@@ -1,0 +1,8 @@
+network_web:
+    resource: "@NetworkWebBundle/Resources/config/routing.yml"
+    prefix:   /
+
+network_store:
+    resource: "@NetworkStoreBundle/Resources/config/routing.yml"
+    prefix:   /
+

@@ -1,0 +1,7 @@
+parameters:
+#    network_store.example.class: Network\StoreBundle\Example
+
+services:
+#    network_store.example:
+#        class: %network_store.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
