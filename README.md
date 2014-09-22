@@ -1,18 +1,17 @@
-VDolgah - educational social network
+VDolgah Social Network
 ========================
 
-VDolgah - social network is co-developed by the students of the groups B8403a and B8403g of the Far Eastern Federal University who are studying mathematics and computer science in 2014 for educational purposes.
+VDolgah is a social network co-developed by students of B8403a and B8403g groups of the Far Eastern Federal University for educational purpose.
 
 Installation
 ------------------------
 
-This section contains information on how to download and install this project.
-
 ### Requirements
 
-PHP version must be at least 5.5.
+PHP v5.5 or higher
+TODO: web server? db? what OS is actually used in production?
 
-### Getting the (development) source files
+### Getting Source Files
 
 Install git (http://git-scm.com/) onto your system. Then run a clone:
 
