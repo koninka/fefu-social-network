@@ -1,7 +1,6 @@
 imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
-    - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
 
 framework:
     #esi:             ~
