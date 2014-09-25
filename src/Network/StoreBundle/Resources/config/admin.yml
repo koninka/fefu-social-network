@@ -1,0 +1,19 @@
+services:
+    sonata.admin.user:
+        class: Network\StoreBundle\Admin\UserAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: user }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\User
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+sonata_block:
+    default_contexts: [cms]
+    blocks:
+        sonata.admin.block.admin_list:
+            contexts:   [admin]
+        sonata.block.service.text:
+        sonata.block.service.action:
+        sonata.block.service.rss:
