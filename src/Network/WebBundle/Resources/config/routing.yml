@@ -2,6 +2,6 @@ network_web_homepage:
     path:     /hello/{name}
     defaults: { _controller: NetworkWebBundle:Default:index }
 
-# facebook_login:
-#     path:     /facebookLogin
-#     defaults: { _controller: NetworkWebBundle:Auth:facebookLogin }
+# smth_login:
+#     path:     /login
+#     defaults: { _controller: NetworkWebBundle:Auth:login }
