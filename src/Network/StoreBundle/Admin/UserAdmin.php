@@ -2,41 +2,28 @@
 
 namespace Network\StoreBundle\Admin;
 
-use Sonata\AdminBundle\Admin\Admin;
-use Sonata\AdminBundle\Form\FormMapper;
-use Sonata\AdminBundle\Datagrid\DatagridMapper;
-use Sonata\AdminBundle\Datagrid\ListMapper;
-use Sonata\AdminBundle\Show\ShowMapper;
-
-use Knp\Menu\ItemInterface as MenuItemInterface;
-use Network\StoreBundle\Entity\User as User;
-
-class UserAdmin extends Admin
+class UserAdmin extends VDolgahAdmin
 {
 
-    protected function configureFormFields(FormMapper $formMapper)
+    public function __construct($code, $class, $baseControllerName)
     {
-        $formMapper
-            ->add('login', null, ['required' => true])
-            ->add('password', null, ['required' => true])
-            ->add('salt', null)
-        ;
+        parent::__construct($code, $class, $baseControllerName);
+        $this->configureFields([
+            [
+                'field' => 'login',
+                'identifier' => true,
+            ],
+            [
+                'field' => 'salt',
+                'options' => [
+                    'required' => false,
+                    'read_only' => true
+                ]
+            ],
+            [
+                'field' => 'password',
+            ]
+        ]);
     }
 
-    protected function configureListFields(ListMapper $listMapper)
-    {
-        $listMapper
-            ->add('login')
-            ->add('password')
-            ->add('salt')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
-        ;
-    }
-
-}
+} 
