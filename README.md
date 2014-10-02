@@ -8,8 +8,8 @@ Installation
 
 ### Requirements
 
-PHP v5.5 or higher
-TODO: web server? db? what OS is actually used in production?
+PHP v5.5 or higher.
+MySQL v5.5 or higher.
 
 ### Getting Source Files
 
