@@ -58,7 +58,7 @@ If you get any warnings or recommendations, fix them before moving on.
 
 If you still have errors see the [Requirements for Running Symfony][2].
 
-## Easy install:
+## Easy install
 
 ### Ubuntu/Debian/Mint
 
