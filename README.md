@@ -58,7 +58,16 @@ If you get any warnings or recommendations, fix them before moving on.
 
 If you still have errors see the [Requirements for Running Symfony][2].
 
+## Easy install:
+
+### Ubuntu/Debian/Mint
+
+Download [`installer_linux.sh`][installer_linux]. Then run `installer_linux.sh -h` to see more info about usage.
+
+
+
 Enjoy!
 
 [1]:  http://getcomposer.org/
 [2]:  http://symfony.com/doc/current/reference/requirements.html
+[installer_linux]: https://github.com/koninka/fefu-social-network/blob/master/installer_linux.sh
