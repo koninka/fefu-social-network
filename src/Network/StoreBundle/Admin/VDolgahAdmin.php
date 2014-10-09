@@ -11,6 +11,12 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class VDolgahAdmin extends Admin
 {
 
+    const FIELD_KEY = 'field';
+    const IDENTIFIER_KEY = 'identifier';
+    const OPTIONS_KEY = 'options';
+    const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
+    const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+
     protected $fields = [];
 
     protected function configureFields($options)
