@@ -10,3 +10,6 @@ security:
 
         default:
             anonymous: ~
+
+    encoders:
+       Network\StoreBundle\Entity\User: sha512
