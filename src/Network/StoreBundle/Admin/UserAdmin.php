@@ -32,8 +32,8 @@ class UserAdmin extends VDolgahAdmin
 
     public function preUpdate($object)
     {
-        $DM = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
-        $uow = $DM->getUnitOfWork();
+        $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
+        $uow = $manager->getUnitOfWork();
         $originalEntityData = $uow->getOriginalEntityData($object);
         if ($originalEntityData['password'] != $object->getPassword()) {
             $this->rehash($object);
