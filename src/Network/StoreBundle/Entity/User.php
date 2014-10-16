@@ -43,6 +43,33 @@ class User implements UserInterface
      */
     private $salt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firstname", type="string", length=20)
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastname", type="string", length=20)
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="genderEnumType")
+     */
+    private $gender;
+
+    /**
+     * @var date
+     *
+     * @ORM\Column(name="birthday", type="date", nullable=true)
+     */
+    private $birthday;
 
     /**
      * Get id
@@ -123,6 +150,70 @@ class User implements UserInterface
         return $this->salt;
     }
 
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param \Network\StoreBundle\Entity\date $birthday
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+    }
+
+    /**
+     * @return \Network\StoreBundle\Entity\date
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
     public function getRoles()
     {
         return array('ROLE_USER');
@@ -130,4 +221,5 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {}
+
 }

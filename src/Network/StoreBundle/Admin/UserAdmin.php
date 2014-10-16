@@ -2,6 +2,9 @@
 
 namespace Network\StoreBundle\Admin;
 
+use Sonata\AdminBundle\Form\FormMapper;
+use Doctrine\DBAL\Types\Type;
+
 class UserAdmin extends VDolgahAdmin
 {
 
@@ -21,7 +24,14 @@ class UserAdmin extends VDolgahAdmin
             [
                 parent::FIELD_KEY => 'password',
                 parent::NOT_SHOW_IN_LIST_KEY => true,
-            ]
+            ],
+            [
+                parent::FIELD_KEY => 'gender',
+                parent::TYPE_KEY => 'sonata_type_choice_field_mask',
+                parent::OPTIONS_KEY => [
+                    'choices' => Type::getType('genderEnumType')->getChoices(),
+                ],
+            ],
         ]);
     }
 
