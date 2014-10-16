@@ -55,9 +55,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set login
+     * Set username
      *
-     * @param string $login
+     * @param string $username
      * @return user
      */
     public function setUsername($username)
