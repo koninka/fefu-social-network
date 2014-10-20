@@ -44,4 +44,17 @@ abstract class EnumType extends Type
 
         return $choices;
     }
+
+    public function getFormType()
+    {
+        return 'choice';
+    }
+
+    public function getFormOptions()
+    {
+        return [
+            'empty_value' => false,
+            'choices' => $this->getChoices(),
+        ];
+    }
 }

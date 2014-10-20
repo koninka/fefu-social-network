@@ -19,6 +19,7 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * NotShowInForm!
      */
     private $id;
 
@@ -40,6 +41,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="salt", type="string", length=40)
+     * NotShowInForm!
      */
     private $salt;
 
