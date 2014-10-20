@@ -37,7 +37,11 @@ class UserAdmin extends VDolgahAdmin
 
     public function prePersist($object)
     {
-        $this->rehash($object);
+        $encoder = $this->getConfigurationPool()
+                        ->getContainer()
+                        ->get('security.encoder_factory')
+                        ->getEncoder($object);
+        $object->rehash($encoder);
     }
 
     public function preUpdate($object)
@@ -46,15 +50,12 @@ class UserAdmin extends VDolgahAdmin
         $uow = $manager->getUnitOfWork();
         $originalEntityData = $uow->getOriginalEntityData($object);
         if ($originalEntityData['password'] != $object->getPassword()) {
-            $this->rehash($object);
+            $encoder = $this->getConfigurationPool()
+                            ->getContainer()
+                            ->get('security.encoder_factory')
+                            ->getEncoder($object);
+            $object->rehash($encoder);
         }
     }
 
-    private function rehash($object)
-    {
-        $salt = md5(time());
-        $encoder = $this->getConfigurationPool()->getContainer()->get('security.encoder_factory')->getEncoder($object);
-        $password = $encoder->encodePassword($object->getPassword(), $salt);
-        $object->setPassword($password)->setSalt($salt);
-    }
 } 

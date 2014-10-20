@@ -222,4 +222,11 @@ class User implements UserInterface
     public function eraseCredentials()
     {}
 
+    public function rehash($encoder)
+    {
+        $salt = md5(time());
+        $password = $encoder->encodePassword($this->password, $salt);
+        $this->setPassword($password)->setSalt($salt);
+    }
+
 }
