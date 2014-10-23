@@ -2,6 +2,12 @@ network_web_homepage:
     path:     /hello/{name}
     defaults: { _controller: NetworkWebBundle:Default:index }
 
+user_profile_editing:
+    path: /user/{id}/profile/
+    defaults: { _controller: NetworkWebBundle:User:profile }
+    requirements:
+       id: \d+
+
 # smth_login:
 #     path:     /login
 #     defaults: { _controller: NetworkWebBundle:Auth:login }

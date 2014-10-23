@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * user
@@ -19,6 +20,7 @@ class User implements UserInterface
      * @ORM\Column(name="id", type="integer")
      * @ORM\Id
      * @ORM\GeneratedValue(strategy="AUTO")
+     * NotShowInForm!
      */
     private $id;
 
@@ -26,6 +28,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -33,6 +36,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=150)
+     * @Assert\Length(min=6, max=150)
      */
     private $password;
 
@@ -40,9 +44,50 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="salt", type="string", length=40)
+     * NotShowInForm!
      */
     private $salt;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="firstname", type="string", length=20)
+     * @Assert\NotBlank()
+     */
+    private $firstName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="lastname", type="string", length=20)
+     * @Assert\NotBlank()
+     */
+    private $lastName;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="email", type="string", length=50)
+     * @Assert\Email()
+     * @Assert\NotBlank()
+     */
+    private $email;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="gender", type="genderEnumType")
+     * @Assert\NotBlank()
+     */
+    private $gender;
+
+    /**
+     * @var date
+     *
+     * @ORM\Column(name="birthday", type="date", nullable=true)
+     * @Assert\Date()
+     */
+    private $birthday;
 
     /**
      * Get id
@@ -55,9 +100,9 @@ class User implements UserInterface
     }
 
     /**
-     * Set login
+     * Set username
      *
-     * @param string $login
+     * @param string $username
      * @return user
      */
     public function setUsername($username)
@@ -123,6 +168,86 @@ class User implements UserInterface
         return $this->salt;
     }
 
+    /**
+     * @param string $firstName
+     */
+    public function setFirstName($firstName)
+    {
+        $this->firstName = $firstName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFirstName()
+    {
+        return $this->firstName;
+    }
+
+    /**
+     * @param string $gender
+     */
+    public function setGender($gender)
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param string $lastName
+     */
+    public function setLastName($lastName)
+    {
+        $this->lastName = $lastName;
+    }
+
+    /**
+     * @return string
+     */
+    public function getLastName()
+    {
+        return $this->lastName;
+    }
+
+    /**
+     * @param \Network\StoreBundle\Entity\date $birthday
+     */
+    public function setBirthday($birthday)
+    {
+        $this->birthday = $birthday;
+    }
+
+    /**
+     * @return \Network\StoreBundle\Entity\date
+     */
+    public function getBirthday()
+    {
+        return $this->birthday;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
+    }
+
     public function getRoles()
     {
         return array('ROLE_USER');
@@ -130,4 +255,12 @@ class User implements UserInterface
 
     public function eraseCredentials()
     {}
+
+    public function rehash($encoder)
+    {
+        $salt = md5(time());
+        $password = $encoder->encodePassword($this->password, $salt);
+        $this->setPassword($password)->setSalt($salt);
+    }
+
 }

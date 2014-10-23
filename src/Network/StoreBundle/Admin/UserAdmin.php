@@ -2,6 +2,9 @@
 
 namespace Network\StoreBundle\Admin;
 
+use Sonata\AdminBundle\Form\FormMapper;
+use Doctrine\DBAL\Types\Type;
+
 class UserAdmin extends VDolgahAdmin
 {
 
@@ -21,23 +24,46 @@ class UserAdmin extends VDolgahAdmin
             [
                 parent::FIELD_KEY => 'password',
                 parent::NOT_SHOW_IN_LIST_KEY => true,
-                parent::FIELD_TYPE_KEY => 'password',
+                parent::TYPE_KEY => 'password',
                 parent::EDIT_OPTIONS_KEY => [
                     'required' => false,
                 ],
-            ]
+            ],
+            [
+                parent::FIELD_KEY => 'gender',
+                parent::TYPE_KEY => 'sonata_type_choice_field_mask',
+                parent::OPTIONS_KEY => [
+                    'choices' => Type::getType('genderEnumType')->getChoices(),
+                ],
+            ],
+            [
+                parent::FIELD_KEY => 'birthday',
+                parent::TYPE_KEY => 'birthday',
+                parent::NOT_SHOW_IN_LIST_KEY => true, // TODO: extend \DateTime with own format of it
+                parent::OPTIONS_KEY => [
+                    'required' => false,
+                ],
+            ],
         ]);
     }
 
     public function prePersist($object)
     {
-        $this->rehash($object);
+        $encoder = $this->getConfigurationPool()
+                        ->getContainer()
+                        ->get('security.encoder_factory')
+                        ->getEncoder($object);
+        $object->rehash($encoder);
     }
 
     public function preUpdate($object)
     {
         if (null != $object->getPassword()) {
-            $this->rehash($object);
+            $encoder = $this->getConfigurationPool()
+                ->getContainer()
+                ->get('security.encoder_factory')
+                ->getEncoder($object);
+            $object->rehash($encoder);
         } else {
             $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
             $uow = $manager->getUnitOfWork();
@@ -46,11 +72,4 @@ class UserAdmin extends VDolgahAdmin
         }
     }
 
-    private function rehash($object)
-    {
-        $salt = md5(time());
-        $encoder = $this->getConfigurationPool()->getContainer()->get('security.encoder_factory')->getEncoder($object);
-        $password = $encoder->encodePassword($object->getPassword(), $salt);
-        $object->setPassword($password)->setSalt($salt);
-    }
 } 
