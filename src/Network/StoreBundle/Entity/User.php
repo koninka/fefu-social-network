@@ -72,6 +72,9 @@ class User implements UserInterface
      */
     private $email;
 
+    /**
+     * @var string
+     *
      * @ORM\Column(name="gender", type="genderEnumType")
      * @Assert\NotBlank()
      */
