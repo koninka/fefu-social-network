@@ -36,6 +36,14 @@ class UserAdmin extends VDolgahAdmin
                     'choices' => Type::getType('genderEnumType')->getChoices(),
                 ],
             ],
+            [
+                parent::FIELD_KEY => 'birthday',
+                parent::TYPE_KEY => 'birthday',
+                parent::NOT_SHOW_IN_LIST_KEY => true, // TODO: extend \DateTime with own format of it
+                parent::OPTIONS_KEY => [
+                    'required' => false,
+                ],
+            ],
         ]);
     }
 
