@@ -14,7 +14,10 @@ class UserController extends Controller
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         $form = $this->createForm(new UserType(), $user);
 
-        $oldPassword = $user->getPassword();
+        $oldPassword = null;
+        if ($user) {
+            $oldPassword = $user->getPassword();
+        }
 
         $form->handleRequest($request);
 
