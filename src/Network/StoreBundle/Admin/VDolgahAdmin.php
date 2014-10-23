@@ -16,6 +16,7 @@ class VDolgahAdmin extends Admin
     const OPTIONS_KEY = 'options';
     const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
     const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+    const FIELD_TYPE_KEY = 'field_type';
 
     protected $fields = [];
 
@@ -33,11 +34,15 @@ class VDolgahAdmin extends Admin
 
     protected function addFieldToMapper($mapper, $field)
     {
+        $type = null;
+        if (array_key_exists(self::FIELD_TYPE_KEY, $field)) {
+            $type = $field[self::FIELD_TYPE_KEY];
+        }
         $options = [];
         if (array_key_exists(VDolgahAdmin::OPTIONS_KEY, $field)) {
             $options = $field[VDolgahAdmin::OPTIONS_KEY];
         }
-        $mapper->add($field['name'], null, $options);
+        $mapper->add($field['name'], $type, $options);
     }
 
     public function __construct($code, $class, $baseControllerName)

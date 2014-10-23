@@ -21,6 +21,10 @@ class UserAdmin extends VDolgahAdmin
             [
                 parent::FIELD_KEY => 'password',
                 parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::FIELD_TYPE_KEY => 'password',
+                parent::OPTIONS_KEY => [
+                    'required' => false,
+                ],
             ]
         ]);
     }
@@ -32,11 +36,13 @@ class UserAdmin extends VDolgahAdmin
 
     public function preUpdate($object)
     {
-        $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
-        $uow = $manager->getUnitOfWork();
-        $originalEntityData = $uow->getOriginalEntityData($object);
-        if ($originalEntityData['password'] != $object->getPassword()) {
+        if (null != $object->getPassword()) {
             $this->rehash($object);
+        } else {
+            $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
+            $uow = $manager->getUnitOfWork();
+            $originalEntityData = $uow->getOriginalEntityData($object);
+            $object->setPassword($originalEntityData['password']);
         }
     }
 
