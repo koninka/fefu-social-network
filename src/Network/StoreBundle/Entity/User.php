@@ -66,6 +66,12 @@ class User implements UserInterface
     /**
      * @var string
      *
+     * @ORM\Column(name="email", type="string", length=50)
+     * @Assert\Email()
+     * @Assert\NotBlank()
+     */
+    private $email;
+
      * @ORM\Column(name="gender", type="genderEnumType")
      * @Assert\NotBlank()
      */
@@ -220,6 +226,22 @@ class User implements UserInterface
     public function getBirthday()
     {
         return $this->birthday;
+    }
+
+    /**
+     * @param string $email
+     */
+    public function setEmail($email)
+    {
+        $this->email = $email;
+    }
+
+    /**
+     * @return string
+     */
+    public function getEmail()
+    {
+        return $this->email;
     }
 
     public function getRoles()
