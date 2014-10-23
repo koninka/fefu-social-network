@@ -12,6 +12,7 @@ class UserController extends Controller
     public function profileAction($id, Request $request)
     {
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
         $form = $this->createForm(new UserType(), $user);
 
         $oldPassword = null;

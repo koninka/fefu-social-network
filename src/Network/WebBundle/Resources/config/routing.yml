@@ -1,3 +1,7 @@
+mainpage:
+    path:     /
+    defaults: { _controller: NetworkWebBundle:Default:index, name: 'stranger' }
+
 network_web_homepage:
     path:     /hello/{name}
     defaults: { _controller: NetworkWebBundle:Default:index }
