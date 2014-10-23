@@ -36,6 +36,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="password", type="string", length=150)
+     * @Assert\Length(min=6, max=150)
      */
     private $password;
 
