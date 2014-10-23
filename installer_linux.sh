@@ -69,7 +69,7 @@ check_configuration(){
 }
 
 install_php(){
-	sudo apt-get install php5 php5-cli php5-intl php-apc
+	sudo apt-get install php5 php5-cli php5-intl php-apc php5-curl
 }
 
 install_mysql(){
