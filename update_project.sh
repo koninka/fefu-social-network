@@ -1,11 +1,15 @@
 #!/bin/bash
 
-git stash
-if ! git pull --rebase origin master; then
-  echo "Fix conflicts and then run this script again"
-  exit
+echo -n "Would you like to do 'git pull' (\"y\" or \"n\", default: \"n\"): "
+read answer
+if [ "$answer" = "y" ]; then
+   git stash
+   if ! git pull --rebase origin master; then
+      echo "Fix conflicts and then run this script again"
+      exit
+   fi
+   git stash apply
 fi
-git stash apply
 
 echo -n "Would you like to update dependencies from composer.json (\"y\" or \"n\", default: \"n\"): "
 read answer
@@ -30,16 +34,13 @@ if [ "$has_debug" != "n" ]; then
    has_debug="y"
 fi
 
+sudo chmod -R a+rw .
+if egrep -i "^www-data" /etc/group > /dev/null; then
+  sudo chown $USER:www-data .
+fi
+
 if [ "$has_debug" = "y" ]; then
    php app/console cache:clear --env=$env
 else
    php app/console cache:clear --env=$env --no-debug
-fi
-#
-rm -f app/logs/dev.log
-rm -f app/logs/prod.log
-
-sudo chmod -R ug+rw .
-if egrep -i "^www-data" /etc/group > /dev/null; then
-  sudo chown $USER:www-data .
 fi
