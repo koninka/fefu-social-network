@@ -6,7 +6,7 @@ user_profile_editing:
     path: /user/{id}/profile/
     defaults: { _controller: NetworkWebBundle:User:profile }
     requirements:
-      id: \d+
+       id: \d+
 
 # smth_login:
 #     path:     /login
