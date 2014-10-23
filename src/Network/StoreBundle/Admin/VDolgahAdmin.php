@@ -11,56 +11,78 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class VDolgahAdmin extends Admin
 {
 
+    const FIELD_KEY = 'field';
+    const IDENTIFIER_KEY = 'identifier';
+    const OPTIONS_KEY = 'options';
+    const EDIT_OPTIONS_KEY = 'edit_options';
+    const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
+    const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+    const FIELD_TYPE_KEY = 'field_type';
+
     protected $fields = [];
+
+    protected function editing()
+    {
+        return $this->id($this->getSubject());
+    }
 
     protected function configureFields($options)
     {
-        foreach ($options as $option)
-        {
-            foreach ($this->fields as $idx => $field)
-                if ($field['name'] === $option['field'])
-                {
+        foreach ($options as $option) {
+            foreach ($this->fields as $idx => $field) {
+                if ($field['name'] === $option[VDolgahAdmin::FIELD_KEY]) {
                     $this->fields[$idx] = array_merge($this->fields[$idx], $option);
                     break;
                 }
+            }
         }
     }
 
-    protected function addFieldsToMapper($mapper)
+    protected function addFieldToMapper($mapper, $field)
     {
-        foreach ($this->fields as $field)
-        {
-            if (
-                array_key_exists('identifier', $field)
-                && $field['identifier']
-                && method_exists($mapper, 'addIdentifier')
-            )
-                $mapper->addIdentifier($field['name']);
-            else {
-                $options = [];
-                if (array_key_exists('options', $field))
-                    $options = $field['options'];
-                $mapper->add($field['name'], null, $options);
-
-            }
+        $type = null;
+        if (array_key_exists(self::FIELD_TYPE_KEY, $field)) {
+            $type = $field[self::FIELD_TYPE_KEY];
         }
+        $options = [];
+        if (
+            array_key_exists(self::EDIT_OPTIONS_KEY, $field)
+            && $this->editing()
+        ) {
+            $options = $field[self::EDIT_OPTIONS_KEY];
+        } elseif (array_key_exists(VDolgahAdmin::OPTIONS_KEY, $field)) {
+            $options = $field[VDolgahAdmin::OPTIONS_KEY];
+        }
+        $mapper->add($field['name'], $type, $options);
     }
 
     public function __construct($code, $class, $baseControllerName)
     {
         parent::__construct($code, $class, $baseControllerName);
         $entityReflection = new \ReflectionClass($class);
-        foreach ($entityReflection->getProperties() as $property)
-        {
+        foreach ($entityReflection->getProperties() as $property) {
             $name = ucfirst($property->getName());
-            if ($entityReflection->hasMethod("set" . $name) && $entityReflection->hasMethod("get" . $name))
+            if ($entityReflection->hasMethod("set" . $name) && $entityReflection->hasMethod("get" . $name)) {
                 $this->fields[] = [ 'name' => $property->getName() ];
+            }
         }
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
-        $this->addFieldsToMapper($listMapper);
+        foreach ($this->fields as $field){
+            if (
+                array_key_exists(VDolgahAdmin::IDENTIFIER_KEY, $field)
+                && $field[VDolgahAdmin::IDENTIFIER_KEY]
+            ) {
+                $listMapper->addIdentifier($field['name']);
+            } elseif (
+                !array_key_exists(VDolgahAdmin::NOT_SHOW_IN_LIST_KEY, $field)
+                || false == $field[VDolgahAdmin::NOT_SHOW_IN_LIST_KEY]
+            ) {
+                $this->addFieldToMapper($listMapper, $field);
+            }
+        }
         $listMapper->add('_action', 'actions', [
             'actions' => [
                 'show' => [],
@@ -72,12 +94,21 @@ class VDolgahAdmin extends Admin
 
     protected function configureFormFields(FormMapper $formMapper)
     {
-        $this->addFieldsToMapper($formMapper);
+        foreach ($this->fields as $field) {
+            if (
+                !array_key_exists(VDolgahAdmin::NOT_SHOW_IN_FORM_KEY, $field)
+                || false == $field[VDolgahAdmin::NOT_SHOW_IN_FORM_KEY]
+            ) {
+                $this->addFieldToMapper($formMapper, $field);
+            }
+        }
     }
 
     protected function configureShowFields(ShowMapper $showMapper)
     {
-        $this->addFieldsToMapper($showMapper);
+        foreach ($this->fields as $field) {
+            $this->addFieldToMapper($showMapper, $field);
+        }
     }
 
 } 
