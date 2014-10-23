@@ -19,11 +19,6 @@ class BaseType extends AbstractType
         'integer' => 'integer',
     ];
 
-    protected static $databaseProperty2FormOption = [
-        'length' => 'max_length',
-        'nullable' => 'required',
-    ];
-
     protected static $specificFormTypes = [
         'password',
         'birthday',
@@ -56,10 +51,10 @@ class BaseType extends AbstractType
             array_key_exists('nullable', $params)
             && $params['nullable'] === 'true'
         ) {
-            $options[self::$databaseProperty2FormOption['nullable']] = false;
+            $options['required'] = false;
         }
         if (array_key_exists('length', $params)) {
-            $options[self::$databaseProperty2FormOption['length']] = $params['length'];
+            $options['max_length'] = $params['length'];
         }
 
         $builder->add($name, $type, $options);
