@@ -28,9 +28,7 @@ class BaseType extends AbstractType
     {
         $name = $params['name'];
         $type = null;
-        $options = [
-            'required' => true,
-        ];
+        $options = [];
         if (array_key_exists($params['type'], self::$databaseType2FormType)) {
             $type = self::$databaseType2FormType[$params['type']];
             if (in_array($name, self::$specificFormTypes)) {
