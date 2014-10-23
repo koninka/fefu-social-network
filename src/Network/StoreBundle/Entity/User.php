@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * user
@@ -27,6 +28,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="username", type="string", length=100)
+     * @Assert\NotBlank()
      */
     private $username;
 
@@ -49,6 +51,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="firstname", type="string", length=20)
+     * @Assert\NotBlank()
      */
     private $firstName;
 
@@ -56,6 +59,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="lastname", type="string", length=20)
+     * @Assert\NotBlank()
      */
     private $lastName;
 
@@ -63,6 +67,7 @@ class User implements UserInterface
      * @var string
      *
      * @ORM\Column(name="gender", type="genderEnumType")
+     * @Assert\NotBlank()
      */
     private $gender;
 
@@ -70,6 +75,7 @@ class User implements UserInterface
      * @var date
      *
      * @ORM\Column(name="birthday", type="date", nullable=true)
+     * @Assert\Date()
      */
     private $birthday;
 
