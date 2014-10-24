@@ -64,10 +64,16 @@ If you still have errors see the [Requirements for Running Symfony][2].
 
 Download [`installer_linux.sh`][installer_linux]. Then run `installer_linux.sh -h` to see more info about usage.
 
+### Windows
+Download [`installer.bat`][installer.bat] and [`installer.ps1`][installer.ps1] in directory you want to install the project. Then run `installer.bat` as Admin.
 
-
+Note about git:
+You should be able to use git from Windows Command Promt. If you have git but 
+able to use it from git bash only then you will be prompted to install git again. There you should check `Use Git from the Windows Command Prompt` option.
 Enjoy!
 
 [1]:  http://getcomposer.org/
 [2]:  http://symfony.com/doc/current/reference/requirements.html
-[installer_linux]: https://github.com/koninka/fefu-social-network/blob/master/installer_linux.sh
+[installer_linux]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer_linux.sh
+[installer.bat]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer.bat
+[installer.ps1]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer.ps1
