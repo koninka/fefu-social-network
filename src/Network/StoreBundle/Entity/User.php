@@ -174,6 +174,8 @@ class User implements UserInterface
     public function setFirstName($firstName)
     {
         $this->firstName = $firstName;
+
+        return $this;
     }
 
     /**
@@ -190,6 +192,8 @@ class User implements UserInterface
     public function setGender($gender)
     {
         $this->gender = $gender;
+
+        return $this;
     }
 
     /**
@@ -206,6 +210,8 @@ class User implements UserInterface
     public function setLastName($lastName)
     {
         $this->lastName = $lastName;
+
+        return $this;
     }
 
     /**
@@ -222,6 +228,8 @@ class User implements UserInterface
     public function setBirthday($birthday)
     {
         $this->birthday = $birthday;
+
+        return $this;
     }
 
     /**
@@ -238,6 +246,8 @@ class User implements UserInterface
     public function setEmail($email)
     {
         $this->email = $email;
+
+        return $this;
     }
 
     /**
