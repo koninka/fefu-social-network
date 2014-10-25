@@ -258,7 +258,7 @@ class User implements UserInterface
 
     public function rehash($encoder)
     {
-        $salt = md5(time());
+        $salt = md5(openssl_random_pseudo_bytes(40));
         $password = $encoder->encodePassword($this->password, $salt);
         $this->setPassword($password)->setSalt($salt);
     }
