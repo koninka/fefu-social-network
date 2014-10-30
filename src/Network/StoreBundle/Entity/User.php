@@ -3,16 +3,48 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\ORM\Mapping\AttributeOverrides;
+use Doctrine\ORM\Mapping\AttributeOverride;
 
 /**
  * user
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
+ * @AttributeOverrides({
+ *     @AttributeOverride(name="username",
+ *         column=@ORM\Column(
+ *             name="username",
+ *             type="string",
+ *             length=100
+ *         )
+ *     ),
+ *     @AttributeOverride(name="password",
+ *         column=@ORM\Column(
+ *             name="password",
+ *             type="string",
+ *             length=150
+ *         )
+ *     ),
+ *     @AttributeOverride(name="salt",
+ *         column=@ORM\Column(
+ *             name="salt",
+ *             type="string",
+ *             length=40
+ *         )
+ *     ),
+ *     @AttributeOverride(name="email",
+ *         column=@ORM\Column(
+ *             name="email",
+ *             type="string",
+ *             length=150
+ *         )
+ *     )
+ * })
  */
-class User implements UserInterface
+class User extends BaseUser
 {
     /**
      * @var integer
@@ -22,31 +54,28 @@ class User implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * NotShowInForm!
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=100)
      * @Assert\NotBlank()
      */
-    private $username;
+    protected $username;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=150)
      * @Assert\Length(min=6, max=150)
      */
-    private $password;
+    protected $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=40)
      * NotShowInForm!
      */
-    private $salt;
+    protected $salt;
 
     /**
      * @var string
@@ -67,11 +96,10 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="email", type="string", length=50)
      * @Assert\Email()
      * @Assert\NotBlank()
      */
-    private $email;
+    protected $email;
 
     /**
      * @var string
