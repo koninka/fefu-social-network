@@ -1,3 +1,7 @@
+network_user:
+    resource: "@NetworkUserBundle/Resources/config/routing.yml"
+    prefix:   /
+
 network_web:
     resource: "@NetworkWebBundle/Resources/config/routing.yml"
     prefix:   /
@@ -17,4 +21,4 @@ _sonata_admin:
 
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
-    prefix: /user
+    prefix: /

@@ -1,0 +1,15 @@
+services:
+#    network_store.example:
+#        class: %network_store.example.class%
+#        arguments: [@service_id, "plain_value", %parameter%]
+    network_user.registration.form.type:
+        class: Network\UserBundle\Form\Type\RegistrationType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_registration }
+
+    network_user.change_password.form.type:
+        class: Network\UserBundle\Form\Type\ChangePasswordType
+        argument: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_change_password }

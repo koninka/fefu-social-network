@@ -1,0 +1,14 @@
+{% block subject %}
+    Vdolgah.org - подтверждение регистрации.
+{% endblock %}
+
+{% block body_text %}
+    {% autoescape false %}
+    Здравствуйте, {{ user.firstName }} {{ user.lastName }}!
+    Для подтверждения вашей учетной записи, пожалуйста, перейдите по этой ссылке: {{ confirmationUrl }}
+    {% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+
+{% endblock %}

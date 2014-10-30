@@ -69,8 +69,8 @@ swiftmailer:
     encryption: ssl
     auth_mode:  login
     host:      "smtp.gmail.com"
-    username:  "vdolgah"
-    password:  "VdolgahPassPro1"
+    username:  "vdolgah.test"
+    password:  "VdolgahPro1"
 #    spool:     { type: memory }
 
 fos_user:
@@ -81,9 +81,12 @@ fos_user:
         mailer: fos_user.mailer.twig_swift
     registration:
         form:
-            type: network_storebundle_user_registration
+            type: network_user_registration
         confirmation:
-            enabled: false
+            enabled: true
+            template: NetworkUserBundle:Mail:confirmation.html.twig
     resetting:
+        email:
+            template: NetworkUserBundle:Mail:resseting.html.twig
         form:
-            type: network_storebundle_user_change_password
+            type: network_user_change_password

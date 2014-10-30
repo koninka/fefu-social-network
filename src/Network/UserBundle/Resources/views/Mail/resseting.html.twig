@@ -1,0 +1,13 @@
+{% block subject %}Vdolgah.org - восстановление пароля{% endblock %}
+
+{% block body_text %}
+    {% autoescape false %}
+    Здравствуйте, {{ user.firstName }}!
+    Вы можете восстановить ваш пароль, перейдя по этой ссылке: {{ confirmationUrl }}
+    {% endautoescape %}
+{% endblock %}
+
+{% block body_html %}
+
+
+{% endblock %}

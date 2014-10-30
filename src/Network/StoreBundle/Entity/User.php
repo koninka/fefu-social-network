@@ -124,7 +124,7 @@ class User extends BaseUser
      */
     public function getId()
     {
-        return $this->id;
+        return parent::getId();
     }
 
     /**
@@ -135,7 +135,7 @@ class User extends BaseUser
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        parent::setUsername($username);
 
         return $this;
     }
@@ -147,7 +147,7 @@ class User extends BaseUser
      */
     public function getUsername()
     {
-        return $this->username;
+        return parent::getUsername();
     }
 
     /**
@@ -158,7 +158,7 @@ class User extends BaseUser
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        parent::setPassword($password);
 
         return $this;
     }
@@ -170,7 +170,7 @@ class User extends BaseUser
      */
     public function getPassword()
     {
-        return $this->password;
+        return parent::getPassword();
     }
 
     /**
@@ -189,11 +189,11 @@ class User extends BaseUser
     /**
      * Get salt
      *
-     * @return string 
+     * @return string
      */
     public function getSalt()
     {
-        return $this->salt;
+        return parent::getSalt();
     }
 
     /**
@@ -273,7 +273,8 @@ class User extends BaseUser
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        parent::setEmail($email);
+        $this->setUsername($email);
 
         return $this;
     }
@@ -283,7 +284,7 @@ class User extends BaseUser
      */
     public function getEmail()
     {
-        return $this->email;
+        return parent::getEmail();
     }
 
     public function getRoles()
