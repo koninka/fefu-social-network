@@ -5,44 +5,12 @@ namespace Network\StoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
-use Doctrine\ORM\Mapping\AttributeOverrides;
-use Doctrine\ORM\Mapping\AttributeOverride;
 
 /**
  * user
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
- * @AttributeOverrides({
- *     @AttributeOverride(name="username",
- *         column=@ORM\Column(
- *             name="username",
- *             type="string",
- *             length=100
- *         )
- *     ),
- *     @AttributeOverride(name="password",
- *         column=@ORM\Column(
- *             name="password",
- *             type="string",
- *             length=150
- *         )
- *     ),
- *     @AttributeOverride(name="salt",
- *         column=@ORM\Column(
- *             name="salt",
- *             type="string",
- *             length=40
- *         )
- *     ),
- *     @AttributeOverride(name="email",
- *         column=@ORM\Column(
- *             name="email",
- *             type="string",
- *             length=150
- *         )
- *     )
- * })
  */
 class User extends BaseUser
 {
@@ -80,7 +48,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=20)
+     * @ORM\Column(name="firstname", type="string", length=200)
      * @Assert\NotBlank()
      */
     private $firstName;
@@ -88,7 +56,7 @@ class User extends BaseUser
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=20)
+     * @ORM\Column(name="lastname", type="string", length=200)
      * @Assert\NotBlank()
      */
     private $lastName;
