@@ -1,1 +1,7 @@
-Hello {{ name }}!
+{% extends "::base.html.twig" %}
+
+{% block title %}NetworkWebBundle:Auth:facebookLogin{% endblock %}
+
+{% block body %}
+    {{ parent() }}
+{% endblock %}
