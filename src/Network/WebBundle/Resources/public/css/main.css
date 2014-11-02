@@ -1,0 +1,20 @@
+body{
+    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+}
+
+header, #content, footer{
+    margin: 0 auto;
+    width: 980px;
+    border: 1px solid #000000;
+    min-height: 200px;
+}
+
+#logo img{
+    width: 40px;
+    height: 40px;
+}
+
+button{
+    background-color: #4c7198;
+    color: #ffffff;
+}

@@ -70,6 +70,10 @@ Download [`installer.bat`][installer.bat] and [`installer.ps1`][installer.ps1] i
 Note about git:
 You should be able to use git from Windows Command Promt. If you have git but 
 able to use it from git bash only then you will be prompted to install git again. There you should check `Use Git from the Windows Command Prompt` option.
+
+Note about php and error with msvcr110.dll:
+Be shure that you istalled [`Visual C++ libraries`][Visual_C++_libraries] before running script
+
 Enjoy!
 
 [1]:  http://getcomposer.org/
@@ -77,3 +81,4 @@ Enjoy!
 [installer_linux]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer_linux.sh
 [installer.bat]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer.bat
 [installer.ps1]: https://raw.githubusercontent.com/koninka/fefu-social-network/master/installer.ps1
+[Visual_C++_libraries]: http://www.microsoft.com/en-us/download/details.aspx?id=30679

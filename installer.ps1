@@ -82,7 +82,18 @@ function InstallPHP(){
     }
 }
 
+function RegistryCheckMySQL(){
+    $a = Get-ItemProperty HKLM:\Software\Microsoft\Windows\CurrentVersion\Uninstall\*
+    foreach($b in $a){
+        if (Test-Path $($b.InstallLocation + "bin\mysql.exe")){
+	    return $True
+	}
+    }
+    return $False
+}
+
 function InstallMySQL(){
+    if ( -not ( RegistryCheckMySQL ) ){
     $title   = 'I dont find mysql?'
     $prompt  = 'Should I install it?'
     $yes     = New-Object System.Management.Automation.Host.ChoiceDescription '&Yes','Continues the operation'
@@ -92,7 +103,12 @@ function InstallMySQL(){
     if ($choice -eq 0){
         DownloadFile http://dev.mysql.com/get/Downloads/MySQLInstaller/mysql-installer-community-5.6.21.1.msi .\cache\mysql_installer.msi
         start-process .\cache\mysql_installer.msi -Wait
+	Write-Host -NoNewLine 'Press any key to continue'
+        $null = $Host.UI.RawUI.ReadKey('NoEcho,IncludeKeyDown')
         UpdatePath
+    }
+    } else {
+	Write-Host mysql is installed
     }
 }
 
@@ -217,7 +233,7 @@ function ConfigurePhpIni(){
         Write-Host Configuring php.ini
         EnableExtensionDir $ini
         RealpathCacheSize $ini
-        if (CheckCommand mysql){
+        if ( ( CheckCommand mysql ) -or ( RegistryCheckMySQL ) ){
             EnablePhpExtension "php_pdo_mysql.dll" $ini
         }
         EnablePhpExtension "php_intl.dll" $ini
@@ -261,6 +277,7 @@ function InstallBundles(){
 }
 
 UpdatePath
+mkdir cache
 CheckAndInstall php   { InstallPHP }
 CheckAndInstall mysql { InstallMySQL }
 CheckAndInstall git   { InstallGit }
@@ -271,3 +288,4 @@ InstallBundles
 php app/console doctrine:database:create
 php app/console doctrine:schema:create
 php app/check.php
+Remove-Item cache -Recurse
