@@ -15,6 +15,30 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     private $container;
     private $manager;
 
+    private function addUser($username, $password, $gender, $firstName,
+        $lastName, $email, $birthday)
+    {
+        $userManager = $this->container->get('fos_user.user_manager');
+        $user = $userManager->createUser();
+        $encoder = $this->container
+                        ->get('security.encoder_factory')
+                        ->getEncoder($user);
+
+        $user->setUsername($username)
+             ->setPassword($password)
+             ->setGender($gender)
+             ->setFirstName($firstName)
+             ->setLastName($lastName)
+             ->setEmail($email)
+             ->setBirthday($birthday)
+             ->setEnabled(true);
+
+        $user->hash($encoder);
+        $userManager->updateUser($user, true);
+        $this->manager->persist($user);
+        $this->manager->flush();
+    }
+
     private function setManager($manager)
     {
         $this->manager = $manager;
@@ -40,8 +64,6 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@почта.рф', '@mail.com'];
 
         for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) {
-            $user = new User();
-
             $gender = $genders[array_rand($genders)];
 
             if ($gender == 'female') {
@@ -57,25 +79,11 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
                 . str_replace(' ', '', $lastName)
                 . $emailProviders[array_rand($emailProviders)];
 
-            $encoder = $this->container
-                            ->get('security.encoder_factory')
-                            ->getEncoder($user);
-
             $birthday = new \DateTime();
             $birthday->setDate(rand(1894, 2014), rand(1, 12), rand(1, 28));
 
-            $user->setUsername('user-' . $i)
-                 ->setPassword('secret-' . $i)
-                 ->setGender($gender)
-                 ->setFirstName($firstName)
-                 ->setLastName($lastName)
-                 ->setEmail($email)
-                 ->setBirthday($birthday);
-
-            $user->hash($encoder);
-
-            $manager->persist($user);
-            $manager->flush();
+            $this->addUser('user-' . $i, 'secret-' . $i, $gender, $firstName,
+                $lastName, $email, $birthday);
         }
     }
 }
