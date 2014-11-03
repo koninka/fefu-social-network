@@ -11,7 +11,7 @@ use Network\StoreBundle\Entity\User;
 
 class LoadUserData implements FixtureInterface, ContainerAwareInterface
 {
-    const USER_COUNT = 1000;
+    const USER_COUNT = 128;
     private $container;
 
     public function setContainer(ContainerInterface $container = null)
