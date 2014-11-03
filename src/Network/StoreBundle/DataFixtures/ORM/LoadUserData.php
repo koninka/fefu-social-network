@@ -56,6 +56,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         $this->setManager($manager);
+        $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null);
+
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
         $firstNamesFemale = file($resDir . 'first-name-female');
         $firstNamesMale = file($resDir . 'first-name-male');
