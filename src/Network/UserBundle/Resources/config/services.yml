@@ -10,6 +10,6 @@ services:
 
     network_user.change_password.form.type:
         class: Network\UserBundle\Form\Type\ChangePasswordType
-        argument: [%fos_user.model.user.class%]
+        arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: network_user_change_password }

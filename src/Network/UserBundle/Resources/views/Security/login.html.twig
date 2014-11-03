@@ -8,6 +8,7 @@
 {% endif %}
 
 <p><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></p>
+<p><a href="{{ path('fos_user_resetting_request') }}">{{ 'layout.reset_password'|trans({}, 'FOSUserBundle') }}</a></p>
 
 <form action="{{ path("fos_user_security_check") }}" method="post">
     <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />

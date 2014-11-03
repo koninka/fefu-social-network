@@ -4,7 +4,7 @@ namespace Network\UserBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use FOS\UserBundle\Form\Type\ChangePasswordFormType as BaseType;
 
 class ChangePasswordType extends BaseType
 {

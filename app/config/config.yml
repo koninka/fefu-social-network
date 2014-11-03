@@ -87,6 +87,6 @@ fos_user:
             template: NetworkUserBundle:Mail:confirmation.html.twig
     resetting:
         email:
-            template: NetworkUserBundle:Mail:resseting.html.twig
+            template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
