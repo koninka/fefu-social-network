@@ -46,3 +46,23 @@ if [ "$has_debug" = "y" ]; then
 else
    php app/console cache:clear --env=$env --no-debug
 fi
+
+echo -n "Do force cache remove (\"y\" or \"n\", default: \"n\"): "
+read answer
+if [ "$answer" = "y" ]; then
+   rm -rf app/cache/*
+fi
+
+echo -n "Replace 'app_dev' with 'app' in .htaccess (\"y\" or \"n\", default: \"n\"): "
+read answer
+if [ "$answer" = "y" ]; then
+   echo -n "Choose your OS (\"o\" for OS X or \"l\" for Linux, default: \"l\"): "
+   read osanswer
+   if [ "$osanswer" = "o" ]; then
+      sed -i '' 's/app_dev/app/g' web/.htaccess
+   else
+      sed -i 's/app_dev/app/g' web/.htaccess
+   fi
+fi
+
+echo "Done!"
