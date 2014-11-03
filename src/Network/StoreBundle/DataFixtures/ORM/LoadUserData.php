@@ -13,6 +13,14 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 {
     const USER_COUNT = 128;
     private $container;
+    private $manager;
+
+    private function setManager($manager)
+    {
+        $this->manager = $manager;
+
+        return $this;
+    }
 
     public function setContainer(ContainerInterface $container = null)
     {
@@ -23,6 +31,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 
     public function load(ObjectManager $manager)
     {
+        $this->setManager($manager);
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
         $firstNamesFemale = file($resDir . 'first-name-female');
         $firstNamesMale = file($resDir . 'first-name-male');
