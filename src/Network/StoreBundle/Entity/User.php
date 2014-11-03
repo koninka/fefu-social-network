@@ -3,8 +3,8 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints as Assert;
+use FOS\UserBundle\Model\User as BaseUser;
 
 /**
  * user
@@ -12,7 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
  * @ORM\Table(name="user")
  * @ORM\Entity
  */
-class User implements UserInterface
+class User extends BaseUser
 {
     /**
      * @var integer
@@ -22,36 +22,41 @@ class User implements UserInterface
      * @ORM\GeneratedValue(strategy="AUTO")
      * NotShowInForm!
      */
-    private $id;
+    protected $id;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="username", type="string", length=100)
+     * @Assert\Email()
      * @Assert\NotBlank()
      */
-    private $username;
+    
+    protected $email;
+    /**
+     * @var string
+     *
+     * @Assert\NotBlank()
+     */
+    protected $username;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="password", type="string", length=150)
      * @Assert\Length(min=6, max=150)
      */
-    private $password;
+    protected $password;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="salt", type="string", length=40)
      * NotShowInForm!
      */
-    private $salt;
+    protected $salt;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="firstname", type="string", length=20)
+     * @ORM\Column(name="firstname", type="string", length=200)
      * @Assert\NotBlank()
      */
     private $firstName;
@@ -59,19 +64,10 @@ class User implements UserInterface
     /**
      * @var string
      *
-     * @ORM\Column(name="lastname", type="string", length=20)
+     * @ORM\Column(name="lastname", type="string", length=200)
      * @Assert\NotBlank()
      */
     private $lastName;
-
-    /**
-     * @var string
-     *
-     * @ORM\Column(name="email", type="string", length=50)
-     * @Assert\Email()
-     * @Assert\NotBlank()
-     */
-    private $email;
 
     /**
      * @var string
@@ -96,7 +92,7 @@ class User implements UserInterface
      */
     public function getId()
     {
-        return $this->id;
+        return parent::getId();
     }
 
     /**
@@ -107,7 +103,7 @@ class User implements UserInterface
      */
     public function setUsername($username)
     {
-        $this->username = $username;
+        parent::setUsername($username);
 
         return $this;
     }
@@ -119,7 +115,7 @@ class User implements UserInterface
      */
     public function getUsername()
     {
-        return $this->username;
+        return parent::getUsername();
     }
 
     /**
@@ -130,7 +126,7 @@ class User implements UserInterface
      */
     public function setPassword($password)
     {
-        $this->password = $password;
+        parent::setPassword($password);
 
         return $this;
     }
@@ -142,7 +138,7 @@ class User implements UserInterface
      */
     public function getPassword()
     {
-        return $this->password;
+        return parent::getPassword();
     }
 
     /**
@@ -165,7 +161,7 @@ class User implements UserInterface
      */
     public function getSalt()
     {
-        return $this->salt;
+        return parent::getSalt();
     }
 
     /**
@@ -245,7 +241,8 @@ class User implements UserInterface
      */
     public function setEmail($email)
     {
-        $this->email = $email;
+        parent::setEmail($email);
+        $this->setUsername($email);
 
         return $this;
     }
@@ -255,12 +252,17 @@ class User implements UserInterface
      */
     public function getEmail()
     {
-        return $this->email;
+        return parent::getEmail();
     }
 
     public function getRoles()
     {
         return array('ROLE_USER');
+    }
+
+    public function getEnabled()
+    {
+        return $this->enabled;
     }
 
     public function eraseCredentials()

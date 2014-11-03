@@ -1,7 +1,12 @@
-{% extends "::base.html.twig" %}
+{% extends "NetworkWebBundle:Default:base.html.twig" %}
 
-{% block title %}NetworkWebBundle:Auth:facebookLogin{% endblock %}
+{% block content %}
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <p><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></p>
+        <p><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></p>
+    {% else %}
+        <p><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></p>
+        <p><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></p>
+    {% endif %}
 
-{% block body %}
-    {{ parent() }}
 {% endblock %}

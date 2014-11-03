@@ -21,7 +21,8 @@
         "sonata-project/admin-bundle": "dev-master",
         "sonata-project/core-bundle": "dev-master",
         "sonata-project/doctrine-orm-admin-bundle": "dev-master",
-        "sonata-project/jquery-bundle": "dev-master"
+        "sonata-project/jquery-bundle": "dev-master",
+        "friendsofsymfony/user-bundle": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
