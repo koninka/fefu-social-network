@@ -12,6 +12,10 @@ use Network\StoreBundle\Entity\User;
 class LoadUserData implements FixtureInterface, ContainerAwareInterface
 {
     const USER_COUNT = 128;
+
+    // Percent of Russians
+    const USER_PURITY = 0.666;
+
     private $container;
     private $manager;
 
@@ -59,27 +63,59 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null);
 
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
+
         $firstNamesFemale = file($resDir . 'first-name-female');
         $firstNamesMale = file($resDir . 'first-name-male');
+        $firstNamesFemaleRussian = file($resDir . 'first-name-female-russian');
+        $firstNamesMaleRussian = file($resDir . 'first-name-male-russian');
+
         $lastNames = file($resDir . 'last-name');
+        $lastNamesRussian = file($resDir . 'last-name-russian');
+        $lastNamesFemaleRussian = file($resDir . 'last-name-female-russian');
+        $lastNamesMaleRussian = file($resDir . 'last-name-male-russian');
+
         $genders = ['male', 'female'];
-        $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@почта.рф', '@mail.com'];
+        $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@mail.com'];
 
         for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) {
             $gender = $genders[array_rand($genders)];
 
-            if ($gender == 'female') {
-                $firstName = $firstNamesFemale[array_rand($firstNamesFemale)];
+            if ((rand() / getrandmax()) < LoadUserData::USER_PURITY) {
+                $emailProvider = '@почта.рф';
+
+                if ($gender == 'male') {
+                    $firstNameSource = $firstNamesMaleRussian;
+                    $lastNameSource = $lastNamesMaleRussian;
+
+                } else {
+                    $firstNameSource = $firstNamesFemaleRussian;
+                    $lastNameSource = $lastNamesFemaleRussian;
+                }
+
+                if (rand() / getrandmax() < 0.5) {
+                    $lastNameSource = $lastNamesRussian;
+                }
+
             } else {
-                $firstName = $firstNamesMale[array_rand($firstNamesMale)];
+                $emailProvider = $emailProviders[array_rand($emailProviders)];
+
+                if ($gender == 'male') {
+                    $firstNameSource = $firstNamesMale;
+
+                } else {
+                    $firstNameSource = $firstNamesFemale;
+                }
+
+                $lastNameSource = $lastNames;
             }
 
-            $lastName = $lastNames[array_rand($lastNames)];
+            $firstName = rtrim($firstNameSource[array_rand($firstNameSource)]);
+            $lastName = rtrim($lastNameSource[array_rand($lastNameSource)]);
 
             $email = str_replace(' ', '', $firstName)
                 . '.'
                 . str_replace(' ', '', $lastName)
-                . $emailProviders[array_rand($emailProviders)];
+                . $emailProvider;
 
             $birthday = new \DateTime();
             $birthday->setDate(rand(1894, 2014), rand(1, 12), rand(1, 28));
