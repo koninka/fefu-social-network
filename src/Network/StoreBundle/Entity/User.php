@@ -86,62 +86,6 @@ class User extends BaseUser
     private $birthday;
 
     /**
-     * Get id
-     *
-     * @return integer
-     */
-    public function getId()
-    {
-        return parent::getId();
-    }
-
-    /**
-     * Set username
-     *
-     * @param string $username
-     * @return user
-     */
-    public function setUsername($username)
-    {
-        parent::setUsername($username);
-
-        return $this;
-    }
-
-    /**
-     * Get login
-     *
-     * @return string
-     */
-    public function getUsername()
-    {
-        return parent::getUsername();
-    }
-
-    /**
-     * Set password
-     *
-     * @param string $password
-     * @return user
-     */
-    public function setPassword($password)
-    {
-        parent::setPassword($password);
-
-        return $this;
-    }
-
-    /**
-     * Get password
-     *
-     * @return string
-     */
-    public function getPassword()
-    {
-        return parent::getPassword();
-    }
-
-    /**
      * Set salt
      *
      * @param string $salt
@@ -155,17 +99,8 @@ class User extends BaseUser
     }
 
     /**
-     * Get salt
-     *
-     * @return string
-     */
-    public function getSalt()
-    {
-        return parent::getSalt();
-    }
-
-    /**
      * @param string $firstName
+     * @return user
      */
     public function setFirstName($firstName)
     {
@@ -184,6 +119,7 @@ class User extends BaseUser
 
     /**
      * @param string $gender
+     * @return user
      */
     public function setGender($gender)
     {
@@ -202,6 +138,7 @@ class User extends BaseUser
 
     /**
      * @param string $lastName
+     * @return user
      */
     public function setLastName($lastName)
     {
@@ -220,6 +157,7 @@ class User extends BaseUser
 
     /**
      * @param \Network\StoreBundle\Entity\date $birthday
+     * @return user
      */
     public function setBirthday($birthday)
     {
@@ -238,6 +176,7 @@ class User extends BaseUser
 
     /**
      * @param string $email
+     * @return user
      */
     public function setEmail($email)
     {
@@ -247,26 +186,37 @@ class User extends BaseUser
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getEmail()
-    {
-        return parent::getEmail();
-    }
-
     public function getRoles()
     {
         return array('ROLE_USER');
     }
+
+    /**
+     * @return bool
+     */
 
     public function getEnabled()
     {
         return $this->enabled;
     }
 
-    public function eraseCredentials()
-    {}
+    /**
+     * @return \DateTime
+     */
+
+    public function getExpiresAt()
+    {
+        return $this->expiresAt;
+    }
+
+    /**
+     * @return \DateTime
+     */
+
+    public function getCredentialsExpireAt()
+    {
+        return $this->credentialsExpireAt;
+    }
 
     public function hash($encoder)
     {
