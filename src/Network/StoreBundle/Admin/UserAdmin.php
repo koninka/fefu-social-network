@@ -52,6 +52,16 @@ class UserAdmin extends VDolgahAdmin
                 parent::NOT_SHOW_IN_FORM_KEY => true,
             ],
             [
+                parent::FIELD_KEY => 'expiresAt',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'credentialsExpireAt',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
                 parent::FIELD_KEY => 'roles',
                 parent::NOT_SHOW_IN_LIST_KEY => true,
                 parent::NOT_SHOW_IN_FORM_KEY => true,
