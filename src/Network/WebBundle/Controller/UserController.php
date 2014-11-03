@@ -28,7 +28,7 @@ class UserController extends Controller
                 $user->setPassword($oldPassword);
             } else {
                 $encoder = $this->get('security.encoder_factory')->getEncoder($user);
-                $user->rehash($encoder);
+                $user->hash($encoder);
             }
             $manager->persist($user);
             $this->get('session')->getFlashBag()->add(
@@ -48,4 +48,4 @@ class UserController extends Controller
         ]);
     }
 
-} 
+}

@@ -53,7 +53,7 @@ class UserAdmin extends VDolgahAdmin
                         ->getContainer()
                         ->get('security.encoder_factory')
                         ->getEncoder($object);
-        $object->rehash($encoder);
+        $object->hash($encoder);
     }
 
     public function preUpdate($object)
@@ -63,7 +63,7 @@ class UserAdmin extends VDolgahAdmin
                 ->getContainer()
                 ->get('security.encoder_factory')
                 ->getEncoder($object);
-            $object->rehash($encoder);
+            $object->hash($encoder);
         } else {
             $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
             $uow = $manager->getUnitOfWork();
@@ -72,4 +72,4 @@ class UserAdmin extends VDolgahAdmin
         }
     }
 
-} 
+}
