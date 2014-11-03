@@ -13,13 +13,59 @@ class UserAdmin extends VDolgahAdmin
         parent::__construct($code, $class, $baseControllerName);
         $this->configureFields([
             [
-                parent::FIELD_KEY => 'username',
+                parent::FIELD_KEY => 'email',
                 parent::IDENTIFIER_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'plainPassword',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
             ],
             [
                 parent::FIELD_KEY => 'salt',
                 parent::NOT_SHOW_IN_LIST_KEY => true,
                 parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'emailCanonical',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'usernameCanonical',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'passwordRequestedAt',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'username',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'lastLogin',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'roles',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'confirmationToken',
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
+            [
+                parent::FIELD_KEY => 'enabled',
+                parent::OPTIONS_KEY => [
+                    'required' => false,
+                ],
             ],
             [
                 parent::FIELD_KEY => 'password',

@@ -27,6 +27,14 @@ class User extends BaseUser
     /**
      * @var string
      *
+     * @Assert\Email()
+     * @Assert\NotBlank()
+     */
+    
+    protected $email;
+    /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     protected $username;
@@ -60,14 +68,6 @@ class User extends BaseUser
      * @Assert\NotBlank()
      */
     private $lastName;
-
-    /**
-     * @var string
-     *
-     * @Assert\Email()
-     * @Assert\NotBlank()
-     */
-    protected $email;
 
     /**
      * @var string
@@ -258,6 +258,11 @@ class User extends BaseUser
     public function getRoles()
     {
         return array('ROLE_USER');
+    }
+
+    public function getEnabled()
+    {
+        return $this->enabled;
     }
 
     public function eraseCredentials()
