@@ -28,37 +28,40 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $genders = ['male', 'female'];
         $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@почта.рф', '@mail.com'];
 
-        for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) { 
+        for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) {
             $user = new User();
 
             $gender = $genders[array_rand($genders)];
 
-            $firstName = $firstNamesMale[array_rand($firstNamesMale)];
             if ($gender == 'female') {
                 $firstName = $firstNamesFemale[array_rand($firstNamesFemale)];
+            } else {
+                $firstName = $firstNamesMale[array_rand($firstNamesMale)];
             }
 
             $lastName = $lastNames[array_rand($lastNames)];
+
             $email = str_replace(' ', '', $firstName)
                 . '.'
                 . str_replace(' ', '', $lastName)
                 . $emailProviders[array_rand($emailProviders)];
-            
-            $user->setUsername('user-' . $i);
-            $user->setSalt(md5(uniqid()));
+
             $encoder = $this->container
                             ->get('security.encoder_factory')
                             ->getEncoder($user);
-            $user->setPassword($encoder->encodePassword('secret-' . $i, $user->getSalt()));
-            
-            $user->setGender($gender)
-                 ->setFirstName($firstName)
-                 ->setLastName($lastName)
-                 ->setEmail($email);
 
             $birthday = new \DateTime();
             $birthday->setDate(rand(1894, 2014), rand(1, 12), rand(1, 28));
-            $user->setBirthday($birthday);
+
+            $user->setUsername('user-' . $i)
+                 ->setPassword('secret-' . $i)
+                 ->setGender($gender)
+                 ->setFirstName($firstName)
+                 ->setLastName($lastName)
+                 ->setEmail($email)
+                 ->setBirthday($birthday);
+
+            $user->hash($encoder);
 
             $manager->persist($user);
             $manager->flush();

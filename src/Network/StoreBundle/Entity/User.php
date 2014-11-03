@@ -92,7 +92,7 @@ class User implements UserInterface
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -115,7 +115,7 @@ class User implements UserInterface
     /**
      * Get login
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -138,7 +138,7 @@ class User implements UserInterface
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -161,7 +161,7 @@ class User implements UserInterface
     /**
      * Get salt
      *
-     * @return string 
+     * @return string
      */
     public function getSalt()
     {
@@ -266,7 +266,7 @@ class User implements UserInterface
     public function eraseCredentials()
     {}
 
-    public function rehash($encoder)
+    public function hash($encoder)
     {
         $salt = md5(openssl_random_pseudo_bytes(40));
         $password = $encoder->encodePassword($this->password, $salt);
