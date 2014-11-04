@@ -1,0 +1,12 @@
+{% extends 'SonataAdminBundle::standard_layout.html.twig' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/jquery.kladr.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/jquery.kladr.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/address_autocompletion.js') }}"></script>
+{% endblock %}

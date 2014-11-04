@@ -90,3 +90,7 @@ fos_user:
             template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
+
+sonata_admin:
+    templates:
+        layout: NetworkWebBundle:User:sonata_admin_base_layout.html.twig
