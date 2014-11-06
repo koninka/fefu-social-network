@@ -53,6 +53,11 @@ class VDolgahAdmin extends Admin
         if (array_key_exists(self::TYPE_KEY, $field)) {
             $type = $field[self::TYPE_KEY];
         }
+        if ($type == 'date') {
+            $options['widget'] = 'single_text';
+            $options['input'] = 'datetime';
+            $options['attr'] = array('class' => 'date');
+        }
         $mapper->add($field['name'], $type, $options);
     }
 
