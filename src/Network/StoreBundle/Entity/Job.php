@@ -21,6 +21,14 @@ class Job
     private $id;
 
     /**
+     * @var \Network\StoreBundle\Entity\User
+     *
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="jobs")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $user;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="employer", type="string", length=50)
@@ -69,6 +77,22 @@ class Job
      * @Assert\NotBlank()
      */
     private $post;
+
+    /**
+     * @param \Network\StoreBundle\Entity\User $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
+    }
+
+    /**
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
 
     /**
      * @param string $city

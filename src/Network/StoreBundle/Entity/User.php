@@ -99,6 +99,14 @@ class User extends BaseUser
      */
     private $birthday;
 
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Job", mappedBy="user", cascade="persist")
+     */
+    private $jobs;
+
     /**
      * @var integer
      *
@@ -237,8 +245,21 @@ class User extends BaseUser
     }
 
     /**
-     * @return User
+     * @param mixed $jobs
      */
+    public function setJobs($jobs)
+    {
+        $this->jobs = $jobs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
+    }
+
     public function hash($encoder)
     {
         $salt = md5(openssl_random_pseudo_bytes(40));
@@ -274,6 +295,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->jobs = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
