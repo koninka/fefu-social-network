@@ -12,6 +12,10 @@ user_profile_editing:
     requirements:
        id: \d+
 
+kladr_test_page:
+    path:     /test/kladr
+    defaults: { _controller: NetworkWebBundle:Kladr:test }
+
 # smth_login:
 #     path:     /login
 #     defaults: { _controller: NetworkWebBundle:Auth:login }
