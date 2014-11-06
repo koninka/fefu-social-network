@@ -1,5 +1,5 @@
-parameters:
-    #
-
 services:
-    #
+  network_store.form.type.job:
+      class: Network\StoreBundle\Form\Type\JobType
+      tags:
+          - { name: form.type, alias: job }
