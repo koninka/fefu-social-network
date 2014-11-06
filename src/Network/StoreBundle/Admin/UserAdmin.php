@@ -130,13 +130,10 @@ class UserAdmin extends VDolgahAdmin
 
     public function getTemplate($name)
     {
-        switch ($name) {
-        case 'layout':
-            return 'NetworkWebBundle:User:layout.html.twig';
-            break;
-        default:
+        if ($name == 'edit') {
+                return 'NetworkWebBundle:User:edit.html.twig';
+        } else {
             return parent::getTemplate($name);
-            break;
         }
     }
 
