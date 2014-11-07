@@ -128,4 +128,13 @@ class UserAdmin extends VDolgahAdmin
         }
     }
 
+    public function getTemplate($name)
+    {
+        if ($name == 'edit') {
+                return 'NetworkWebBundle:User:edit.html.twig';
+        } else {
+            return parent::getTemplate($name);
+        }
+    }
+
 }
