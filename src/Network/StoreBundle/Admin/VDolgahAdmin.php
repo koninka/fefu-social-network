@@ -56,7 +56,7 @@ class VDolgahAdmin extends Admin
         if ($type == 'date') {
             $options['widget'] = 'single_text';
             $options['input'] = 'datetime';
-            $options['attr'] = ['class' => 'date'];
+            $options['attr'] = ['class' => 'datepicker'];
         }
         $mapper->add($field['name'], $type, $options);
     }

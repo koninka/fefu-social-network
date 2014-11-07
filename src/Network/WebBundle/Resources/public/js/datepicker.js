@@ -4,12 +4,15 @@ $(function() {
 
     $.datepicker.setDefaults($.datepicker.regional['']);
 
-    $('.date').datepicker({
+    $('input[class^="datepicker"]')
+    .attr('type', 'text')
+    .datepicker({
         showAnim: 'slideDown',
         dateFormat: 'yy-mm-dd',
         changeMonth: true,
         changeYear: true,
         yearRange: String(currYear-120 + ':' + currYear)
-    });
+    })
+    .attr('type', 'text');
 
 });
