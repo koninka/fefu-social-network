@@ -13,3 +13,9 @@ services:
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: network_user_change_password }
+
+    network_user.profile.form.type:
+        class: Network\UserBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_profile }

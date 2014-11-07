@@ -93,3 +93,7 @@ fos_user:
             template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
+
+    profile:
+        form:
+            type: network_user_profile
