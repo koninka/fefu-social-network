@@ -22,3 +22,7 @@ _sonata_admin:
 fos_user:
     resource: "@FOSUserBundle/Resources/config/routing/all.xml"
     prefix: /
+
+fos_user_group:
+    resource: "@FOSUserBundle/Resources/config/routing/group.xml"
+    prefix: /group

@@ -32,6 +32,18 @@ class User extends BaseUser
      */
     
     protected $email;
+
+    /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\ManyToMany(targetEntity="Network\StoreBundle\Entity\Group")
+     * @ORM\JoinTable(name="user_user_group",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="group_id", referencedColumnName="id")}
+     * )
+     */
+    protected $groups;
+
     /**
      * @var string
      *
@@ -186,11 +198,6 @@ class User extends BaseUser
         return $this;
     }
 
-    public function getRoles()
-    {
-        return array('ROLE_USER');
-    }
-
     /**
      * @return bool
      */
@@ -225,4 +232,41 @@ class User extends BaseUser
         $this->setPassword($password)->setSalt($salt);
     }
 
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getGroups()
+    {
+        return $this->groups;
+    }
+
+    /**
+     * @param mixed $groups
+     * @return user
+     */
+    public function setGroups($groups)
+    {
+        $this->groups = $groups;
+        
+        return $this;
+    }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        parent::__construct();
+        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Get id
+     *
+     * @return integer 
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
 }
