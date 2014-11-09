@@ -9,6 +9,16 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [NetworkStoreBundle]]
+    sonata.admin.group:
+        class: Network\StoreBundle\Admin\GroupAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: group }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Group
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
 sonata_block:
     default_contexts: [cms]
     blocks:

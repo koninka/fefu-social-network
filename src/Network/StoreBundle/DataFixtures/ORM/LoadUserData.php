@@ -19,8 +19,19 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     private $container;
     private $manager;
 
+    public function addGroup($name, $roles = [])
+    {
+        $groupManager = $this->container->get('fos_user.group_manager');
+        $group = $groupManager->createGroup($name, $roles);
+        $group->setName($name);
+        $group->setRoles($roles);
+        $groupManager->updateGroup($group, true);
+        $this->manager->persist($group);
+        $this->manager->flush();
+    }
+
     private function addUser($username, $password, $gender, $firstName,
-        $lastName, $email, $birthday)
+        $lastName, $email, $birthday, $group)
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
@@ -35,7 +46,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
              ->setLastName($lastName)
              ->setEmail($email)
              ->setBirthday($birthday)
-             ->setEnabled(true);
+             ->setEnabled(true)
+             ->addGroup($group);
 
         $user->hash($encoder);
         $userManager->updateUser($user, true);
@@ -60,7 +72,11 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     public function load(ObjectManager $manager)
     {
         $this->setManager($manager);
-        $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null);
+        $groupManager = $this->container->get('fos_user.group_manager');
+        $this->addGroup('admin', ['ROLE_ADMIN']);
+        $this->addGroup('user', ['ROLE_USER']);
+        $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null,
+                        $groupManager->findGroupByName('admin'));
 
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
 
@@ -76,6 +92,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 
         $genders = ['male', 'female'];
         $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@mail.com'];
+
+        $userGroup = $groupManager->findGroupByName('user');
 
         for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) {
             $gender = $genders[array_rand($genders)];
@@ -121,7 +139,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
             $birthday->setDate(rand(1894, 2014), rand(1, 12), rand(1, 28));
 
             $this->addUser('user-' . $i, 'secret-' . $i, $gender, $firstName,
-                $lastName, $email, $birthday);
+                $lastName, $email, $birthday, $userGroup);
         }
     }
 }

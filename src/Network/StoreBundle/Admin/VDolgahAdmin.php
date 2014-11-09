@@ -112,6 +112,13 @@ class VDolgahAdmin extends Admin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         foreach ($this->fields as $field) {
+            $type = null;
+            if (array_key_exists(self::TYPE_KEY, $field)) {
+                $type = $field[self::TYPE_KEY];
+            }
+            if ($type === 'collection') {
+                $field[self::TYPE_KEY] = 'array';
+            }
             $this->addFieldToMapper($showMapper, $field);
         }
     }
