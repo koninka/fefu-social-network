@@ -247,7 +247,7 @@ class User extends BaseUser
     public function setGroups($groups)
     {
         $this->groups = $groups;
-        
+
         return $this;
     }
 
