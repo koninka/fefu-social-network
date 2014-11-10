@@ -32,10 +32,9 @@ class Group extends BaseGroup
      */
     protected $roles;
 
-    public function __construct()
+    public function __construct($name = '', $roles = [])
     {
-        $this->name = '';
-        $this->roles = [];
+        parent::__construct($name, $roles);
     }
 
     public function __toString()

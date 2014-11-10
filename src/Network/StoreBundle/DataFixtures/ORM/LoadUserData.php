@@ -22,8 +22,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     public function addGroup($name, $roles = [])
     {
         $groupManager = $this->container->get('fos_user.group_manager');
-        $group = $groupManager->createGroup($name, $roles);
-        $group->setName($name);
+        $group = $groupManager->createGroup($name);
         $group->setRoles($roles);
         $groupManager->updateGroup($group, true);
         $this->manager->persist($group);
