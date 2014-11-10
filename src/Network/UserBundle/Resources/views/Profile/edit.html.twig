@@ -1,5 +1,17 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
 {% block fos_user_content %}
-{% include "FOSUserBundle:Profile:edit_content.html.twig" %}
+    {% include "FOSUserBundle:Profile:edit_content.html.twig" %}
 {% endblock fos_user_content %}
