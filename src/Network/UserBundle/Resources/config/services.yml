@@ -19,3 +19,23 @@ services:
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: network_user_profile }
+
+    network.mailer.twig_swift:
+        class: Network\UserBundle\Mailer\TwigSwiftMailer
+        arguments:
+            - '@mailer'
+            - '@router'
+            - '@twig'
+            -
+                template:
+                    confirmation: '%fos_user.registration.confirmation.template%'
+                    resetting: '%fos_user.resetting.email.template%'
+                    new: '%network.new.email.template%'
+                from_email:
+                    confirmation: '%fos_user.registration.confirmation.from_email%'
+                    resetting: '%fos_user.resetting.email.from_email%'
+                    new: '%network.new.email.from_email%'
+
+parameters:
+    network.new.email.template: NetworkUserBundle:Mail:email_change.html.twig
+    network.new.email.from_email:

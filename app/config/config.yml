@@ -83,7 +83,7 @@ fos_user:
     from_email:
         sender_name:    VDolgah
     service:
-        mailer: fos_user.mailer.twig_swift
+        mailer: network.mailer.twig_swift
     registration:
         form:
             type: network_user_registration
@@ -95,7 +95,6 @@ fos_user:
             template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
-
     profile:
         form:
             type: network_user_profile
