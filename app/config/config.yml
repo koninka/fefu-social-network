@@ -80,6 +80,8 @@ fos_user:
     user_class: Network\StoreBundle\Entity\User
     group:
         group_class: Network\StoreBundle\Entity\Group
+    from_email:
+        sender_name:    VDolgah
     service:
         mailer: fos_user.mailer.twig_swift
     registration:
