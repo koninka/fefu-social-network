@@ -1,0 +1,4 @@
+fos_user_registration_confirm_email:
+    path: /confirm_email/{token}/{email}
+    defaults: { _controller: NetworkUserBundle:Registration:confirmEmail }
+    requirements: { _method: GET }
