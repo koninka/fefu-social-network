@@ -1,10 +1,9 @@
 parameters:
-#    network_web.example.class: Network\WebBundle\Example
+    user_class_name: Network\StoreBundle\Entity\User
 
 services:
     network_web.aouth_user_provider:
         class: Network\WebBundle\Model\OAuthUserProvider
-
-#    network_web.example:
-#        class: %network_web.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+        arguments:
+            - @doctrine
+            - %user_class_name%
