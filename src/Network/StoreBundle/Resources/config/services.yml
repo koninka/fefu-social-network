@@ -1,7 +1,9 @@
 parameters:
-#    network_store.example.class: Network\StoreBundle\Example
+    user_class_name: Network\StoreBundle\Entity\User
 
 services:
-#    network_store.example:
-#        class: %network_store.example.class%
-#        arguments: [@service_id, "plain_value", %parameter%]
+    network_store.aouth_user_provider:
+        class:  Network\StoreBundle\Authorization\OAuthUserProvider
+        arguments:
+            - @doctrine
+            - %user_class_name%
