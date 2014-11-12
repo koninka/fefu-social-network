@@ -95,7 +95,7 @@ fos_user:
 
 # OAuth Configuration
 hwi_oauth:
-    firewall_name: secured_area
+    firewall_name: main
     resource_owners:
         vkontakte:
             type:             vkontakte
