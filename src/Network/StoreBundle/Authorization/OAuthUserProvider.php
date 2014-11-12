@@ -1,6 +1,6 @@
 <?php
 
-namespace Network\WebBundle\Model;
+namespace Network\StoreBundle\Authorization;
 
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
