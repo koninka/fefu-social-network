@@ -20,7 +20,7 @@ hwi_oauth_redirect:
 
 hwi_oauth_login:
     resource: "@HWIOAuthBundle/Resources/config/routing/login.xml"
-    prefix:   /login
+    prefix:   /authorization
 
 _sonata_admin:
     resource: .
