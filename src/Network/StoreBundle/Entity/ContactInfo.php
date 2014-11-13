@@ -60,11 +60,7 @@ class ContactInfo
     private $address;
     
     /**
-     * @ORM\ManyToMany(targetEntity="Phonenumber")
-     * @ORM\JoinTable(name="users_phonenumbers",
-     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *      inverseJoinColumns={@ORM\JoinColumn(name="phonenumber_id", referencedColumnName="id")}
-     *      )
+     * @ORM\OneToMany(targetEntity="Phonenumber", mappedBy="contactInfo", cascade = {"persist"}, orphanRemoval = true)
      **/
     private $phone;
   
@@ -185,6 +181,7 @@ class ContactInfo
     public function addPhone(\Network\StoreBundle\Entity\Phonenumber $phone)
     {
         $this->phone[] = $phone;
+        $phone->setContactInfo($this);
     
         return $this;
     }
@@ -197,6 +194,7 @@ class ContactInfo
     public function removePhone(\Network\StoreBundle\Entity\Phonenumber $phone)
     {
         $this->phone->removeElement($phone);
+        $phone->setContactInfo(NULL);
     }
 
     /**
@@ -206,7 +204,25 @@ class ContactInfo
      */
     public function getPhone()
     {
+        foreach ($this->phone as $phone) {
+            $phone->setContactInfo($this);
+        }
         return $this->phone;
+    }
+    /**
+     * Set phone
+     *
+     * @param \Doctrine\Common\Collections\Collection  $phones
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function setPhone(\Doctrine\Common\Collections\Collection  $phones)
+    {
+        $this->phone = $phones;
+        foreach ($phones as $phone) {
+            $phone->setContactInfo($this);
+        }
+
+        return $this;
     }
 
     /**

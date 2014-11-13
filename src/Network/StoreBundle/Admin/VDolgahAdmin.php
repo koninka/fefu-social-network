@@ -19,6 +19,7 @@ class VDolgahAdmin extends Admin
     const OPTIONS_KEY_DESCRIPTION = 'edit_description';
     const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
     const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+    const QUERY = 'query';
 
     protected $fields = [];
 
@@ -59,7 +60,11 @@ class VDolgahAdmin extends Admin
             $options['input'] = 'datetime';
             $options['attr'] = ['class' => 'datepicker'];
         }
-        $mapper->add($field['name'], $type, $options);
+        if (array_key_exists(self::QUERY, $field)) {
+            $query = $this->addQuery($field[self::QUERY]);
+            if ($query != null)
+                $options['query'] = $query;
+        }
         $description = null;
         if (array_key_exists(VDolgahAdmin::OPTIONS_KEY_DESCRIPTION, $field)) {
             $description = $field[VDolgahAdmin::OPTIONS_KEY_DESCRIPTION];

@@ -41,7 +41,7 @@ class ContactAdmin extends VDolgahAdmin
                 parent::TYPE_KEY => 'sonata_type_model',
                 parent::OPTIONS_KEY => [
                     'label' => 'Phonenumber',
-                    'by_reference' => false,
+                    'required' => false,
                     'class'=>'NetworkStoreBundle:Phonenumber',
                     'multiple' => true,
                 ],
@@ -60,4 +60,19 @@ class ContactAdmin extends VDolgahAdmin
         'cascade_validation' => true
      );
 
+    protected function addQuery($q)
+    {
+        $id = null;
+        $query = null;
+        $id = $this->getRoot()->getSubject();
+        if ($id != null) {
+            $entityReflection = new \ReflectionClass($id);
+            if ($entityReflection->hasMethod("getContactInfo"))
+                $id = $id->getContactInfo();
+            $query = $this->modelManager->getEntityManager($this->getClass())->createQuery($q)
+                ->setParameter('id', $id);
+        }
+
+        return $query;
+    }
 }
