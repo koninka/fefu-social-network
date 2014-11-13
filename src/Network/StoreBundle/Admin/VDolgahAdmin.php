@@ -74,7 +74,9 @@ class VDolgahAdmin extends Admin
         $entityReflection = new \ReflectionClass($class);
         foreach ($entityReflection->getProperties() as $property) {
             $name = ucfirst($property->getName());
-            if ($entityReflection->hasMethod("set" . $name) && $entityReflection->hasMethod("get" . $name)) {
+            if (($entityReflection->hasMethod("set" . $name)
+                || ($entityReflection->hasMethod("add" . $name)))
+                && $entityReflection->hasMethod("get" . $name)) {
                 $this->fields[] = [ 'name' => $property->getName() ];
             }
         }
