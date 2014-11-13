@@ -18,7 +18,7 @@ security:
                     vkontakte:           "/authorization/check-vkontakte"
                 login_path:        /authorization
                 failure_path:      /authorization
-
+                default_target_path: fos_user_profile_show
                 oauth_user_provider:
                     service: network_o_auth.aouth_user_provider
             form_login:
