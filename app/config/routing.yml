@@ -1,3 +1,7 @@
+network_o_auth:
+    resource: "@NetworkOAuthBundle/Resources/config/routing.yml"
+    prefix:   /
+
 network_user:
     resource: "@NetworkUserBundle/Resources/config/routing.yml"
     prefix:   /

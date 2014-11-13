@@ -1,0 +1,3 @@
+network_o_auth_homepage:
+    path:     /hello/{name}
+    defaults: { _controller: NetworkOAuthBundle:Default:index }

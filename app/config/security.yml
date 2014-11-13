@@ -5,7 +5,7 @@ security:
         in_memory:
             memory: ~
         _hwi_provider:
-             id: network_store.aouth_user_provider
+             id: network_o_auth.aouth_user_provider
 
     encoders:
        Network\StoreBundle\Entity\User: sha512
@@ -20,7 +20,7 @@ security:
                 failure_path:      /authorization
 
                 oauth_user_provider:
-                    service: network_store.aouth_user_provider
+                    service: network_o_auth.aouth_user_provider
             form_login:
                 provider:      fos_userbundle
                 login_path:    fos_user_security_login

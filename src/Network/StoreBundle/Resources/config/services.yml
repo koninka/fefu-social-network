@@ -1,9 +1,5 @@
 parameters:
-    user_class_name: Network\StoreBundle\Entity\User
+    #
 
 services:
-    network_store.aouth_user_provider:
-        class:  Network\StoreBundle\Authorization\OAuthUserProvider
-        arguments:
-            - @doctrine
-            - %user_class_name%
+    #
