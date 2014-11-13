@@ -19,6 +19,37 @@ services:
             - ~
         calls:
             - [ setTranslationDomain, [NetworkStoreBundle]]
+    sonata.admin.contact:
+        class: Network\StoreBundle\Admin\ContactAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: ContactsInfo, show_in_dashboard: false  }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\ContactInfo
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+    sonata.admin.address:
+        class: Network\StoreBundle\Admin\ContactAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: address }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Address
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+    sonata.admin.phone:
+        class: Network\StoreBundle\Admin\ContactAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: phonenumber, enabled: false, show_in_dashboard: false  }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Phonenumber
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+
 sonata_block:
     default_contexts: [cms]
     blocks:
