@@ -16,8 +16,10 @@ class VDolgahAdmin extends Admin
     const OPTIONS_KEY = 'options';
     const TYPE_KEY = 'type';
     const EDIT_OPTIONS_KEY = 'edit_options';
+    const OPTIONS_KEY_DESCRIPTION = 'edit_description';
     const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
     const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+    const QUERY = 'query';
 
     protected $fields = [];
 
@@ -58,7 +60,17 @@ class VDolgahAdmin extends Admin
             $options['input'] = 'datetime';
             $options['attr'] = ['class' => 'datepicker'];
         }
-        $mapper->add($field['name'], $type, $options);
+        if (array_key_exists(self::QUERY, $field)) {
+            $query = $this->addQuery($field[self::QUERY]);
+            if ($query != null)
+                $options['query'] = $query;
+        }
+        $description = null;
+        if (array_key_exists(VDolgahAdmin::OPTIONS_KEY_DESCRIPTION, $field)) {
+            $description = $field[VDolgahAdmin::OPTIONS_KEY_DESCRIPTION];
+            $mapper->add($field['name'], $type, $options, $description);
+        } else
+            $mapper->add($field['name'], $type, $options);
     }
 
     public function __construct($code, $class, $baseControllerName)
@@ -67,7 +79,9 @@ class VDolgahAdmin extends Admin
         $entityReflection = new \ReflectionClass($class);
         foreach ($entityReflection->getProperties() as $property) {
             $name = ucfirst($property->getName());
-            if ($entityReflection->hasMethod("set" . $name) && $entityReflection->hasMethod("get" . $name)) {
+            if (($entityReflection->hasMethod("set" . $name)
+                || ($entityReflection->hasMethod("add" . $name)))
+                && $entityReflection->hasMethod("get" . $name)) {
                 $this->fields[] = [ 'name' => $property->getName() ];
             }
         }
