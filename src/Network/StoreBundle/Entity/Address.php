@@ -27,6 +27,14 @@ class Address
     /**
      * @var string
      *
+     * @ORM\Column(name="country", type="string", length=255)
+     * @Assert\NotBlank()
+     */
+    private $country;
+
+    /**
+     * @var string
+     *
      * @ORM\Column(name="city", type="string", length=255)
      * @Assert\NotBlank()
      */
@@ -58,6 +66,29 @@ class Address
         return $this->id;
     }
 
+    /**
+     * Set country
+     *
+     * @param string $country
+     * @return Address
+     */
+    public function setCountry($country)
+    {
+        $this->country = $country;
+
+        return $this;
+    }
+
+    /**
+     * Get country
+     *
+     * @return string 
+     */
+    public function getCountry()
+    {
+        return $this->country;
+    }
+    
     /**
      * Set city
      *
@@ -129,7 +160,7 @@ class Address
     
     public function __toString()
     {
-        return sprintf('г. %s ул. %s, %s ', 
-            $this->city, $this->street, $this->house);
+        return sprintf('%s г. %s ул. %s, %s ', 
+           $this->country, $this->city, $this->street, $this->house);
     }
 }
