@@ -16,12 +16,6 @@ kladr_test_page:
     path:     /test/kladr
     defaults: { _controller: NetworkWebBundle:Kladr:test }
 
-vkontakte_login:
-    pattern: /authorization/check-vkontakte
-
-vkontakte_connect:
-    pattern: /connect/check-vkontakte
-
 # smth_login:
 #     path:     /login
 #     defaults: { _controller: NetworkWebBundle:Auth:login }
