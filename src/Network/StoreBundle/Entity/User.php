@@ -98,6 +98,14 @@ class User extends BaseUser
     private $birthday;
 
     /**
+     * @var integer
+     *
+     * @ORM\OneToOne(targetEntity="ContactInfo", inversedBy = "user", cascade = {"persist"})
+     * @ORM\JoinColumn(name="contact_info_id", referencedColumnName="id")
+     */
+    private $contactInfo;
+
+    /**
      * Set salt
      *
      * @param string $salt
@@ -268,5 +276,34 @@ class User extends BaseUser
     public function getId()
     {
         return $this->id;
+    }
+
+    /**
+     * Set contactInfo
+     *
+     * @param \Network\StoreBundle\Entity\ContactInfo $contactInfo
+     * @return User
+     */
+
+    public function setContactInfo(\Network\StoreBundle\Entity\ContactInfo $contactInfo = null)
+    {
+        $this->contactInfo = $contactInfo;
+
+        return $this;
+    }
+
+    /**
+     * Get contactInfo
+     *
+     * @return \Network\StoreBundle\Entity\ContactInfo
+     */
+    public function getContactInfo()
+    {
+        return $this->contactInfo;
+    }
+
+    public function __toString()
+    {
+        return $this->username;
     }
 }

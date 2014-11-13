@@ -16,6 +16,7 @@ class VDolgahAdmin extends Admin
     const OPTIONS_KEY = 'options';
     const TYPE_KEY = 'type';
     const EDIT_OPTIONS_KEY = 'edit_options';
+    const OPTIONS_KEY_DESCRIPTION = 'edit_description';
     const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
     const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
 
@@ -59,6 +60,12 @@ class VDolgahAdmin extends Admin
             $options['attr'] = ['class' => 'datepicker'];
         }
         $mapper->add($field['name'], $type, $options);
+        $description = null;
+        if (array_key_exists(VDolgahAdmin::OPTIONS_KEY_DESCRIPTION, $field)) {
+            $description = $field[VDolgahAdmin::OPTIONS_KEY_DESCRIPTION];
+            $mapper->add($field['name'], $type, $options, $description);
+        } else
+            $mapper->add($field['name'], $type, $options);
     }
 
     public function __construct($code, $class, $baseControllerName)

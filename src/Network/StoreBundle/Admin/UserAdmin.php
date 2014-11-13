@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Admin;
 
 use Sonata\AdminBundle\Form\FormMapper;
 use Doctrine\DBAL\Types\Type;
+use Network\StoreBundle\Entity\ContactInfo;
 
 class UserAdmin extends VDolgahAdmin
 {
@@ -98,6 +99,21 @@ class UserAdmin extends VDolgahAdmin
                 parent::OPTIONS_KEY => [
                     'required' => false,
                     'years' => range(date('Y') - 120, date('Y')),
+                ],
+            ],
+            [
+                parent::FIELD_KEY => 'contactInfo',
+                parent::TYPE_KEY =>  'sonata_type_admin',
+                parent::OPTIONS_KEY =>
+                [
+                    'btn_add' => false,
+                    'delete' => false,
+                    'required' => false,
+                ],
+                parent::OPTIONS_KEY_DESCRIPTION =>
+                [
+                   'admin_code' => 'sonata.admin.contact',
+                   'placeholder' => 'No author selected'
                 ],
             ],
         ]);
