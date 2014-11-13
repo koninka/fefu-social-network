@@ -55,14 +55,15 @@ class BaseType extends AbstractType
         $builder->add($name, $type, $options);
     }
 
-    public function buildForm(FormBuilderInterface $builder, array $options)
+    protected function addEntityFieldsToBuilder(FormBuilderInterface $builder)
     {
         $entityReflection = new \ReflectionClass($this->entityClass);
         foreach ($entityReflection->getProperties() as $property) {
             $argList = [];
-            $match = preg_match_all('/Column\((.*)\)/x', $property->getDocComment(), $argList);
-            $notShow = preg_match('/NotShowInForm!/', $property->getDocComment()); // TODO: think about more elegant way
-            if ($match && !$notShow) {
+            $doc = $property->getDocComment();
+            $isColumn = preg_match_all('/\\\\Column\((.*)\)/x', $doc, $argList);
+            $notShow = preg_match('/NotShowInForm!/', $doc); // TODO: think about more elegant way
+            if (!$notShow && $isColumn) {
                 $args = array_map('trim', preg_split('/,/', $argList[1][0]));
                 $params = [];
                 foreach ($args as $str) {
@@ -72,6 +73,11 @@ class BaseType extends AbstractType
                 $this->addFieldToBuilder($builder, $params);
             }
         }
+    }
+
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
+        $this->addEntityFieldsToBuilder($builder);
         $builder->add('save', 'submit');
     }
 
