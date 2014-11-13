@@ -119,6 +119,10 @@ class UserAdmin extends VDolgahAdmin
         ]);
     }
 
+    protected $formOptions = array(
+        'cascade_validation' => true
+     );
+
     public function prePersist($object)
     {
         $encoder = $this->getConfigurationPool()
