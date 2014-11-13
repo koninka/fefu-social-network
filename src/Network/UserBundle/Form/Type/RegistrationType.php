@@ -6,25 +6,22 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\DBAL\Types\Type;
 use FOS\UserBundle\Form\Type\RegistrationFormType as BaseType;
+use Network\UserBundle\Service\UserFormBuilder;
 
 class RegistrationType extends BaseType
 {
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        parent::buildForm($builder, $options);
-        $builder->remove('username')
-                ->add('email', 'email', ['label' => 'E-mail', 'translation_domain' => 'FOSUserBundle'])
-                ->add('plainPassword', 'repeated', [
+        UserFormBuilder::baseBuildForm($builder);
+        $builder->add('email', 'email', ['label' => 'E-mail', 'translation_domain' => 'FOSUserBundle'])
+                ->add('plainPassword', 'repeated', array(
                     'type'            => 'password',
                     'options'         => ['translation_domain' => 'FOSUserBundle'],
                     'first_options'   => ['label' => 'Пароль'],
                     'second_options'  => ['label' => 'Подтвердите пароль'],
                     'invalid_message' => 'Введенные пароли не совпадают!',
-                ])
-                ->add('firstName', null, ['label' => 'Имя'])
-                ->add('lastName', null, ['label' => 'Фамилия'])
-                ->add('gender', 'choice', ['label' => 'Пол', 'choices' => Type::getType('genderEnumType')->getChoices()]);
+        ));
     }
 
     public function getName()

@@ -98,3 +98,10 @@ fos_user:
     profile:
         form:
             type: network_user_profile
+
+parameters:
+    user_form_builder.class: Network\UserBundle\UserFormBuilder
+
+services:
+    user_form_builder:
+        class: %user_form_builder.class%
