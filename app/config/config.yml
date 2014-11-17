@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
+    - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
 
 framework:
     #esi:             ~
@@ -92,15 +93,3 @@ fos_user:
             template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
-
-# OAuth Configuration
-hwi_oauth:
-    firewall_name: main
-    resource_owners:
-        vkontakte:
-            type:             vkontakte
-            client_id:        "4602253"
-            client_secret:    "68ZtvU4VMVohGyGk1tjN"
-            scope:            "email"
-            # options:
-            #     display:      popup

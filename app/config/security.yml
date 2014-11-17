@@ -15,7 +15,7 @@ security:
             pattern: ^/
             oauth:
                 resource_owners:
-                    vkontakte:           "/authorization/check-vkontakte"
+                    vkontakte:           /authorization/check-vkontakte
                 login_path:        /authorization
                 failure_path:      /authorization
                 default_target_path: fos_user_profile_show
