@@ -2,11 +2,12 @@
 
 namespace Network\OAuthBundle\Authorization;
 
-use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
-use Symfony\Component\Security\Core\User\UserProviderInterface;
-use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
-use Symfony\Component\Security\Core\User\UserInterface;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\UserProviderInterface;
+use Network\OAuthBundle\Classes\OAuthToken;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
@@ -26,36 +27,62 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
      */
     protected $repository;
 
-    // protected $logger;
+    protected $oAuthToken;
 
     public function __construct(ManagerRegistry $registry, $className)
     {
         $this->em = $registry->getManager();
         $this->repository = $this->em->getRepository($className);
         $this->className = $className;
+        $this->oAuthToken = new OAuthToken();
     }
+
+
+    private function loginUserVK(UserResponseInterface $response)
+    {
+        $username = $response->getUsername();
+        $resource = $response->getResourceOwner()->getName();
+        $realname = explode(' ', $response->getRealname());
+        $firstName = $realname[1];
+        $lastName = $realname[0];
+        $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
+        $email = empty($email)
+                ? "$username@$resource.com"
+                : $email;
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => 'male',
+            'email' => $email,
+        ];
+    }
+
 
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $username = $response->getUsername();
-        $realname = explode(' ', $response->getRealname());
-        $email = "$username@vkontakte.com"; //TODO get real email
-        $gender = 'male'; //TODO get real gender
         $resourceOwnerName = $response->getResourceOwner()->getName();
+        if ($resourceOwnerName == 'vkontakte') {
+            $data = $this->loginUserVK($response);
+        } else {
+            return;
+        }
 
         $user = $this->repository->findOneBy(
-            array('email' => $email)
+            ['email' => $data['email']]
         );
 
         if (null === $user) {
             $user = new $this->className();
-            $user->setUsername($username)
-                 ->setPassword($resourceOwnerName)
-                 ->setSalt($resourceOwnerName)
-                 ->setFirstName($realname[1])
-                 ->setLastName($realname[0])
-                 ->setGender('male')
-                 ->setEmail($email);
+            $user->setUsername($data['username'])
+                 ->setPassword(' ')
+                 ->setSalt(' ')
+                 ->setFirstName($data['firstName'])
+                 ->setLastName($data['lastName'])
+                 ->setGender($data['gender'])
+                 ->setEmail($data['email'])
+                 ->setEnabled(true);
             $this->em->persist($user);
             $this->em->flush();
         }
@@ -65,7 +92,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     public function loadUserByUsername($username)
     {
-        $user = $this->repository->findOneBy(array('username' => $username));
+        $user = $this->repository->findOneBy(['username' => $username]);
         if (!$user) {
             throw new UsernameNotFoundException(sprintf("User '%s' not found.", $username));
         }
