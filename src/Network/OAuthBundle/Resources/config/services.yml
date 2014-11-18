@@ -2,7 +2,7 @@ parameters:
     user_class_name: Network\StoreBundle\Entity\User
 
 services:
-    network_o_auth.aouth_user_provider:
+    network_oauth.oauth_user_provider:
         class:  Network\OAuthBundle\Authorization\OAuthUserProvider
         arguments:
             - @doctrine

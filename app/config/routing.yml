@@ -1,4 +1,4 @@
-network_o_auth:
+network_oauth:
     resource: "@NetworkOAuthBundle/Resources/config/routing.yml"
     prefix:   /
 
