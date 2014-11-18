@@ -6,3 +6,21 @@ fos_user_registration_confirm_email:
 fos_user_change_email:
     path: /profile/change-email
     defaults: { _controller: NetworkUserBundle:ChangeEmail:changeEmail }
+
+user_profile:
+    path: /user/{id}/
+    defaults: { _controller: NetworkUserBundle:Profile:profile }
+    requirements:
+       id: \d+
+
+user_add_friend:
+    path: /add_friend/{id}
+    defaults: { _controller: NetworkUserBundle:Profile:addFriend }
+    requirements:
+       id: \d+
+
+user_delete_friend:
+    path: /delete_friend/{id}
+    defaults: { _controller: NetworkUserBundle:Profile:deleteFriend }
+    requirements:
+       id: \d+

@@ -47,6 +47,11 @@ class User extends BaseUser
     protected $groups;
 
     /**
+     * @ORM\OneToMany(targetEntity="Friendship", mappedBy="user", cascade={"persist"})
+     */
+    protected $friends;
+
+    /**
      * @var string
      *
      * @Assert\NotBlank()
@@ -310,8 +315,66 @@ class User extends BaseUser
         return $this->contactInfo;
     }
 
+    /**
+     * Add friends
+     *
+     * @param \Network\StoreBundle\Entity\Friendship $friend
+     * @return User
+     */
+    public function addFriend(\Network\StoreBundle\Entity\Friendship $friend)
+    {
+        if (!$this->getFriends()->contains($friend)) {
+            $this->friends[] = $friend;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove friends
+     *
+     * @param \Network\StoreBundle\Entity\Friendship $friend
+     */
+    public function removeFriend(\Network\StoreBundle\Entity\Friendship $friend)
+    {
+        if (!$this->getFriends()->contains($friend)) {
+            $this->friends->removeElement($friend);
+        }
+    }
+
+    /**
+     * Get friends
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFriends()
+    {
+        return $this->friends;
+    }
+
+    public function getFriendsIds()
+    {
+        $ids = [];
+        foreach ($this->getFriends() as $friend) {
+            $ids[] = $friend->getFriend()->getId();
+        }
+
+        return $ids;
+    }
+
+    /**
+     *
+     * @param integer $friend
+     * @return boolean
+     */
+    public function hasFriend($friend)
+    {
+        return in_array($friend, $this->getFriendsIds());
+    }
+
     public function __toString()
     {
         return $this->username;
     }
+
 }
