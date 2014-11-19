@@ -14,7 +14,7 @@ fi
 echo -n "Would you like to update dependencies from composer.json (\"y\" or \"n\", default: \"n\"): "
 read answer
 if [ "$answer" = "y" ]; then
-   composer update
+   composer install
 fi
 
 sudo chmod -R a+rw .
