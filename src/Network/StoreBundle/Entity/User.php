@@ -30,7 +30,7 @@ class User extends BaseUser
      * @Assert\Email()
      * @Assert\NotBlank()
      */
-    
+
     protected $email;
 
     /**
@@ -229,17 +229,21 @@ class User extends BaseUser
     /**
      * @return \DateTime
      */
-
     public function getCredentialsExpireAt()
     {
         return $this->credentialsExpireAt;
     }
 
+    /**
+     * @return User
+     */
     public function hash($encoder)
     {
         $salt = md5(openssl_random_pseudo_bytes(40));
         $password = $encoder->encodePassword($this->password, $salt);
         $this->setPassword($password)->setSalt($salt);
+
+        return $this;
     }
 
     /**
@@ -273,7 +277,7 @@ class User extends BaseUser
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {

@@ -32,7 +32,7 @@ class VDolgahAdmin extends Admin
     {
         foreach ($options as $option) {
             foreach ($this->fields as $idx => $field) {
-                if ($field['name'] === $option[VDolgahAdmin::FIELD_KEY]) {
+                if ($field['name'] === $option[self::FIELD_KEY]) {
                     $this->fields[$idx] = array_merge($this->fields[$idx], $option);
                     break;
                 }
@@ -48,8 +48,8 @@ class VDolgahAdmin extends Admin
             && $this->editing()
         ) {
             $options = $field[self::EDIT_OPTIONS_KEY];
-        } elseif (array_key_exists(VDolgahAdmin::OPTIONS_KEY, $field)) {
-            $options = $field[VDolgahAdmin::OPTIONS_KEY];
+        } elseif (array_key_exists(self::OPTIONS_KEY, $field)) {
+            $options = $field[self::OPTIONS_KEY];
         }
         $type = null;
         if (array_key_exists(self::TYPE_KEY, $field)) {
@@ -62,15 +62,15 @@ class VDolgahAdmin extends Admin
         }
         if (array_key_exists(self::QUERY, $field)) {
             $query = $this->addQuery($field[self::QUERY]);
-            if ($query != null)
+            if ($query != null) {
                 $options['query'] = $query;
+            }
         }
-        $description = null;
-        if (array_key_exists(VDolgahAdmin::OPTIONS_KEY_DESCRIPTION, $field)) {
-            $description = $field[VDolgahAdmin::OPTIONS_KEY_DESCRIPTION];
-            $mapper->add($field['name'], $type, $options, $description);
-        } else
+        if (array_key_exists(self::OPTIONS_KEY_DESCRIPTION, $field)) {
+            $mapper->add($field['name'], $type, $options, $field[self::OPTIONS_KEY_DESCRIPTION]);
+        } else {
             $mapper->add($field['name'], $type, $options);
+        }
     }
 
     public function __construct($code, $class, $baseControllerName)
@@ -79,25 +79,25 @@ class VDolgahAdmin extends Admin
         $entityReflection = new \ReflectionClass($class);
         foreach ($entityReflection->getProperties() as $property) {
             $name = ucfirst($property->getName());
-            if (($entityReflection->hasMethod("set" . $name)
-                || ($entityReflection->hasMethod("add" . $name)))
-                && $entityReflection->hasMethod("get" . $name)) {
-                $this->fields[] = [ 'name' => $property->getName() ];
+            if (($entityReflection->hasMethod('set' . $name)
+                || ($entityReflection->hasMethod('add' . $name)))
+                && $entityReflection->hasMethod('get' . $name)) {
+                $this->fields[] = ['name' => $property->getName()];
             }
         }
     }
 
     protected function configureListFields(ListMapper $listMapper)
     {
-        foreach ($this->fields as $field){
+        foreach ($this->fields as $field) {
             if (
-                array_key_exists(VDolgahAdmin::IDENTIFIER_KEY, $field)
-                && $field[VDolgahAdmin::IDENTIFIER_KEY]
+                array_key_exists(self::IDENTIFIER_KEY, $field)
+                && $field[self::IDENTIFIER_KEY]
             ) {
                 $listMapper->addIdentifier($field['name']);
             } elseif (
-                !array_key_exists(VDolgahAdmin::NOT_SHOW_IN_LIST_KEY, $field)
-                || false == $field[VDolgahAdmin::NOT_SHOW_IN_LIST_KEY]
+                !array_key_exists(self::NOT_SHOW_IN_LIST_KEY, $field)
+                || false == $field[self::NOT_SHOW_IN_LIST_KEY]
             ) {
                 $this->addFieldToMapper($listMapper, $field);
             }
@@ -115,8 +115,8 @@ class VDolgahAdmin extends Admin
     {
         foreach ($this->fields as $field) {
             if (
-                !array_key_exists(VDolgahAdmin::NOT_SHOW_IN_FORM_KEY, $field)
-                || false == $field[VDolgahAdmin::NOT_SHOW_IN_FORM_KEY]
+                !array_key_exists(self::NOT_SHOW_IN_FORM_KEY, $field)
+                || false == $field[self::NOT_SHOW_IN_FORM_KEY]
             ) {
                 $this->addFieldToMapper($formMapper, $field);
             }
@@ -126,10 +126,7 @@ class VDolgahAdmin extends Admin
     protected function configureShowFields(ShowMapper $showMapper)
     {
         foreach ($this->fields as $field) {
-            $type = null;
-            if (array_key_exists(self::TYPE_KEY, $field)) {
-                $type = $field[self::TYPE_KEY];
-            }
+            $type = array_key_exists(self::TYPE_KEY, $field) ? $field[self::TYPE_KEY] : null;
             if ($type === 'collection') {
                 $field[self::TYPE_KEY] = 'array';
             }
@@ -137,4 +134,4 @@ class VDolgahAdmin extends Admin
         }
     }
 
-} 
+}

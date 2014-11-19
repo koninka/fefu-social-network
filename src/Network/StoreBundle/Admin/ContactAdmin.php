@@ -9,6 +9,9 @@ use \Network\StoreBundel\Entity\Phonenumber;
 
 class ContactAdmin extends VDolgahAdmin
 {
+    protected $formOptions = [
+        'cascade_validation' => true
+    ];
 
     public function __construct($code, $class, $baseControllerName)
     {
@@ -26,7 +29,7 @@ class ContactAdmin extends VDolgahAdmin
                 parent::TYPE_KEY => 'sonata_type_model',
                 parent::OPTIONS_KEY => [
                     'label' => 'Address',
-                    'class'=>'NetworkStoreBundle:Address',
+                    'class' => 'NetworkStoreBundle:Address',
                     'required' => false,
                     'multiple' => true,
                 ],
@@ -42,7 +45,7 @@ class ContactAdmin extends VDolgahAdmin
                 parent::OPTIONS_KEY => [
                     'label' => 'Phonenumber',
                     'required' => false,
-                    'class'=>'NetworkStoreBundle:Phonenumber',
+                    'class' => 'NetworkStoreBundle:Phonenumber',
                     'multiple' => true,
                 ],
                 parent::QUERY => 'SELECT p FROM NetworkStoreBundle:Phonenumber p WHERE p.contactInfo IS NULL
@@ -56,21 +59,15 @@ class ContactAdmin extends VDolgahAdmin
         ]);
     }
 
-    protected $formOptions = array(
-        'cascade_validation' => true
-     );
-
     protected function addQuery($q)
     {
-        $id = null;
         $query = null;
         $id = $this->getRoot()->getSubject();
         if ($id != null) {
-            $entityReflection = new \ReflectionClass($id);
-            if ($entityReflection->hasMethod("getContactInfo"))
+            if ((new \ReflectionClass($id))->hasMethod('getContactInfo')) {
                 $id = $id->getContactInfo();
-            $query = $this->modelManager->getEntityManager($this->getClass())->createQuery($q)
-                ->setParameter('id', $id);
+            }
+            $query = $this->modelManager->getEntityManager($this->getClass())->createQuery($q)->setParameter('id', $id);
         }
 
         return $query;

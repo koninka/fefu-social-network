@@ -26,21 +26,21 @@ class ContactInfo
      * NotShowInForm!
      */
     private $id;
-     
+
      /**
      * @var integer
      *
      * @ORM\OneToOne(targetEntity="User", mappedBy = "contactInfo")
      */
     private $user;
-    
+
     /**
      * @var string
      *
      * @ORM\Column(name="skype", type="string", length=255, nullable = true, unique = true)
      */
     private $skype;
-    
+
     /**
      * @var string
      *
@@ -49,7 +49,7 @@ class ContactInfo
      *
      */
     private $additionalEmail;
-   
+
     /**
      * @ORM\ManyToMany(targetEntity="Address", cascade = {"persist"})
      * @ORM\JoinTable(name="users_address",
@@ -58,12 +58,12 @@ class ContactInfo
      *      )
      **/
     private $address;
-    
+
     /**
      * @ORM\OneToMany(targetEntity="Phonenumber", mappedBy="contactInfo", cascade = {"persist"}, orphanRemoval = true)
      **/
     private $phone;
-  
+
     /**
      * Constructor
      */
@@ -76,7 +76,7 @@ class ContactInfo
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -92,14 +92,14 @@ class ContactInfo
     public function setSkype($skype)
     {
         $this->skype = $skype;
-    
+
         return $this;
     }
 
     /**
      * Get skype
      *
-     * @return string 
+     * @return string
      */
     public function getSkype()
     {
@@ -115,14 +115,14 @@ class ContactInfo
     public function setAdditionalEmail($additionalEmail)
     {
         $this->additionalEmail = $additionalEmail;
-    
+
         return $this;
     }
 
     /**
      * Get additionalEmail
      *
-     * @return string 
+     * @return string
      */
     public function getAdditionalEmail()
     {
@@ -138,38 +138,38 @@ class ContactInfo
     public function setUser(\Network\StoreBundle\Entity\User $user = null)
     {
         $this->user = $user;
-    
+
         return $this;
     }
 
     /**
      * Get user
      *
-     * @return \Network\StoreBundle\Entity\User 
+     * @return \Network\StoreBundle\Entity\User
      */
     public function getUser()
     {
         return $this->user;
     }
-  
+
     public function __toString()
     {
-        $addres  = "";
-        $phonenumber = "";
-        $skype  = "";
-        $additionalEmail = "";
+        $address  = '';
         foreach ($this->address->getValues() as $val) {
-            $addres .= sprintf('Address: %s; ', $val);
+            $address .= sprintf('Address: %s; ', $val);
         }
+
+        $phonenumbers = '';
         foreach ($this->phone->getValues() as $val) {
-            $phonenumber .= sprintf('Phone number: %s; ', $val);
+            $phonenumbers .= sprintf('Phone number: %s; ', $val);
         }
-        if ($this->skype)
-            $skype = sprintf('skype: %s;', $this->skype);
-        if ($this->additionalEmail)
-            $additionalEmail = sprintf('additionalEmail: %s', $this->additionalEmail);
-        return sprintf('%s %s %s %s',
-            $skype, $addres, $phonenumber , $additionalEmail);
+
+        $skype = !empty($this->skype) ? sprintf('skype: %s;', $this->skype) : '';
+
+        $additionalEmail = !empty($this->additionalEmail)
+            ? sprintf('additionalEmail: %s', $this->additionalEmail)
+            : '';
+        return sprintf('%s %s %s %s', $skype, $address, $phonenumbers, $additionalEmail);
     }
 
     /**
@@ -182,7 +182,7 @@ class ContactInfo
     {
         $this->phone[] = $phone;
         $phone->setContactInfo($this);
-    
+
         return $this;
     }
 
@@ -190,30 +190,34 @@ class ContactInfo
      * Remove phone
      *
      * @param \Network\StoreBundle\Entity\Phonenumber $phone
+     * @return ContactInfo
      */
     public function removePhone(\Network\StoreBundle\Entity\Phonenumber $phone)
     {
         $this->phone->removeElement($phone);
-        $phone->setContactInfo(NULL);
+        $phone->setContactInfo(null);
+
+        return $this;
     }
 
     /**
      * Get phone
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getPhone()
     {
         foreach ($this->phone as $phone) {
             $phone->setContactInfo($this);
         }
+
         return $this->phone;
     }
     /**
      * Set phone
      *
      * @param \Doctrine\Common\Collections\Collection  $phones
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ContactInfo
      */
     public function setPhone(\Doctrine\Common\Collections\Collection  $phones)
     {
@@ -234,7 +238,7 @@ class ContactInfo
     public function addAddress(\Network\StoreBundle\Entity\Address $address)
     {
         $this->address[] = $address;
-    
+
         return $this;
     }
 
@@ -242,16 +246,19 @@ class ContactInfo
      * Remove address
      *
      * @param \Network\StoreBundle\Entity\Address $address
+     * @return ContactInfo
      */
     public function removeAddress(\Network\StoreBundle\Entity\Address $address)
     {
         $this->address->removeElement($address);
+
+        return $this;
     }
 
     /**
      * Get address
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getAddress()
     {
@@ -262,7 +269,7 @@ class ContactInfo
      * Set address
      *
      * @param \Doctrine\Common\Collections\Collection  $address
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return ContactInfo
      */
     public function setAddress(\Doctrine\Common\Collections\Collection  $address)
     {

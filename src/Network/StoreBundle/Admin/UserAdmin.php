@@ -9,6 +9,10 @@ use Network\StoreBundle\Entity\ContactInfo;
 class UserAdmin extends VDolgahAdmin
 {
 
+    protected $formOptions = [
+        'cascade_validation' => true
+    ];
+
     public function __construct($code, $class, $baseControllerName)
     {
         parent::__construct($code, $class, $baseControllerName);
@@ -119,10 +123,6 @@ class UserAdmin extends VDolgahAdmin
         ]);
     }
 
-    protected $formOptions = array(
-        'cascade_validation' => true
-     );
-
     public function prePersist($object)
     {
         $encoder = $this->getConfigurationPool()
@@ -136,25 +136,20 @@ class UserAdmin extends VDolgahAdmin
     {
         if (null != $object->getPassword()) {
             $encoder = $this->getConfigurationPool()
-                ->getContainer()
-                ->get('security.encoder_factory')
-                ->getEncoder($object);
+                            ->getContainer()
+                            ->get('security.encoder_factory')
+                            ->getEncoder($object);
             $object->hash($encoder);
         } else {
             $manager = $this->getConfigurationPool()->getContainer()->get('Doctrine')->getManager();
-            $uow = $manager->getUnitOfWork();
-            $originalEntityData = $uow->getOriginalEntityData($object);
+            $originalEntityData = $manager->getUnitOfWork()->getOriginalEntityData($object);
             $object->setPassword($originalEntityData['password']);
         }
     }
 
     public function getTemplate($name)
     {
-        if ($name == 'edit') {
-                return 'NetworkWebBundle:User:edit.html.twig';
-        } else {
-            return parent::getTemplate($name);
-        }
+        return $name == 'edit' ? 'NetworkWebBundle:User:edit.html.twig' : parent::getTemplate($name);
     }
 
 }

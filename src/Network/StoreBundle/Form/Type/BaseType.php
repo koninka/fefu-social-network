@@ -42,13 +42,10 @@ class BaseType extends AbstractType
             $type = $dbType->getFormType();
             $options = $dbType->getFormOptions();
         } else {
-            throw \Exception("No exist type for " . $params['type']);
+            throw \Exception(sprintf('No exist type for %s', $params['type']));
         }
 
-        if (
-            array_key_exists('nullable', $params)
-            && $params['nullable'] === 'true'
-        ) {
+        if (array_key_exists('nullable', $params) && $params['nullable'] === 'true') {
             $options['required'] = false;
         }
         if (array_key_exists('length', $params)) {

@@ -59,7 +59,7 @@ class Address
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -82,13 +82,13 @@ class Address
     /**
      * Get country
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
         return $this->country;
     }
-    
+
     /**
      * Set city
      *
@@ -105,7 +105,7 @@ class Address
     /**
      * Get city
      *
-     * @return string 
+     * @return string
      */
     public function getCity()
     {
@@ -128,7 +128,7 @@ class Address
     /**
      * Get street
      *
-     * @return string 
+     * @return string
      */
     public function getStreet()
     {
@@ -151,16 +151,16 @@ class Address
     /**
      * Get house
      *
-     * @return string 
+     * @return string
      */
     public function getHouse()
     {
         return $this->house;
     }
-    
+
     public function __toString()
     {
-        return sprintf('%s г. %s ул. %s, %s ', 
+        return sprintf('%s г. %s ул. %s, %s ',
            $this->country, $this->city, $this->street, $this->house);
     }
 }

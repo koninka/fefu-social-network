@@ -15,4 +15,4 @@ class UserType extends BaseType
         return 'network_storebundle_user';
     }
 
-} 
+}

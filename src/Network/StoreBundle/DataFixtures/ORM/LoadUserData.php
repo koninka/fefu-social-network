@@ -19,7 +19,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     private $container;
     private $manager;
 
-    public function addGroup($name, $roles = [])
+    private function addGroup($name, $roles = [])
     {
         $groupManager = $this->container->get('fos_user.group_manager');
         $group = $groupManager->createGroup($name);
@@ -27,10 +27,11 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $groupManager->updateGroup($group, true);
         $this->manager->persist($group);
         $this->manager->flush();
+
+        return $this;
     }
 
-    private function addUser($username, $password, $gender, $firstName,
-        $lastName, $email, $birthday, $group)
+    private function addUser($username, $password, $gender, $firstName, $lastName, $email, $birthday, $group)
     {
         $userManager = $this->container->get('fos_user.user_manager');
         $user = $userManager->createUser();
@@ -72,8 +73,8 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
     {
         $this->setManager($manager);
         $groupManager = $this->container->get('fos_user.group_manager');
-        $this->addGroup('admin', ['ROLE_ADMIN']);
-        $this->addGroup('user', ['ROLE_USER']);
+        $this->addGroup('admin', ['ROLE_ADMIN'])
+             ->addGroup('user', ['ROLE_USER']);
         $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null,
                         $groupManager->findGroupByName('admin'));
 
@@ -103,7 +104,6 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
                 if ($gender == 'male') {
                     $firstNameSource = $firstNamesMaleRussian;
                     $lastNameSource = $lastNamesMaleRussian;
-
                 } else {
                     $firstNameSource = $firstNamesFemaleRussian;
                     $lastNameSource = $lastNamesFemaleRussian;
@@ -112,17 +112,10 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
                 if (rand() / getrandmax() < 0.5) {
                     $lastNameSource = $lastNamesRussian;
                 }
-
             } else {
                 $emailProvider = $emailProviders[array_rand($emailProviders)];
 
-                if ($gender == 'male') {
-                    $firstNameSource = $firstNamesMale;
-
-                } else {
-                    $firstNameSource = $firstNamesFemale;
-                }
-
+                $firstNameSource = $gender == 'male' ? $firstNamesMale : $firstNamesFemale;
                 $lastNameSource = $lastNames;
             }
 

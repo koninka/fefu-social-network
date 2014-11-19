@@ -27,7 +27,7 @@ class GroupAdmin extends VDolgahAdmin
                     'type'   => 'choice',
                     'options' => ['choices' => Type::getType('roleEnumType')->getChoices()]
                 ],
-                static::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_LIST_KEY => true,
             ],
         ]);
     }

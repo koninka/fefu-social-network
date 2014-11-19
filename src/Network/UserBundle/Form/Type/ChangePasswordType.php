@@ -13,9 +13,9 @@ class ChangePasswordType extends BaseType
     {
         $builder->add('plainPassword', 'repeated', array(
             'type'            => 'password',
-            'options'         => array('translation_domain' => 'FOSUserBundle'),
-            'first_options'   => array('label' => 'Пароль'),
-            'second_options'  => array('label' => 'Подтвердите пароль'),
+            'options'         => ['translation_domain' => 'FOSUserBundle'],
+            'first_options'   => ['label' => 'Пароль'],
+            'second_options'  => ['label' => 'Подтвердите пароль'],
             'invalid_message' => 'Введенные пароли не совпадают!',
         ));
     }

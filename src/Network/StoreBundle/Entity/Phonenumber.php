@@ -41,14 +41,14 @@ class Phonenumber
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
         return $this->id;
     }
 
-    
+
     public function __toString()
     {
         return $this->phonenumber;
@@ -63,14 +63,14 @@ class Phonenumber
     public function setPhonenumber($phonenumber)
     {
         $this->phonenumber = $phonenumber;
-    
+
         return $this;
     }
 
     /**
      * Get phonenumber
      *
-     * @return string 
+     * @return string
      */
     public function getPhonenumber()
     {
@@ -93,7 +93,7 @@ class Phonenumber
     /**
      * Get contactInfo
      *
-     * @return \Network\StoreBundle\Entity\ContactInfo 
+     * @return \Network\StoreBundle\Entity\ContactInfo
      */
     public function getContactInfo()
     {

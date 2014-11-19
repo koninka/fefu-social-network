@@ -1,9 +1,5 @@
 mainpage:
     path:     /
-    defaults: { _controller: NetworkWebBundle:Default:index, name: 'stranger' }
-
-network_web_homepage:
-    path:     /hello/{name}
     defaults: { _controller: NetworkWebBundle:Default:index }
 
 user_profile_editing:
@@ -15,7 +11,3 @@ user_profile_editing:
 kladr_test_page:
     path:     /test/kladr
     defaults: { _controller: NetworkWebBundle:Kladr:test }
-
-# smth_login:
-#     path:     /login
-#     defaults: { _controller: NetworkWebBundle:Auth:login }
