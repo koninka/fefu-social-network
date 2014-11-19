@@ -279,6 +279,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -334,12 +335,15 @@ class User extends BaseUser
      * Remove friends
      *
      * @param \Network\StoreBundle\Entity\Friendship $friend
+     * @return User
      */
     public function removeFriend(\Network\StoreBundle\Entity\Friendship $friend)
     {
         if (!$this->getFriends()->contains($friend)) {
             $this->friends->removeElement($friend);
         }
+
+        return $this;
     }
 
     /**

@@ -5,6 +5,7 @@ namespace Network\StoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Network\StoreBundle\DBAL\FriendshipStatusEnumType;
 
 /**
  * Friendship
@@ -36,6 +37,14 @@ class Friendship
      */
 
     protected $friend;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="status", type="friendshipStatusEnumType")
+     * @Assert\NotBlank()
+     */
+    private $status;
 
     /**
      * Get id
@@ -92,4 +101,18 @@ class Friendship
     {
         return $this->friend;
     }
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->status = FriendshipStatusEnumType::FS_REQUESTED;
+    }
+
+    public function __toString()
+    {
+        return $this->friend->getName();
+    }
+
 }
