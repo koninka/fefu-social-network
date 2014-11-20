@@ -60,13 +60,37 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     }
 
 
+    private function loginUserGitHub(UserResponseInterface $response)
+    {
+        $username = $response->getNickname();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = 'Default first name';
+        $lastName = 'Default last name';
+        $rawToken = $this->oAuthToken->getOAuthToken($response)->getRawToken();
+        $email = isset($rawToken['email']) && !empty($rawToken['email'])
+            ? $rawToken['email']
+            : "$username@$resource.com";
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => 'male',
+            'email' => $email,
+        ];
+    }
+
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $resourceOwnerName = $response->getResourceOwner()->getName();
-        if ($resourceOwnerName == 'vkontakte') {
-            $data = $this->loginUserVK($response);
-        } else {
-            return;
+        switch ($response->getResourceOwner()->getName()) {
+            case 'vkontakte' :
+                $data = $this->loginUserVK($response);
+                break;
+            case 'github' :
+                $data = $this->loginUserGitHub($response);
+                break;
+            default :
+                return null;
         }
 
         $user = $this->repository->findOneBy(
