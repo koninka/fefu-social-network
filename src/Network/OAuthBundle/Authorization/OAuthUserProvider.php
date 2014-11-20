@@ -100,6 +100,29 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             'email' => $email,
         ];
     }
+
+
+    private function loginUserGoogle(UserResponseInterface $response)
+    {
+        $username = $response->getUsername();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = $response->getResponse()['given_name'];
+        $lastName = $response->getResponse()['family_name'];
+        $gender = $response->getResponse()['gender'];
+        $email = empty($response->getEmail())
+            ? "$username@$resource.com"
+            : $response->getEmail();
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => $gender,
+            'email' => $email,
+        ];
+    }
+
+
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
         switch ($response->getResourceOwner()->getName()) {
@@ -111,6 +134,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                 break;
             case 'facebook' :
                 $data = $this->loginUserFacebook($response);
+                break;
+            case 'google' :
+                $data = $this->loginUserGoogle($response);
                 break;
             default :
                 return null;

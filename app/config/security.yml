@@ -17,6 +17,8 @@ security:
                 resource_owners:
                     vkontakte:           vkontakte_login
                     github:              github_login
+                    facebook:            facebook_login
+                    google:              google_login
                 login_path:        fos_user_security_login
                 failure_path:      mainpage
                 default_target_path: fos_user_profile_show

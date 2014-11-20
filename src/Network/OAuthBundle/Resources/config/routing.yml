@@ -15,3 +15,9 @@ facebook_login:
 
 facebook_connect:
     pattern: /connect/check-facebook
+
+google_login:
+    pattern: /authorization/check-google
+
+google_connect:
+    pattern: /connect/check-google
