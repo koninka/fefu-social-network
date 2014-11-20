@@ -72,4 +72,10 @@ class ContactAdmin extends VDolgahAdmin
 
         return $query;
     }
+
+    public function getTemplate($name)
+    {
+        return $name == 'edit' ? 'NetworkWebBundle:Contact:edit.html.twig' : parent::getTemplate($name);
+    }
+
 }
