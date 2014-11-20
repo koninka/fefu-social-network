@@ -4,10 +4,23 @@ security:
             id: fos_user.user_provider.username_email
         in_memory:
             memory: ~
+        _hwi_provider:
+             id: network_oauth.oauth_user_provider
+
+    encoders:
+       Network\StoreBundle\Entity\User: sha512
 
     firewalls:
         main:
             pattern: ^/
+            oauth:
+                resource_owners:
+                    vkontakte:           vkontakte_login
+                login_path:        fos_user_security_login
+                failure_path:      mainpage
+                default_target_path: fos_user_profile_show
+                oauth_user_provider:
+                    service: network_oauth.oauth_user_provider
             form_login:
                 provider:      fos_userbundle
                 login_path:    fos_user_security_login
@@ -24,7 +37,6 @@ security:
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-
         default:
             anonymous: ~
 
@@ -40,3 +52,4 @@ security:
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile, role: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/admin/, role: ROLE_ADMIN }
+        - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }

@@ -1,0 +1,9 @@
+parameters:
+    user_class_name: Network\StoreBundle\Entity\User
+
+services:
+    network_oauth.oauth_user_provider:
+        class:  Network\OAuthBundle\Authorization\OAuthUserProvider
+        arguments:
+            - @doctrine
+            - %user_class_name%

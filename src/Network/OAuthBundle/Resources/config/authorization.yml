@@ -1,0 +1,9 @@
+# OAuth Configuration
+hwi_oauth:
+    firewall_name: main
+    resource_owners:
+        vkontakte:
+            type:             vkontakte
+            client_id:        "4602253"
+            client_secret:    "68ZtvU4VMVohGyGk1tjN"
+            scope:            "email"

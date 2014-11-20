@@ -1,0 +1,11 @@
+vkontakte_login:
+    pattern: /authorization/check-vkontakte
+
+vkontakte_connect:
+    pattern: /connect/check-vkontakte
+
+github_login:
+    pattern: /authorization/check-github
+
+github_connect:
+    pattern: /connect/check-github

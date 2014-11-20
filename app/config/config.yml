@@ -2,6 +2,7 @@ imports:
     - { resource: parameters.yml }
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
+    - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
 
 framework:
     #esi:             ~

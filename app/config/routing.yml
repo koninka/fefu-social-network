@@ -1,3 +1,7 @@
+network_oauth:
+    resource: "@NetworkOAuthBundle/Resources/config/routing.yml"
+    prefix:   /
+
 network_user:
     resource: "@NetworkUserBundle/Resources/config/routing.yml"
     prefix:   /
@@ -13,6 +17,10 @@ network_store:
 admin:
     resource: '@SonataAdminBundle/Resources/config/routing/sonata_admin.xml'
     prefix: /admin
+
+hwi_oauth_redirect:
+    resource: "@HWIOAuthBundle/Resources/config/routing/redirect.xml"
+    prefix:   /connect
 
 _sonata_admin:
     resource: .
