@@ -60,13 +60,86 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     }
 
 
+    private function loginUserGitHub(UserResponseInterface $response)
+    {
+        $username = $response->getNickname();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = 'Default first name';
+        $lastName = 'Default last name';
+        $rawToken = $this->oAuthToken->getOAuthToken($response)->getRawToken();
+        $email = isset($rawToken['email']) && !empty($rawToken['email'])
+            ? $rawToken['email']
+            : "$username@$resource.com";
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => 'male',
+            'email' => $email,
+        ];
+    }
+
+
+    private function loginUserFaceBook(UserResponseInterface $response)
+    {
+        $username = $response->getNickname();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = $response->getResponse()['first_name'];
+        $lastName = $response->getResponse()['last_name'];
+        $gender = $response->getResponse()['gender'];
+        $email = empty($response->getEmail())
+            ? "$username@$resource.com"
+            : $response->getEmail();
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => $gender,
+            'email' => $email,
+        ];
+    }
+
+
+    private function loginUserGoogle(UserResponseInterface $response)
+    {
+        $username = $response->getUsername();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = $response->getResponse()['given_name'];
+        $lastName = $response->getResponse()['family_name'];
+        $gender = $response->getResponse()['gender'];
+        $email = empty($response->getEmail())
+            ? "$username@$resource.com"
+            : $response->getEmail();
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => $gender,
+            'email' => $email,
+        ];
+    }
+
+
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
-        $resourceOwnerName = $response->getResourceOwner()->getName();
-        if ($resourceOwnerName == 'vkontakte') {
-            $data = $this->loginUserVK($response);
-        } else {
-            return;
+        switch ($response->getResourceOwner()->getName()) {
+            case 'vkontakte' :
+                $data = $this->loginUserVK($response);
+                break;
+            case 'github' :
+                $data = $this->loginUserGitHub($response);
+                break;
+            case 'facebook' :
+                $data = $this->loginUserFacebook($response);
+                break;
+            case 'google' :
+                $data = $this->loginUserGoogle($response);
+                break;
+            default :
+                return null;
         }
 
         $user = $this->repository->findOneBy(

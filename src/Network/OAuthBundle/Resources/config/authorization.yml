@@ -7,3 +7,21 @@ hwi_oauth:
             client_id:        "4602253"
             client_secret:    "68ZtvU4VMVohGyGk1tjN"
             scope:            "email"
+
+        github:
+            type:             github
+            client_id:        "4586d58a3dbf045e178e"
+            client_secret:    "99225fedb2d3ce7044a61ee29e7e7cb8600f1bc0"
+            scope:            "user:email"
+
+        facebook:
+            type:             facebook
+            client_id:        "278935655649323"
+            client_secret:    "9005fb2aee66302e460da34160624002"
+            scope:            "email"
+
+        google:
+            type:             google
+            client_id:        '423379035176-l6a5kt5uuj6fb8a4h4ohft5spit48pd1.apps.googleusercontent.com'
+            client_secret:    'ifwL00BQeNh0BTimEwVHyISF'
+            scope:            'https://www.googleapis.com/auth/userinfo.email'
