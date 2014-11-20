@@ -80,6 +80,26 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         ];
     }
 
+
+    private function loginUserFaceBook(UserResponseInterface $response)
+    {
+        $username = $response->getNickname();
+        $resource = $response->getResourceOwner()->getName();
+        $firstName = $response->getResponse()['first_name'];
+        $lastName = $response->getResponse()['last_name'];
+        $gender = $response->getResponse()['gender'];
+        $email = empty($response->getEmail())
+            ? "$username@$resource.com"
+            : $response->getEmail();
+
+        return [
+            'username' => $username,
+            'firstName' => $firstName,
+            'lastName' => $lastName,
+            'gender' => $gender,
+            'email' => $email,
+        ];
+    }
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
         switch ($response->getResourceOwner()->getName()) {
@@ -88,6 +108,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                 break;
             case 'github' :
                 $data = $this->loginUserGitHub($response);
+                break;
+            case 'facebook' :
+                $data = $this->loginUserFacebook($response);
                 break;
             default :
                 return null;

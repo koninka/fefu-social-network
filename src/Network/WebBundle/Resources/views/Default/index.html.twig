@@ -7,6 +7,7 @@
     {% else %}
         <!-- TODO make normal link to VK-->
         <p><a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Регистрация VK</a></p>
+        <p><a href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Регистрация Facebook</a></p>
         <p><a href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">Регистрация GitHub</a></p>
         <p><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></p>
         <p><a href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a></p>
