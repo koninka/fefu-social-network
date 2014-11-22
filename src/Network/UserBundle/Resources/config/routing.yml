@@ -2,3 +2,7 @@ fos_user_registration_confirm_email:
     path: /confirm_email/{token}/{email}
     defaults: { _controller: NetworkUserBundle:Registration:confirmEmail }
     requirements: { _method: GET }
+
+fos_user_change_email:
+    path: /profile/change-email
+    defaults: { _controller: NetworkUserBundle:ChangeEmail:changeEmail }
