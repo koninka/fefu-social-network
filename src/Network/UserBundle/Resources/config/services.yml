@@ -20,6 +20,12 @@ services:
         tags:
             - { name: form.type, alias: network_user_profile }
 
+    network_user.email_change.listener:
+        class: %network.email_change.listener.class%
+        arguments: ['@fos_user.mailer', '@fos_user.util.token_generator', '@router', '@session', '@security.context']
+        tags:
+            - { name: kernel.event_subscriber }
+
     network.mailer.twig_swift:
         class: Network\UserBundle\Mailer\TwigSwiftMailer
         arguments:
@@ -37,5 +43,6 @@ services:
                     new: '%network.new.email.from_email%'
 
 parameters:
+    network.email_change.listener.class: Network\UserBundle\EventListener\ChangeEmailSubscriber
     network.new.email.template: NetworkUserBundle:Mail:email_change.html.twig
     network.new.email.from_email:
