@@ -1,0 +1,20 @@
+{{ form_start(form) }}
+
+    {{ form_rest(form) }}
+
+    {% block javascripts %}
+
+        {% javascripts  '@NetworkWebBundle/Resources/public/js/jquery.min.js'
+                        '@NetworkWebBundle/Resources/public/js/*' %}
+
+            <script type="text/javascript" src="{{ asset_url }}"></script>
+
+        {% endjavascripts %}
+
+        <script type="text/javascript">
+            new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}');
+        </script>
+
+    {% endblock %}
+
+{{ form_end(form) }}
