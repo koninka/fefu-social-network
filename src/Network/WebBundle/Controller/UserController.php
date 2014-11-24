@@ -11,9 +11,8 @@ use Symfony\Component\HttpFoundation\Request;
 class UserController extends Controller
 {
 
-    public function jobsAction($id, Request $request)
-    {
-        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+    public function jobsAction($id, Request $request) {
+        $user = $this->get('security.context')->getToken()->getUser();
         $em = $this->getDoctrine()->getManager();
         if (null === $user) {
             return $this->redirect($this->generateUrl('mainpage'));
