@@ -8,19 +8,31 @@ fos_user_change_email:
     defaults: { _controller: NetworkUserBundle:ChangeEmail:changeEmail }
 
 user_profile:
-    path: /user/{id}/
+    path: /id{id}
     defaults: { _controller: NetworkUserBundle:Profile:profile }
     requirements:
        id: \d+
 
-user_add_friend:
-    path: /add_friend/{id}
-    defaults: { _controller: NetworkUserBundle:Profile:addFriend }
+user_send_friendship_request:
+    path: /send_friendship_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:sendFriendshipRequest }
     requirements:
        id: \d+
 
-user_delete_friend:
-    path: /delete_friend/{id}
-    defaults: { _controller: NetworkUserBundle:Profile:deleteFriend }
+user_accept_friendship_request:
+    path: /accept_friendship_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:acceptFriendshipRequest }
+    requirements:
+       id: \d+
+
+user_decline_friendship_request:
+    path: /decline_friendship_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:declineFriendship }
+    requirements:
+       id: \d+
+
+user_delete_friendship:
+    path: /delete_friendship/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:deleteFriendship }
     requirements:
        id: \d+

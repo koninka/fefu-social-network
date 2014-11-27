@@ -5,16 +5,18 @@ namespace Network\StoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
-use Network\StoreBundle\DBAL\FriendshipStatusEnumType;
+use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 
 /**
- * Friendship
+ * Relationship
  *
- * @ORM\Table(name="user_friend", uniqueConstraints={@ORM\UniqueConstraint(name="friendship_idx", columns={"user_id", "friend_id"})})
+ * @ORM\Table(name="relationships")
  * @ORM\Entity
  */
 
-class Friendship
+//@ORM\Table(name="user_relationship", uniqueConstraints={@ORM\UniqueConstraint(name="relationship_idx", columns={"user_id", "partner_id"})})
+
+class Relationship
 {
     /**
      * @var integer
@@ -33,15 +35,15 @@ class Friendship
 
     /**
      * @ORM\ManyToOne(targetEntity="User")
-     * @ORM\JoinColumn(name="friend_id", referencedColumnName="id")
+     * @ORM\JoinColumn(name="partner_id", referencedColumnName="id")
      */
 
-    protected $friend;
+    protected $partner;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="status", type="friendshipStatusEnumType")
+     * @ORM\Column(name="status", type="relationshipStatusEnumType")
      * @Assert\NotBlank()
      */
     private $status;
@@ -60,7 +62,7 @@ class Friendship
      * Set user
      *
      * @param \Network\StoreBundle\Entity\User $user
-     * @return Friendship
+     * @return Relationship
      */
     public function setUser(\Network\StoreBundle\Entity\User $user = null)
     {
@@ -80,26 +82,42 @@ class Friendship
     }
 
     /**
-     * Set friend
+     * Set partner
      *
-     * @param \Network\StoreBundle\Entity\User $friend
-     * @return Friendship
+     * @param \Network\StoreBundle\Entity\User $partner
+     * @return Relationship
      */
-    public function setFriend(\Network\StoreBundle\Entity\User $friend = null)
+    public function setPartner(\Network\StoreBundle\Entity\User $partner = null)
     {
-        $this->friend = $friend;
+        $this->partner = $partner;
 
         return $this;
     }
 
     /**
-     * Get friend
+     * Get partner
      *
      * @return \Network\StoreBundle\Entity\User 
      */
-    public function getFriend()
+    public function getPartner()
     {
-        return $this->friend;
+        return $this->partner;
+    }
+
+    /**
+     * @return string
+     */
+    public function getStatus()
+    {
+        return $this->status;
+    }
+
+    /**
+     * @param string $status
+     */
+    public function setStatus($status)
+    {
+        $this->status = $status;
     }
 
     /**
@@ -107,12 +125,15 @@ class Friendship
      */
     public function __construct()
     {
-        $this->status = FriendshipStatusEnumType::FS_REQUESTED;
+        $this->status = RelationshipStatusEnumType::FS_NONE;
     }
 
+    /**
+     * @return mixed
+     */
     public function __toString()
     {
-        return $this->friend->getName();
+        return $this->getPartner()->getFirstName() . ' ' . $this->getPartner()->getLastName() . ': ' . $this->getStatus();
     }
 
 }

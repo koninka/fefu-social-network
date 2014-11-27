@@ -3,6 +3,7 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -47,9 +48,9 @@ class User extends BaseUser
     protected $groups;
 
     /**
-     * @ORM\OneToMany(targetEntity="Friendship", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Relationship", mappedBy="user", cascade={"persist"})
      */
-    protected $friends;
+    protected $relationships;
 
     /**
      * @var string
@@ -279,7 +280,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->friends = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->relationships = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -317,50 +318,50 @@ class User extends BaseUser
     }
 
     /**
-     * Add friends
+     * Add relationships
      *
-     * @param \Network\StoreBundle\Entity\Friendship $friend
+     * @param \Network\StoreBundle\Entity\Relationship $friend
      * @return User
      */
-    public function addFriend(\Network\StoreBundle\Entity\Friendship $friend)
+    public function addRelationship(\Network\StoreBundle\Entity\Relationship $partner)
     {
-        if (!$this->getFriends()->contains($friend)) {
-            $this->friends[] = $friend;
+        if (!$this->getRelationships()->contains($partner)) {
+            $this->relationships[] = $partner;
         }
 
         return $this;
     }
 
     /**
-     * Remove friends
+     * Remove relationships
      *
-     * @param \Network\StoreBundle\Entity\Friendship $friend
+     * @param \Network\StoreBundle\Entity\Relationship $friend
      * @return User
      */
-    public function removeFriend(\Network\StoreBundle\Entity\Friendship $friend)
+    public function removeRelationship(\Network\StoreBundle\Entity\Relationship $partner)
     {
-        if (!$this->getFriends()->contains($friend)) {
-            $this->friends->removeElement($friend);
+        if (!$this->getRelationships()->contains($partner)) {
+            $this->relationships->removeElement($partner);
         }
 
         return $this;
     }
 
     /**
-     * Get friends
+     * Get relationships
      *
      * @return \Doctrine\Common\Collections\Collection
      */
-    public function getFriends()
+    public function getRelationships()
     {
-        return $this->friends;
+        return $this->relationships;
     }
 
-    public function getFriendsIds()
+    public function getRelationshipByIds()
     {
         $ids = [];
-        foreach ($this->getFriends() as $friend) {
-            $ids[] = $friend->getFriend()->getId();
+        foreach ($this->getRelationships() as $relationship) {
+            $ids[$relationship->getPartner()->getId()] = $relationship;
         }
 
         return $ids;
@@ -368,12 +369,44 @@ class User extends BaseUser
 
     /**
      *
-     * @param integer $friend
+     * @param integer $partner
+     * @param string $status
      * @return boolean
      */
-    public function hasFriend($friend)
+    public function hasRelationship($partner, $status)
     {
-        return in_array($friend, $this->getFriendsIds());
+        $rels = $this->getRelationshipByIds();
+        if (array_key_exists($partner, $rels)) {
+            return $rels[$partner]->getStatus() === $status;
+        }
+        return false;
+
+    }
+
+    /**
+     * @param integer $partner
+     * @return Relationship
+     */
+    public function getRelationship($partner)
+    {
+        $rels = $this->getRelationshipByIds();
+        if (array_key_exists($partner, $rels)) {
+            return $rels[$partner];
+        }
+        return NULL;
+    }
+
+    /**
+     * @param integer $partner
+     * @return string
+     */
+    public function getRelationshipStatus($partner)
+    {
+        $rel = $this->getRelationship($partner);
+        if ($rel) {
+            return $rel->getStatus();
+        }
+        return RelationshipStatusEnumType::FS_NONE;
     }
 
     public function __toString()

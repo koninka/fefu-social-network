@@ -2,11 +2,9 @@
 
 <div class="fos_user_user_show">
     {% if is_granted('ROLE_USER') and not is_cur_user %}
-        {% if is_friend %}
-            <a href="{{ path('user_delete_friend', {'id': user.id}) }}">Удалить из друзей</a>
-        {% else %}
-            <a href="{{ path('user_add_friend', {'id': user.id}) }}">Добавить в друзья</a>
-        {% endif %}
+        <p>
+            {{ rl_status }}
+        </p>
     {% endif %}
     <p>{{ 'profile.show.firstName'|trans }}: {{ user.firstName }}</p>
 
@@ -16,16 +14,12 @@
 
     <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
 
-    <div>
-        {% for friend in user.friends %}
-            <div>
-                {{ 'profile.show.friend'|trans }}:  <a href="{{ path('user_profile', {'id': friend.friend.id}) }}">
-                    {{ friend.friend.firstName }} {{ friend.friend.lastName }}
-                </a>
-                {% if is_cur_user %}
-                    <a href="{{ path('user_delete_friend', {'id': friend.friend.id}) }}">Удалить из друзей</a>
-                {% endif %}
-            </div>
-        {% endfor %}
-    </div>
+    {% if is_cur_user %}
+        <div>
+            <p>Отношения:</p>
+            {% for relationship in user.relationships %}
+                <p>{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}: {{ relationship.status }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
 </div>

@@ -17,8 +17,8 @@ class NetworkStoreBundle extends Bundle
         if (!Type::hasType('roleEnumType')) {
             Type::addType('roleEnumType', 'Network\StoreBundle\DBAL\RoleEnumType');
         }
-        if (!Type::hasType('friendshipStatusEnumType')) {
-            Type::addType('friendshipStatusEnumType', 'Network\StoreBundle\DBAL\FriendshipStatusEnumType');
+        if (!Type::hasType('relationshipStatusEnumType')) {
+            Type::addType('relationshipStatusEnumType', 'Network\StoreBundle\DBAL\RelationshipStatusEnumType');
         }
     }
 
