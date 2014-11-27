@@ -5,6 +5,7 @@ namespace Network\StoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * user
@@ -271,7 +272,8 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     /**
@@ -311,5 +313,66 @@ class User extends BaseUser
     public function __toString()
     {
         return $this->username;
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="user")
+     */
+    protected $posts;
+
+    /**
+     * Add groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     * @return User
+     */
+    public function addGroup(\Network\StoreBundle\Entity\Group $groups)
+    {
+        $this->groups[] = $groups;
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     */
+    public function removeGroup(\Network\StoreBundle\Entity\Group $groups)
+    {
+        $this->groups->removeElement($groups);
+    }
+
+    /**
+     * Add posts
+     *
+     * @param \Network\StoreBundle\Entity\Post $posts
+     * @return User
+     */
+    public function addPost(\Network\StoreBundle\Entity\Post $posts)
+    {
+        $this->posts[] = $posts;
+
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \Network\StoreBundle\Entity\Post $posts
+     */
+    public function removePost(\Network\StoreBundle\Entity\Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPosts()
+    {
+        return $this->posts;
     }
 }
