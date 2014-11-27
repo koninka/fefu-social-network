@@ -321,29 +321,6 @@ class User extends BaseUser
     protected $posts;
 
     /**
-     * Add groups
-     *
-     * @param \Network\StoreBundle\Entity\Group $groups
-     * @return User
-     */
-    public function addGroup(\Network\StoreBundle\Entity\Group $groups)
-    {
-        $this->groups[] = $groups;
-
-        return $this;
-    }
-
-    /**
-     * Remove groups
-     *
-     * @param \Network\StoreBundle\Entity\Group $groups
-     */
-    public function removeGroup(\Network\StoreBundle\Entity\Group $groups)
-    {
-        $this->groups->removeElement($groups);
-    }
-
-    /**
      * Add posts
      *
      * @param \Network\StoreBundle\Entity\Post $posts
