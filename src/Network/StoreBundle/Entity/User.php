@@ -6,12 +6,14 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
  * user
  *
  * @ORM\Table(name="user")
  * @ORM\Entity
+ * @UniqueEntity("email")
  */
 class User extends BaseUser
 {

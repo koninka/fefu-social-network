@@ -71,6 +71,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 
     public function load(ObjectManager $manager)
     {
+        $usedEmailPrefixes = [];
         $this->setManager($manager);
         $groupManager = $this->container->get('fos_user.group_manager');
         $this->addGroup('admin', ['ROLE_ADMIN'])
@@ -122,10 +123,15 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
             $firstName = rtrim($firstNameSource[array_rand($firstNameSource)]);
             $lastName = rtrim($lastNameSource[array_rand($lastNameSource)]);
 
-            $email = str_replace(' ', '', $firstName)
+            $emailPrefix = str_replace(' ', '', $firstName)
                 . '.'
-                . str_replace(' ', '', $lastName)
-                . $emailProvider;
+                . str_replace(' ', '', $lastName);
+
+            while (array_key_exists($emailPrefix, $usedEmailPrefixes)) {
+                $emailPrefix = $emailPrefix . '1';
+            }
+            $usedEmailPrefixes[$emailPrefix] = true;
+            $email = $emailPrefix . $emailProvider;
 
             $birthday = new \DateTime();
             $birthday->setDate(rand(1894, 2014), rand(1, 12), rand(1, 28));
