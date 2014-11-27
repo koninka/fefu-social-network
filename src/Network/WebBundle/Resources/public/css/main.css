@@ -19,3 +19,26 @@ button{
 .centered{
     margin: 0 auto;
 }
+
+body::before {
+    z-index: -100;
+    background-image: url("../img/bg.jpg");
+}
+
+body::after{
+    z-index: -98;
+    background-color: rgba(0,0,0,0.05);
+}
+
+body::before, body:after {
+    content: ' ';
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+

@@ -7,12 +7,12 @@
 {% block title %}
     Добро пожаловать!
 {% endblock %}
-{% block content %}
+{% block body %}
     <div class="centered" id="login_container">
         <div id="logo">
             <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
         </div>
-
+    {% block authorization %}
     {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
         <p><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></p>
         <p><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></p>
@@ -26,5 +26,6 @@
         {#<a id="login_button" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>#}
         <a id="login_button" href="{{ path('fos_user_security_login') }}">{{ 'Войти'|trans({}, 'FOSUserBundle') }}</a>
     {% endif %}
+        {% endblock %}
     </div>
 {% endblock %}

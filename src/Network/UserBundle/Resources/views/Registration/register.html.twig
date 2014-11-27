@@ -1,5 +1,18 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 
-{% block fos_user_content %}
-{% include "FOSUserBundle:Registration:register_content.html.twig" %}
-{% endblock fos_user_content %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/login.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block body %}
+<div class="centered" id="login_container">
+    <div id="logo">
+        <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
+    </div>
+    {% block authorization %}
+        {% include "FOSUserBundle:Registration:register_content.html.twig" %}
+    {{ parent() }}
+    {% endblock %}
+</div>
+{% endblock %}
