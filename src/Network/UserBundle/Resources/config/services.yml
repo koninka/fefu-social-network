@@ -20,6 +20,12 @@ services:
         tags:
             - { name: form.type, alias: network_user_profile }
 
+    network_user.email_change.form.type:
+        class: Network\UserBundle\Form\Type\ChangeEmailType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_change_email}
+
     network_user.email_change.listener:
         class: %network.email_change.listener.class%
         arguments: ['@fos_user.mailer', '@fos_user.util.token_generator', '@router', '@session', '@security.context']
