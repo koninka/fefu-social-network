@@ -1,0 +1,30 @@
+{% extends "NetworkWebBundle:Default:base.html.twig" %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/login.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block title %}
+    Добро пожаловать!
+{% endblock %}
+{% block content %}
+    <div class="centered" id="login_container">
+        <div id="logo">
+            <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
+        </div>
+
+    {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
+        <p><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></p>
+        <p><a href="{{ path('fos_user_security_logout') }}">{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}</a></p>
+    {% else %}
+        <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
+        <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
+        <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
+        <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
+        {#<a id="registration_button" href="{{ path('fos_user_registration_register')  }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>#}
+        <a id="registration_button" href="{{ path('fos_user_registration_register')  }}">{{ 'Зарегестрироваться'|trans({}, 'FOSUserBundle') }}</a>
+        {#<a id="login_button" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>#}
+        <a id="login_button" href="{{ path('fos_user_security_login') }}">{{ 'Войти'|trans({}, 'FOSUserBundle') }}</a>
+    {% endif %}
+    </div>
+{% endblock %}

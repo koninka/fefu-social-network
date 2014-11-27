@@ -8,6 +8,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('NetworkWebBundle:Default:index.html.twig');
+        return $this->render('NetworkWebBundle:LoginAndRegistration:index.html.twig');
     }
 }

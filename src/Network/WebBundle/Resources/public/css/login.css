@@ -1,0 +1,91 @@
+body::before {
+    z-index: -100;
+    background-image: url("../img/bg.jpg");
+}
+
+body::after{
+    z-index: -98;
+    background-color: rgba(0,0,0,0.05);
+}
+
+body::before, body:after {
+    content: ' ';
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+#login_container{
+    width: 300px;
+    min-height: 470px;
+    margin-top: 100px;
+    background-color: #fff;
+    border-radius: 6px;
+    display: block;
+    position: relative;
+    box-shadow: rgba(0, 0, 0, 0.5) 0 4px 24px 6px;
+}
+
+#logo img{
+    width: 175px;
+    height: 175px;
+    margin: 40px 0 40px 62px;
+}
+
+.button.authentication{
+    width: 120px;
+    font-size: 14px;
+    line-height: 30px;
+    height: 30px;
+    margin: 8px 0 0 19px;
+    text-align: center;
+    display: inline-block;
+    border-radius: 5px;
+    color: #5b5b5b;
+    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+    text-decoration: none;
+}
+
+.button.authentication:active, #login_button:active{
+    background-image: linear-gradient(rgb(245, 245, 245), rgb(255, 255, 255));
+}
+
+#registration_button, #login_button{
+    width: 260px;
+    height: 35px;
+    margin: 20px 0 0 20px;
+    display: block;
+    line-height: 35px;
+    text-align: center;
+    text-decoration: none;
+}
+
+#registration_button{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(44, 145, 249));
+    border: 1px solid rgb(3, 125, 214);
+    border-radius: 5px;
+    font-weight: bold;
+    color: #fff;
+}
+
+#registration_button:active{
+    background-image: linear-gradient(rgb(44, 145, 249), rgb(44, 145, 249))
+}
+
+#registration_button:hover{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(57, 173, 252));
+}
+
+#login_button{
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+    border-radius: 5px;
+    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
+    font-weight: bold;
+    color: #5b5b5b;
+}
