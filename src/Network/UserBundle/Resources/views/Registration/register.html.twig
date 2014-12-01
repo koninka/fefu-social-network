@@ -1,18 +1,13 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
-
-{% block stylesheets %}
+{% extends "NetworkWebBundle:Default:auth.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block authorization %}
     {{ parent() }}
-    <link href="{{ asset('bundles/networkweb/css/login.css') }}" type="text/css" rel="stylesheet" />
-{% endblock %}
-
-{% block body %}
-<div class="centered" id="login_container">
-    <div id="logo">
-        <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
-    </div>
-    {% block authorization %}
-        {% include "FOSUserBundle:Registration:register_content.html.twig" %}
-    {{ parent() }}
-    {% endblock %}
-</div>
+    <form action="{{ path('fos_user_registration_register') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register register_form">
+        {{ form_widget(form) }}
+        {{ form_widget(form.gender, { 'attr': {'class': 'calendar'} }) }}
+        <div>
+            <input type="submit" class="submit_button" value="{{ 'registration.submit'|trans }}" />
+        </div>
+    </form>
+    <a class="login_authentication_button" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
 {% endblock %}

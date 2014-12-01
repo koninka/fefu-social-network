@@ -4,22 +4,17 @@
     {{ parent() }}
     {#<link href="{{ asset('bundles/networkweb/css/login.css') }}" type="text/css" rel="stylesheet" />#}
 {% endblock %}
-{% block title %}
-    Вход/авторизация
-{% endblock %}
 {% block body %}
-
+    {{ parent() }}
         {% block authorization %}
             <div class="authentication_button">
                 {% if is_granted("IS_AUTHENTICATED_REMEMBERED") %}
                     {{ 'layout.logged_in_as'|trans({'%username%': app.user.username}, 'FOSUserBundle') }} |
                     <a href="{{ path('fos_user_security_logout') }}">
-                        {#{{ 'layout.logout'|trans({}, 'FOSUserBundle') }}#}
-                        {{ 'Выход'|trans({}, 'FOSUserBundle') }}
+                        {{ 'layout.logout'|trans({}, 'FOSUserBundle') }}
                     </a>
                 {% else %}
-                    {#<a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>#}
-                    <a href="{{ path('fos_user_security_login') }}">{{ 'Вход'|trans({}, 'FOSUserBundle') }}</a>
+                    <a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
                 {% endif %}
             </div>
 
@@ -30,7 +25,6 @@
                     </div>
                 {% endfor %}
             {% endfor %}
-
             <div>
                 {% block fos_user_content %}
 

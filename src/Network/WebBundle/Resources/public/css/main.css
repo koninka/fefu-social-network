@@ -20,6 +20,10 @@ button{
     margin: 0 auto;
 }
 
+label{
+    color: rgb(149, 149, 149);
+}
+
 body::before {
     z-index: -100;
     background-image: url("../img/bg.jpg");
@@ -40,5 +44,14 @@ body::before, body:after {
     bottom: 0;
     left: 0;
     right: 0;
+}
+
+label{
+    color: rgb(149, 149, 149);
+}
+
+.red_label{
+    color: #ff585a;
+    font-size: 14px;
 }
 
