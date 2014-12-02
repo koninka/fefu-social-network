@@ -55,3 +55,37 @@ label{
     font-size: 14px;
 }
 
+/*------------------------------ buttons ---------------------------------*/
+
+.blue_button, .gray_button{
+    margin: 5px;
+    padding: 5px;
+    display: block;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.blue_button{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(44, 145, 249));
+    border: 1px solid rgb(3, 125, 214);
+    font-weight: bold;
+    color: #fff;
+}
+
+.blue_button:active{
+    background-image: linear-gradient(rgb(44, 145, 249), rgb(44, 145, 249))
+}
+
+.blue_button:hover{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(57, 173, 252));
+}
+
+.gray_button{
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
+    font-weight: bold;
+    color: #5b5b5b;
+}

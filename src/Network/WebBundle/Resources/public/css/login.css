@@ -81,8 +81,8 @@
     line-height: 20px;
     text-align: right;
     border: 1px solid #000;
-    display: inline-block;
     margin-left: 20px;
+    display: none;
 }
 
 .register_form{
