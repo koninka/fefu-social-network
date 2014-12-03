@@ -80,8 +80,10 @@ fos_user:
     user_class: Network\StoreBundle\Entity\User
     group:
         group_class: Network\StoreBundle\Entity\Group
+    from_email:
+        sender_name:    VDolgah
     service:
-        mailer: fos_user.mailer.twig_swift
+        mailer: network.mailer.twig_swift
     registration:
         form:
             type: network_user_registration
@@ -93,3 +95,13 @@ fos_user:
             template: NetworkUserBundle:Mail:resetting.html.twig
         form:
             type: network_user_change_password
+    profile:
+        form:
+            type: network_user_profile
+
+parameters:
+    user_form_builder.class: Network\UserBundle\UserFormBuilder
+
+services:
+    user_form_builder:
+        class: %user_form_builder.class%

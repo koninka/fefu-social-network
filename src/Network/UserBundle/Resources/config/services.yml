@@ -13,3 +13,42 @@ services:
         arguments: [%fos_user.model.user.class%]
         tags:
             - { name: form.type, alias: network_user_change_password }
+
+    network_user.profile.form.type:
+        class: Network\UserBundle\Form\Type\ProfileFormType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_profile }
+
+    network_user.email_change.form.type:
+        class: Network\UserBundle\Form\Type\ChangeEmailType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_change_email}
+
+    network_user.email_change.listener:
+        class: %network.email_change.listener.class%
+        arguments: ['@fos_user.mailer', '@fos_user.util.token_generator', '@router', '@session', '@security.context']
+        tags:
+            - { name: kernel.event_subscriber }
+
+    network.mailer.twig_swift:
+        class: Network\UserBundle\Mailer\TwigSwiftMailer
+        arguments:
+            - '@mailer'
+            - '@router'
+            - '@twig'
+            -
+                template:
+                    confirmation: '%fos_user.registration.confirmation.template%'
+                    resetting: '%fos_user.resetting.email.template%'
+                    new: '%network.new.email.template%'
+                from_email:
+                    confirmation: '%fos_user.registration.confirmation.from_email%'
+                    resetting: '%fos_user.resetting.email.from_email%'
+                    new: '%network.new.email.from_email%'
+
+parameters:
+    network.email_change.listener.class: Network\UserBundle\EventListener\ChangeEmailSubscriber
+    network.new.email.template: NetworkUserBundle:Mail:email_change.html.twig
+    network.new.email.from_email:
