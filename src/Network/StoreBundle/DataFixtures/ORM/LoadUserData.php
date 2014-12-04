@@ -76,7 +76,7 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $groupManager = $this->container->get('fos_user.group_manager');
         $this->addGroup('admin', ['ROLE_ADMIN'])
              ->addGroup('user', ['ROLE_USER']);
-        $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin', null,
+        $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin@vdolgah.com', null,
                         $groupManager->findGroupByName('admin'));
 
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
