@@ -5,6 +5,14 @@ function CollectionHolder(startIndex, container) {
     this.init();
 }
 
+CollectionHolder.prototype.initSearchSuggestors = function (container) {
+    container
+        .find('input[class*="vdolgah_searchable_field"]')
+        .each(function (idx, elem) {
+            new SearchSuggestor(elem);
+        });
+};
+
 CollectionHolder.prototype.init = function() {
     var addBtn = $('<button>Add</button>');
     var th = this;
@@ -16,6 +24,8 @@ CollectionHolder.prototype.init = function() {
         newForm.append(th.createDeleteBtn());
 
         th.domContainer.append(newForm);
+
+        th.initSearchSuggestors(newForm);
     });
 
     this.domContainer.prepend(addBtn);
@@ -23,6 +33,8 @@ CollectionHolder.prototype.init = function() {
     this.domContainer.children('div').each(function(idx, elem) {
         $(elem).append(th.createDeleteBtn());
     });
+
+    this.initSearchSuggestors(this.domContainer);
 };
 
 CollectionHolder.prototype.createDeleteBtn = function() {

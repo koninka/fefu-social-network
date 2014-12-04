@@ -1,10 +1,31 @@
+{% for flashMessage in app.session.flashbag.get('notice') %}
+    <div>
+        {{ flashMessage }}
+    </div>
+{% endfor %}
+
+
 {{ form_start(form) }}
 
     {{ form_rest(form) }}
 
+    {% block stylesheets %}
+
+        {% stylesheets '@NetworkWebBundle/Resources/public/css/jquery-ui/*'
+                        filter='cssrewrite' %}
+
+            <link rel="stylesheet" href="{{ asset_url }}" />
+
+        {% endstylesheets %}
+
+    {% endblock %}
+
     {% block javascripts %}
 
-        {% javascripts  '@NetworkWebBundle/Resources/public/js/jquery.min.js'
+        <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+        <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+        {% javascripts  'bundles/sonatacore/vendor/jquery/dist/jquery.min.js'
                         '@NetworkWebBundle/Resources/public/js/*' %}
 
             <script type="text/javascript" src="{{ asset_url }}"></script>
