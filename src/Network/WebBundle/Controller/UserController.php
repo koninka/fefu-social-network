@@ -7,12 +7,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Network\StoreBundle\Form\Type\UserType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class UserController extends Controller
 {
+    const MAX_COUNT = 15;
 
-    public function jobsAction($id, Request $request) {
-        $user = $this->get('security.context')->getToken()->getUser();
+    private $searchData = [
+        'post' => [
+            'repo' => 'NetworkStoreBundle:JobPost',
+        ],
+    ];
+
+    public function jobsAction(Request $request)
+    {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         if (null === $user) {
@@ -48,6 +57,41 @@ class UserController extends Controller
         return $this->render('NetworkWebBundle:User:profile_jobs.html.twig', [
             'form' => $form->createView(),
         ]);
+    }
+
+    public function jsonAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+
+        $what = $data['what'];
+        $by = $data['by'];
+        $val = $data['val'];
+        $response = [];
+
+        if (null === $what || null === $by || !array_key_exists($what, $this->searchData)) {
+            $response['result'] = 'badParams';
+        } else {
+            $repo = $this->getDoctrine()
+                         ->getRepository($this->searchData[$what]['repo']);
+
+            $entities = $repo->createQueryBuilder('i')
+                ->where("i.$by LIKE :cond")
+                ->setMaxResults(self::MAX_COUNT)
+                ->setParameter('cond', "$val%")
+                ->getQuery()
+                ->getResult();
+
+            $serializer = $this->container->get('jms_serializer');
+            $response['data'] = [];
+
+            foreach($entities as $entity) {
+                $response['data'][] = $serializer->serialize($entity, 'json');
+            }
+
+            $response['result'] = 'ok';
+        }
+
+        return new JsonResponse($response);
     }
 
 }
