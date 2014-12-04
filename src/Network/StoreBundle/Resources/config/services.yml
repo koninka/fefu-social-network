@@ -3,3 +3,8 @@ services:
       class: Network\StoreBundle\Form\Type\JobType
       tags:
           - { name: form.type, alias: job }
+  network_store.form.type.job_post:
+    class: Network\StoreBundle\Form\Type\JobPostType
+    arguments: ["@doctrine.orm.entity_manager"]
+    tags:
+        - { name: form.type, alias: network_storebundle_job_post }

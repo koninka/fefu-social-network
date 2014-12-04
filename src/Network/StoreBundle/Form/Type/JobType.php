@@ -11,6 +11,11 @@ class JobType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $this->addEntityFieldsToBuilder($builder);
+        $builder->add('post', 'network_storebundle_job_post', [
+            'attr' => [
+                'class' => 'vdolgah_searchable_field_by_name',
+            ],
+        ]);
     }
 
     public function getName()
