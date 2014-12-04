@@ -71,10 +71,10 @@ class Job
 
 
     /**
-     * @var string
+     * @var JobPost
      *
-     * @ORM\Column(name="post", type="string", length=100)
-     * @Assert\NotBlank()
+     * @ORM\ManyToOne(targetEntity="JobPost")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
      */
     private $post;
 
@@ -209,7 +209,7 @@ class Job
     }
 
     /**
-     * @param string $post
+     * @param JobPost $post
      * @return \Network\StoreBundle\Entity\Job
      */
     public function setPost($post)
@@ -220,7 +220,7 @@ class Job
     }
 
     /**
-     * @return string
+     * @return JobPost
      */
     public function getPost()
     {
