@@ -50,6 +50,74 @@ services:
         calls:
             - [ setTranslationDomain, [NetworkStoreBundle]]
 
+    sonata.admin.country:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: country }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Country
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+    sonata.admin.city:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: city }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\City
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+    sonata.admin.university:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: university }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\University
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+    sonata.admin.faculty:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: faculty }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Faculty
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+    sonata.admin.chair:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: chair }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Chair
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+    sonata.admin.school:
+        class: Network\StoreBundle\Admin\SchoolAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: school }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\School
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+            - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
+
+
 sonata_block:
     default_contexts: [cms]
     blocks:
