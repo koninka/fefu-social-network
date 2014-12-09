@@ -20,6 +20,7 @@ class VDolgahAdmin extends Admin
     const OPTIONS_KEY_DESCRIPTION = 'edit_description';
     const NOT_SHOW_IN_LIST_KEY = 'not_show_in_list';
     const NOT_SHOW_IN_FORM_KEY = 'not_show_in_form';
+    const NOT_SHOW_IN_CHILD_KEY = 'not_show_in_child';
     const QUERY = 'query';
 
     protected $fields = [];
@@ -91,6 +92,11 @@ class VDolgahAdmin extends Admin
         }
     }
 
+    protected function checkKey($field, $key)
+    {
+        return array_key_exists($key, $field) && $field[$key];
+    }
+
     protected function configureListFields(ListMapper $listMapper)
     {
         foreach ($this->fields as $field) {
@@ -115,15 +121,24 @@ class VDolgahAdmin extends Admin
         ]);
     }
 
+    protected function checkChild()
+    {
+        return $this->getRoot()->getClass() != $this->getClass() ||
+            //TODO::find other way to solve the problem;
+            //problem::parent field in child popup form
+        array_key_exists('pcode', $_GET);
+    }
+
     protected function configureFormFields(FormMapper $formMapper)
     {
         foreach ($this->fields as $field) {
             if (
-                !array_key_exists(self::NOT_SHOW_IN_FORM_KEY, $field)
-                || false == $field[self::NOT_SHOW_IN_FORM_KEY]
+                $this->checkKey($field, self::NOT_SHOW_IN_FORM_KEY) ||
+                ($this->checkKey($field, self::NOT_SHOW_IN_CHILD_KEY) && $this->checkChild())
             ) {
-                $this->addFieldToMapper($formMapper, $field);
+                continue;
             }
+            $this->addFieldToMapper($formMapper, $field);
         }
     }
 
