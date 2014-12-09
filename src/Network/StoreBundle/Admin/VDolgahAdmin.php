@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Symfony\Component\PropertyAccess\PropertyAccess;
 
 class VDolgahAdmin extends Admin
 {
@@ -76,13 +77,16 @@ class VDolgahAdmin extends Admin
     public function __construct($code, $class, $baseControllerName)
     {
         parent::__construct($code, $class, $baseControllerName);
+        $entity = new $class;
+        $accessor = PropertyAccess::createPropertyAccessor();
         $entityReflection = new \ReflectionClass($class);
         foreach ($entityReflection->getProperties() as $property) {
-            $name = ucfirst($property->getName());
-            if (($entityReflection->hasMethod('set' . $name)
-                || ($entityReflection->hasMethod('add' . $name)))
-                && $entityReflection->hasMethod('get' . $name)) {
-                $this->fields[] = ['name' => $property->getName()];
+            $propertyName = $property->getName();
+            if (
+                $accessor->isWritable($entity, $propertyName) &&
+                $accessor->isReadable($entity, $propertyName)
+            ) {
+                $this->fields[] = [ 'name' => $propertyName ];
             }
         }
     }
