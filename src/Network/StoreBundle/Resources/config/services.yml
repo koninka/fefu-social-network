@@ -2,4 +2,8 @@ parameters:
     #
 
 services:
-    #
+    network.store.form.type.category:
+        class: Network\StoreBundle\Form\Type\CategoryType
+        tags:
+            - { name: form.type, alias: category }
+        arguments: ["@sonata.admin.manager.orm"]
