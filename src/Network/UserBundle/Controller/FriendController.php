@@ -18,7 +18,9 @@ class FriendController extends Controller
         $em = $this->getDoctrine()->getManager();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         $msg = 'Не найден пользователь';
-        if (!empty($userFriend)) {
+        if (!$user) {
+            $msg = 'Вы не авторизованы!';
+        } elseif (!empty($userFriend)) {
             $status = $user->getRelationshipStatus($id);
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
                 $msg = 'Пользователь уже в друзьях';
@@ -65,7 +67,9 @@ class FriendController extends Controller
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         $msg = 'Не найден пользователь';
-        if (!empty($userFriend)) {
+        if (!$user) {
+            $msg = 'Вы не авторизованы!';
+        } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
                 $msg = 'Пользователь уже в друзьях';
@@ -96,7 +100,9 @@ class FriendController extends Controller
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         $msg = 'Не найден пользователь';
-        if (!empty($userFriend)) {
+        if (!$user) {
+            $msg = 'Вы не авторизованы!';
+        } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
                 $msg = 'Пользователь уже в друзьях';
@@ -129,7 +135,9 @@ class FriendController extends Controller
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         $msg = 'Не найден пользователь';
-        if (!empty($userFriend)) {
+        if (!$user) {
+            $msg = 'Вы не авторизованы!';
+        } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status != RelationshipStatusEnumType::FS_ACCEPTED) {
                 $msg = 'Пользователь не является вашим другом';
