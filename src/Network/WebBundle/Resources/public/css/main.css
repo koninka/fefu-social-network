@@ -1,12 +1,9 @@
 body{
-    font-family: tahoma, arial, verdana, sans-serif, Lucida Sans;
+    font-family: Lato, 'Helvetica Neue', Arial, sans-serif;
 }
 
 header, #content, footer{
     margin: 0 auto;
-    width: 980px;
-    border: 1px solid #000000;
-    min-height: 200px;
 }
 
 #logo img{
@@ -17,4 +14,78 @@ header, #content, footer{
 button{
     background-color: #4c7198;
     color: #ffffff;
+}
+
+.centered{
+    margin: 0 auto;
+}
+
+label{
+    color: rgb(149, 149, 149);
+}
+
+body::before {
+    z-index: -100;
+    background-image: url("../img/bg.jpg");
+}
+
+body::after{
+    z-index: -98;
+    background-color: rgba(0,0,0,0.05);
+}
+
+body::before, body:after {
+    content: ' ';
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+label{
+    color: rgb(149, 149, 149);
+}
+
+.red_label{
+    color: #ff585a;
+    font-size: 14px;
+}
+
+/*------------------------------ buttons ---------------------------------*/
+
+.blue_button, .gray_button{
+    margin: 5px;
+    padding: 5px;
+    display: block;
+    height: 30px;
+    border-radius: 5px;
+    text-align: center;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.blue_button{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(44, 145, 249));
+    border: 1px solid rgb(3, 125, 214);
+    font-weight: bold;
+    color: #fff;
+}
+
+.blue_button:active{
+    background-image: linear-gradient(rgb(44, 145, 249), rgb(44, 145, 249))
+}
+
+.blue_button:hover{
+    background-image: linear-gradient(rgb(56, 169, 251), rgb(57, 173, 252));
+}
+
+.gray_button{
+    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
+    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
+    font-weight: bold;
+    color: #5b5b5b;
 }
