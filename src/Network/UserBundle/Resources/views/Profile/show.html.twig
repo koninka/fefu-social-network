@@ -1,8 +1,24 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
-
-{% block fos_user_content %}
-    <p><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.edit'|trans({}, 'FOSUserBundle') }}</a></p>
-    <p><a href="{{ path('fos_user_change_password') }}">{{ 'layout.change_password'|trans({}, 'FOSUserBundle') }}</a></p>
-    <p><a href="{{ path('fos_user_change_email') }}">{{ 'layout.change_email'|trans({}, 'FOSUserBundle') }}</a></p>
-    {% include "FOSUserBundle:Profile:show_content.html.twig" %}
-{% endblock fos_user_content %}
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block right_content_sub_two %}
+    {{ parent() }}
+    {% if is_granted('ROLE_USER') and not is_cur_user %}
+        <p>
+            {{ rl_status }}
+        </p>
+    {% endif %}
+    <div class="fos_user_user_show">
+        <p>{{ 'profile.show.firstName'|trans }}: {{ user.firstName }}</p>
+        <p>{{ 'profile.show.lastName'|trans }}: {{ user.lastName }}</p>
+        <p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>
+        <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+    </div>
+    {% if is_cur_user %}
+        <div>
+            <p>Отношения:</p>
+            {% for relationship in user.relationships %}
+                <p>{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}: {{ relationship.status }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endblock %}
