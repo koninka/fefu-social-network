@@ -40,3 +40,15 @@ user_delete_friendship:
 user_profile_friendship_requests:
     path: /profile/friendship_requests
     defaults: { _controller: NetworkUserBundle:Profile:manageFriendshipRequests }
+
+user_profile_show_friends:
+    path: /profile/friends
+    defaults: { _controller: NetworkUserBundle:Profile:showProfileFriends }
+    requirements:
+       id: \d+
+
+user_show_friends:
+    path: /id{id}/friends
+    defaults: { _controller: NetworkUserBundle:Profile:showFriends }
+    requirements:
+       id: \d+

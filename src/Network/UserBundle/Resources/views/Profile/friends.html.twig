@@ -1,0 +1,50 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <div>
+        <div>
+            <a href="{{ path('user_profile', {'id':user_id} ) }}">{{ 'profile.show.back_to_profile'|trans }}</a>
+        </div>
+        {% if friends %}
+            <div>
+                <p>{{ 'profile.show.friends'|trans }}: {{ friends|length }}</p>
+                {% for relationship in friends %}
+                    <p>
+                        <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if subscribers %}
+            <div>
+                <p>{{ 'profile.show.subscribers'|trans }}: {{ subscribers|length }}</p>
+                {% for relationship in subscribers %}
+                    <p>
+                        <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+        {% if subscribed_on %}
+            <div>
+                <p>{{ 'profile.show.subscribed_on'|trans }}: {{ subscribed_on|length }}</p>
+                {% for relationship in subscribed_on %}
+                    <p>
+                        <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+    </div>
+{% endblock %}

@@ -60,6 +60,26 @@ class ProfileController extends BaseController
         ]);
     }
 
+    public function showFriendsAction($id)
+    {
+        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        return $this->render('NetworkUserBundle:Profile:friends.html.twig', [
+            'user_id' => $user->getId(),
+            'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
+            'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),
+            'subscribed_on' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+        ]);
+    }
+
+    public function showProfileFriendsAction()
+    {
+        $user = $this->getUser();
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        return $this->showFriendsAction($user->getId());
+    }
+
     public function manageFriendshipRequestsAction()
     {
         return $this->render('NetworkUserBundle:Profile:manage_requests.html.twig', [
