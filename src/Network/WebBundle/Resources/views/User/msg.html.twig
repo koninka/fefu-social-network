@@ -1,7 +1,6 @@
 {% extends "NetworkWebBundle:Default:base.html.twig" %}
-{% block content %}
+{% block body %}
     <div class="msg">
-        {{ msg }}
-        <a href="javascript:window.location.replace(document.referrer)">Назад</a>
+        {{ msg|trans  }}
     </div>
 {% endblock %}

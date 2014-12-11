@@ -14,25 +14,29 @@ user_profile:
        id: \d+
 
 user_send_friendship_request:
-    path: /send_friendship_request/{id}
+    path: /friendship/send_request/{id}
     defaults: { _controller: NetworkUserBundle:Friend:sendFriendshipRequest }
     requirements:
        id: \d+
 
 user_accept_friendship_request:
-    path: /accept_friendship_request/{id}
+    path: /friendship/accept_request/{id}
     defaults: { _controller: NetworkUserBundle:Friend:acceptFriendshipRequest }
     requirements:
        id: \d+
 
 user_decline_friendship_request:
-    path: /decline_friendship_request/{id}
+    path: /friendship/decline_request/{id}
     defaults: { _controller: NetworkUserBundle:Friend:declineFriendship }
     requirements:
        id: \d+
 
 user_delete_friendship:
-    path: /delete_friendship/{id}
+    path: /friendship/delete/{id}
     defaults: { _controller: NetworkUserBundle:Friend:deleteFriendship }
     requirements:
        id: \d+
+
+user_profile_friendship_requests:
+    path: /profile/friendship_requests
+    defaults: { _controller: NetworkUserBundle:Profile:manageFriendshipRequests }

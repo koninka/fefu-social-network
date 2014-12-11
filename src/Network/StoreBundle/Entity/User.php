@@ -320,7 +320,7 @@ class User extends BaseUser
     /**
      * Add relationships
      *
-     * @param \Network\StoreBundle\Entity\Relationship $friend
+     * @param \Network\StoreBundle\Entity\Relationship $partner
      * @return User
      */
     public function addRelationship(\Network\StoreBundle\Entity\Relationship $partner)
@@ -335,7 +335,7 @@ class User extends BaseUser
     /**
      * Remove relationships
      *
-     * @param \Network\StoreBundle\Entity\Relationship $friend
+     * @param \Network\StoreBundle\Entity\Relationship $partner
      * @return User
      */
     public function removeRelationship(\Network\StoreBundle\Entity\Relationship $partner)
@@ -407,6 +407,22 @@ class User extends BaseUser
             return $rel->getStatus();
         }
         return RelationshipStatusEnumType::FS_NONE;
+    }
+
+    /**
+     * @param string $status
+     * @return array
+     */
+    public function getRelationshipsWithStatus($status)
+    {
+        $rels = [];
+        foreach ($this->getRelationships() as $relationship) {
+            if ($relationship->getStatus() === $status) {
+                $rels[] = $relationship;
+            }
+        }
+
+        return $rels;
     }
 
     public function __toString()

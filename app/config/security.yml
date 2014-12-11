@@ -54,7 +54,6 @@ security:
         - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/profile, role: ROLE_USER }
-        - { path: ^/add_friend, role: ROLE_USER }
-        - { path: ^/delete_friend, role: ROLE_USER }
+        - { path: ^/friendship, role: ROLE_USER }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }

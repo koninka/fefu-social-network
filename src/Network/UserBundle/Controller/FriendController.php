@@ -17,15 +17,15 @@ class FriendController extends Controller
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        $msg = 'Не найден пользователь';
+        $msg = 'msg.user_not_found';
         if (!$user) {
-            $msg = 'Вы не авторизованы!';
+            $msg = 'msg.not_authorized';
         } elseif (!empty($userFriend)) {
             $status = $user->getRelationshipStatus($id);
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
-                $msg = 'Пользователь уже в друзьях';
+                $msg = 'msg.is_already_friend';
             } elseif ($status === RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME) {
-                $msg = 'Вы уже подписаны на пользователя';
+                $msg = 'msg.isAlreadySubscribed';
             } elseif ($status === RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER) {
                 $friendRelationship = $userFriend->getRelationship($user->getId());
                 $friendRelationship->setStatus(RelationshipStatusEnumType::FS_ACCEPTED);
@@ -36,11 +36,10 @@ class FriendController extends Controller
                 $em->persist($relationship);
 
                 $em->flush();
-                $msg = 'Заявка на дружбу принята';
+                $msg = 'msg.friendship_accepted';
             } elseif ($status != RelationshipStatusEnumType::FS_NONE) {
-                $msg = $status.'Неизвестная ошибка';
+                $msg = $status.'msg.unknown_error';
             } else {
-                //$status != RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER
                 $relationship = new Relationship();
                 $relationship->setUser($user)->setPartner($userFriend)->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME);
                 $em->persist($relationship);
@@ -53,7 +52,7 @@ class FriendController extends Controller
 
                 $em->flush();
 
-                $msg = 'Заявка отправлена';
+                $msg = 'msg.friendship_request_sent';
             }
         }
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
@@ -66,15 +65,15 @@ class FriendController extends Controller
     {
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        $msg = 'Не найден пользователь';
+        $msg = 'msg.user_not_found';
         if (!$user) {
-            $msg = 'Вы не авторизованы!';
+            $msg = 'msg.not_authorized';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
-                $msg = 'Пользователь уже в друзьях';
+                $msg = 'msg.is_already_friend';
             } elseif ($status != RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME) {
-                $msg = 'Пользователь не отправлял вам запрос на дружбу (не подписывался на вас)';
+                $msg = 'msg.user_does_not_sent_friendship_request';
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -87,7 +86,7 @@ class FriendController extends Controller
                 $em->persist($relationship);
 
                 $em->flush();
-                $msg = 'Заявка на дружбу принята';
+                $msg = 'msg.friendship_accepted';
             }
         }
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
@@ -99,15 +98,15 @@ class FriendController extends Controller
     {
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        $msg = 'Не найден пользователь';
+        $msg = 'msg.user_not_found';
         if (!$user) {
-            $msg = 'Вы не авторизованы!';
+            $msg = 'msg.not_authorized';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
-                $msg = 'Пользователь уже в друзьях';
+                $msg = 'msg.is_already_friend';
             } elseif ($status != RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME) {
-                $msg = 'Пользователь не отправлял вам запрос на дружбу (не подписывался на вас)';
+                $msg = 'msg.user_does_not_sent_friendship_request';
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -121,7 +120,7 @@ class FriendController extends Controller
 
                 $em->flush();
 
-                $msg = 'Заявка отклонена';
+                $msg = 'msg.friendship_request_declined';
             }
         }
 
@@ -134,13 +133,13 @@ class FriendController extends Controller
     {
         $user = $this->getUser();
         $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        $msg = 'Не найден пользователь';
+        $msg = 'msg.user_not_found';
         if (!$user) {
-            $msg = 'Вы не авторизованы!';
+            $msg = 'msg.not_authorized';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status != RelationshipStatusEnumType::FS_ACCEPTED) {
-                $msg = 'Пользователь не является вашим другом';
+                $msg = 'msg.user_is_not_friend';
             } else {
                 $em = $this->getDoctrine()->getManager();
 
@@ -154,7 +153,7 @@ class FriendController extends Controller
 
                 $em->flush();
 
-                $msg = 'Пользователь удален из друзей';
+                $msg = 'msg.friendship_deleted';
             }
         }
         return $this->render('NetworkWebBundle:User:msg.html.twig', [

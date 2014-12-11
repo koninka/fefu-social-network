@@ -53,7 +53,17 @@ class ProfileController extends BaseController
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
             'rl_status' => $fsStatus,
+            'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
+            'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),
+            'subscribed_on' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME),
             'is_cur_user' => $is_cur_user
+        ]);
+    }
+
+    public function manageFriendshipRequestsAction()
+    {
+        return $this->render('NetworkUserBundle:Profile:manage_requests.html.twig', [
+            'friendship_requests' => $this->getUser()->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER)
         ]);
     }
 

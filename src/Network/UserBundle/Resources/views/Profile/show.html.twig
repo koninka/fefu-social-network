@@ -3,9 +3,19 @@
 {% block right_content_sub_two %}
     {{ parent() }}
     {% if is_granted('ROLE_USER') and not is_cur_user %}
-        <p>
-            {{ rl_status }}
-        </p>
+            <div>
+            <p>
+                {% if rl_status == 'relationship_none' %}
+                    <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans  }}</a>
+                {% elseif rl_status == 'friendship_accepted' %}
+                    <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.show.delete_friendship'|trans  }}</a>
+                {% elseif rl_status == 'friendship_subscribed_by_me' %}
+                    {{ 'profile.show.subscribed_on_user'|trans  }}
+                {% elseif rl_status == 'friendship_subscribed_by_user' %}
+                    {{ 'profile.show.user_subscribed_on_you'|trans  }}
+                {% endif %}
+            </p>
+        </div>
     {% endif %}
     <div class="fos_user_user_show">
         <p>{{ 'profile.show.firstName'|trans }}: {{ user.firstName }}</p>
@@ -13,11 +23,33 @@
         <p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>
         <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
     </div>
-    {% if is_cur_user %}
+    {% if friends %}
         <div>
-            <p>Отношения:</p>
-            {% for relationship in user.relationships %}
-                <p>{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}: {{ relationship.status }}</p>
+            <p>{{ 'profile.show.friends'|trans }}</p>
+            {% for relationship in friends %}
+                <p>
+                    <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if subscribers %}
+        <div>
+            <p>{{ 'profile.show.subscribers'|trans }}</p>
+            {% for relationship in subscribers %}
+                <p>
+                    <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                </p>
+            {% endfor %}
+        </div>
+    {% endif %}
+    {% if subscribed_on %}
+        <div>
+            <p>{{ 'profile.show.subscribed_on'|trans }}</p>
+            {% for relationship in subscribed_on %}
+                <p>
+                    <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                </p>
             {% endfor %}
         </div>
     {% endif %}
