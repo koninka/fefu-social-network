@@ -5,7 +5,6 @@ namespace Network\StoreBundle\Controller;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
  * Class CategoryController
@@ -30,32 +29,14 @@ class CategoryController extends Controller
         if (!method_exists($categoryClass, 'getParent')) {
             return new JsonResponse(['message' => 'wrong value in "category"'], 400);
         }
-        $parentCategory = strtolower($categoryClass::getParent());
-
-        $manager = $this->get('doctrine.orm.entity_manager');
-        $q = $manager->createQueryBuilder()
-            ->select('u')
-            ->from($categoryClass, 'u')
-            ->join("u.$parentCategory", 'p')
-            ->where("p.id = :parentId")
-            ->andWhere("u.name LIKE :q")
-            ->orderBy('u.id')
-            ->setParameter('parentId', $parentCategoryId)
-            ->setParameter('q', '%'. $query .'%')
-            ->setFirstResult(($page -1) * $limit)->setMaxResults($limit)
-            ->getQuery();
-        $paginator = new DoctrinePaginator($q, $fetchJoinCollection = true);
-        $count = count($paginator);
-        $items = $q->getResult();
-        $data = [];
-        foreach ($items as $i) {
-            $data[] = ['id' => $i->getId(), 'text' => (string) $i];
-        }
-        $json = [
-            'totalCount' => $count,
-            'items' => $data,
-            'itemsPerPage' => $limit
-        ];
+        $categoryService = $this->get('network.store.category_service');
+        $json = $categoryService->getChildrenNamedLike(
+            $categoryClass,
+            $parentCategoryId,
+            $query,
+            $page,
+            $limit
+        );
 
         return new JsonResponse($json);
     }
