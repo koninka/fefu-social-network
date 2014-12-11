@@ -1,5 +1,12 @@
 #!/bin/bash
 
+set_permissions() {
+   sudo chmod -R a+rw .
+   if egrep -i "^www-data" /etc/group > /dev/null; then
+      sudo chown $USER:www-data .
+   fi
+}
+
 echo -n "Would you like to do 'git pull' (\"y\" or \"n\", default: \"n\"): "
 read answer
 if [ "$answer" = "y" ]; then
@@ -17,10 +24,7 @@ if [ "$answer" = "y" ]; then
    composer install
 fi
 
-sudo chmod -R a+rw .
-if egrep -i "^www-data" /etc/group > /dev/null; then
-   sudo chown $USER:www-data .
-fi
+set_permissions
 
 if [[ ! -z "$VDOLGAH_PROD" && $VDOLGAH_PROD -eq 1 ]]; then
    php app/console cache:clear --env=prod --no-debug
@@ -39,5 +43,7 @@ php app/console doctrine:database:create
 php app/console doctrine:schema:create
 php app/console doctrine:fixtures:load
 php app/console assets:install web --symlink
+
+set_permissions
 
 echo "Done!"
