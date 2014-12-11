@@ -37,6 +37,12 @@ user_delete_friendship:
     requirements:
        id: \d+
 
+user_delete_friendship_subscribtion:
+    path: /friendship/delete_subscription/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:deleteFriendshipSubscription }
+    requirements:
+       id: \d+
+
 user_profile_friendship_requests:
     path: /profile/friendship_requests
     defaults: { _controller: NetworkUserBundle:Profile:manageFriendshipRequests }

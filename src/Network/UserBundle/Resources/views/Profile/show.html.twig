@@ -10,7 +10,7 @@
                 {% elseif rl_status == 'friendship_accepted' %}
                     <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.show.delete_friendship'|trans  }}</a>
                 {% elseif rl_status == 'friendship_subscribed_by_me' %}
-                    {{ 'profile.show.subscribed_on_user'|trans  }}
+                    <a class="gray_button" href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans  }}</a>
                 {% endif %}
             </p>
         </div>

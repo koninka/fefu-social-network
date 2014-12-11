@@ -65,7 +65,19 @@ class ProfileController extends BaseController
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
+        $is_cur_user = false;
+        $friendship_requests_count = [];
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $cur_user = $this->getUser();
+            $is_cur_user = ($cur_user->getId() === $user->getId());
+            if ($is_cur_user) {
+                $friendship_requests_count = count($cur_user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true));
+            }
+        }
+
         return $this->render('NetworkUserBundle:Profile:friends.html.twig', [
+            'is_cur_user' => $is_cur_user,
+            'friendship_requests_count' => $friendship_requests_count,
             'user_id' => $user->getId(),
             'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
             'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),

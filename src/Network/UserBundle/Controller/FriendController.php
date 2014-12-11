@@ -20,6 +20,8 @@ class FriendController extends Controller
         $msg = 'msg.user_not_found';
         if (!$user) {
             $msg = 'msg.not_authorized';
+        } elseif ($user->getId() == $id) {
+            $msg = 'msg.same_user';
         } elseif (!empty($userFriend)) {
             $status = $user->getRelationshipStatus($id);
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
@@ -68,6 +70,8 @@ class FriendController extends Controller
         $msg = 'msg.user_not_found';
         if (!$user) {
             $msg = 'msg.not_authorized';
+        } elseif ($user->getId() == $id) {
+            $msg = 'msg.same_user';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
@@ -101,6 +105,8 @@ class FriendController extends Controller
         $msg = 'msg.user_not_found';
         if (!$user) {
             $msg = 'msg.not_authorized';
+        } elseif ($user->getId() == $id) {
+            $msg = 'msg.same_user';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
@@ -137,6 +143,8 @@ class FriendController extends Controller
         $msg = 'msg.user_not_found';
         if (!$user) {
             $msg = 'msg.not_authorized';
+        } elseif ($user->getId() == $id) {
+            $msg = 'msg.same_user';
         } elseif (!empty($userFriend)) {
             $status = $userFriend->getRelationshipStatus($user->getId());
             if ($status != RelationshipStatusEnumType::FS_ACCEPTED) {
@@ -151,11 +159,44 @@ class FriendController extends Controller
                 $relationship = $user->getRelationship($id);
                 $relationship->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
                 $relationship->setHidden(true);
-                $em->persist($friendRelationship);
+                $em->persist($relationship);
 
                 $em->flush();
 
                 $msg = 'msg.friendship_deleted';
+            }
+        }
+        return $this->render('NetworkWebBundle:User:msg.html.twig', [
+            'msg' => $msg
+        ]);
+
+    }
+
+    public function deleteFriendshipSubscriptionAction($id)
+    {
+        $user = $this->getUser();
+        $userFriend = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+        $msg = 'msg.user_not_found';
+        if (!$user) {
+            $msg = 'msg.not_authorized';
+        } elseif ($user->getId() == $id) {
+            $msg = 'msg.same_user';
+        } elseif (!empty($userFriend)) {
+            $status = $userFriend->getRelationshipStatus($user->getId());
+            if ($status != RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER) {
+                $msg = 'msg.you_are_not_subscribed_on_user';
+            } else {
+                $em = $this->getDoctrine()->getManager();
+
+                $friendRelationship = $userFriend->getRelationship($user->getId());
+                $em->remove($friendRelationship);
+
+                $relationship = $user->getRelationship($id);
+                $em->remove($relationship);
+
+                $em->flush();
+
+                $msg = 'msg.friendship_request_deleted';
             }
         }
         return $this->render('NetworkWebBundle:User:msg.html.twig', [

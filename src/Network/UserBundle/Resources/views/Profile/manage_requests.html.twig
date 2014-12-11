@@ -12,6 +12,9 @@
 {% endblock %}
 {% block right_content %}
     <div>
+        <div>
+            <a href="{{ path('user_profile_show_friends') }}">{{ 'profile.show_friends' }}</a>
+        </div>
         {% if friendship_requests %}
             <div>
                 <p>{{ 'profile.requests.count'|trans }}: {{ friendship_requests|length }}</p>

@@ -13,7 +13,11 @@
 {% block right_content %}
     <div>
         <div>
-            <a href="{{ path('user_profile', {'id':user_id} ) }}">{{ 'profile.show.back_to_profile'|trans }}</a>
+            {% if is_cur_user %}
+                <a href="{{ path('user_profile_friendship_requests') }}">{{ 'layout.friendship_requests'|trans }}: {{ friendship_requests_count }}</a>
+            {% else %}
+                <a href="{{ path('user_profile', {'id':user_id} ) }}">{{ 'profile.back_to_profile'|trans }}</a>
+            {% endif %}
         </div>
         {% if friends %}
             <div>
@@ -21,6 +25,9 @@
                 {% for relationship in friends %}
                     <p>
                         <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                        {% if is_cur_user %}
+                            <a href="{{ path('user_delete_friendship', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_friend' }}</a>
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
@@ -41,6 +48,9 @@
                 {% for relationship in subscribed_on %}
                     <p>
                         <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
+                        {% if is_cur_user %}
+                            <a href="{{ path('user_delete_friendship_subscribtion', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_subscription' }}</a>
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
