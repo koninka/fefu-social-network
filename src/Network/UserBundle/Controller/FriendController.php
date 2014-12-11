@@ -25,7 +25,7 @@ class FriendController extends Controller
             if ($status === RelationshipStatusEnumType::FS_ACCEPTED) {
                 $msg = 'msg.is_already_friend';
             } elseif ($status === RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME) {
-                $msg = 'msg.isAlreadySubscribed';
+                $msg = 'msg.is_already_subscribed';
             } elseif ($status === RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER) {
                 $friendRelationship = $userFriend->getRelationship($user->getId());
                 $friendRelationship->setStatus(RelationshipStatusEnumType::FS_ACCEPTED);
@@ -116,6 +116,7 @@ class FriendController extends Controller
 
                 $relationship = $user->getRelationship($id);
                 $relationship->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
+                $relationship->setHidden(true);
                 $em->persist($relationship);
 
                 $em->flush();
@@ -149,6 +150,7 @@ class FriendController extends Controller
 
                 $relationship = $user->getRelationship($id);
                 $relationship->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
+                $relationship->setHidden(true);
                 $em->persist($friendRelationship);
 
                 $em->flush();

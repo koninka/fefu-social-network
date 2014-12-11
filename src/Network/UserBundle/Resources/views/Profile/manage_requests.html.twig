@@ -12,18 +12,21 @@
 {% endblock %}
 {% block right_content %}
     <div>
-        <div>
-            {% if friendship_requests %}
-                {% for request in friendship_requests %}
-                    <div>
-                        {{ request.partner.firstName }} {{ request.partner.lastName }}
-                        <a class="blue_button" href="{{ path('user_accept_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.accept'|trans }}</a>
-                        <a class="gray_button" href="{{ path('user_decline_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.decline'|trans }}</a>
-                    </div>
-                {% endfor %}
-            {% else %}
-                {{ 'profile.requests.empty'|trans }}
-            {% endif %}
-        </div>
+        {% if friendship_requests %}
+            <div>
+                <p>{{ 'profile.requests.count'|trans }}: {{ friendship_requests|length }}</p>
+            </div>
+            {% for request in friendship_requests %}
+                <div>
+                    {{ request.partner.firstName }} {{ request.partner.lastName }}
+                    <a class="blue_button" href="{{ path('user_accept_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.accept'|trans }}</a>
+                    <a class="gray_button" href="{{ path('user_decline_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.decline'|trans }}</a>
+                </div>
+            {% endfor %}
+        {% else %}
+            <div>
+                <p>{{ 'profile.requests.empty'|trans }}</p>
+            </div>
+        {% endif %}
     </div>
 {% endblock %}

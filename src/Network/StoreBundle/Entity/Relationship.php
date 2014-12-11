@@ -49,6 +49,13 @@ class Relationship
     private $status;
 
     /**
+     * @var boolean
+     *
+     * @ORM\Column(name="hidden", type="boolean")
+     */
+    private $hidden;
+
+    /**
      * Get id
      *
      * @return integer 
@@ -121,11 +128,30 @@ class Relationship
     }
 
     /**
+     * @return mixed
+     */
+    public function getHidden()
+    {
+        return $this->hidden;
+    }
+
+    /**
+     * @param boolean $hidden
+     * @return Relationship
+     */
+    public function setHidden($hidden)
+    {
+        $this->hidden = $hidden;
+        return $this;
+    }
+
+    /**
      * Constructor
      */
     public function __construct()
     {
         $this->status = RelationshipStatusEnumType::FS_NONE;
+        $this->hidden = false;
     }
 
     /**

@@ -63,7 +63,7 @@ class ProfileController extends BaseController
     public function manageFriendshipRequestsAction()
     {
         return $this->render('NetworkUserBundle:Profile:manage_requests.html.twig', [
-            'friendship_requests' => $this->getUser()->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER)
+            'friendship_requests' => $this->getUser()->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true)
         ]);
     }
 

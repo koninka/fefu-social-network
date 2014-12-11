@@ -3,7 +3,7 @@
 {% block right_content_sub_two %}
     {{ parent() }}
     {% if is_granted('ROLE_USER') and not is_cur_user %}
-            <div>
+        <div>
             <p>
                 {% if rl_status == 'relationship_none' %}
                     <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans  }}</a>
@@ -25,7 +25,7 @@
     </div>
     {% if friends %}
         <div>
-            <p>{{ 'profile.show.friends'|trans }}</p>
+            <p>{{ 'profile.show.friends'|trans }}: {{ friends|length }}</p>
             {% for relationship in friends %}
                 <p>
                     <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
@@ -35,7 +35,7 @@
     {% endif %}
     {% if subscribers %}
         <div>
-            <p>{{ 'profile.show.subscribers'|trans }}</p>
+            <p>{{ 'profile.show.subscribers'|trans }}: {{ subscribers|length }}</p>
             {% for relationship in subscribers %}
                 <p>
                     <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
@@ -45,7 +45,7 @@
     {% endif %}
     {% if subscribed_on %}
         <div>
-            <p>{{ 'profile.show.subscribed_on'|trans }}</p>
+            <p>{{ 'profile.show.subscribed_on'|trans }}: {{ subscribed_on|length }}</p>
             {% for relationship in subscribed_on %}
                 <p>
                     <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>

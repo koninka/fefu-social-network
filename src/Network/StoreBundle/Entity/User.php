@@ -411,14 +411,17 @@ class User extends BaseUser
 
     /**
      * @param string $status
+     * @param boolean $noHidden
      * @return array
      */
-    public function getRelationshipsWithStatus($status)
+    public function getRelationshipsWithStatus($status, $noHidden = false)
     {
         $rels = [];
         foreach ($this->getRelationships() as $relationship) {
             if ($relationship->getStatus() === $status) {
-                $rels[] = $relationship;
+                if (!$noHidden || ($noHidden && $relationship->getHidden() === false)) {
+                    $rels[] = $relationship;
+                }
             }
         }
 
