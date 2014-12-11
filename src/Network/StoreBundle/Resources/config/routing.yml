@@ -1,0 +1,5 @@
+get_from_category:
+    pattern: /api/categories
+    defaults: {_controller: NetworkStoreBundle:Category:getItemsFromCategory}
+    options:
+        expose: true
