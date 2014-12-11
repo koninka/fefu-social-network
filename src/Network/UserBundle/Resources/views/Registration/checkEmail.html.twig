@@ -1,7 +1,5 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
-
+{% extends "NetworkWebBundle:Default:auth.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-
-{% block fos_user_content %}
+{% block authorization %}
     <p>{{ 'registration.check_email'|trans({'%email%': user.email}) }}</p>
-{% endblock fos_user_content %}
+{% endblock %}

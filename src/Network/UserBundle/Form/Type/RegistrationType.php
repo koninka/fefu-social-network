@@ -14,14 +14,14 @@ class RegistrationType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         UserFormBuilder::baseBuildForm($builder);
-        $builder->add('email', 'email', ['label' => 'E-mail', 'translation_domain' => 'FOSUserBundle'])
-                ->add('plainPassword', 'repeated', array(
+        $builder->add('email', 'email', ['label' => false, 'attr' => ['placeholder' => 'E-mail',], 'translation_domain' => 'FOSUserBundle'])
+                ->add('plainPassword', 'repeated', [
                     'type'            => 'password',
                     'options'         => ['translation_domain' => 'FOSUserBundle'],
-                    'first_options'   => ['label' => 'Пароль'],
-                    'second_options'  => ['label' => 'Подтвердите пароль'],
+                    'first_options'   => ['attr' => ['placeholder' => 'Пароль',],'label' => false],
+                    'second_options'  => ['attr' => ['placeholder' => 'Подтвердите пароль',],'label' => false],
                     'invalid_message' => 'Введенные пароли не совпадают!',
-        ));
+                ]);
     }
 
     public function getName()

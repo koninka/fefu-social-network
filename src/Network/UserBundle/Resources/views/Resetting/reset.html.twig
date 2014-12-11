@@ -1,5 +1,13 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
-
-{% block fos_user_content %}
-{% include "FOSUserBundle:Resetting:reset_content.html.twig" %}
-{% endblock fos_user_content %}
+{% extends "NetworkWebBundle:Default:auth.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block title %}
+    {{ 'resetting.password_already_requested'|trans }}
+{% endblock %}
+{% block authorization %}
+    <form action="{{ path('fos_user_resetting_reset', {'token': token}) }}" {{ form_enctype(form) }} method="POST" class="fos_user_resetting_reset">
+        {{ form_widget(form) }}
+        <div>
+            <input class="submit_button" type="submit" value="{{ 'resetting.reset.submit'|trans }}" />
+        </div>
+    </form>
+{% endblock authorization %}

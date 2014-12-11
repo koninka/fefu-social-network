@@ -1,5 +1,14 @@
-{% extends "FOSUserBundle::layout.html.twig" %}
-
-{% block fos_user_content %}
-{% include "NetworkUserBundle:ChangeEmail:changeEmail_content.html.twig" %}
-{% endblock fos_user_content %}
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block right_content %}
+    <div>
+        <div>
+            <form action="{{ path('fos_user_change_email') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_email">
+                {{ form_widget(form) }}
+                <div>
+                    <input class="blue_button" type="submit" value="{{ 'change_email.submit'|trans }}" />
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
