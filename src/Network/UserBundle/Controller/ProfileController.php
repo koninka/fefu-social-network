@@ -20,9 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProfileController extends BaseController
 {
-    /**
-     * Show the user
-     */
+
     public function showAction()
     {
         $user = $this->getUser();
@@ -31,10 +29,6 @@ class ProfileController extends BaseController
         }
 
         return $this->redirect($this->generateUrl('user_profile', ['id' => $user->getId()]));
-
-//        return $this->render('FOSUserBundle:Profile:show.html.twig', array(
-//            'user' => $user
-//        ));
     }
 
     public function profileAction($id, Request $request)
@@ -42,21 +36,18 @@ class ProfileController extends BaseController
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
-        $is_cur_user = false;
+        $isCurUser = false;
         $fsStatus = RelationshipStatusEnumType::FS_NONE;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $cur_user = $this->getUser();
-            $is_cur_user = ($cur_user->getId() === $user->getId());
-            $fsStatus = $cur_user->getRelationshipStatus($id);
+            $curUser = $this->getUser();
+            $isCurUser = ($curUser->getId() === $user->getId());
+            $fsStatus = $curUser->getRelationshipStatus($id);
         }
 
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
             'rl_status' => $fsStatus,
-            'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
-            'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),
-            'subscribed_on' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME),
-            'is_cur_user' => $is_cur_user
+            'is_cur_user' => $isCurUser
         ]);
     }
 
@@ -65,19 +56,19 @@ class ProfileController extends BaseController
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
-        $is_cur_user = false;
-        $friendship_requests_count = [];
+        $isCurUser = false;
+        $friendshipRequestsCount = [];
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $cur_user = $this->getUser();
-            $is_cur_user = ($cur_user->getId() === $user->getId());
-            if ($is_cur_user) {
-                $friendship_requests_count = count($cur_user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true));
+            $curUser = $this->getUser();
+            $isCurUser = ($curUser->getId() === $user->getId());
+            if ($isCurUser) {
+                $friendshipRequestsCount = count($curUser->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true));
             }
         }
 
         return $this->render('NetworkUserBundle:Profile:friends.html.twig', [
-            'is_cur_user' => $is_cur_user,
-            'friendship_requests_count' => $friendship_requests_count,
+            'is_cur_user' => $isCurUser,
+            'friendship_requests_count' => $friendshipRequestsCount,
             'user_id' => $user->getId(),
             'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
             'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),
@@ -89,6 +80,7 @@ class ProfileController extends BaseController
     {
         $user = $this->getUser();
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
         return $this->showFriendsAction($user->getId());
     }
 
@@ -98,5 +90,4 @@ class ProfileController extends BaseController
             'friendship_requests' => $this->getUser()->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true)
         ]);
     }
-
 }

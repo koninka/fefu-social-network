@@ -4,9 +4,6 @@ namespace Network\UserBundle\Controller;
 
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Network\StoreBundle\Entity\Relationship;
 
 class FriendController extends Controller
@@ -38,18 +35,21 @@ class FriendController extends Controller
                 $em->persist($relationship);
 
                 $em->flush();
+
                 $msg = 'msg.friendship_accepted';
             } elseif ($status != RelationshipStatusEnumType::FS_NONE) {
                 $msg = $status.'msg.unknown_error';
             } else {
                 $relationship = new Relationship();
-                $relationship->setUser($user)->setPartner($userFriend)->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME);
+                $relationship->setUser($user)
+                             ->setPartner($userFriend)
+                             ->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME);
                 $em->persist($relationship);
 
-                $em->flush();
-
                 $friendRelationship = new Relationship();
-                $friendRelationship->setUser($userFriend)->setPartner($user)->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
+                $friendRelationship->setUser($userFriend)
+                                   ->setPartner($user)
+                                   ->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
                 $em->persist($friendRelationship);
 
                 $em->flush();
@@ -57,10 +57,10 @@ class FriendController extends Controller
                 $msg = 'msg.friendship_request_sent';
             }
         }
+
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
             'msg' => $msg
         ]);
-
     }
 
     public function acceptFriendshipRequestAction($id)
@@ -90,9 +90,11 @@ class FriendController extends Controller
                 $em->persist($relationship);
 
                 $em->flush();
+
                 $msg = 'msg.friendship_accepted';
             }
         }
+
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
             'msg' => $msg
         ]);
@@ -157,8 +159,8 @@ class FriendController extends Controller
                 $em->persist($friendRelationship);
 
                 $relationship = $user->getRelationship($id);
-                $relationship->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER);
-                $relationship->setHidden(true);
+                $relationship->setStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER)
+                             ->setHidden(true);
                 $em->persist($relationship);
 
                 $em->flush();
@@ -166,10 +168,10 @@ class FriendController extends Controller
                 $msg = 'msg.friendship_deleted';
             }
         }
+
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
             'msg' => $msg
         ]);
-
     }
 
     public function deleteFriendshipSubscriptionAction($id)
@@ -199,10 +201,10 @@ class FriendController extends Controller
                 $msg = 'msg.friendship_request_deleted';
             }
         }
+        
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
             'msg' => $msg
         ]);
-
     }
 
 }

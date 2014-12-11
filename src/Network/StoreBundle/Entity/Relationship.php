@@ -13,9 +13,6 @@ use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
  * @ORM\Table(name="relationships")
  * @ORM\Entity
  */
-
-//@ORM\Table(name="user_relationship", uniqueConstraints={@ORM\UniqueConstraint(name="relationship_idx", columns={"user_id", "partner_id"})})
-
 class Relationship
 {
     /**
@@ -37,7 +34,6 @@ class Relationship
      * @ORM\ManyToOne(targetEntity="User")
      * @ORM\JoinColumn(name="partner_id", referencedColumnName="id")
      */
-
     protected $partner;
 
     /**
@@ -69,7 +65,7 @@ class Relationship
      * Set user
      *
      * @param \Network\StoreBundle\Entity\User $user
-     * @return Relationship
+     * @return \Network\StoreBundle\Entity\Relationship
      */
     public function setUser(\Network\StoreBundle\Entity\User $user = null)
     {
@@ -92,7 +88,7 @@ class Relationship
      * Set partner
      *
      * @param \Network\StoreBundle\Entity\User $partner
-     * @return Relationship
+     * @return \Network\StoreBundle\Entity\Relationship
      */
     public function setPartner(\Network\StoreBundle\Entity\User $partner = null)
     {
@@ -121,14 +117,17 @@ class Relationship
 
     /**
      * @param string $status
+     * @return \Network\StoreBundle\Entity\Relationship
      */
     public function setStatus($status)
     {
         $this->status = $status;
+
+        return $this;
     }
 
     /**
-     * @return mixed
+     * @return boolean
      */
     public function getHidden()
     {
@@ -137,7 +136,7 @@ class Relationship
 
     /**
      * @param boolean $hidden
-     * @return Relationship
+     * @return \Network\StoreBundle\Entity\Relationship
      */
     public function setHidden($hidden)
     {

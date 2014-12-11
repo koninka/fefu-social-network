@@ -33,7 +33,6 @@ class User extends BaseUser
      * @Assert\Email()
      * @Assert\NotBlank()
      */
-
     protected $email;
 
     /**
@@ -117,7 +116,7 @@ class User extends BaseUser
      * Set salt
      *
      * @param string $salt
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setSalt($salt)
     {
@@ -128,7 +127,7 @@ class User extends BaseUser
 
     /**
      * @param string $firstName
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setFirstName($firstName)
     {
@@ -147,7 +146,7 @@ class User extends BaseUser
 
     /**
      * @param string $gender
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setGender($gender)
     {
@@ -166,7 +165,7 @@ class User extends BaseUser
 
     /**
      * @param string $lastName
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setLastName($lastName)
     {
@@ -185,7 +184,7 @@ class User extends BaseUser
 
     /**
      * @param \Network\StoreBundle\Entity\date $birthday
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setBirthday($birthday)
     {
@@ -204,7 +203,7 @@ class User extends BaseUser
 
     /**
      * @param string $email
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setEmail($email)
     {
@@ -219,7 +218,6 @@ class User extends BaseUser
     /**
      * @return bool
      */
-
     public function getEnabled()
     {
         return $this->enabled;
@@ -228,7 +226,6 @@ class User extends BaseUser
     /**
      * @return \DateTime
      */
-
     public function getExpiresAt()
     {
         return $this->expiresAt;
@@ -243,7 +240,7 @@ class User extends BaseUser
     }
 
     /**
-     * @return User
+     * @return \Network\StoreBundle\Entity\User
      */
     public function hash($encoder)
     {
@@ -264,7 +261,7 @@ class User extends BaseUser
 
     /**
      * @param mixed $groups
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setGroups($groups)
     {
@@ -297,7 +294,7 @@ class User extends BaseUser
      * Set contactInfo
      *
      * @param \Network\StoreBundle\Entity\ContactInfo $contactInfo
-     * @return User
+     * @return \Network\StoreBundle\Entity\User
      */
 
     public function setContactInfo(\Network\StoreBundle\Entity\ContactInfo $contactInfo = null)
@@ -321,7 +318,7 @@ class User extends BaseUser
      * Add relationships
      *
      * @param \Network\StoreBundle\Entity\Relationship $partner
-     * @return User
+     * @return \Network\StoreBundle\Entity\User
      */
     public function addRelationship(\Network\StoreBundle\Entity\Relationship $partner)
     {
@@ -336,7 +333,7 @@ class User extends BaseUser
      * Remove relationships
      *
      * @param \Network\StoreBundle\Entity\Relationship $partner
-     * @return User
+     * @return \Network\StoreBundle\Entity\User
      */
     public function removeRelationship(\Network\StoreBundle\Entity\Relationship $partner)
     {
@@ -406,6 +403,7 @@ class User extends BaseUser
         if ($rel) {
             return $rel->getStatus();
         }
+
         return RelationshipStatusEnumType::FS_NONE;
     }
 
@@ -419,7 +417,7 @@ class User extends BaseUser
         $rels = [];
         foreach ($this->getRelationships() as $relationship) {
             if ($relationship->getStatus() === $status) {
-                if (!$noHidden || ($noHidden && $relationship->getHidden() === false)) {
+                if (!$noHidden || ($noHidden && !$relationship->getHidden())) {
                     $rels[] = $relationship;
                 }
             }
