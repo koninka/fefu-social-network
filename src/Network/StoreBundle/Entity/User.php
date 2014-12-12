@@ -9,6 +9,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Yaml\Tests\A;
+use Application\Sonata\MediaBundle\Entity\Media as MediaInterface;
 
 /**
  * user
@@ -576,7 +577,7 @@ class User extends BaseUser
         return $this;
     }
 
-    /**    
+    /**
      * Add communities
      *
      * @param \Network\StoreBundle\Entity\UserCommunity $communities
@@ -670,6 +671,7 @@ class User extends BaseUser
 
         return $this;
     }
+
      /**
      * @param MP3Record $mp3
      * @return User
@@ -754,4 +756,46 @@ class User extends BaseUser
     {
         return 'user';
     }
+
+     /**
+     * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    protected $avatar;
+
+    /**
+     * Set avatar
+     *
+     * @param MediaInterface $avatar
+     * @return User
+     */
+    public function setAvatar(MediaInterface $avatar = null)
+    {
+        if ($avatar) {
+            $this->avatar = $avatar;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return MediaInterface
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Remove avatar
+     *
+     * @param MediaInterface $avatar
+     */
+    public function removeAvatar(MediaInterface $avatar)
+    {
+        $this->avatar->removeElement($avatar);
+    }
+
 }
