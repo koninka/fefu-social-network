@@ -6,7 +6,6 @@ use Sonata\AdminBundle\Form\FormMapper;
 use Symfony\Component\Validator\Constraints as Assert;
 use \Network\StoreBundel\Entity\Phonenumber;
 use Network\StoreBundle\Admin\VDolgahAdmin as Admin;
-
 /**
  * Admin class for country, city, university, school, faculty and chair
  */
@@ -134,7 +133,9 @@ class SchoolAdmin extends Admin
     public function addParent($mapper, $class, $mapped, $data)
     {
         $parent = false;
-        $baseNameClass = basename($class);
+        $r = new \ReflectionClass($class);
+
+        $baseNameClass = $r->getShortName();
         $getter = 'get' . $baseNameClass;
         if (method_exists($class, 'getParent')) {
             $parent = $class::getParent();
