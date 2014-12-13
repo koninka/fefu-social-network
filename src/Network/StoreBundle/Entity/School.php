@@ -119,6 +119,17 @@ class School
     {
         return $this->city;
     }
+
+    /**
+     * @return Country|null
+     */
+    public function getCountry()
+    {
+        $city = $this->getCity();
+
+        return  ($city != null) ? $city->getCountry() : null;
+    }
+
     /**
      * @return string parent entity
      */
