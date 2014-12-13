@@ -120,6 +120,18 @@ class UserAdmin extends VDolgahAdmin
                    'placeholder' => 'No author selected'
                 ],
             ],
+            [
+                parent::FIELD_KEY => 'jobs',
+                parent::TYPE_KEY => 'collection',
+                parent::OPTIONS_KEY => [
+                    'type' => 'job',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                ],
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
+            ],
         ]);
     }
 
