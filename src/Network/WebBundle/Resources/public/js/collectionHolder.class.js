@@ -26,6 +26,7 @@ CollectionHolder.prototype.init = function() {
         th.domContainer.append(newForm);
 
         th.initSearchSuggestors(newForm);
+        initDatePickers(newForm);
     });
 
     this.domContainer.prepend(addBtn);
