@@ -26,7 +26,10 @@
         <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
         {% javascripts  'bundles/sonatacore/vendor/jquery/dist/jquery.min.js'
-                        '@NetworkWebBundle/Resources/public/js/*' %}
+                        'bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js'
+                        '@NetworkWebBundle/Resources/public/js/searchSuggestor.class.js'
+                        '@NetworkWebBundle/Resources/public/js/datepicker.js'
+                        '@NetworkWebBundle/Resources/public/js/collectionHolder.class.js' %}
 
             <script type="text/javascript" src="{{ asset_url }}"></script>
 
