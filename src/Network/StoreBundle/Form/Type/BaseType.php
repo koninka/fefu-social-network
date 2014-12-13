@@ -36,6 +36,17 @@ class BaseType extends AbstractType
                 if ($type == 'password') {
                     $options['required'] = false;
                 }
+            } else if ($type == 'date') {
+                if (!array_key_exists('attr', $options)) {
+                    $options['attr'] = [];
+                }
+                if (!array_key_exists('class', $options['attr'])) {
+                    $options['attr']['class'] = 'datepicker';
+                } else {
+                    $options['attr']['class'] .= ' datepicker';
+                }
+                $options['format'] = 'yyyy-MM-dd';
+                $options['widget'] = 'single_text';
             }
         } elseif (Type::hasType($params['type'])) {
             $dbType = Type::getType($params['type']);
