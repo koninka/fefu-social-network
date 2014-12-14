@@ -56,13 +56,15 @@ class ProfileController extends BaseController
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
+        $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
+
         $isCurUser = false;
         $friendshipRequestsCount = [];
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());
             if ($isCurUser) {
-                $friendshipRequestsCount = count($curUser->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true));
+                $friendshipRequestsCount = $rels->getFriendshipRequestsForUserCount($curUser->getId());
             }
         }
 
@@ -70,9 +72,9 @@ class ProfileController extends BaseController
             'is_cur_user' => $isCurUser,
             'friendship_requests_count' => $friendshipRequestsCount,
             'user_id' => $user->getId(),
-            'friends' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_ACCEPTED),
-            'subscribers' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER),
-            'subscribed_on' => $user->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+            'friends' => $rels->findFriendsForUser($user->getId()),
+            'subscribers' => $rels->findSubscribersForUser($user->getId()),
+            'subscribed_on' => $rels->findSubscribedOnForUser($user->getId())
         ]);
     }
 
@@ -86,8 +88,10 @@ class ProfileController extends BaseController
 
     public function manageFriendshipRequestsAction()
     {
+        $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
+
         return $this->render('NetworkUserBundle:Profile:manage_requests.html.twig', [
-            'friendship_requests' => $this->getUser()->getRelationshipsWithStatus(RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER, true)
+            'friendship_requests' => $rels->findFriendshipRequestsForUser($this->getUser()->getId())
         ]);
     }
 }

@@ -35,7 +35,7 @@
                         <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('fos_user_change_password') }}">{{ 'layout.change_password'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('fos_user_change_email') }}">{{ 'layout.change_email'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('user_profile_show_friends') }}">{{ 'layout.show_friends'|trans({}, 'FOSUserBundle') }}: {{ app.user.getRelationshipsWithStatus('friendship_subscribed_by_user', true)|length }}</a></li>
+                        <li><a href="{{ path('user_profile_show_friends') }}">{{ 'layout.show_friends'|trans({}, 'FOSUserBundle') }}</a></li>
                     </ul>
                 {% else %}
                     <ul>

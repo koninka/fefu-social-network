@@ -407,25 +407,6 @@ class User extends BaseUser
         return RelationshipStatusEnumType::FS_NONE;
     }
 
-    /**
-     * @param string $status
-     * @param boolean $noHidden
-     * @return array
-     */
-    public function getRelationshipsWithStatus($status, $noHidden = false)
-    {
-        $rels = [];
-        foreach ($this->getRelationships() as $relationship) {
-            if ($relationship->getStatus() === $status) {
-                if (!$noHidden || ($noHidden && !$relationship->getHidden())) {
-                    $rels[] = $relationship;
-                }
-            }
-        }
-
-        return $rels;
-    }
-
     public function __toString()
     {
         return $this->username;

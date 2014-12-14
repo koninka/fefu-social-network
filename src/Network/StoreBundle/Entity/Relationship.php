@@ -11,7 +11,7 @@ use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
  * Relationship
  *
  * @ORM\Table(name="relationships")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\RelationshipRepository")
  */
 class Relationship
 {
