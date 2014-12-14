@@ -36,11 +36,8 @@ class SchoolAdmin extends Admin
             ];
         }
         $fields = [
-            'cities' => 'City',
-            'universities' => 'University',
             'faculties' => 'Faculty',
             'chairs' => 'Chair',
-            'schools' => 'School'
         ];
         foreach ($fields as $field => $class) {
             $options[] = [
@@ -53,6 +50,13 @@ class SchoolAdmin extends Admin
                     'by_reference' => false,
                 ],
                 parent::QUERY => $this->genDQL($class)
+            ];
+        }
+        foreach (['cities', 'universities', 'schools'] as $field) {
+            $options[] = [
+                parent::FIELD_KEY => $field,
+                parent::NOT_SHOW_IN_LIST_KEY => true,
+                parent::NOT_SHOW_IN_FORM_KEY => true,
             ];
         }
         $this->configureFields($options);
