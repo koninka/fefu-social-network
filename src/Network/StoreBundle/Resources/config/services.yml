@@ -2,4 +2,18 @@ parameters:
     #
 
 services:
-    #
+    network.store.form.type.category:
+        class: Network\StoreBundle\Form\Type\CategoryType
+        tags:
+            - { name: form.type, alias: category }
+        arguments: ["@sonata.admin.manager.orm"]
+
+    network.store.paginator:
+        class: Network\StoreBundle\Service\Paginator
+        arguments: ["@doctrine.orm.entity_manager"]
+
+    network.store.category_service:
+        class: Network\StoreBundle\Service\CategoryService
+        calls:
+            - [setPaginator, ["@network.store.paginator"]]
+        arguments: ["@doctrine.orm.entity_manager"]
