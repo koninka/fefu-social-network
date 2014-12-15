@@ -26,3 +26,4 @@ class ChangePasswordType extends BaseType
     }
 
 }
+

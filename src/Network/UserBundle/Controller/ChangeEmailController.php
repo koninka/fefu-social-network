@@ -8,11 +8,13 @@ use FOS\UserBundle\Event\FilterUserResponseEvent;
 use FOS\UserBundle\Event\GetResponseUserEvent;
 use FOS\UserBundle\Model\UserInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 
 use Network\UserBundle\Form\Type\ChangeEmailType;
+
 
 class ChangeEmailController extends Controller
 {
@@ -48,10 +50,7 @@ class ChangeEmailController extends Controller
             $userManager = $this->get('fos_user.user_manager');
             if (!$this->validUser($user->getUsername(), $user->getPlainPassword()))
             {
-                $this->get('session')->getFlashBag()->add(
-                    'error',
-                    'Invalid password'
-                );
+                $form->get('plainPassword')->addError(new FormError('Invalid password'));
 
                 return $this->render('NetworkUserBundle:ChangeEmail:changeEmail.html.twig', [
                     'form' => $form->createView(),
