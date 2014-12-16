@@ -36,16 +36,23 @@ class ProfileController extends BaseController
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
+        $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
+
         $isCurUser = false;
         $fsStatus = RelationshipStatusEnumType::FS_NONE;
+        $friendshipRequestsCount = 0;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());
             $fsStatus = $curUser->getRelationshipStatus($id);
+            if ($isCurUser) {
+                $friendshipRequestsCount = $rels->getFriendshipRequestsForUserCount($curUser->getId());
+            }
         }
 
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
+            'friendship_requests_count' => $friendshipRequestsCount,
             'rl_status' => $fsStatus,
             'is_cur_user' => $isCurUser
         ]);
@@ -59,7 +66,7 @@ class ProfileController extends BaseController
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
         $isCurUser = false;
-        $friendshipRequestsCount = [];
+        $friendshipRequestsCount = 0;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());

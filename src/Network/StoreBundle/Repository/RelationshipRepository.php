@@ -1,6 +1,6 @@
 <?php
 
-namespace Network\StoreBundle\Entity;
+namespace Network\StoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
