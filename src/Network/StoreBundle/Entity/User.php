@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 /**
@@ -276,8 +277,9 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
-        $this->groups = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->relationships = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->relationships = new ArrayCollection();
+        $this->groups = new ArrayCollection();
+        $this->posts = new ArrayCollection();
     }
 
     /**
@@ -412,4 +414,41 @@ class User extends BaseUser
         return $this->username;
     }
 
+    /**
+     * @ORM\OneToMany(targetEntity="Post", mappedBy="user")
+     */
+    protected $posts;
+
+    /**
+     * Add posts
+     *
+     * @param \Network\StoreBundle\Entity\Post $posts
+     * @return User
+     */
+    public function addPost(\Network\StoreBundle\Entity\Post $posts)
+    {
+        $this->posts[] = $posts;
+
+        return $this;
+    }
+
+    /**
+     * Remove posts
+     *
+     * @param \Network\StoreBundle\Entity\Post $posts
+     */
+    public function removePost(\Network\StoreBundle\Entity\Post $posts)
+    {
+        $this->posts->removeElement($posts);
+    }
+
+    /**
+     * Get posts
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPosts()
+    {
+        return $this->posts;
+    }
 }
