@@ -1,0 +1,48 @@
+{% extends 'SonataDoctrineORMAdminBundle:Form:form_admin_fields.html.twig' %}
+
+{% block category_widget %}
+    {% spaceless %}
+        <input {{ block('widget_attributes') }} />
+        <script type="text/javascript">
+            $(document).ready(function () {
+                var parentCategory = $("[category='{{ attr.parent_category }}']");
+                var category = $("#{{ id }}");
+                parentCategory.change(function () {
+                    var data = $(parentCategory).select2('data');
+                    var tagId = null;
+                    if (data != null)
+                        tagId = data.id;
+                    category.select2({
+                        placeholder: "Pick this",
+                        //minimumInputLength: 3,
+                        ajax: {
+                            url: "{{ path('get_from_category') }}",
+                            dataType: 'json',
+                            quietMillis: 250,
+                            data: function (term, page) {
+                                return {
+                                    query:    term,
+                                    page:     page,
+                                    category: "{{ name|title }}",
+                                    parentId: tagId
+                                };
+                            },
+                            results: function (data, page) {
+                                var more = (page * data.itemsPerPage) < data.totalCount;
+
+                                return { results: data.items, more: more };
+                            }
+                        },
+                        dropdownCssClass: "bigdrop",
+                        escapeMarkup: function (m) { return m; }
+                    });
+                    category.change();
+                });
+                parentCategory.change();
+                {% if data is not null %}
+                    category.select2('data', {id: '{{ data.id }}', text: "{{data.name}}"});
+                {% endif  %}
+            });
+        </script>
+    {% endspaceless %}
+{% endblock %}
