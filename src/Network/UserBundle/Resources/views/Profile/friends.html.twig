@@ -14,7 +14,7 @@
     <div>
         <div>
             {% if is_cur_user %}
-                <a href="{{ path('user_profile_friendship_requests') }}">{{ 'layout.friendship_requests'|trans }}: {{ friendship_requests_count }}</a>
+                <a href="{{ path('user_profile_friendship_requests') }}">{{ 'layout.friendship_requests'|trans }}{% if friendship_requests_count is defined %}: {{ friendship_requests_count }}{% endif %}</a>
             {% else %}
                 <a href="{{ path('user_profile', {'id':user_id} ) }}">{{ 'profile.back_to_profile'|trans }}</a>
             {% endif %}

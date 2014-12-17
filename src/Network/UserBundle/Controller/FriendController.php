@@ -8,6 +8,7 @@ use Network\StoreBundle\Entity\Relationship;
 
 class FriendController extends Controller
 {
+    use ProfileTrait;
 
     public function sendFriendshipRequestAction($id)
     {

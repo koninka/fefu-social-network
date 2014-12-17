@@ -20,6 +20,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class ProfileController extends BaseController
 {
+    use ProfileTrait;
 
     public function showAction()
     {
@@ -40,19 +41,14 @@ class ProfileController extends BaseController
 
         $isCurUser = false;
         $fsStatus = RelationshipStatusEnumType::FS_NONE;
-        $friendshipRequestsCount = 0;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());
             $fsStatus = $curUser->getRelationshipStatus($id);
-            if ($isCurUser) {
-                $friendshipRequestsCount = $rels->getFriendshipRequestsForUserCount($curUser->getId());
-            }
         }
 
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
-            'friendship_requests_count' => $friendshipRequestsCount,
             'rl_status' => $fsStatus,
             'is_cur_user' => $isCurUser
         ]);
@@ -66,18 +62,13 @@ class ProfileController extends BaseController
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
         $isCurUser = false;
-        $friendshipRequestsCount = 0;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());
-            if ($isCurUser) {
-                $friendshipRequestsCount = $rels->getFriendshipRequestsForUserCount($curUser->getId());
-            }
         }
 
         return $this->render('NetworkUserBundle:Profile:friends.html.twig', [
             'is_cur_user' => $isCurUser,
-            'friendship_requests_count' => $friendshipRequestsCount,
             'user_id' => $user->getId(),
             'friends' => $rels->findFriendsForUser($user->getId()),
             'subscribers' => $rels->findSubscribersForUser($user->getId()),
