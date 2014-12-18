@@ -37,7 +37,9 @@ class ProfileController extends BaseController
     public function profileAction($id, Request $request)
     {
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
@@ -59,7 +61,9 @@ class ProfileController extends BaseController
     public function showFriendsAction($id)
     {
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
@@ -81,7 +85,9 @@ class ProfileController extends BaseController
     public function showProfileFriendsAction()
     {
         $user = $this->getUser();
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         return $this->showFriendsAction($user->getId());
     }
