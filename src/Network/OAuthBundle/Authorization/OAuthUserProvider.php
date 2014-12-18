@@ -8,6 +8,7 @@ use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
+use Network\StoreBundle\Entity\ContactInfo;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
@@ -155,7 +156,8 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setLastName($data['lastName'])
                  ->setGender($data['gender'])
                  ->setEmail($data['email'])
-                 ->setEnabled(true);
+                 ->setEnabled(true)
+                 ->setContactInfo(new ContactInfo());
             $this->em->persist($user);
             $this->em->flush();
         }

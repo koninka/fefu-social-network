@@ -84,6 +84,7 @@ fos_user:
         sender_name:    VDolgah
     service:
         mailer: network.mailer.twig_swift
+        user_manager: network.user_manager
     registration:
         form:
             type: network_user_registration
