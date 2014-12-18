@@ -48,6 +48,11 @@ services:
                     resetting: '%fos_user.resetting.email.from_email%'
                     new: '%network.new.email.from_email%'
 
+    network_user.contact.form.type:
+        class: Network\UserBundle\Form\Type\ContactInfoType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_contact }
 
     network.user_manager:
         class: '%network.user_manager.class%'
