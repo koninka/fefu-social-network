@@ -9,8 +9,7 @@ Element.prototype.setAttribute = function(attrName, newValue) {
 }
 
 var flag = false;
-var id = '';
-var ids = [];
+var input = '';
 
 var objs = [
     {name: 'country', names: {'ru': 'Страна ', 'en': 'Country '}},
@@ -27,7 +26,7 @@ var setNames = function(local) {
 }
 
 var tryKladrOff = function() {
-    if ($('#'+id).val().toLowerCase() !== 'россия') {
+    if (input.value.toLowerCase() !== 'россия') {
         return false;
     }
 }
@@ -90,23 +89,11 @@ $(document).on(
     'change',
     'input[id$="_country"]',
     function() {
-        var inputs = document.getElementsByTagName('input');
         var pattern = /country$/;
-        for (var i = 0; i < inputs.length; ++i) {
-            if (!pattern.test(inputs[i].id)) {
-                continue;
-            }
-            var index = $.inArray(inputs[i].id, ids);
-            if (index < 0) {
-                id = inputs[i].id;
-                ids.push(id);
-                break;
-            } else {
-                id = ids[index];
-            }
+        if (pattern.test(this.id)) {
+            input = this;
         }
-
-        if ($('#'+id) && $('#'+id).val().toLowerCase() === 'россия') {
+        if (input && input.value.toLowerCase() === 'россия') {
             if (!flag) {
                 flag = true;
                 setNames('ru');
