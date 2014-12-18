@@ -2,8 +2,10 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" /> 
+    <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
@@ -13,7 +15,12 @@
 {% block right_content %}
 <div>
     <div>
+        <ul class="tabs">
+            <li><a href="{{path('fos_user_profile_edit')}}">Profile</a> </li>
+            <li><a href="{{path('user_edit_contact')}}">ContactInfo</a> </li>
+         </ul>
         <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="fos_user_profile_edit">
+            {{ form_errors(form) }}
             {{ form_widget(form) }}
             <div>
                 <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
