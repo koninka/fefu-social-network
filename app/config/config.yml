@@ -13,7 +13,7 @@ framework:
         strict_requirements: ~
     form:            ~
     csrf_protection: ~
-    validation:      { enable_annotations: true }
+    validation: { enable_annotations: true }
     templating:
         engines: ['twig']
         #assets_version: SomeVersionScheme
@@ -84,6 +84,7 @@ fos_user:
         sender_name:    VDolgah
     service:
         mailer: network.mailer.twig_swift
+        user_manager: network.user_manager
     registration:
         form:
             type: network_user_registration

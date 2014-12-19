@@ -7,6 +7,10 @@ fos_user_change_email:
     path: /profile/change-email
     defaults: { _controller: NetworkUserBundle:ChangeEmail:changeEmail }
 
+user_edit_contact:
+    path: /profile/edit/contact
+    defaults: { _controller: NetworkUserBundle:Profile:contact }
+
 user_profile:
     path: /id{id}
     defaults: { _controller: NetworkUserBundle:Profile:profile }

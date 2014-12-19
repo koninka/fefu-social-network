@@ -13,6 +13,8 @@ namespace Network\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
+use Network\StoreBundle\Entity\ContactInfo;
+use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Network\StoreBundle\Entity\User;
@@ -90,6 +92,31 @@ class ProfileController extends BaseController
 
         return $this->render('NetworkUserBundle:Profile:manage_requests.html.twig', [
             'friendship_requests' => $rels->findFriendshipRequestsForUser($this->getUser()->getId())
+        ]);
+    }
+
+    public function contactAction(Request $request)
+    {
+        $user = $this->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        } 
+        $formContact = $this->container->get('form.factory')->create(
+            new ContactInfoType(),
+            $user->getContactInfo()
+        );
+        $formContact->handleRequest($request);
+
+        if ($formContact->isValid()) {
+            $em = $this->container->get('doctrine')->getManager();
+            $em->persist($user->getContactInfo());
+            $em->flush();
+
+            return $this->redirect( $this->generateUrl('user_profile', ['id' => $user->getId()]));
+        }
+
+        return $this->render('FOSUserBundle:Profile:contact.html.twig',[
+            'form' =>  $formContact->createView()
         ]);
     }
 }

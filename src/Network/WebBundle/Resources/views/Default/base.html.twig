@@ -9,11 +9,11 @@
             <link href="{{ asset('bundles/networkweb/css/form.css') }}" type="text/css" rel="stylesheet" />
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+        {% block javascripts %}
+        {% endblock %}
     </head>
     <body>
         {% block body %}
-        {% endblock %}
-        {% block javascripts %}
         {% endblock %}
     </body>
 </html>
