@@ -2,10 +2,34 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block right_content_sub_two %}
     {{ parent() }}
+    {% if is_granted('ROLE_USER') and not is_cur_user %}
+        <div>
+            <p>
+                {% if rl_status == 'relationship_none' or rl_status == 'friendship_subscribed_by_user' %}
+                    <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans  }}</a>
+                {% elseif rl_status == 'friendship_accepted' %}
+                    <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.show.delete_friendship'|trans  }}</a>
+                {% elseif rl_status == 'friendship_subscribed_by_me' %}
+                    <a class="gray_button" href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans  }}</a>
+                {% endif %}
+            </p>
+        </div>
+    {% endif %}
     <div class="fos_user_user_show">
         <p>{{ 'profile.show.firstName'|trans }}: {{ user.firstName }}</p>
         <p>{{ 'profile.show.lastName'|trans }}: {{ user.lastName }}</p>
         <p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>
         <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
+        <p>{{ 'profile.show.skype'|trans }}: {{ user.contactInfo.skype }}</p>
+        <p>{{ 'profile.show.additionalEmail'|trans }}: {{ user.contactInfo.additionalEmail}}</p>
+        {% for phonenumber in user.contactInfo.phone  %}
+             <p>{{ 'profile.show.phonenumber'|trans }}: {{ phonenumber }}</p>
+        {% endfor %}
+        {% for address in user.contactInfo.address  %}
+             <p>{{ 'profile.show.address'|trans }}: {{ address }}</p>
+        {% endfor %}
+    </div>
+    <div>
+        <a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a>
     </div>
 {% endblock %}

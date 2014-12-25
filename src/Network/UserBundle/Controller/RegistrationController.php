@@ -15,6 +15,7 @@ use FOS\UserBundle\Model\UserInterface;
 
 class RegistrationController extends BaseController
 {
+    use ProfileTrait;
 
     public function confirmEmailAction(Request $request, $token)
     {

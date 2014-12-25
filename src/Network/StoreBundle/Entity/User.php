@@ -3,6 +3,7 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -33,7 +34,6 @@ class User extends BaseUser
      * @Assert\Email()
      * @Assert\NotBlank()
      */
-
     protected $email;
 
     /**
@@ -46,6 +46,11 @@ class User extends BaseUser
      * )
      */
     protected $groups;
+
+    /**
+     * @ORM\OneToMany(targetEntity="Relationship", mappedBy="user", cascade={"persist"})
+     */
+    protected $relationships;
 
     /**
      * @var string
@@ -120,7 +125,7 @@ class User extends BaseUser
      * Set salt
      *
      * @param string $salt
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setSalt($salt)
     {
@@ -131,7 +136,7 @@ class User extends BaseUser
 
     /**
      * @param string $firstName
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setFirstName($firstName)
     {
@@ -150,7 +155,7 @@ class User extends BaseUser
 
     /**
      * @param string $gender
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setGender($gender)
     {
@@ -169,7 +174,7 @@ class User extends BaseUser
 
     /**
      * @param string $lastName
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setLastName($lastName)
     {
@@ -188,7 +193,7 @@ class User extends BaseUser
 
     /**
      * @param \Network\StoreBundle\Entity\date $birthday
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setBirthday($birthday)
     {
@@ -207,7 +212,7 @@ class User extends BaseUser
 
     /**
      * @param string $email
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setEmail($email)
     {
@@ -222,7 +227,6 @@ class User extends BaseUser
     /**
      * @return bool
      */
-
     public function getEnabled()
     {
         return $this->enabled;
@@ -231,7 +235,6 @@ class User extends BaseUser
     /**
      * @return \DateTime
      */
-
     public function getExpiresAt()
     {
         return $this->expiresAt;
@@ -280,7 +283,7 @@ class User extends BaseUser
 
     /**
      * @param mixed $groups
-     * @return user
+     * @return \Network\StoreBundle\Entity\User
      */
     public function setGroups($groups)
     {
@@ -296,6 +299,7 @@ class User extends BaseUser
     {
         parent::__construct();
         $this->jobs = new ArrayCollection();
+        $this->relationships = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
     }
@@ -314,7 +318,7 @@ class User extends BaseUser
      * Set contactInfo
      *
      * @param \Network\StoreBundle\Entity\ContactInfo $contactInfo
-     * @return User
+     * @return \Network\StoreBundle\Entity\User
      */
 
     public function setContactInfo(\Network\StoreBundle\Entity\ContactInfo $contactInfo = null)
@@ -332,6 +336,99 @@ class User extends BaseUser
     public function getContactInfo()
     {
         return $this->contactInfo;
+    }
+
+    /**
+     * Add relationships
+     *
+     * @param \Network\StoreBundle\Entity\Relationship $partner
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function addRelationship(\Network\StoreBundle\Entity\Relationship $partner)
+    {
+        if (!$this->getRelationships()->contains($partner)) {
+            $this->relationships[] = $partner;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove relationships
+     *
+     * @param \Network\StoreBundle\Entity\Relationship $partner
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function removeRelationship(\Network\StoreBundle\Entity\Relationship $partner)
+    {
+        if (!$this->getRelationships()->contains($partner)) {
+            $this->relationships->removeElement($partner);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get relationships
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getRelationships()
+    {
+        return $this->relationships;
+    }
+
+    public function getRelationshipByIds()
+    {
+        $ids = [];
+        foreach ($this->getRelationships() as $relationship) {
+            $ids[$relationship->getPartner()->getId()] = $relationship;
+        }
+
+        return $ids;
+    }
+
+    /**
+     *
+     * @param integer $partner
+     * @param string $status
+     * @return boolean
+     */
+    public function hasRelationship($partner, $status)
+    {
+        $rels = $this->getRelationshipByIds();
+        if (array_key_exists($partner, $rels)) {
+            return $rels[$partner]->getStatus() === $status;
+        }
+        return false;
+
+    }
+
+    /**
+     * @param integer $partner
+     * @return Relationship
+     */
+    public function getRelationship($partner)
+    {
+        $rels = $this->getRelationshipByIds();
+        if (array_key_exists($partner, $rels)) {
+            return $rels[$partner];
+        }
+        return NULL;
+    }
+
+    /**
+     * @param integer $partner
+     * @return string
+     */
+    public function getRelationshipStatus($partner)
+    {
+        $rel = $this->getRelationship($partner);
+        if ($rel) {
+            return $rel->getStatus();
+        }
+
+        return RelationshipStatusEnumType::FS_NONE;
     }
 
     public function __toString()

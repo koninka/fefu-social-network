@@ -27,12 +27,13 @@ class Phonenumber
      * @var string
      *
      * @ORM\Column(name="phone", type="string", length=50)
-     * @Assert\Regex( pattern="/^((8|0|\+\d{1,2})[\- ]?)?(\(?\d{3}\)?[\- ]?)?[\d\- ]{7}$/")
+     * @Assert\NotBlank()
+     * @Assert\Regex(pattern="/^((8|\+7)[\- ]?)?(\(?\d{3,4}\)?[\- ]?)?[\d\- ]{5,7}$/",  message="This phonenumber is not valid")
      */
     private $phonenumber;
 
     /**
-     * @ORM\ManyToOne(targetEntity="ContactInfo", inversedBy="phone", cascade = {"persist"})
+     * @ORM\ManyToOne(targetEntity="ContactInfo", inversedBy="phone", cascade={"persist"})
      * @ORM\JoinColumn(name="contact_info_id", referencedColumnName="id")
      **/
     private $contactInfo;

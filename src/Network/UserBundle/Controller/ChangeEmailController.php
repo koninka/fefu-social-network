@@ -18,6 +18,7 @@ use Network\UserBundle\Form\Type\ChangeEmailType;
 
 class ChangeEmailController extends Controller
 {
+    use ProfileTrait;
     /**
      * Change user email
      */

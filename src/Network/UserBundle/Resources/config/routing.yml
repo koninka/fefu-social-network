@@ -6,3 +6,59 @@ fos_user_registration_confirm_email:
 fos_user_change_email:
     path: /profile/change-email
     defaults: { _controller: NetworkUserBundle:ChangeEmail:changeEmail }
+
+user_edit_contact:
+    path: /profile/edit/contact
+    defaults: { _controller: NetworkUserBundle:Profile:contact }
+
+user_profile:
+    path: /id{id}
+    defaults: { _controller: NetworkUserBundle:Profile:profile }
+    requirements:
+       id: \d+
+
+user_send_friendship_request:
+    path: /friendship/send_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:sendFriendshipRequest }
+    requirements:
+       id: \d+
+
+user_accept_friendship_request:
+    path: /friendship/accept_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:acceptFriendshipRequest }
+    requirements:
+       id: \d+
+
+user_decline_friendship_request:
+    path: /friendship/decline_request/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:declineFriendship }
+    requirements:
+       id: \d+
+
+user_delete_friendship:
+    path: /friendship/delete/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:deleteFriendship }
+    requirements:
+       id: \d+
+
+user_delete_friendship_subscribtion:
+    path: /friendship/delete_subscription/{id}
+    defaults: { _controller: NetworkUserBundle:Friend:deleteFriendshipSubscription }
+    requirements:
+       id: \d+
+
+user_profile_friendship_requests:
+    path: /profile/friendship_requests
+    defaults: { _controller: NetworkUserBundle:Profile:manageFriendshipRequests }
+
+user_profile_show_friends:
+    path: /profile/friends
+    defaults: { _controller: NetworkUserBundle:Profile:showProfileFriends }
+    requirements:
+       id: \d+
+
+user_show_friends:
+    path: /id{id}/friends
+    defaults: { _controller: NetworkUserBundle:Profile:showFriends }
+    requirements:
+       id: \d+

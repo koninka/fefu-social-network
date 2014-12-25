@@ -48,7 +48,19 @@ services:
                     resetting: '%fos_user.resetting.email.from_email%'
                     new: '%network.new.email.from_email%'
 
+    network_user.contact.form.type:
+        class: Network\UserBundle\Form\Type\ContactInfoType
+        arguments: [%fos_user.model.user.class%]
+        tags:
+            - { name: form.type, alias: network_user_contact }
+
+    network.user_manager:
+        class: '%network.user_manager.class%'
+        arguments: ["@security.encoder_factory", "@fos_user.util.username_canonicalizer", "@fos_user.util.email_canonicalizer", "@fos_user.entity_manager", %fos_user.model.user.class%]
+
+
 parameters:
     network.email_change.listener.class: Network\UserBundle\EventListener\ChangeEmailSubscriber
     network.new.email.template: NetworkUserBundle:Mail:email_change.html.twig
     network.new.email.from_email:
+    network.user_manager.class: Network\UserBundle\Doctrine\UserManager

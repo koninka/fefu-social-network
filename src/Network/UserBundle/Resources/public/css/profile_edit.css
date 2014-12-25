@@ -1,0 +1,27 @@
+.tabs {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    overflow: hidden;
+    font-family: Georgia;
+    font-size: 12px;
+    line-height: 30px;
+    height: 30px;
+}
+.tabs li {
+    float: left;
+    border-right: 1px solid gray;
+    border-top: 1px solid gray;
+    background: #eee;
+    padding: 0 10px;
+    height: 30px;
+}
+.tabs a {
+    text-decoration: none;
+}
+.pages {
+    clear: both;
+}
+.tabs li:hover {
+    background: #ddd;
+}

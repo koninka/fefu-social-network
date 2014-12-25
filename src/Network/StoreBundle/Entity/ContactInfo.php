@@ -13,6 +13,8 @@ use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
  *
  * @ORM\Table(name="contact_info")
  * @ORM\Entity
+ * @UniqueEntity("additionalEmail", message="This email already exists")
+ * @UniqueEntity("skype", message="This skype already exists")
  */
 
 class ContactInfo
@@ -30,28 +32,28 @@ class ContactInfo
      /**
      * @var integer
      *
-     * @ORM\OneToOne(targetEntity="User", mappedBy = "contactInfo")
+     * @ORM\OneToOne(targetEntity="User", mappedBy="contactInfo")
      */
     private $user;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="skype", type="string", length=255, nullable = true, unique = true)
+     * @ORM\Column(name="skype", type="string", length=255, nullable=true, unique=true)
      */
     private $skype;
 
     /**
      * @var string
      *
-     * @ORM\Column(name="additional_email", type="string", length=255, nullable = true, unique = true)
+     * @ORM\Column(name="additional_email", type="string", length=255, nullable=true, unique=true)
      * @Assert\Email
      *
      */
     private $additionalEmail;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Address", cascade = {"persist"})
+     * @ORM\ManyToMany(targetEntity="Address", cascade={"persist"})
      * @ORM\JoinTable(name="users_address",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="address_id", referencedColumnName="id")}
@@ -60,7 +62,7 @@ class ContactInfo
     private $address;
 
     /**
-     * @ORM\OneToMany(targetEntity="Phonenumber", mappedBy="contactInfo", cascade = {"persist"}, orphanRemoval = true)
+     * @ORM\OneToMany(targetEntity="Phonenumber", mappedBy="contactInfo", cascade={"persist"}, orphanRemoval=true)
      **/
     private $phone;
 
