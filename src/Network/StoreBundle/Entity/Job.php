@@ -55,8 +55,7 @@ class Job
     /**
      * @var date
      *
-     * @ORM\Column(name="start_date", type="date")
-     * @Assert\NotBlank()
+     * @ORM\Column(name="start_date", type="date", nullable=true)
      * @Assert\Date()
      */
     private $startDate;
