@@ -1,0 +1,51 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+{% endblock %}
+
+{% block right_content %}
+    <div>
+
+        <div>
+            <ul class="tabs">
+
+                <li>
+                    <a href="{{ path('fos_user_profile_edit') }}">
+                        Profile
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ path('user_edit_contact') }}">
+                        ContactInfo
+                    </a>
+                </li>
+
+                <li>
+                    <a href="{{ path('user_jobs_profile') }}">
+                        Jobs
+                    </a>
+                </li>
+
+            </ul>
+        </div>
+
+        <div>
+            {% block edit_content %}
+
+            {% endblock %}
+        </div>
+
+    </div>
+{% endblock %}
