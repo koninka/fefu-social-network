@@ -11,15 +11,11 @@
             <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
             <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
 
-            {% javascripts  'bundles/sonatacore/vendor/jquery/dist/jquery.min.js'
-                            'bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js'
-                            '@NetworkWebBundle/Resources/public/js/searchSuggestor.class.js'
-                            '@NetworkWebBundle/Resources/public/js/datepicker.js'
-                            '@NetworkWebBundle/Resources/public/js/collectionHolder.class.js' %}
-
-                <script type="text/javascript" src="{{ asset_url }}"></script>
-
-            {% endjavascripts %}
+            <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/searchSuggestor.class.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/collectionHolder.class.js') }}"></script>
 
             <script type="text/javascript">
                 new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}');
