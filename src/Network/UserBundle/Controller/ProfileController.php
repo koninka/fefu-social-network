@@ -155,9 +155,8 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
 
-        $threadId = $data['threadId'];
-        if ($threadId) {
-            $thread = $imService->getThreadById($threadId);
+        if (array_key_exists('threadId', $data)) {
+            $thread = $imService->getThreadById($data['threadId']);
 
         } else {
             $recipientUser = $this->getDoctrine()
@@ -220,16 +219,19 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
 
-        $threads = $this->getDoctrine()
-               ->getRepository('NetworkStoreBundle:Thread')
-               ->getThreadListForUser($user->getId());
+        $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+
+        $threads = $threadRepo->getThreadListForUser($user->getId());
 
         $r = [];
 
         foreach ($threads as $t) {
+            $ou = $threadRepo->getOtherUserInThread($t->getId(), $user->getId());
             $r[] = [
                 'id' => $t->getId(),
                 'topic' => $t->getTopic(),
+                'userId' => $ou->getId(),
+                'userName' => $ou->getFirstName() . " " . $ou->getLastName()
             ];
         }
 

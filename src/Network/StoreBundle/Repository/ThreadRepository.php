@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 
 use Network\StoreBundle\Entity\Thread;
+use Network\StoreBundle\Entity\User;
 
 class ThreadRepository extends EntityRepository
 {
@@ -58,6 +59,29 @@ class ThreadRepository extends EntityRepository
         $query->setParameter(1, $userId);
 
         $r = $query->getResult();
+        return $r;
+    }
+
+    public function getOtherUserInThread($threadId, $userId)
+    {
+        $em = $this->getEntityManager();
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult('Network\StoreBundle\Entity\User', 'u');
+        $rsm->addFieldResult('u', 'id', 'id');
+        $rsm->addFieldResult('u', 'firstname', 'firstName');
+        $rsm->addFieldResult('u', 'lastname', 'lastName');
+
+        $sql =
+       "SELECT t1.* FROM user as t1
+        INNER JOIN threads_users as t2
+        ON (t1.id = t2.user_id AND t2.user_id != ? AND t2.thread_id = ?)";
+
+        $query = $em->createNativeQuery($sql, $rsm);
+
+        $query->setParameter(1, $userId);
+        $query->setParameter(2, $threadId);
+
+        $r = $query->getOneOrNullResult();
         return $r;
     }
 }
