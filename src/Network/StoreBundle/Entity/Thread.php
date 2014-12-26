@@ -69,12 +69,19 @@ class Thread
     public function __construct()
     {
         $this->posts = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
      */
     protected $posts;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="threads")
+     * @ORM\JoinTable(name="threads_users")
+     **/
+    protected $users;
 
     /**
      * Add posts
@@ -107,5 +114,38 @@ class Thread
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Add users
+     *
+     * @param \Network\StoreBundle\Entity\User $users
+     * @return Thread
+     */
+    public function addUser(\Network\StoreBundle\Entity\User $users)
+    {
+        $this->users[] = $users;
+
+        return $this;
+    }
+
+    /**
+     * Remove users
+     *
+     * @param \Network\StoreBundle\Entity\User $users
+     */
+    public function removeUser(\Network\StoreBundle\Entity\User $users)
+    {
+        $this->users->removeElement($users);
+    }
+
+    /**
+     * Get users
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUsers()
+    {
+        return $this->users;
     }
 }
