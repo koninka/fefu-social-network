@@ -42,18 +42,21 @@ function updateThreadList() {
     $('#thread-list').empty();
     for (var i in data) {
       var thread = data[i];
-      var threadButton = $('<input id="thread-button" type="button" '
-      + 'class="blue_button" value="' + thread.id + ' ' + thread.topic + '"/>');
-      $('#thread-list').append(threadButton);
+      var threadBlock = $('#thread-preview').clone();
+      threadBlock.show();
+      var threadButton = threadBlock.find('#open-thread');
+      var threadUser = threadBlock.find('#user');
+      threadUser.attr('href', '/id' + thread.userId);
+      threadUser.html(thread.userName);
+      $('#thread-list').append(threadBlock);
       threadButton.data('id', thread.id);
       threadButton.click(function (e) {
         $('#thread-list-wrapper').hide();
         $('#posts').show();
         $('#post-form').show();
-        var thread_id = $(this).data().id;
-        $('#recipient').val(thread_id);
-        currentThreadId = thread_id;
-        updateThreadView(thread_id);
+        var threadId = $(this).data().id;
+        $('#recipient').val(threadId);
+        updateThreadView(threadId);
         e.preventDefault();
       });
     }
@@ -64,7 +67,10 @@ function updateThreadView(threadId) {
   // Currently reloads all posts from thread
   xhr('thread', {id: threadId})
   .then(function (data) {
+    currentThreadId = threadId;
+    $('#post-form>#custom-recipient').hide();
     var postsBlock = $('#posts');
+    postsBlock.show();
     postsBlock.empty();
     var lastAuthor = "";
     for (var j in data) {
@@ -88,7 +94,7 @@ function updateThreadView(threadId) {
         postsBlock.append(postHeader);
         lastAuthor = post.from;
       }
-      var postBody = $('#post-template').clone();
+      var postBody = $('#post').clone();
       postBody.html(post.text);
       postBody.show();
       postsBlock.append(postBody);
@@ -106,9 +112,15 @@ $(function () {
       text: $('#post-text').val()
     })
     .then(function (data) {
-      updateThreadList();
       updateThreadView(data.threadId);
     });
+    e.preventDefault();
+  });
+
+  $('#compose-post').click(function (e) {
+    $('#thread-list-wrapper').hide();
+    $('#post-form').show();
+    $('#post-form>#custom-recipient').show();
     e.preventDefault();
   });
 });
