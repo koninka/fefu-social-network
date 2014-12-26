@@ -6,17 +6,25 @@
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/bluebird.js') }}"></script>
     <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/im.js') }}"></script>
 {% endblock %}
 {% block right_content %}
     <div>
         <div>
-            <form>
-                <textarea name="body" rows="10" id="posttext"></textarea>
-                <input type="submit" name="form.submitted" value="Post"/>
-            </form>
+            <textarea id="post-text" cols="80" rows="10"></textarea>
+            <label for="recipient">Recipient</label>
+            <input type="text" id="recipient"/>
+            <input type='button' class="blue_button" id="send" value="Send"/>
+            <div id="thread-list">
+
+            </div>
+            <div id="posts">
+
+            </div>
         </div>
     </div>
 {% endblock %}
