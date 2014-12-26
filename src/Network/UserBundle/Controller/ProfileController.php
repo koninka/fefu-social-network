@@ -262,4 +262,3 @@ class ProfileController extends BaseController
         return $response;
     }
 }
-
