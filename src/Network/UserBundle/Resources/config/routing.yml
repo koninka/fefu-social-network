@@ -76,4 +76,3 @@ threads:
 thread:
     path: /thread
     defaults: { _controller: NetworkUserBundle:Profile:thread }
-

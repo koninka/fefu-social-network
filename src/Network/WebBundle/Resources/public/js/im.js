@@ -4,15 +4,22 @@ function xhr(action, message) {
   return new Promise(function (resolve, reject) {
     var oReq = new XMLHttpRequest();
     oReq.open('POST', '/' + action);
-    oReq.responseType = 'json';
+    oReq.responseType = 'text';
 
     oReq.onreadystatechange = function () {
       if (oReq.readyState === 4) {
         switch (oReq.status) {
           case 200:
             console.log(oReq.response);
-            resolve(oReq.response);
+            resolve(JSON.parse(oReq.response));
           break;
+
+          case 500:
+            // it's an internal server error so we're assuming for response text
+            // to be a html document describing the error
+            // TODO: ensure this only happens in dev mode
+            document.write(oReq.responseText);
+            reject();
 
           default:
             console.log('readyState is 4 and status = ', oReq.status);
@@ -41,8 +48,9 @@ function updateThreadList() {
       $('#thread-list').append(threadButton);
       threadButton.data('id', thread.id);
       threadButton.click(function (e) {
-        $('#recipient').val($(this).data().id);
-        updateThreadView($(this).data().id);
+        var thread_id = $(this).data().id;
+        $('#recipient').val(thread_id);
+        updateThreadView(thread_id);
         e.preventDefault();
       });
     }
@@ -63,18 +71,18 @@ function updateThreadView(threadId) {
   });
 }
 
-$('#send').click(function (e) {
-  xhr('post', {
-    id: $('#recipient').val(),
-    text: $('#post-text').val()
-  })
-  .then(function (data) {
-    updateThreadList();
-    updateThreadView(data.threadId);
-  });
-  e.preventDefault();
-});
-
 $(function () {
   updateThreadList();
+
+  $('#send').click(function (e) {
+    xhr('post', {
+      id: $('#recipient').val(),
+      text: $('#post-text').val()
+    })
+    .then(function (data) {
+      updateThreadList();
+      updateThreadView(data.threadId);
+    });
+    e.preventDefault();
+  });
 });
