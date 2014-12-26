@@ -1,5 +1,7 @@
 'use strict';
 
+var currentThreadId;
+
 function xhr(action, message) {
   return new Promise(function (resolve, reject) {
     var oReq = new XMLHttpRequest();
@@ -50,6 +52,7 @@ function updateThreadList() {
       threadButton.click(function (e) {
         var thread_id = $(this).data().id;
         $('#recipient').val(thread_id);
+        currentThreadId = thread_id;
         updateThreadView(thread_id);
         e.preventDefault();
       });
@@ -76,7 +79,8 @@ $(function () {
 
   $('#send').click(function (e) {
     xhr('post', {
-      id: $('#recipient').val(),
+      recipientId: $('#recipient').val(),
+      threadId: currentThreadId,
       text: $('#post-text').val()
     })
     .then(function (data) {

@@ -151,41 +151,46 @@ class ProfileController extends BaseController
 
     public function postAction(Request $request)
     {
-        $em = $this->getDoctrine()->getManager();
-        $user = $this->getUser();
-
-        $data = json_decode($request->getContent(), true);
-        $recipientUser = $this->getDoctrine()
-                              ->getRepository('NetworkStoreBundle:User')
-                              ->find($data['id']);
-
-        if (!$recipientUser) {
-            // TODO: handle error case when there's no recipient user found by id
-        }
-
         $imService = $this->get('network.store.im_service');
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
 
-        // TODO: decide what to do when posting to yourself
-        // currently it does Internal Server Error (500)
-        $thread = $this->getDoctrine()
-                       ->getRepository('NetworkStoreBundle:Thread')
-                       ->findByUsers($user->getId(), $recipientUser->getId());
+        $threadId = $data['threadId'];
+        if ($threadId) {
+            $thread = $imService->getThreadById($threadId);
 
-        if (!$thread or count($thread) == 0) {
-            // there's no 1x1 thread between this pair of users
-            // so we're creating a new one
-            $thread = new Thread();
-            $thread->setTopic('no topic')
-                   ->addUser($user)
-                   ->addUser($recipientUser);
-
-            $imService->createThread($thread);
-
-        } elseif (count($thread) > 1) {
-            // TODO: handle exceptional error case when there's somehow more
-            // than one 1x1 thread for this pair of users
         } else {
-            $thread = $thread[0];
+            $recipientUser = $this->getDoctrine()
+                                  ->getRepository('NetworkStoreBundle:User')
+                                  ->find($data['recipientId']);
+
+            if (!$recipientUser) {
+                // TODO: handle error case when there's no recipient user found by id
+            }
+
+
+            // TODO: decide what to do when posting to yourself
+            // currently it does Internal Server Error (500)
+            $thread = $this->getDoctrine()
+                           ->getRepository('NetworkStoreBundle:Thread')
+                           ->findByUsers($user->getId(), $recipientUser->getId());
+
+            if (!$thread or count($thread) == 0) {
+                // there's no 1x1 thread between this pair of users
+                // so we're creating a new one
+                $thread = new Thread();
+                $thread->setTopic('no topic')
+                       ->addUser($user)
+                       ->addUser($recipientUser);
+
+                $imService->createThread($thread);
+
+            } elseif (count($thread) > 1) {
+                // TODO: handle exceptional error case when there's somehow more
+                // than one 1x1 thread for this pair of users
+            } else {
+                $thread = $thread[0];
+            }
         }
 
         $oldTimeZone = date_default_timezone_get();

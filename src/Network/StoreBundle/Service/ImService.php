@@ -31,4 +31,9 @@ class ImService
         $this->em->flush();
     }
 
+    public function getThreadById($threadId)
+    {
+        return $this->em->getRepository('NetworkStoreBundle:Thread')->findOneById($threadId);
+    }
+
 }
