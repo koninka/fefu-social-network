@@ -6,10 +6,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * Thread
+ * thread
  *
- * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Table(name="thread")
+ * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\ThreadRepository")
  */
 class Thread
 {

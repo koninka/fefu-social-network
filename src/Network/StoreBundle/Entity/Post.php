@@ -5,10 +5,10 @@ namespace Network\StoreBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * Post
+ * post
  *
- * @ORM\Table()
- * @ORM\Entity
+ * @ORM\Table(name="post")
+ * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\PostRepository")
  */
 class Post
 {
