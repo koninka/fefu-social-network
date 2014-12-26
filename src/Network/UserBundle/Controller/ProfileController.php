@@ -111,7 +111,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
-        } 
+        }
         $formContact = $this->container->get('form.factory')->create(
             new ContactInfoType(),
             $user->getContactInfo()
@@ -163,6 +163,8 @@ class ProfileController extends BaseController
             // TODO: handle error case when there's no recipient user found by id
         }
 
+        $imService = $this->get('network.store.im_service');
+
         // TODO: decide what to do when posting to yourself
         // currently it does Internal Server Error (500)
         $thread = $this->getDoctrine()
@@ -173,11 +175,11 @@ class ProfileController extends BaseController
             // there's no 1x1 thread between this pair of users
             // so we're creating a new one
             $thread = new Thread();
-            $thread->setTopic('default topic')
+            $thread->setTopic('no topic')
                    ->addUser($user)
                    ->addUser($recipientUser);
-            $em->persist($thread);
-            $em->flush();
+
+            $imService->createThread($thread);
 
         } elseif (count($thread) > 1) {
             // TODO: handle exceptional error case when there's somehow more
@@ -196,8 +198,7 @@ class ProfileController extends BaseController
              ->setUser($user)
              ->setThread($thread);
 
-        $em->persist($post);
-        $em->flush();
+        $imService->createPost($post);
 
         date_default_timezone_set($oldTimeZone);
 
@@ -219,7 +220,6 @@ class ProfileController extends BaseController
                ->getThreadListForUser($user->getId());
 
         $r = [];
-
 
         foreach ($threads as $t) {
             $r[] = [
