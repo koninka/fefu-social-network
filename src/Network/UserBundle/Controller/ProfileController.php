@@ -254,11 +254,13 @@ class ProfileController extends BaseController
         $r = [];
 
         foreach ($posts as $p) {
+            $pu = $p->getUser();
             $r[] = [
                 'id' => $p->getId(),
                 'ts' => $p->getTs(),
                 'text' => $p->getText(),
-                'from' => $p->getUser()->getFirstName() . " " . $p->getUser()->getLastName()
+                'from' => $pu->getFirstName() . " " . $pu->getLastName(),
+                'userId' => $pu->getId()
             ];
         }
 

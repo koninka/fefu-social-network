@@ -13,18 +13,51 @@
     <script src="{{ asset('bundles/networkweb/js/im.js') }}"></script>
 {% endblock %}
 {% block right_content %}
-    <div>
-        <div>
-            <textarea id="post-text" cols="80" rows="10"></textarea>
-            <label for="recipient">Recipient</label>
-            <input type="text" id="recipient"/>
-            <input type='button' class="blue_button" id="send" value="Send"/>
+    <style type="text/css">
+        #post-header {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            font-size: small;
+        }
+        #post-header > #author {
+            width: 80%;
+            font-weight: bold;
+            float: left;
+        }
+        #post-header > #ts {
+            overflow: hidden;
+            width: 20%;
+        }
+    </style>
+
+    <div id="post-header" style="display: none;">
+        <a id="author">oooooooooooooooooo</a>
+        <div id="ts">21:23</div>
+    </div>
+
+    <div id="post-template" style="display: none; margin-left: 8px; font-size: small;">
+        Post Text
+    </div>
+
+    <div><div>
+        <div id="thread-list-wrapper">
+            <h1>Threads</h1>
+            <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
             <div id="thread-list">
-
-            </div>
-            <div id="posts">
-
             </div>
         </div>
-    </div>
+
+        <div id="posts" style="display: none;">
+        </div>
+
+        <div id="post-form" style="display: none; margin-top: 4px;">
+            <textarea id="post-text" cols="80" rows="10"></textarea>
+            <div id="custom-recipient" style="display: none;">
+                <label for="recipient">Recipient</label>
+                <input type="text" id="recipient"/>
+            </div>
+            <input type="button" class="blue_button" id="send" value="Send"/>
+        </div>
+
+    </div></div>
 {% endblock %}
