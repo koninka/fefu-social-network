@@ -19,6 +19,11 @@ use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Network\StoreBundle\Entity\User;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\JsonResponse;
+
+use Network\StoreBundle\Entity\Thread;
+use Network\StoreBundle\Entity\Post;
 
 class ProfileController extends BaseController
 {
@@ -37,7 +42,9 @@ class ProfileController extends BaseController
     public function profileAction($id, Request $request)
     {
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
@@ -59,7 +66,9 @@ class ProfileController extends BaseController
     public function showFriendsAction($id)
     {
         $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
@@ -81,7 +90,9 @@ class ProfileController extends BaseController
     public function showProfileFriendsAction()
     {
         $user = $this->getUser();
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
 
         return $this->showFriendsAction($user->getId());
     }
@@ -100,7 +111,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
-        } 
+        }
         $formContact = $this->container->get('form.factory')->create(
             new ContactInfoType(),
             $user->getContactInfo()
@@ -118,5 +129,145 @@ class ProfileController extends BaseController
         return $this->render('FOSUserBundle:Profile:contact.html.twig',[
             'form' =>  $formContact->createView()
         ]);
+    }
+
+    public function showIMAction()
+    {
+        $user = $this->getUser();
+        if (empty($user)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
+
+        $isCurUser = false;
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $curUser = $this->getUser();
+            $isCurUser = ($curUser->getId() === $user->getId());
+        }
+
+        return $this->render('NetworkUserBundle:Profile:im.html.twig', [
+            'user_id' => $user->getId()
+        ]);
+    }
+
+    public function postAction(Request $request)
+    {
+        $imService = $this->get('network.store.im_service');
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        if (array_key_exists('threadId', $data)) {
+            $thread = $imService->getThreadById($data['threadId']);
+
+        } else {
+            $recipientUser = $this->getDoctrine()
+                                  ->getRepository('NetworkStoreBundle:User')
+                                  ->find($data['recipientId']);
+
+            if (!$recipientUser) {
+                // TODO: handle error case when there's no recipient user found by id
+            }
+
+
+            // TODO: decide what to do when posting to yourself
+            // currently it does Internal Server Error (500)
+            $thread = $this->getDoctrine()
+                           ->getRepository('NetworkStoreBundle:Thread')
+                           ->findByUsers($user->getId(), $recipientUser->getId());
+
+            if (!$thread or count($thread) == 0) {
+                // there's no 1x1 thread between this pair of users
+                // so we're creating a new one
+                $thread = new Thread();
+                $thread->setTopic('no topic')
+                       ->addUser($user)
+                       ->addUser($recipientUser);
+
+                $imService->createThread($thread);
+
+            } elseif (count($thread) > 1) {
+                // TODO: handle exceptional error case when there's somehow more
+                // than one 1x1 thread for this pair of users
+            } else {
+                $thread = $thread[0];
+            }
+        }
+
+        $oldTimeZone = date_default_timezone_get();
+        date_default_timezone_set("UTC");
+
+        // TODO: check for $data['text'] existence and size
+        $post = new Post();
+        $post->setText($data['text'])
+             ->setTs(new \DateTime('now'))
+             ->setUser($user)
+             ->setThread($thread);
+
+        $imService->createPost($post);
+
+        date_default_timezone_set($oldTimeZone);
+
+        $r = ['threadId' => $thread->getId()];
+
+        $response = new JsonResponse();
+        $response->setData($r);
+        return $response;
+    }
+
+    public function threadListAction(Request $request)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $data = json_decode($request->getContent(), true);
+
+        $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+
+        $threads = $threadRepo->getThreadListForUser($user->getId());
+
+        $r = [];
+
+        foreach ($threads as $t) {
+            $ou = $threadRepo->getOtherUserInThread($t->getId(), $user->getId());
+            $r[] = [
+                'id' => $t->getId(),
+                'topic' => $t->getTopic(),
+                'userId' => $ou->getId(),
+                'userName' => $ou->getFirstName() . " " . $ou->getLastName()
+            ];
+        }
+
+        $response = new JsonResponse();
+        $response->setData($r);
+        return $response;
+    }
+
+    public function threadAction(Request $request)
+    {
+        // TODO: check if user is a member of requested thread
+        // user shouldn't be able to see it if he's not a member
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+
+        $data = json_decode($request->getContent(), true);
+
+        $posts = $this->getDoctrine()
+                      ->getRepository('NetworkStoreBundle:Post')
+                      ->getThreadPosts($data['id']);
+
+        $r = [];
+
+        foreach ($posts as $p) {
+            $pu = $p->getUser();
+            $r[] = [
+                'id' => $p->getId(),
+                'ts' => $p->getTs(),
+                'text' => $p->getText(),
+                'from' => $pu->getFirstName() . " " . $pu->getLastName(),
+                'userId' => $pu->getId()
+            ];
+        }
+
+        $response = new JsonResponse();
+        $response->setData($r);
+        return $response;
     }
 }

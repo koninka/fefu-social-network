@@ -1,0 +1,67 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/bluebird.js') }}"></script>
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/im.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <style type="text/css">
+        #post-header {
+            margin-top: 8px;
+            margin-bottom: 4px;
+            font-size: small;
+        }
+        #post-header > #author {
+            width: 80%;
+            font-weight: bold;
+            float: left;
+        }
+        #post-header > #ts {
+            overflow: hidden;
+            width: 20%;
+        }
+    </style>
+
+    <div id="post-header" style="display: none;">
+        <a id="author"></a>
+        <div id="ts"></div>
+    </div>
+
+    <div id="post" style="display: none; margin-left: 8px; font-size: small;">
+    </div>
+
+    <div id="thread-preview" style="display: none;">
+        <a id="user" href="" style="float: left;"></a>
+        <input id="open-thread" type="button" class="blue_button" value="Show Thread"/>
+    </div>
+
+    <div><div>
+        <div id="thread-list-wrapper">
+            <h1>Threads</h1>
+            <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
+            <div id="thread-list">
+            </div>
+        </div>
+
+        <div id="posts" style="display: none;">
+        </div>
+
+        <div id="post-form" style="display: none; margin-top: 4px;">
+            <textarea id="post-text" cols="80" rows="10"></textarea>
+            <div id="custom-recipient" style="display: none;">
+                <label for="recipient">Recipient</label>
+                <input type="text" id="recipient"/>
+            </div>
+            <input type="button" class="blue_button" id="send" value="Send"/>
+        </div>
+
+    </div></div>
+{% endblock %}
