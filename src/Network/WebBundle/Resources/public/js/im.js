@@ -112,6 +112,7 @@ $(function () {
       text: $('#post-text').val()
     })
     .then(function (data) {
+      $('#post-text').val('');
       updateThreadView(data.threadId);
     });
     e.preventDefault();
