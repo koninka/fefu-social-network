@@ -138,12 +138,6 @@ class ProfileController extends BaseController
             return $this->redirect($this->generateUrl('mainpage'));
         }
 
-        $isCurUser = false;
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $curUser = $this->getUser();
-            $isCurUser = ($curUser->getId() === $user->getId());
-        }
-
         return $this->render('NetworkUserBundle:Profile:im.html.twig', [
             'user_id' => $user->getId()
         ]);
@@ -182,7 +176,7 @@ class ProfileController extends BaseController
                        ->addUser($user)
                        ->addUser($recipientUser);
 
-                $imService->createThread($thread);
+                $imService->persistThread($thread);
 
             } elseif (count($thread) > 1) {
                 // TODO: handle exceptional error case when there's somehow more
@@ -202,7 +196,7 @@ class ProfileController extends BaseController
              ->setUser($user)
              ->setThread($thread);
 
-        $imService->createPost($post);
+        $imService->persistPost($post);
 
         date_default_timezone_set($oldTimeZone);
 
@@ -210,6 +204,7 @@ class ProfileController extends BaseController
 
         $response = new JsonResponse();
         $response->setData($r);
+
         return $response;
     }
 
@@ -221,10 +216,12 @@ class ProfileController extends BaseController
 
         $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
 
+        // TODO: sort threads by date; implement in repo
         $threads = $threadRepo->getThreadListForUser($user->getId());
 
         $r = [];
 
+        // TODO: try to pull this in single DB request instead of loop
         foreach ($threads as $t) {
             $ou = $threadRepo->getOtherUserInThread($t->getId(), $user->getId());
             $r[] = [
@@ -237,6 +234,7 @@ class ProfileController extends BaseController
 
         $response = new JsonResponse();
         $response->setData($r);
+
         return $response;
     }
 
@@ -255,6 +253,7 @@ class ProfileController extends BaseController
 
         $r = [];
 
+        // TODO: try to pull this in single DB request instead of loop
         foreach ($posts as $p) {
             $pu = $p->getUser();
             $r[] = [
@@ -268,6 +267,7 @@ class ProfileController extends BaseController
 
         $response = new JsonResponse();
         $response->setData($r);
+
         return $response;
     }
 }

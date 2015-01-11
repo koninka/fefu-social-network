@@ -19,13 +19,13 @@ class ImService
         $this->em = $em;
     }
 
-    public function createThread($thread)
+    public function persistThread($thread)
     {
         $this->em->persist($thread);
         $this->em->flush();
     }
 
-    public function createPost($post)
+    public function persistPost($post)
     {
         $this->em->persist($post);
         $this->em->flush();

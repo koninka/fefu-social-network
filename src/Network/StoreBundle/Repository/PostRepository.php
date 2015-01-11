@@ -26,6 +26,7 @@ class PostRepository extends EntityRepository
         $query = $em->createNativeQuery($sql, $rsm);
         $query->setParameter(1, $threadId);
         $r = $query->getResult();
+
         return $r;
     }
 }

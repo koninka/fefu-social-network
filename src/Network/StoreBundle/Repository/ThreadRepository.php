@@ -38,6 +38,7 @@ class ThreadRepository extends EntityRepository
         $query->setParameter(2, $userId2);
 
         $r = $query->getResult();
+
         return $r;
     }
 
@@ -59,6 +60,7 @@ class ThreadRepository extends EntityRepository
         $query->setParameter(1, $userId);
 
         $r = $query->getResult();
+
         return $r;
     }
 
@@ -82,6 +84,7 @@ class ThreadRepository extends EntityRepository
         $query->setParameter(2, $threadId);
 
         $r = $query->getOneOrNullResult();
+
         return $r;
     }
 }
