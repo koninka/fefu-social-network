@@ -54,11 +54,25 @@ user_profile_friendship_requests:
 user_profile_show_friends:
     path: /profile/friends
     defaults: { _controller: NetworkUserBundle:Profile:showProfileFriends }
-    requirements:
-       id: \d+
 
 user_show_friends:
     path: /id{id}/friends
     defaults: { _controller: NetworkUserBundle:Profile:showFriends }
     requirements:
        id: \d+
+
+user_profile_show_messages:
+    path: /im
+    defaults: { _controller: NetworkUserBundle:Profile:showIM }
+
+post:
+    path: /post
+    defaults: { _controller: NetworkUserBundle:Profile:post }
+
+threads:
+    path: /thread_list
+    defaults: { _controller: NetworkUserBundle:Profile:threadList }
+
+thread:
+    path: /thread
+    defaults: { _controller: NetworkUserBundle:Profile:thread }

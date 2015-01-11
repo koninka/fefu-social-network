@@ -202,7 +202,7 @@ class FriendController extends Controller
                 $msg = 'msg.friendship_request_deleted';
             }
         }
-        
+
         return $this->render('NetworkWebBundle:User:msg.html.twig', [
             'msg' => $msg
         ]);

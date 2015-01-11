@@ -280,6 +280,7 @@ class User extends BaseUser
         $this->relationships = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
+        $this->threads = new ArrayCollection();
     }
 
     /**
@@ -420,6 +421,11 @@ class User extends BaseUser
     protected $posts;
 
     /**
+     * @ORM\ManyToMany(targetEntity="Thread", mappedBy="users")
+     **/
+    protected $threads;
+
+    /**
      * Add posts
      *
      * @param \Network\StoreBundle\Entity\Post $posts
@@ -450,5 +456,38 @@ class User extends BaseUser
     public function getPosts()
     {
         return $this->posts;
+    }
+
+    /**
+     * Add threads
+     *
+     * @param \Network\StoreBundle\Entity\Thread $threads
+     * @return User
+     */
+    public function addThread(\Network\StoreBundle\Entity\Thread $threads)
+    {
+        $this->threads[] = $threads;
+
+        return $this;
+    }
+
+    /**
+     * Remove threads
+     *
+     * @param \Network\StoreBundle\Entity\Thread $threads
+     */
+    public function removeThread(\Network\StoreBundle\Entity\Thread $threads)
+    {
+        $this->threads->removeElement($threads);
+    }
+
+    /**
+     * Get threads
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getThreads()
+    {
+        return $this->threads;
     }
 }

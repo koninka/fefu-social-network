@@ -184,4 +184,3 @@ class University
         return 'City';
     }
 }
-

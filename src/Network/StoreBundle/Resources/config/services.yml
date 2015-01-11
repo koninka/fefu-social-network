@@ -17,3 +17,7 @@ services:
         calls:
             - [setPaginator, ["@network.store.paginator"]]
         arguments: ["@doctrine.orm.entity_manager"]
+
+    network.store.im_service:
+        class: Network\StoreBundle\Service\ImService
+        arguments: ["@doctrine.orm.entity_manager"]
