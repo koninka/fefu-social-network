@@ -150,7 +150,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         if (null === $user) {
             $user = new $this->className();
             $user->setUsername($data['username'])
-                 ->setPassword(' ')
+                 ->setPassword(md5(rand()))
                  ->setSalt(' ')
                  ->setFirstName($data['firstName'])
                  ->setLastName($data['lastName'])
