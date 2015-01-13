@@ -157,6 +157,14 @@ class User extends BaseUser
     private $contactInfo;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="MP3Record", inversedBy="users")
+     * @ORM\JoinTable(name="users_mp3s")
+     */
+    private $mp3s;
+
+    /**
      * Set salt
      *
      * @param string $salt
@@ -414,7 +422,8 @@ class User extends BaseUser
         $this->communities = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->userThreads = new ArrayCollection();
+        $this->threads = new ArrayCollection();
+        $this->mp3s = new ArrayCollection();
     }
 
     /**
@@ -628,5 +637,46 @@ class User extends BaseUser
     public function getCommunities()
     {
         return $this->communities;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getMp3s()
+    {
+        return $this->mp3s;
+    }
+
+    /**
+     * @param ArrayCollection $mp3s
+     *
+     * @return User
+     */
+    public function setMp3s($mp3s)
+    {
+        $this->mp3s = $mp3s;
+
+        return $this;
+    }
+     /**
+     * @param MP3Record $mp3
+     * @return User
+     */
+    public function addMp3(MP3Record $mp3)
+    {
+        $this->mp3s->add($mp3);
+
+        return $this;
+    }
+
+    /**
+     * @param MP3Record $mp3
+     * @return User
+     */
+    public function removeMp3(MP3Record $mp3)
+    {
+        $this->mp3s->removeElement($mp3);
+
+        return $this;
     }
 }
