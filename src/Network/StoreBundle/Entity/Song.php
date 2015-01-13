@@ -2,6 +2,7 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\SongRepository")
@@ -145,5 +146,14 @@ class Song
         $this->album = $album;
 
         return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasPoster()
+    {
+        return null !== $this->album
+            && null !== $this->album->getPoster();
     }
 }

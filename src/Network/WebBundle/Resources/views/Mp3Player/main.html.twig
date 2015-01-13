@@ -1,0 +1,188 @@
+{% extends 'NetworkWebBundle:Default:edit.base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jquery.jplayer.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jplayer.playlist.js') }}"></script>
+    <script src="http://hayageek.github.io/jQuery-Upload-File/jquery.uploadfile.min.js"></script>
+
+    <script type="text/javascript">
+        $(document).ready(function(){
+            var cssSelector = {
+                jPlayer: "#jquery_jplayer_1",
+                cssSelectorAncestor: "#jp_container_1"
+            };
+            var options = {
+                swfPath: "/js/lib/jplayer/",
+                supplied: "mp3",
+                playlistOptions: {
+                    enableRemoveControls: true
+                },
+                useStateClassSkin: true,
+                autoBlur: false,
+                smoothPlayBar: true,
+                keyEnabled: true,
+                audioFullScreen: true
+            };
+            var playlist = [
+                {% for mp3 in mp3s %}
+                    {
+                        title: "{{ mp3.getSong.getTitle }}",
+                        artist: "{{ mp3.getSong.getArtist }}",
+                        mp3: Routing.generate('file_mp3_get', {file_id: {{ mp3.getId }}}),
+                        poster: ""
+                    },
+                {% endfor %}
+            ];
+
+            var myPlaylist = new jPlayerPlaylist(cssSelector, playlist, options);
+
+            $('#jquery_jplayer_1').jPlayer({
+                swfPath: '/js/lib/jplayer/',
+                solution: 'html, flash',
+                supplied: 'mp3',
+                preload: 'metadata',
+                volume: 0.8,
+                muted: false,
+                backgroundColor: '#000000',
+                cssSelectorAncestor: '#jp_container_1',
+                cssSelector: {
+                    videoPlay: '.jp-video-play',
+                    play: '.jp-play',
+                    pause: '.jp-pause',
+                    stop: '.jp-stop',
+                    seekBar: '.jp-seek-bar',
+                    playBar: '.jp-play-bar',
+                    mute: '.jp-mute',
+                    unmute: '.jp-unmute',
+                    volumeBar: '.jp-volume-bar',
+                    volumeBarValue: '.jp-volume-bar-value',
+                    volumeMax: '.jp-volume-max',
+                    playbackRateBar: '.jp-playback-rate-bar',
+                    playbackRateBarValue: '.jp-playback-rate-bar-value',
+                    currentTime: '.jp-current-time',
+                    duration: '.jp-duration',
+                    title: '.jp-title',
+                    fullScreen: '.jp-full-screen',
+                    restoreScreen: '.jp-restore-screen',
+                    repeat: '.jp-repeat',
+                    repeatOff: '.jp-repeat-off',
+                    gui: '.jp-gui',
+                    noSolution: '.jp-no-solution'
+                },
+                errorAlerts: false,
+                warningAlerts: false
+            });
+
+            $("#mp3_upload").uploadFile({
+                url: "{{ path('file_mp3_upload') }}",
+                multiple: true,
+                filename: "{{ filename }}",
+                onSuccess: function(file, data, xhr) {
+                    var status = data['status'];
+
+                    switch (status) {
+                        case 'ok':
+                            var metadata = data['metadata'];
+                            var newMedia = {
+                                title: metadata['title'],
+                                artist: metadata['artist'],
+                                mp3: Routing.generate('file_mp3_get', { file_id: metadata['file_id'] })
+                            };
+
+                            if (metadata['album_id'] !== undefined) {
+                                newMedia['poster'] = Routing.generate('file_mp3_poster', {
+                                    album_id: metadata['album_id']
+                                });
+                            }
+
+                            myPlaylist.add(newMedia);
+                            break;
+
+                        case 'badFile':
+                            alert(
+                                'Mp3 file \'' + file +
+                                '\' is bad (doesn\'t content ID3-tags). ' +
+                                'Try to upload other files.'
+                            );
+                            break;
+
+                        default:
+                            break;
+                    }
+                }
+            });
+
+        });
+    </script>
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('bundles/networkweb/css/jplayer/jplayer.blue.monday.min.css') }}" type="text/css" rel="stylesheet" />
+    <link href="http://hayageek.github.io/jQuery-Upload-File/uploadfile.min.css" rel="stylesheet">
+
+{% endblock %}
+
+{% block edit_content %}
+
+    <div id="jp_container_1" class="jp-video jp-video-270p" role="application" aria-label="media player">
+        <div class="jp-type-playlist">
+            <div id="jquery_jplayer_1" class="jp-jplayer"></div>
+            <div class="jp-gui">
+                <div class="jp-video-play">
+                    <button class="jp-video-play-icon" role="button" tabindex="0">play</button>
+                </div>
+                <div class="jp-interface">
+                    <div class="jp-progress">
+                        <div class="jp-seek-bar">
+                            <div class="jp-play-bar"></div>
+                        </div>
+                    </div>
+                    <div class="jp-current-time" role="timer" aria-label="time">&nbsp;</div>
+                    <div class="jp-duration" role="timer" aria-label="duration">&nbsp;</div>
+                    <div class="jp-controls-holder">
+                        <div class="jp-controls">
+                            <button class="jp-previous" role="button" tabindex="0">previous</button>
+                            <button class="jp-play" role="button" tabindex="0">play</button>
+                            <button class="jp-next" role="button" tabindex="0">next</button>
+                            <button class="jp-stop" role="button" tabindex="0">stop</button>
+                        </div>
+                        <div class="jp-volume-controls">
+                            <button class="jp-mute" role="button" tabindex="0">mute</button>
+                            <button class="jp-volume-max" role="button" tabindex="0">max volume</button>
+                            <div class="jp-volume-bar">
+                                <div class="jp-volume-bar-value"></div>
+                            </div>
+                        </div>
+                        <div class="jp-toggles">
+                            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
+                            <button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
+                            <button class="jp-full-screen" role="button" tabindex="0">full screen</button>
+                        </div>
+                    </div>
+                    <div class="jp-details">
+                        <div class="jp-title" aria-label="title">&nbsp;</div>
+                    </div>
+                </div>
+            </div>
+            <div class="jp-playlist">
+                <ul>
+                    <li>&nbsp;</li>
+                </ul>
+            </div>
+            <div class="jp-no-solution">
+                <span>Update Required</span>
+                To play the media you will need to either update your browser to a recent version or update your <a href="http://get.adobe.com/flashplayer/" target="_blank">Flash plugin</a>.
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+    <div id="mp3_upload"></div>
+{% endblock %}

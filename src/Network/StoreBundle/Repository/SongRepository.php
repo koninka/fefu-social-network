@@ -17,25 +17,18 @@ class SongRepository extends EntityRepository
      */
     public function getSongByMetadata(array $metadata)
     {
-        if (
-            !array_key_exists('title', $metadata)
-            || !array_key_exists('artist', $metadata)
-            || !array_key_exists('genre', $metadata)
-        ) {
-            return null;
-        }
-
         $song = $this->findOneBy([
-            'title' => $metadata['title'][0],
-            'artist' => $metadata['artist'][0],
+            'title' => $metadata['title'],
+            'artist' => $metadata['artist'],
+            'genre' => $metadata['genre'],
         ]);
 
         if (null === $song) {
             $song = new Song();
 
-            $song->setTitle($metadata['title'][0])
-                 ->setArtist($metadata['artist'][0])
-                 ->setGenre($metadata['genre'][0]);
+            $song->setTitle($metadata['title'])
+                 ->setArtist($metadata['artist'])
+                 ->setGenre($metadata['genre']);
 
             if (
                 array_key_exists('album', $metadata)
@@ -44,9 +37,9 @@ class SongRepository extends EntityRepository
                 $album = $this->getEntityManager()
                               ->getRepository('NetworkStoreBundle:Album')
                               ->getAlbumByATY(
-                                  $metadata['artist'][0],
-                                  $metadata['album'][0],
-                                  (int)$metadata['year'][0]
+                                  $metadata['artist'],
+                                  $metadata['album'],
+                                  (int)$metadata['year']
                               );
 
                 $song->setAlbum($album);

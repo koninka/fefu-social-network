@@ -679,4 +679,13 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * @param MP3Record $mp3
+     * @return bool
+     */
+    public function hasMp3InPlaylist(MP3Record $mp3)
+    {
+        return $this->mp3s->contains($mp3);
+    }
 }

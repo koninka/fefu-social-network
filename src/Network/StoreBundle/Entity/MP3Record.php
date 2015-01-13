@@ -21,13 +21,6 @@ class MP3Record
     private $id;
 
     /**
-     * @var string
-     *
-     * @ORM\Column(name="path", type="string", length=300)
-     */
-    private $path;
-
-    /**
      * @var \DateTime
      *
      * @ORM\Column(name="uploaded", type="datetime")
@@ -49,29 +42,17 @@ class MP3Record
      */
     private $users;
 
+    /**
+     * @var MP3File
+     *
+     * @ORM\ManyToOne(targetEntity="MP3File", inversedBy="records")
+     * @ORM\JoinColumn(name="file_id", referencedColumnName="id")
+     */
+    private $file;
+
     public function __construct()
     {
         $this->users = new ArrayCollection();
-    }
-
-    /**
-     * @return string
-     */
-    public function getPath()
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     *
-     * @return MP3Record
-     */
-    public function setPath($path)
-    {
-        $this->path = $path;
-
-        return $this;
     }
 
     /**
@@ -163,4 +144,26 @@ class MP3Record
     {
         $this->users->removeElement($user);
     }
+
+    /**
+     * @return MP3File
+     */
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    /**
+     * @param MP3File $file
+     *
+     * @return MP3Record
+     */
+    public function setFile($file)
+    {
+        $this->file = $file;
+
+        return $this;
+    }
+
+
 }
