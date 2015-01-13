@@ -76,8 +76,12 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $groupManager = $this->container->get('fos_user.group_manager');
         $this->addGroup('admin', ['ROLE_ADMIN'])
              ->addGroup('user', ['ROLE_USER']);
+        $userGroup = $groupManager->findGroupByName('user');
+
         $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin@vdolgah.com', null,
                         $groupManager->findGroupByName('admin'));
+        $this->addUser('admins_girlfriend', 'password', 'female', 'Dummy', 'Whale',
+                       'admins_girlfriend', null, $userGroup);
 
         $resDir = __DIR__ . '/../../Resources/DataFixtures/';
 
@@ -93,8 +97,6 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 
         $genders = ['male', 'female'];
         $emailProviders = ['@gmail.com', '@hotmail.com', '@yandex.ru', '@mail.com'];
-
-        $userGroup = $groupManager->findGroupByName('user');
 
         for ($i = 0; $i < LoadUserData::USER_COUNT; $i++) {
             $gender = $genders[array_rand($genders)];
