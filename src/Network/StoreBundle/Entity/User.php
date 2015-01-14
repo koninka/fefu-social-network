@@ -105,6 +105,14 @@ class User extends BaseUser
      */
     private $birthday;
 
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Job", mappedBy="user", cascade="persist")
+     */
+    private $jobs;
+
     /**
      * @var integer
      *
@@ -241,8 +249,21 @@ class User extends BaseUser
     }
 
     /**
-     * @return \Network\StoreBundle\Entity\User
+     * @param mixed $jobs
      */
+    public function setJobs($jobs)
+    {
+        $this->jobs = $jobs;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getJobs()
+    {
+        return $this->jobs;
+    }
+
     public function hash($encoder)
     {
         $salt = md5(openssl_random_pseudo_bytes(40));
@@ -277,6 +298,7 @@ class User extends BaseUser
     public function __construct()
     {
         parent::__construct();
+        $this->jobs = new ArrayCollection();
         $this->relationships = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();

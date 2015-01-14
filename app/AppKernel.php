@@ -28,6 +28,8 @@ class AppKernel extends Kernel
             new Network\UserBundle\NetworkUserBundle(),
             new HWI\Bundle\OAuthBundle\HWIOAuthBundle(),
             new Network\OAuthBundle\NetworkOAuthBundle(),
+            new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
+            new JMS\SerializerBundle\JMSSerializerBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

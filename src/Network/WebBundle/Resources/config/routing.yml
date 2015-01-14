@@ -2,6 +2,17 @@ mainpage:
     path:     /
     defaults: { _controller: NetworkWebBundle:Default:index }
 
+user_jobs_profile:
+  path: /profile/jobs
+  defaults: { _controller: NetworkWebBundle:User:jobs }
+
+user_profile_json:
+  path: /profile/json/jobPosts.get
+  defaults: { _controller: NetworkWebBundle:User:json }
+  methods: [POST]
+  options:
+    expose: true
+
 kladr_test_page:
     path:     /test/kladr
     defaults: { _controller: NetworkWebBundle:Kladr:test }

@@ -1,87 +1,93 @@
-{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
-{% trans_default_domain 'FOSUserBundle' %}
+{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
-    <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
+
     <link href="{{ asset('bundles/networkweb/css/jquery.kladr.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/sonatajquery/jquery-1.8.0.js') }}"></script> 
+
     <script src="{{ asset('bundles/networkweb/js/jquery.kladr.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/address_autocompletion.js') }}"></script>
     <script src="{{ asset('bundles/networkuser/js/add_address_phone.js') }}"></script> 
 {% endblock %}
-{% block right_content %}
-<div>
-    <div>
-        <ul class="tabs">
-            <li><a href="{{path('fos_user_profile_edit')}}">Profile</a> </li>
-            <li background="#ddd"><a href="{{path('user_edit_contact')}}">ContactInfo</a> </li>
-        </ul>
-        {{ form_start(form) }}
+
+{% block edit_content %}
+    {{ form_start(form) }}
+
         {{ form_errors(form) }}
+
         <div>
              {{ form_errors(form.skype) }}
             {{ form_label(form.skype) }}
             {{ form_widget(form.skype) }}
         </div>
+
         <div>
             {{ form_errors(form.additionalEmail) }}
             {{ form_label(form.additionalEmail) }}
             {{ form_widget(form.additionalEmail) }}
         </div>
+
         <div>
             {{ form_label(form.phone) }}
             {{ form_errors(form.phone) }}
+
             <div id="phone-fields-list" data-prototype="{{ form_widget(form.phone.vars.prototype)|e }}">
                 {% for phoneField in form.phone %}
                     <div id="" >
                         {{ form_errors(phoneField) }}
                         <script type="text/javascript">
                              addPhone('{{ form_widget(phoneField) }}');
-                        </script> 
+                        </script>
                     </div>
                 {% endfor %}
             </div>
+
             <button type="button" id="add-another-phone">Add phone</button>
         </div>
+
         <div>
             {{ form_label(form.address) }}
             {{ form_errors(form.address) }}
-             <div id="address-fields-list" data-prototype="<div>{{ form_label(form.address.vars.prototype.country)|e }}<div>{{ form_widget(form.address.vars.prototype.country)|e }}</div></div>
+
+            <div id="address-fields-list" data-prototype="<div>{{ form_label(form.address.vars.prototype.country)|e }}<div>{{ form_widget(form.address.vars.prototype.country)|e }}</div></div>
                  <div>{{ form_label(form.address.vars.prototype.city)|e }}<div>{{ form_widget(form.address.vars.prototype.city)|e }}</div></div>
                  <div>{{ form_label(form.address.vars.prototype.street)|e }}<div>{{ form_widget(form.address.vars.prototype.street)|e }}</div></div>
                  <div>{{ form_label(form.address.vars.prototype.house)|e }}<div>{{ form_widget(form.address.vars.prototype.house)|e }}</div></div>">
+
                 {% for address in form.address %}
                     <div>
                         {{ form_errors(address) }}
                         <script type="text/javascript">
                             var str = '';
-                        </script>   
+                        </script>
                         {% for i in address %}
                             <script type="text/javascript">
                                 str += '<div>{{ form_label(i) }} \n\
-                                    <div> {{ form_widget(i) }}</div></div>'; 
-                            </script> 
+                                    <div> {{ form_widget(i) }}</div></div>';
+                            </script>
                         {% endfor %}
                         <script type="text/javascript">
                             addAddress("{{address.vars.value.country}}", "{{address.vars.value.city}}",
                                 "{{address.vars.value.street}}", "{{address.vars.value.house}}",
                                 createDiv(str));
-                        </script> 
+                        </script>
                     </div>
                 {% endfor %}
             </div>
+
             <button type="button" id="add-another-address">Add address</button>
         </div>
+
         <div>
             <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
         </div>
-        {% do form.address.setRendered %} 
-        {% do form.phone.setRendered %}     
+
+        {% do form.address.setRendered %}
+        {% do form.phone.setRendered %}
+
     {{ form_end(form) }}
-    </div>
-</div>
 {% endblock %}

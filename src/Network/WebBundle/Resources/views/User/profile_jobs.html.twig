@@ -1,0 +1,28 @@
+{% extends 'NetworkWebBundle:Default:edit.base.html.twig' %}
+
+{% block edit_content %}
+
+    {{ form_start(form) }}
+
+       {{ form_rest(form) }}
+
+        {% block javascripts %}
+
+            <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+            <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+
+            <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/searchSuggestor.class.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/collectionHolder.class.js') }}"></script>
+
+            <script type="text/javascript">
+                new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}');
+            </script>
+
+        {% endblock %}
+
+    {{ form_end(form) }}
+
+{% endblock %}
