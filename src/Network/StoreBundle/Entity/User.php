@@ -379,59 +379,9 @@ class User extends BaseUser
         return $this->relationships;
     }
 
-    public function getRelationshipByIds()
-    {
-        $ids = [];
-        foreach ($this->getRelationships() as $relationship) {
-            $ids[$relationship->getPartner()->getId()] = $relationship;
-        }
-
-        return $ids;
-    }
-
     /**
-     *
-     * @param integer $partner
-     * @param string $status
-     * @return boolean
-     */
-    public function hasRelationship($partner, $status)
-    {
-        $rels = $this->getRelationshipByIds();
-        if (array_key_exists($partner, $rels)) {
-            return $rels[$partner]->getStatus() === $status;
-        }
-        return false;
-
-    }
-
-    /**
-     * @param integer $partner
-     * @return Relationship
-     */
-    public function getRelationship($partner)
-    {
-        $rels = $this->getRelationshipByIds();
-        if (array_key_exists($partner, $rels)) {
-            return $rels[$partner];
-        }
-        return NULL;
-    }
-
-    /**
-     * @param integer $partner
      * @return string
      */
-    public function getRelationshipStatus($partner)
-    {
-        $rel = $this->getRelationship($partner);
-        if ($rel) {
-            return $rel->getStatus();
-        }
-
-        return RelationshipStatusEnumType::FS_NONE;
-    }
-
     public function __toString()
     {
         return $this->username;
