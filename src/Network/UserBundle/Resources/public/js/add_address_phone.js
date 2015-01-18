@@ -5,8 +5,8 @@ function addAddress(country, city, street, house, Div) {
     var addressList = $('#address-fields-list');
     var address = country + ', г.' + city + ', ул.' + street + ', ' + house;
     var newLi = $('<div></div>').html(address);
-    var linkEdit = $('<button type="button">edit</button>');
-    var linkdelete = $('<button type="button">X</button>');
+    var linkEdit = $('<button class="blue_button" type="button">edit</button>');
+    var linkdelete = $('<button class="blue_button" type="button">X</button>');
     newLi.append(linkEdit);
     newLi.append(linkdelete);
     $(linkEdit).click(function(e) {
@@ -35,7 +35,7 @@ function addButton(newDiv, save) {
     var error = $('<div>Complete all fields</div>');
     error.css("display", "none");
     newDiv.append(error);
-    var linkSave = $('<button type="button">save</button>');
+    var linkSave = $('<button class="blue_button" type="button">save</button>');
     newDiv.append(linkSave);
     $(linkSave).click(function(e) {
         var bool;
@@ -52,7 +52,7 @@ function addButton(newDiv, save) {
             newDiv.css("display", "none");
         }
     });
-    var linkCancel = $('<button type="button">cancel</button>');
+    var linkCancel = $('<button class="blue_button" type="button">cancel</button>');
     newDiv.append(linkCancel);
     $(linkCancel).click(function(e) {
         e.preventDefault();
@@ -75,6 +75,7 @@ function addPhone(phone) {
     var newLi = $('<div id = "phone"></div>').html(phone);
     var linkdelete = $('<button type="button">X</button>');
     newLi.append(linkdelete);
+    var linkdelete = $('<button class="blue_button" type="button">X</button>');
     $(linkdelete).click(function(e) {
         e.preventDefault();
         newLi.remove();
