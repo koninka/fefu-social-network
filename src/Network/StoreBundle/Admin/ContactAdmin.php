@@ -2,11 +2,6 @@
 
 namespace Network\StoreBundle\Admin;
 
-use Sonata\AdminBundle\Form\FormMapper;
-use Doctrine\DBAL\Types\Type;
-use Symfony\Component\Validator\Constraints as Assert;
-use \Network\StoreBundel\Entity\Phonenumber;
-
 class ContactAdmin extends VDolgahAdmin
 {
     protected $formOptions = [
@@ -48,8 +43,22 @@ class ContactAdmin extends VDolgahAdmin
                     'class' => 'NetworkStoreBundle:Phonenumber',
                     'multiple' => true,
                 ],
-                parent::QUERY => 'SELECT p FROM NetworkStoreBundle:Phonenumber p WHERE p.contactInfo IS NULL
-                    OR p.contactInfo = :id',
+                parent::QUERY =>function ()
+                {
+                    $query = null;
+                    $q ='SELECT p FROM NetworkStoreBundle:Phonenumber p WHERE p.contactInfo IS NULL
+                        OR p.contactInfo = :id';
+                    $id = $this->getRoot()->getSubject();
+                    if ($id != null) {
+                        if ((new \ReflectionClass($id))->hasMethod('getContactInfo')) {
+                            $id = $id->getContactInfo();
+                        }
+                        $query = $this->modelManager->getEntityManager($this->getClass())
+                                    ->createQuery($q)->setParameter('id', $id);
+                    }
+
+                    return $query;
+                },
             ],
             [
                 parent::FIELD_KEY => 'user',
@@ -57,20 +66,6 @@ class ContactAdmin extends VDolgahAdmin
                 parent::NOT_SHOW_IN_FORM_KEY => true,
             ],
         ]);
-    }
-
-    protected function addQuery($q)
-    {
-        $query = null;
-        $id = $this->getRoot()->getSubject();
-        if ($id != null) {
-            if ((new \ReflectionClass($id))->hasMethod('getContactInfo')) {
-                $id = $id->getContactInfo();
-            }
-            $query = $this->modelManager->getEntityManager($this->getClass())->createQuery($q)->setParameter('id', $id);
-        }
-
-        return $query;
     }
 
     public function getTemplate($name)

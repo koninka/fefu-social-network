@@ -63,10 +63,7 @@ class VDolgahAdmin extends Admin
             $options['attr'] = ['class' => 'datepicker'];
         }
         if (array_key_exists(self::QUERY, $field)) {
-            $query = $this->addQuery($field[self::QUERY]);
-            if ($query != null) {
-                $options['query'] = $query;
-            }
+            $options['query'] = $field[self::QUERY]();
         }
         if (array_key_exists(self::OPTIONS_KEY_DESCRIPTION, $field)) {
             $mapper->add($field['name'], $type, $options, $field[self::OPTIONS_KEY_DESCRIPTION]);
