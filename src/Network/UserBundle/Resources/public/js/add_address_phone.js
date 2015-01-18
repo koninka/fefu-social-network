@@ -22,14 +22,16 @@ function addAddress(country, city, street, house, Div) {
     
     return newLi;
 }
+function valAddress (address, val) {
+    for(var i = 0; i < 4; i++) {
+        address[i] = val[i].value;
+    }
+}
 
 function addButton(newDiv, save) {
-    var div =  $('*', newDiv);
-    var address = [];
-    var j = 1;
-    for(var i = 3; i < 16; i += 4) {
-        address[j++] = div[i];
-    }
+    var address =  $('input', newDiv);
+    var address_val = [];
+    valAddress(address_val, address);
     var saveAddress = save;
     var newLi;
     var error = $('<div>Complete all fields</div>');
@@ -39,14 +41,15 @@ function addButton(newDiv, save) {
     newDiv.append(linkSave);
     $(linkSave).click(function(e) {
         var bool;
-        for(var i = 1; i < 5; i++) {
-            bool = address[i].value ==="";
+        valAddress(address_val, address);
+        for(var i = 0; i < 4; i++) {
+            bool = address_val[i] === "";
         }
         if (bool) {
             error.css("display", "block");
         } else {
-            newLi = addAddress(address[1].value, address[2].value, 
-            address[3].value, address[4].value, newDiv);
+            newLi = addAddress(address_val[0], address_val[1], 
+            address_val[2], address_val[3], newDiv);
             saveAddress = true;
             error.css("display", "none");
             newDiv.css("display", "none");
@@ -62,9 +65,13 @@ function addButton(newDiv, save) {
             newDiv.css("display", "none");
             if (newLi) {
                 newLi.css("display", "block");
+                for(var i = 0; i < 4; i++) {
+                    address[i].value = address_val[i];
+                }
             } else {
-                newLi = addAddress(address[1].value, address[2].value, 
-                address[3].value, address[4].value, newDiv);
+                valAddress(address_val, address);
+                newLi = addAddress(address_val[0], address_val[1], 
+                address_val[2], address_val[3], newDiv);
             }
         }
     });
@@ -73,9 +80,9 @@ function addButton(newDiv, save) {
 function addPhone(phone) {
     var phoneList = $('#phone-fields-list');
     var newLi = $('<div id = "phone"></div>').html(phone);
-    var linkdelete = $('<button type="button">X</button>');
-    newLi.append(linkdelete);
+    var div =  $('div', newLi);
     var linkdelete = $('<button class="blue_button" type="button">X</button>');
+    linkdelete.appendTo(div[1]);
     $(linkdelete).click(function(e) {
         e.preventDefault();
         newLi.remove();
