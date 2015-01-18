@@ -10,24 +10,17 @@ class AddressType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('country', 'text', [
-            'cascade_validation'  => true,
-        ]);
-        $builder->add('city', 'text', [
-            'cascade_validation'  => true,
-        ]);
-        $builder->add('street', 'text', [
-            'cascade_validation'  => true,
-        ]);
-        $builder->add('house', 'text', [
-            'cascade_validation'  => true,
-        ]);
+        $builder->add('country', 'text', []);
+        $builder->add('city', 'text', []);
+        $builder->add('street', 'text', []);
+        $builder->add('house', 'text', []);
     }
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\Address',
+            'cascade_validation'  => true,
         ]);
     }
 
