@@ -2,7 +2,7 @@
 
 {% block stylesheets %}
     {{ parent() }}
-
+    
     <link href="{{ asset('bundles/networkweb/css/jquery.kladr.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
@@ -15,6 +15,11 @@
 {% endblock %}
 
 {% block edit_content %}
+    <style type="text/css">
+        .blue_button {
+            display: inline-block;
+        }
+    </style>
     {{ form_start(form) }}
 
         {{ form_errors(form) }}
@@ -32,21 +37,17 @@
         </div>
 
         <div>
-            {{ form_label(form.phone) }}
             {{ form_errors(form.phone) }}
 
             <div id="phone-fields-list" data-prototype="{{ form_widget(form.phone.vars.prototype)|e }}">
                 {% for phoneField in form.phone %}
-                    <div id="" >
                         {{ form_errors(phoneField) }}
                         <script type="text/javascript">
                              addPhone('{{ form_widget(phoneField) }}');
-                        </script>
-                    </div>
+                        </script> 
                 {% endfor %}
             </div>
-
-            <button type="button" id="add-another-phone">Add phone</button>
+            <button class="blue_button"  type="button" id="add-another-phone">Add phone</button>
         </div>
 
         <div>
@@ -78,8 +79,7 @@
                     </div>
                 {% endfor %}
             </div>
-
-            <button type="button" id="add-another-address">Add address</button>
+            <button class="blue_button" type="button" id="add-another-address">Add address</button>
         </div>
 
         <div>

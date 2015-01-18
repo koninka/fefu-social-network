@@ -11,8 +11,7 @@ class PhoneType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('phonenumber', 'text', [
-            'cascade_validation'  => true,
-            'error_bubbling' => true
+            'error_bubbling' => true,
         ]);
     }
 
@@ -20,6 +19,7 @@ class PhoneType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\Phonenumber',
+            'cascade_validation'  => true,
         ]);
     }
 
