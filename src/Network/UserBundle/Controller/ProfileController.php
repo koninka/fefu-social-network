@@ -177,8 +177,9 @@ class ProfileController extends BaseController
                 // there's no 1x1 thread between this pair of users
                 // so we're creating a new one
                 $thread = new Thread();
-                $thread->setTopic('no topic')
-                       ->addUser($user)
+                $thread->setTopic('no topic');
+                $imService->persistThread($thread); //because of foreign key error
+                $thread->addUser($user)
                        ->addUser($recipientUser);
 
                 $imService->persistThread($thread);
@@ -224,21 +225,9 @@ class ProfileController extends BaseController
         // TODO: sort threads by date; implement in repo
         $threads = $threadRepo->getThreadListForUser($user->getId());
 
-        $r = [];
-
-        // TODO: try to pull this in single DB request instead of loop
-        foreach ($threads as $t) {
-            $ou = $threadRepo->getOtherUserInThread($t->getId(), $user->getId());
-            $r[] = [
-                'id' => $t->getId(),
-                'topic' => $t->getTopic(),
-                'userId' => $ou->getId(),
-                'userName' => $ou->getFirstName() . " " . $ou->getLastName()
-            ];
-        }
 
         $response = new JsonResponse();
-        $response->setData($r);
+        $response->setData($threads);
 
         return $response;
     }
@@ -251,29 +240,18 @@ class ProfileController extends BaseController
         $user = $this->getUser();
 
         $data = json_decode($request->getContent(), true);
-
+        if ($data == null || !array_key_exists('id', $data)) {
+            return new JsonResponse(['error' => 'field "id" is empty']);
+        }
+        $threadId = $data['id'];
         $posts = $this->getDoctrine()
                       ->getRepository('NetworkStoreBundle:Post')
-                      ->getThreadPosts($data['id']);
-
-        $r = [];
-
-        // TODO: try to pull this in single DB request instead of loop
-        foreach ($posts as $p) {
-            $pu = $p->getUser();
-            $r[] = [
-                'id' => $p->getId(),
-                'ts' => $p->getTs(),
-                'text' => $p->getText(),
-                'from' => $pu->getFirstName() . " " . $pu->getLastName(),
-                'userId' => $pu->getId()
-            ];
+                      ->getThreadPosts($threadId);
+        return new JsonResponse($posts);
+    }
         }
 
-        $response = new JsonResponse();
-        $response->setData($r);
 
-        return $response;
     }
     
     public function showProfileCommunityAction(Request $request)

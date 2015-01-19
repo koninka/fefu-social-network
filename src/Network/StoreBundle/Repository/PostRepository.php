@@ -14,17 +14,17 @@ class PostRepository extends EntityRepository
     public function getThreadPosts($threadId)
     {
         $em = $this->getEntityManager();
-        $rsm = new ResultSetMapping();
-        $rsm->addEntityResult('Network\StoreBundle\Entity\Post', 'p');
-        $rsm->addFieldResult('p', 'id', 'id');
-        $rsm->addFieldResult('p', 'ts', 'ts');
-        $rsm->addFieldResult('p', 'text', 'text');
-        $rsm->addMetaResult('p', 'user_id', 'user_id');
-
-        $sql = "SELECT t1.* FROM post as t1 WHERE t1.thread_id=?";
-
-        $query = $em->createNativeQuery($sql, $rsm);
-        $query->setParameter(1, $threadId);
+        $dql = "
+            SELECT
+                p.id as id,
+                p.ts as ts,
+                p.text as text,
+                CONCAT(u.firstName, CONCAT(' ', u.lastName)) as author,
+                u.id as userId
+            FROM NetworkStoreBundle:Post p
+            JOIN p.user u
+            JOIN p.thread t WHERE t.id=:id";
+        $query = $em->CreateQuery($dql)->setParameter('id', $threadId);
         $r = $query->getResult();
 
         return $r;
