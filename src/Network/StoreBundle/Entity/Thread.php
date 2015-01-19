@@ -30,6 +30,7 @@ class Thread
     private $topic;
 
 
+
     /**
      * Get id
      *
@@ -39,6 +40,7 @@ class Thread
     {
         return $this->id;
     }
+
 
     /**
      * Set topic
@@ -172,12 +174,16 @@ class Thread
     }
 
     /**
-     * increase counters of unreadposts in UserThread
+     * increase counters of unreadposts in UserThread except $user
+     *
+     * @param User $user
      */
-    public function incUnreadPosts()
+    public function incUnreadPosts($user)
     {
         foreach ($this->userThreads as $ut) {
-            $ut->incUnreadPosts();
+            if ($ut->getUser()->getId() != $user->getId()) {
+                $ut->incUnreadPosts();
+            }
         }
     }
 }

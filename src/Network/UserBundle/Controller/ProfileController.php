@@ -214,7 +214,7 @@ class ProfileController extends BaseController
              ->setTs(new \DateTime('now'))
              ->setUser($user)
              ->setThread($thread);
-        $thread->incUnreadPosts();
+        $thread->incUnreadPosts($user);
 
         $imService->persistPost($post);
 
@@ -257,7 +257,7 @@ class ProfileController extends BaseController
                       ->getThreadPosts($threadId);
         $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
 
-        return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts]);
+        return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts, 'selfId' => $user->getId()]);
     }
 
     public function getFriendsJsonAction(Request $request)

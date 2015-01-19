@@ -93,6 +93,7 @@ function updateThreadView(threadId) {
     };
     xhr('thread', {id: threadId})
     .then(function (data) {
+        var selfId = data.selfId;
         var posts = data.posts;
         var unreadPosts = data.unreadPosts || 0;
         currentThreadId = threadId;
@@ -101,10 +102,16 @@ function updateThreadView(threadId) {
         postsBlock.show();
         var postsWidth = postsBlock.width();
         postsBlock.empty();
+        for (var i = posts.length - 1; unreadPosts > 0 && i >= 0; --i) {
+            if (posts[i].userId != selfId) {
+                posts[i].unread = true;
+                --unreadPosts;
+            }
+        }
         var l = posts.length;
         for (var j in posts) {
-            var unread = l - j <= unreadPosts;
             var post = posts[j];
+            var unread = post.unread;
             var ts = new Date(post.ts.date + ' UTC');
             var tsString;
             var now = new Date;
