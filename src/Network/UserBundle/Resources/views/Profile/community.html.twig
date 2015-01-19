@@ -1,0 +1,80 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkuser/js/community.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <style type="text/css">
+        .ui-widget input{
+            font-size: 14px;
+        }
+    </style>
+    <div>
+        {% if is_cur_user %}
+            <div>
+                <button class="blue_button" id="create_community"> create community</button>
+                <a href="{{ path('user_search_community')}}">{{ 'profile.search_community' }}</a>
+            </div>
+        {% endif %}
+        {% if communities %}
+            <div>
+                {% for comm in communities %}
+                    <p>
+                        {% if comm.role != 'role_community_asking' %}
+                            <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
+                            {% if comm.role == 'role_community_invitee' and is_cur_user %}
+                                <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.accept_request' }}</a>
+                                <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.reject_request' }}</a>
+                            {% endif %}
+                        {% endif %}      
+                    </p>
+                {% endfor %}
+            </div>
+            <div>
+                {% for comm in communities %}
+                    <p>
+                        {% if comm.role == 'role_community_asking' %}
+                            <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
+                            {% if is_cur_user %}
+                                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.cancel_reques' }}</a>
+                            {% endif %}
+                        {% endif %}      
+                    </p>
+                {% endfor %}
+            </div>
+        {% endif %}
+     {% if is_cur_user %}
+        <div id="modal_form" title="Create community">
+           {{ form_start(form) }}
+               {{ form_errors(form) }}
+               <div>
+               {{ form_errors(form.name) }}
+               {{ form_label(form.name) }}
+               {{ form_widget(form.name) }}
+               </div>
+               <div>
+               {{ form_errors(form.view) }}
+               {{ form_label(form.view) }}
+               {{ form_widget(form.view) }}
+               </div>
+               <input class="blue_button" type="submit" value="{{ 'profile.create.submit'|trans }}" />
+           {{ form_end(form) }}
+       </div>  
+    {% endif %}
+    {% if is_error_form  %}
+        <script>
+            $(document).ready(function(){
+                $('#create_community').click();
+            });
+        </script>
+    {% endif %}
+    </div>
+
+{% endblock %}

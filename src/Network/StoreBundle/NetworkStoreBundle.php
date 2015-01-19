@@ -20,6 +20,15 @@ class NetworkStoreBundle extends Bundle
         if (!Type::hasType('relationshipStatusEnumType')) {
             Type::addType('relationshipStatusEnumType', 'Network\StoreBundle\DBAL\RelationshipStatusEnumType');
         }
+        if (!Type::hasType('roleCommunityEnumType')) {
+            Type::addType('roleCommunityEnumType', 'Network\StoreBundle\DBAL\RoleCommunityEnumType');
+        }
+        if (!Type::hasType('viewCommunityEnumType')) {
+            Type::addType('viewCommunityEnumType', 'Network\StoreBundle\DBAL\ViewCommunityEnumType');
+        }
+        if (!Type::hasType('typeCommunityEnumType')) {
+            Type::addType('typeCommunityEnumType', 'Network\StoreBundle\DBAL\TypeCommunityEnumType');
+        }
     }
 
 }

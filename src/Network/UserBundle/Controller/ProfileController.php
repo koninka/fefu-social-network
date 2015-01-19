@@ -13,17 +13,21 @@ namespace Network\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
-use Network\StoreBundle\Entity\ContactInfo;
 use Network\UserBundle\Form\Type\ContactInfoType;
+use Network\UserBundle\Form\Type\CommunityType;
+use Network\UserBundle\Form\Type\CreateCommunityType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
-use Network\StoreBundle\Entity\User;
+use Network\StoreBundle\Entity\Community;
+use Network\StoreBundle\Entity\UserCommunity;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
-
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\Post;
+use Network\StoreBundle\DBAL\RoleCommunityEnumType;
+use Network\StoreBundle\DBAL\TypeCommunityEnumType;
+
 
 class ProfileController extends BaseController
 {
@@ -130,6 +134,7 @@ class ProfileController extends BaseController
             'form' =>  $formContact->createView()
         ]);
     }
+
 
     public function showIMAction()
     {
@@ -269,5 +274,118 @@ class ProfileController extends BaseController
         $response->setData($r);
 
         return $response;
+    }
+    
+    public function showProfileCommunityAction(Request $request)
+    {
+        $user = $this->getUser();
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        return $this->communityAction($user->getId(), $request);
+    }
+    
+    public function communityAction($id, Request $request)
+    {
+        $curUser = $this->getUser();
+        $communityService = $this->get('network.store.community_service');
+        $user = $communityService->getFindByUserId($id);
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        
+        $communities = $user->getCommunities();
+        $isCurUser = $curUser === $user;
+        $community = new Community();
+        $form = $this->container->get('form.factory')->create(
+            new CreateCommunityType(),
+            $community 
+        );
+        $hasForm = false; 
+        if ($isCurUser && $request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $community = $communityService->createCommunity($community, $user);
+    
+                return $this->redirect( $this->generateUrl('user_edit_community', ['id' => $community->getId()]));
+            }
+            $hasForm = true;
+        }
+        
+        return $this->render('NetworkUserBundle:Profile:community.html.twig', [
+            'user' => $user,
+            'communities' => $communities,
+            'form' => $form->createView(),
+            'is_error_form' => $hasForm,
+            'is_cur_user' => $isCurUser
+        ]);
+    }
+    
+    public function editCommunityAction($id, Request $request)
+    {
+        $user = $this->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        $communityService = $this->get('network.store.community_service');
+        $community = $communityService->getFindByCommunityId($id);
+        if ($community->getOwner()->getId() !== $user->getId()) {
+            return showCommunityAction($id, $request);
+        }
+        $form = $this->container->get('form.factory')->create(
+            new CommunityType(),
+            $community 
+        );
+        $isClose = $community->getType() === TypeCommunityEnumType::C_CLOSED;
+        if ($request->getMethod() == 'POST') {
+            $form->handleRequest($request);
+            if ($form->isValid()) {
+                $community = $communityService->updateCommunity($community, $isClose);
+                
+                return $this->redirect( $this->generateUrl('user_show_community', ['id' => $community->getId()]));
+            }
+        }
+        return $this->render('NetworkUserBundle:Profile:edit_community.html.twig', [
+            'user' => $user,
+            'form' => $form->createView()
+        ]);
+ 
+        
+    }
+    
+    public function showCommunityAction($id)
+    {
+        $user = $this->getUser();
+        $communityService = $this->get('network.store.community_service');
+        $community = $communityService->getFindByCommunityId($id);
+        if (empty($community)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
+        $isRole = false;
+        $isOwner = false;
+        if ($user) {
+            $isOwner = $this->getDoctrine()
+                ->getRepository('NetworkStoreBundle:Community')
+                ->userInCommunityRole($user->getId(), 
+                    $community->getId(), RoleCommunityEnumType::RC_OWNER);
+            $rel = $this->getDoctrine()
+                ->getRepository('NetworkStoreBundle:Community')
+                ->getUser($user->getId(), $community->getId());
+            if ($rel) {
+                $isRole = $rel->getRole();
+            }
+        }
+        list ($friends_invitee, $ans_friends, $participants, $asking) 
+                = $communityService->showCommunity($id, $user);
+        
+        return $this->render('NetworkUserBundle:Profile:show_community.html.twig', [
+            'user' => $user,
+            'community' => $community,
+            'is_role' => $isRole,
+            'is_owner' => $isOwner,
+            'friends' => $ans_friends,
+            'friends_invitee' => $friends_invitee,
+            'asking' => $asking,
+            'participants' => $participants
+        ]);
     }
 }

@@ -1,0 +1,35 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <div>
+        <div>
+            <form>
+            <dd><input name="search" value="{{search}}"></dd>
+            <button class="blue_button" type="submit">{{ 'profile.search_community' }}</button>
+            </form>
+        </div>
+    
+
+    {% if community %}
+
+            <div>
+                {% for comm in community %}
+                    <p>
+                        <a href="{{ path('user_show_community', {'id':comm.id} ) }}">{{ comm.name }} </a>
+                    </p>
+                {% endfor %}
+            </div>
+
+    {% endif %}
+    </div>
+{% endblock %}
