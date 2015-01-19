@@ -164,3 +164,7 @@ user_search_community:
 get_friends:
     path: /api/friends
     defaults: { _controller: NetworkUserBundle:Profile:getFriendsJson }
+
+read_posts:
+    path: /api/read_posts
+    defaults: { _controller: NetworkUserBundle:Profile:readPosts }

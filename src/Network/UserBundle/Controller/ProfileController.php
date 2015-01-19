@@ -213,6 +213,7 @@ class ProfileController extends BaseController
              ->setTs(new \DateTime('now'))
              ->setUser($user)
              ->setThread($thread);
+        $thread->incUnreadPosts();
 
         $imService->persistPost($post);
 
@@ -255,8 +256,11 @@ class ProfileController extends BaseController
         $posts = $this->getDoctrine()
                       ->getRepository('NetworkStoreBundle:Post')
                       ->getThreadPosts($threadId);
-        return new JsonResponse($posts);
+        $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
+
+        return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts]);
     }
+
     public function getFriendsJsonAction(Request $request)
     {
         $user = $this->getUser();
@@ -273,9 +277,32 @@ class ProfileController extends BaseController
         return new JsonResponse($friends);
     }
 
+    public function readPostsAction(Request $request)
+    {
+        $user = $this->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        $data = json_decode($request->getContent(), true);
+        if ($data == null || !array_key_exists('threadId', $data)) {
+            return new JsonResponse(['error' => 'threadId field is missing']);
+        }
+        $threadId = $data['threadId'];
+        $count = 0;
+        if (array_key_exists('count', $data)) {
+            $count = $data['count'];
+        }
+        $userThreadRep = $this->getDoctrine()->getRepository('NetworkStoreBundle:UserThread');
+        $userThread = $userThreadRep->findByUserAndThread($user->getId(), $threadId);
+        if ($userThread == null) {
+            return new JsonResponse(['error' => 'thread not found']);
+        }
+        $userThread->decUnreadPosts($count);
+        $this->get('network.store.im_service')->persistUserThread($userThread);
 
+        return new JsonResponse(['count' => $count]);
     }
-    
+
     public function showProfileCommunityAction(Request $request)
     {
         $user = $this->getUser();
