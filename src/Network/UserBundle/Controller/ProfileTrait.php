@@ -20,12 +20,18 @@ trait ProfileTrait
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
 
         $friendshipRequestsCount = 0;
+        $communityRequestsCount = 0;
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $friendshipRequestsCount = $rels->getFriendshipRequestsForUserCount($curUser->getId());
+            $communityService = $this->get('network.store.community_service');
+            $communityRequestsCount = count($communityService->getUserInviteeById($curUser)); 
         }
         if ($friendshipRequestsCount > 0) {
             $parameters['friendship_requests_count'] = $friendshipRequestsCount;
+        }
+        if ($communityRequestsCount > 0) {
+            $parameters['community_requests_count'] = $communityRequestsCount;
         }
 
         return $this->container->get('templating')->renderResponse($view, $parameters, $response);
