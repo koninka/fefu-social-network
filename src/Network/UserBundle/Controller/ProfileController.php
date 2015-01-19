@@ -355,16 +355,16 @@ class ProfileController extends BaseController
     public function showCommunityAction($id)
     {
         $user = $this->getUser();
-        if (!is_object($user) || !$user instanceof UserInterface) {
-            throw new AccessDeniedException('This user does not have access to this section.');
-        }
         $communityService = $this->get('network.store.community_service');
         $community = $communityService->getFindByCommunityId($id);
-        $userCom = $communityService->getUserCommunityById ($user, $id);
-        $isOwner = ($userCom && $userCom->getRole() === RoleCommunityEnumType::RC_OWNER);
         $isRole = false;
-        if ($userCom) {
-            $isRole = $userCom->getRole();
+        $isOwner = false;
+        if ($user) {
+            $userCom = $communityService->getUserCommunityById ($user, $id);
+            $isOwner = ($userCom && $userCom->getRole() === RoleCommunityEnumType::RC_OWNER);
+            if ($userCom) {
+                $isRole = $userCom->getRole();
+            }
         }
         list ($friends_invitee, $ans_friends, $participants, $asking) 
                 = $communityService->ShowCommunity($id, $user);

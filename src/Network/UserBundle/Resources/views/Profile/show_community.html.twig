@@ -41,7 +41,7 @@
                 <a class="gray_button" href="{{ path('user_go_out_community', {'id':community.id} ) }}">{{ 'profile.go_out_community' }}</a>
             {% elseif is_role == 'role_community_asking' %}
                 <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':user.id, 'communityId':community.id} ) }}">{{ 'profile.cancel_request' }}</a>
-            {% else %}    
+            {% elseif user %}    
                 <a class="blue_button" href="{{ path('user_join_community', {'id':community.id} ) }}">{{ 'profile.join_community' }}</a>
             {% endif %}
         </div>

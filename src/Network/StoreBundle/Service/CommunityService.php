@@ -130,22 +130,24 @@ class CommunityService
     
     public function ShowCommunity($id, $user) {
         $rels = $this->em->getRepository('NetworkStoreBundle:Relationship');
-        $friends = $rels->findFriendsForUser($user->getId());
         $parti =  $this->getFindByUserCommunityId($id);
         $ans_friends = [];
         $friends_invitee = [];
         $asking = [];
         $participants = [];
-        foreach ($friends as $val) {
-            $involved = true;
-            foreach ($parti as $value) {
-                $involved = $involved && ($val->getPartner() != $value->getUser());
-                if ($value->getRole() === RoleCommunityEnumType::RC_INVITEE) {
-                    array_push($friends_invitee, $value);
+        if ($user) {
+            $friends = $rels->findFriendsForUser($user->getId());
+            foreach ($friends as $val) {
+                $involved = true;
+                foreach ($parti as $value) {
+                    $involved = $involved && ($val->getPartner() != $value->getUser());
+                    if ($value->getRole() === RoleCommunityEnumType::RC_INVITEE) {
+                        array_push($friends_invitee, $value);
+                    }
                 }
-            }
-            if ($involved && !($val->getPartner() === $user)) {
-                array_push($ans_friends, $val->getPartner());
+                if ($involved && !($val->getPartner() === $user)) {
+                    array_push($ans_friends, $val->getPartner());
+                }
             }
         }
         foreach ($parti as $value) {
