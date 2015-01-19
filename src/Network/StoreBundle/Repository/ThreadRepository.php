@@ -38,15 +38,22 @@ class ThreadRepository extends EntityRepository
 
     public function getThreadListForUser($userId)
     {
+        //sorted by last post date
         $em = $this->getEntityManager();
         $dql =
        "SELECT
           t1.id as id,
           t1.topic as topic,
-          ut1.unreadPosts as unreadPosts
-          FROM NetworkStoreBundle:Thread t1
+          ut1.unreadPosts as unreadPosts,
+          (
+            SELECT max(p2.ts) FROM NetworkStoreBundle:Post p2
+	        WHERE p2.thread = ut1.thread
+	        GROUP BY p2.thread
+          ) as lastDate
+        FROM NetworkStoreBundle:Thread t1
         JOIN t1.userThreads ut1
-        WHERE ut1.user = :id";
+        WHERE ut1.user = :id
+        ORDER BY lastDate DESC";
         $query = $em->createQuery($dql)->setParameter('id', $userId);
         $r = $query->getResult();
 

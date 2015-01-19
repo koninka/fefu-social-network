@@ -230,8 +230,6 @@ class ProfileController extends BaseController
         $data = json_decode($request->getContent(), true);
 
         $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
-
-        // TODO: sort threads by date; implement in repo
         $threads = $threadRepo->getThreadListForUser($user->getId());
 
         $response = new JsonResponse();
