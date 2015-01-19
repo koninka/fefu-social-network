@@ -164,7 +164,7 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
         if ($data == null || !array_key_exists('text', $data) || trim($data['text']) == '') {
-            return new JsonResponse(['error' => 'field "text" is empty']);
+            return new JsonResponse(['error' => 'field \'text\' is empty']);
         }
         if (array_key_exists('threadId', $data)) {
             $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
@@ -173,6 +173,9 @@ class ProfileController extends BaseController
                 throw new AccessDeniedException('This user does not have access to this section.');
             }
         } else {
+            if (!array_key_exists('recipientId', $data) || !is_numeric($data['recipientId'])) {
+                return new JsonResponse(['error' => 'field \'recipientId\' is not numeric']);
+            }
             $recipientUser = $this->getDoctrine()
                                   ->getRepository('NetworkStoreBundle:User')
                                   ->find($data['recipientId']);
