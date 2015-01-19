@@ -65,40 +65,58 @@ function updateThreadList() {
 
 function updateThreadView(threadId) {
   // Currently reloads all posts from thread
+    var lastAuthor = "";
+    var lastDate = null;
+    var diff_less_than = function (date1, date2, min){
+        return date1 - date2 < min * 60 * 1000;
+    };
+    var new_post = function(post, tsString, with_header, unread){
+
+        var postDiv = $('#post').clone();
+        if (with_header) {
+            var postHeader = postDiv.find('#post-header');
+            var pAuthor = postHeader.find('#author');
+            pAuthor.attr('href', '/id' + post.userId);
+            pAuthor.html(post.author);
+            postHeader.find('#ts').html(tsString);
+            postHeader.show();
+        }
+        if (unread)
+            postDiv.addClass('unread-post');
+        var postBody = postDiv.find('#post-body');
+        postBody.html(post.text);
+        postBody.show();
+        postDiv.show();
+        return postDiv;
+    };
   xhr('thread', {id: threadId})
   .then(function (data) {
+          var posts = data.posts;
+          var unreadPosts = data.unreadPosts || 0;
     currentThreadId = threadId;
     $('#post-form>#custom-recipient').hide();
     var postsBlock = $('#posts');
     postsBlock.show();
+          var postsWidth = postsBlock.width();
     postsBlock.empty();
-    var lastAuthor = "";
-    for (var j in data) {
-      var post = data[j];
-      if (lastAuthor !== post.from) {
-        var postHeader = $('#post-header').clone();
-        var pAuthor = postHeader.find('#author');
-        pAuthor.attr('href', '/id' + post.userId);
-        pAuthor.html(post.from);
-
+    var l = posts.length;
+    for (var j in posts) {
+        var unread = l - j <= unreadPosts;
+      var post = posts[j];
         var ts = new Date(post.ts.date + ' UTC');
         var tsString;
-        if (((new Date) - ts) < 60 * 60 * 1000 * 24) {
-          tsString = ts.toLocaleTimeString();
+        var now = new Date;
+        if (diff_less_than(now, ts, 60 * 24)) {
+            tsString = ts.toLocaleTimeString();
         } else {
-          tsString = ts.toLocaleDateString();
+            tsString = ts.toLocaleDateString();
         }
-
-        postHeader.find('#ts').html(tsString);
-        postHeader.show();
-        postsBlock.append(postHeader);
-        lastAuthor = post.from;
-      }
-      var postBody = $('#post').clone();
-      postBody.html(post.text);
-      postBody.show();
-      postsBlock.append(postBody);
+        var with_header = lastAuthor !== post.author || !diff_less_than(ts, lastDate, 5);
+        postsBlock.append(new_post(post, tsString, with_header, unread));
+        lastAuthor = post.author;
+        lastDate = ts;
     }
+          postsBlock.width(postsWidth);
   });
 }
 
