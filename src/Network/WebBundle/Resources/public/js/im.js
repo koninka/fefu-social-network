@@ -180,6 +180,7 @@ function InitIM(partnerId, partnerName) {
     });
     $('#recipient').select2({
         width:'resolve',
+        multiple: true,
         ajax: {
             url: "/api/friends",
             dataType: 'json',
@@ -197,11 +198,14 @@ function InitIM(partnerId, partnerName) {
     });
     $('#send').click(function (e) {
         var recipient = $('#recipient').select2('data');
-        var recipientId = null;
-        if (recipient != null)
-            recipientId = recipient.id;
+        var recipientIds = [];
+        if (recipient != null) {
+            for (var i in recipient) {
+                recipientIds.push(recipient[i].id);
+            }
+        }
         xhr('post', {
-            recipientId: recipientId,
+            recipientId: recipientIds,
             threadId: currentThreadId,
             text: $('#post-text').val()
         }).then(function (data) {

@@ -13,15 +13,18 @@ namespace Network\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
+use Network\StoreBundle\DBAL\ThreadEnumType;
 use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\Post;
+
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 
 class ProfileController extends BaseController
@@ -168,39 +171,66 @@ class ProfileController extends BaseController
                 throw new AccessDeniedException('This user does not have access to this section.');
             }
         } else {
-            if (!array_key_exists('recipientId', $data) || !is_numeric($data['recipientId'])) {
-                return new JsonResponse(['error' => 'field \'recipientId\' is not numeric']);
+            if (!array_key_exists('recipientId', $data) ||
+                !is_array($data['recipientId']) ||
+                empty($data['recipientId'])) {
+                return new JsonResponse(['error' => 'field \'recipientId\' is empty or not array_type']);
             }
-            $recipientUser = $this->getDoctrine()
+            $recipientUsers = $this->getDoctrine()
                                   ->getRepository('NetworkStoreBundle:User')
-                                  ->find($data['recipientId']);
+                                  ->findBy(['id' => $data['recipientId']]);
 
-            if (!$recipientUser) {
-                return new JsonResponse(['error' => $data['recipientId'] . ' not found']);
+            if (!$recipientUsers) {
+                return new JsonResponse(['error' => 'users with given ids not found']);
             }
-            if ($recipientUser->getId() == $user->getId()) {
-                return new JsonResponse(['error' => 'unable to write to yourself']);
+            $recipientUsers = new ArrayCollection($recipientUsers);
+            $recipientUsers->removeElement($user);
+            if ($recipientUsers->isEmpty()) {
+                return new JsonResponse(['error' => 'users with given ids not found']);
             }
+            $recipientsCount = $recipientUsers->count();
+            if ($recipientUsers->count() == 1) {
+                $recipientUser = $recipientUsers[0];
 
-            $thread = $this->getDoctrine()
-                           ->getRepository('NetworkStoreBundle:Thread')
-                           ->findByUsers($user->getId(), $recipientUser->getId());
+                $thread = $this->getDoctrine()
+                    ->getRepository('NetworkStoreBundle:Thread')
+                    ->findByUsers($user->getId(), $recipientUser->getId());
 
-            if (!$thread or count($thread) == 0) {
-                // there's no 1x1 thread between this pair of users
-                // so we're creating a new one
-                $thread = new Thread();
-                $thread->setTopic('no topic');
-                $imService->persistThread($thread); //because of foreign key error
-                $thread->addUser($user)
-                       ->addUser($recipientUser);
+                if (!$thread or count($thread) == 0) {
+                    // there's no 1x1 thread between this pair of users
+                    // so we're creating a new one
+                    $thread = new Thread();
+                    $thread->setTopic('no topic');
+                    $imService->persistThread($thread); //because of foreign key error
+                    $thread->addUser($user)
+                        ->addUser($recipientUser);
 
-                $imService->persistThread($thread);
+                    $imService->persistThread($thread);
 
-            } elseif (count($thread) > 1) {
-                throw new Exception('SERVER ERROR: 2 dialogs between 2 persons');
+                } elseif (count($thread) > 1) {
+                    throw new Exception('SERVER ERROR: 2 dialogs between 2 persons');
+                } else {
+                    $thread = $thread[0];
+                }
             } else {
-                $thread = $thread[0];
+                if (!array_key_exists('topic', $data) || trim($data['topic']) == '') {
+                    $data['topic'] = '';
+                    foreach ($recipientUsers as $k => $recipientUser) {
+                        $data['topic'] .= $recipientUser->getFirstName();
+                        if ($k + 1 < $recipientsCount) {
+                            $data['topic'] .= ', ';
+                        }
+                    }
+                }
+                $thread = new Thread();
+                $thread->setTopic($data['topic'])
+                        ->setType(ThreadEnumType::T_CONFERENCE);
+                $imService->persistThread($thread);
+                foreach ($recipientUsers as $recipientUser) {
+                    $thread->addUser($recipientUser);
+                }
+                $thread->addUser($user);
+                $imService->persistThread($thread);
             }
         }
 
