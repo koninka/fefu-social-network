@@ -116,7 +116,26 @@ services:
         calls:
             - [ setTranslationDomain, [NetworkStoreBundle]]
             - [ setTemplate, [edit, NetworkStoreBundle:School:edit.html.twig]]
-
+    sonata.admin.community:
+        class: Network\StoreBundle\Admin\CommunityAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: community }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Community
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
+    sonata.admin.subjects:
+        class: Network\StoreBundle\Admin\CommunityAdmin
+        tags:
+            - { name: sonata.admin, manager_type: orm, group: "Content", label: subjects }
+        arguments:
+            - ~
+            - Network\StoreBundle\Entity\Subjects
+            - ~
+        calls:
+            - [ setTranslationDomain, [NetworkStoreBundle]]
 
 sonata_block:
     default_contexts: [cms]

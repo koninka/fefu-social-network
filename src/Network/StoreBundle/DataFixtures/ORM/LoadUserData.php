@@ -7,7 +7,8 @@ use Doctrine\Common\DataFixtures\FixtureInterface;
 use Doctrine\Common\Persistence\ObjectManager;
 use Symfony\Component\DependencyInjection\ContainerAwareInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Network\StoreBundle\Entity\User;
+use Network\StoreBundle\Entity\Subjects;
+use Network\StoreBundle\DBAL\SubjectsCommunityEnumType;
 
 class LoadUserData implements FixtureInterface, ContainerAwareInterface
 {
@@ -26,6 +27,16 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
         $group->setRoles($roles);
         $groupManager->updateGroup($group, true);
         $this->manager->persist($group);
+        $this->manager->flush();
+
+        return $this;
+    }
+    
+    private function addSubjects($name)
+    {
+        $subjects = new Subjects();
+        $subjects->setName($name);
+        $this->manager->persist($subjects);
         $this->manager->flush();
 
         return $this;
@@ -80,6 +91,9 @@ class LoadUserData implements FixtureInterface, ContainerAwareInterface
 
         $this->addUser('admin', 'password', 'male', 'John', 'Doe', 'admin@vdolgah.com', null,
                         $groupManager->findGroupByName('admin'));
+        $this->addSubjects('music')->addSubjects('working')->addSubjects('entertainment')
+             ->addSubjects('education')->addSubjects(' journey')->addSubjects('sport')   
+             ->addSubjects("science and technology");
         $this->addUser('admins_girlfriend', 'password', 'female', 'Dummy', 'Whale',
                        'admins_girlfriend', null, $userGroup);
 
