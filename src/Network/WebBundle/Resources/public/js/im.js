@@ -201,6 +201,11 @@ function InitIM(partnerId, partnerName) {
             }
             $('#post-text').val('');
             updateThreadView(data.threadId);
+            var scrollTo_int = $posts.prop('scrollHeight') + 'px';
+            $posts.slimScroll({
+                scrollTo : scrollTo_int,
+                start: 'bottom'
+            }).trigger('slimscrolling');
         });
         e.preventDefault();
     });
