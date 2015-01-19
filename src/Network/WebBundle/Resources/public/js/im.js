@@ -45,9 +45,12 @@ function updateThreadList() {
       var threadBlock = $('#thread-preview').clone();
       threadBlock.show();
       var threadButton = threadBlock.find('#open-thread');
-      var threadUser = threadBlock.find('#user');
-      threadUser.attr('href', '/id' + thread.userId);
-      threadUser.html(thread.userName);
+        if (thread.unreadPosts > 0)
+        threadBlock.find('#unreadPosts').html(thread.unreadPosts);
+      if (thread.userId)
+        threadBlock.find('#user')
+            .attr('href', '/id' + thread.userId)
+            .html(thread.userName);
       $('#thread-list').append(threadBlock);
       threadButton.data('id', thread.id);
       threadButton.click(function (e) {
@@ -124,7 +127,31 @@ function updateThreadView(threadId) {
 
 function InitIM(partnerId, partnerName) {
     var $posts = $('#posts');
+    var posts = null;
+    var checkUnreadPosts = function () {
+        if (posts == null) return;
+        xhr('api/read_posts', {
+            count : posts.length,
+            threadId : currentThreadId
+        }).then(function(data){
+            if (data.error){
+                console.log(data.error);
+                posts = null;
+                return ;
+            }
+            posts.removeClass('unread-post');
+            posts = null;
+            $posts.trigger('slimscrolling');
+        })
+    };
     $posts.slimScroll().bind('slimscrolling', function(e, pos){
+        if (posts != null) return;
+        posts = $("#post.unread-post").filter(function(){
+            var $this = $(this);
+            return $this.position().top < $posts.height();
+        });
+        if (posts.length == 0) {posts = null; return;}
+        checkUnreadPosts();
     });;
     var $sl = $('.slimScrollDiv:has(#posts)');
 
