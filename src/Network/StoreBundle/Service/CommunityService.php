@@ -92,7 +92,7 @@ class CommunityService
         if (empty($user)) return 'msg.not_authorized';
         if (empty($community)) return 'msg.not_this_community';
         if (!($repository->isUserInCommunity($user->getId(), $community->getId()))) {
-            $rel = $repository->UserInCommunityRole($user->getId(), 
+            $rel = $repository->userInCommunityRole($user->getId(), 
                         $community->getId(), RoleCommunityEnumType::RC_INVITEE);
             if (!empty($rel)) {
                 $rel[0]->setRole(RoleCommunityEnumType::RC_PARTICIPANT);
@@ -131,7 +131,7 @@ class CommunityService
         if (!$this->em->getRepository('NetworkStoreBundle:Community')
                 ->isUserInCommunity($userFriend->getId(), $community->getId())) {
             $msg = 'msg.user_in_community';
-        } elseif (empty($repository->UserInCommunityRole($user->getId(), 
+        } elseif (empty($repository->userInCommunityRole($user->getId(), 
                         $community->getId(), RoleCommunityEnumType::RC_OWNER))) {   
             $msg = 'msg.user_does_not_have_the_right_to_invite_the_community';
         } else {
@@ -165,7 +165,7 @@ class CommunityService
             return 'msg.user_does_not_have_the_right_to_invite_the_community';
         if (($community->getOwner() === $user) && ($userFriend->getId() !== $user->getId()) ) {
             $rel = $this->em->getRepository('NetworkStoreBundle:Community')
-                    ->UserInCommunityRole($userFriend->getId(), 
+                    ->userInCommunityRole($userFriend->getId(), 
                       $community->getId(), RoleCommunityEnumType::RC_ASKING);
             if ($rel) {
                 $rel[0]->setRole(RoleCommunityEnumType::RC_INVITEE);
@@ -188,7 +188,8 @@ class CommunityService
         return $this->excludeUser($userFriend, $communityId, $class);
     }
     
-    public function CreateCommunity($community, $user) {
+    public function createCommunity($community, $user)
+    {
         $community->setOwner($user);
         $userCom = new UserCommunity();
         $userCom->setUser($user)
@@ -200,7 +201,8 @@ class CommunityService
         return $community;
     }
     
-    public function UpdateCommunity($community, $isClose) {
+    public function updateCommunity($community, $isClose) 
+    {
         if ($isClose && $community->getType() === TypeCommunityEnumType::C_OPEN) {
             $asking = $this->getUserAskingById($community->getId());
             foreach ($asking as $val) {
@@ -213,7 +215,8 @@ class CommunityService
         return $community;
     }
     
-    public function ShowCommunity($id, $user) {
+    public function showCommunity($id, $user) 
+    {
         $rels = $this->em->getRepository('NetworkStoreBundle:Relationship');
         $parti =  $this->em->getRepository('NetworkStoreBundle:Community')->getUsers($id);
         $ans_friends = [];

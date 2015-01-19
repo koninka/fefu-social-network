@@ -64,7 +64,7 @@ class CommunityRepository extends EntityRepository
      * @param string $role
      * @return bool
      */
-    public function UserInCommunityRole($userId, $communityId, $role)
+    public function userInCommunityRole($userId, $communityId, $role)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('r')

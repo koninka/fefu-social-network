@@ -304,7 +304,7 @@ class ProfileController extends BaseController
         if ($isCurUser && $request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $community = $communityService->CreateCommunity($community, $user);
+                $community = $communityService->createCommunity($community, $user);
     
                 return $this->redirect( $this->generateUrl('user_edit_community', ['id' => $community->getId()]));
             }
@@ -339,7 +339,7 @@ class ProfileController extends BaseController
         if ($request->getMethod() == 'POST') {
             $form->handleRequest($request);
             if ($form->isValid()) {
-                $community = $communityService->UpdateCommunity($community, $isClose);
+                $community = $communityService->updateCommunity($community, $isClose);
                 
                 return $this->redirect( $this->generateUrl('user_show_community', ['id' => $community->getId()]));
             }
@@ -357,17 +357,25 @@ class ProfileController extends BaseController
         $user = $this->getUser();
         $communityService = $this->get('network.store.community_service');
         $community = $communityService->getFindByCommunityId($id);
+        if (empty($community)) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
         $isRole = false;
         $isOwner = false;
         if ($user) {
-            $userCom = $communityService->getUserCommunityById ($user, $id);
-            $isOwner = ($userCom && $userCom->getRole() === RoleCommunityEnumType::RC_OWNER);
-            if ($userCom) {
-                $isRole = $userCom->getRole();
+            $isOwner = $this->getDoctrine()
+                ->getRepository('NetworkStoreBundle:Community')
+                ->userInCommunityRole($user->getId(), 
+                    $community->getId(), RoleCommunityEnumType::RC_OWNER);
+            $rel = $this->getDoctrine()
+                ->getRepository('NetworkStoreBundle:Community')
+                ->getUser($user->getId(), $community->getId());
+            if ($rel) {
+                $isRole = $rel->getRole();
             }
         }
         list ($friends_invitee, $ans_friends, $participants, $asking) 
-                = $communityService->ShowCommunity($id, $user);
+                = $communityService->showCommunity($id, $user);
         
         return $this->render('NetworkUserBundle:Profile:show_community.html.twig', [
             'user' => $user,
