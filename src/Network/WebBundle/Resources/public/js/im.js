@@ -105,18 +105,43 @@ function updateThreadView(threadId) {
 $(function () {
   updateThreadList();
 
-  $('#send').click(function (e) {
-    xhr('post', {
-      recipientId: $('#recipient').val(),
-      threadId: currentThreadId,
-      text: $('#post-text').val()
-    })
-    .then(function (data) {
-      $('#post-text').val('');
-      updateThreadView(data.threadId);
+    $('#recipient').select2({
+        width:'resolve',
+        ajax: {
+            url: "/api/friends",
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+                return {
+                    query:    term,
+                    page:     page
+                };
+            },
+            results: function (data, page) {
+                return { results: data.items, more: data.more };
+            }
+        }
     });
-    e.preventDefault();
-  });
+    $('#send').click(function (e) {
+        var recipient = $('#recipient').select2('data');
+        var recipientId = null;
+        if (recipient != null)
+            recipientId = recipient.id;
+        xhr('post', {
+            recipientId: recipientId,
+            threadId: currentThreadId,
+            text: $('#post-text').val()
+        })
+            .then(function (data) {
+                if(data.error){
+                    console.log(data.error);
+                    return;
+                }
+                $('#post-text').val('');
+                updateThreadView(data.threadId);
+            });
+        e.preventDefault();
+    });
 
   $('#compose-post').click(function (e) {
     $('#thread-list-wrapper').hide();

@@ -160,3 +160,7 @@ user_search_community:
     path: /search_community/
     defaults: { _controller: NetworkUserBundle:Community:searchCommunity}
     requirements: { _method: GET,_method: POST}
+
+get_friends:
+    path: /api/friends
+    defaults: { _controller: NetworkUserBundle:Profile:getFriendsJson }

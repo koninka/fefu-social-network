@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/sonatacore/vendor/select2/select2.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -11,9 +12,14 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/im.js') }}"></script>
+    <script src="{{ asset('bundles/sonatacore/vendor/select2/select2.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/jquery.slimscroll.js') }}"></script>
 {% endblock %}
 {% block right_content %}
     <style type="text/css">
+        #post {
+            width : 100%;
+        }
         #post-header {
             margin-top: 8px;
             margin-bottom: 4px;
@@ -58,7 +64,7 @@
             <textarea id="post-text" cols="80" rows="10"></textarea>
             <div id="custom-recipient" style="display: none;">
                 <label for="recipient">Recipient</label>
-                <input type="text" id="recipient"/>
+                    <input id="recipient" />
             </div>
             <input type="button" class="blue_button" id="send" value="Send"/>
         </div>

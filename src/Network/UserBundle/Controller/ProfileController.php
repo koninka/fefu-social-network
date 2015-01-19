@@ -248,7 +248,21 @@ class ProfileController extends BaseController
                       ->getThreadPosts($threadId);
         return new JsonResponse($posts);
     }
+    public function getFriendsJsonAction(Request $request)
+    {
+        $user = $this->getUser();
+        if (!is_object($user) || !$user instanceof UserInterface) {
+            throw new AccessDeniedException('This user does not have access to this section.');
         }
+        $limit = $request->get('limit', 10);
+        $page = $request->get('page', 1);
+        $q = $request->get('query', '');
+        $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
+        $paginator = $this->get('network.store.paginator');
+        $friends = $rels->getPaginatedFriends($user->getId(), $paginator, $page, $limit, $q);
+
+        return new JsonResponse($friends);
+    }
 
 
     }
