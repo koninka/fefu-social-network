@@ -120,7 +120,7 @@ function updateThreadView(threadId) {
             } else {
                 tsString = ts.toLocaleDateString();
             }
-            var with_header = lastAuthor !== post.author || !diff_less_than(ts, lastDate, 5);
+            var with_header = lastAuthor !== post.author || !diff_less_than(ts, lastDate, 1);
             postsBlock.append(new_post(post, tsString, with_header, unread));
             lastAuthor = post.author;
             lastDate = ts;
