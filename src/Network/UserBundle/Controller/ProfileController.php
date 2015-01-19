@@ -153,7 +153,9 @@ class ProfileController extends BaseController
         $imService = $this->get('network.store.im_service');
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-
+        if (!array_key_exists('text', $data) or trim($data['text']) == '') {
+            return new JsonResponse(['error' => 'field "text" is empty']);
+        }
         if (array_key_exists('threadId', $data)) {
             $thread = $imService->getThreadById($data['threadId']);
 
@@ -195,7 +197,6 @@ class ProfileController extends BaseController
         $oldTimeZone = date_default_timezone_get();
         date_default_timezone_set("UTC");
 
-        // TODO: check for $data['text'] existence and size
         $post = new Post();
         $post->setText($data['text'])
              ->setTs(new \DateTime('now'))
