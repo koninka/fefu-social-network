@@ -68,6 +68,19 @@ class ThreadRepository extends EntityRepository
         return $query->getSingleResult()['unreadPosts'];
     }
 
+    public function getThreadByIdAndUser($threadId, $userId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT t FROM NetworkStoreBundle:Thread t
+                JOIN t.userThreads t2
+                WHERE t2.thread = :thread_id AND t2.user = :user_id";
+        $query = $em->createQuery($dql)
+            ->setParameter('user_id', $userId)
+            ->setParameter('thread_id', $threadId);
+
+        return $query->getOneOrNullResult();
+    }
+
     public function checkPermission($threadId, $userId)
     {
         $em = $this->getEntityManager();

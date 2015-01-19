@@ -162,12 +162,13 @@ class ProfileController extends BaseController
         $imService = $this->get('network.store.im_service');
         $user = $this->getUser();
         $data = json_decode($request->getContent(), true);
-        if (!array_key_exists('text', $data) or trim($data['text']) == '') {
+        if ($data == null || !array_key_exists('text', $data) || trim($data['text']) == '') {
             return new JsonResponse(['error' => 'field "text" is empty']);
         }
         if (array_key_exists('threadId', $data)) {
             $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
-            if ($threadRepo->checkPermission($data['threadId'], $user->getId())) {
+            $thread = $threadRepo->getThreadByIdAndUser($data['threadId'], $user->getId());
+            if ($thread == null) {
                 throw new AccessDeniedException('This user does not have access to this section.');
             }
         } else {
