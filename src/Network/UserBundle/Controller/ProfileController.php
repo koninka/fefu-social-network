@@ -17,6 +17,7 @@ use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\UserBundle\Form\Type\CommunityType;
 use Network\UserBundle\Form\Type\CreateCommunityType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
+use Symfony\Component\Security\Acl\Exception\Exception;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Network\StoreBundle\Entity\Community;
 use Network\StoreBundle\Entity\UserCommunity;
@@ -199,8 +200,7 @@ class ProfileController extends BaseController
                 $imService->persistThread($thread);
 
             } elseif (count($thread) > 1) {
-                // TODO: handle exceptional error case when there's somehow more
-                // than one 1x1 thread for this pair of users
+                throw new Exception('SERVER ERROR: 2 dialogs between 2 persons');
             } else {
                 $thread = $thread[0];
             }
