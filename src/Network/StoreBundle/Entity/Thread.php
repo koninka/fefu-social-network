@@ -4,6 +4,8 @@ namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Network\StoreBundle\DBAL\ThreadEnumType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * thread
@@ -29,8 +31,13 @@ class Thread
      */
     private $topic;
 
-
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="threadEnumType")
+     * @Assert\NotBlank()
+     */
+    private $type = ThreadEnumType::T_DIALOG;
     /**
      * Get id
      *
@@ -41,7 +48,25 @@ class Thread
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
+    /**
+     * @param string $type
+     *
+     * @return $this
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
     /**
      * Set topic
      *

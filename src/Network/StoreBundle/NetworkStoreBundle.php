@@ -29,6 +29,9 @@ class NetworkStoreBundle extends Bundle
         if (!Type::hasType('typeCommunityEnumType')) {
             Type::addType('typeCommunityEnumType', 'Network\StoreBundle\DBAL\TypeCommunityEnumType');
         }
+        if (!Type::hasType('threadEnumType')) {
+            Type::addType('threadEnumType', 'Network\StoreBundle\DBAL\ThreadEnumType');
+        }
     }
 
 }
