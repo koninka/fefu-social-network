@@ -53,6 +53,13 @@ class User extends BaseUser
     protected $relationships;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     * 
+     * @ORM\OneToMany(targetEntity="UserCommunity", mappedBy="user", cascade={"persist"})
+     */
+    protected $communities;
+
+    /**
      * @var string
      *
      * @Assert\NotBlank()
@@ -300,6 +307,7 @@ class User extends BaseUser
         parent::__construct();
         $this->jobs = new ArrayCollection();
         $this->relationships = new ArrayCollection();
+        $this->communities = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->threads = new ArrayCollection();
@@ -439,7 +447,20 @@ class User extends BaseUser
     public function addThread(\Network\StoreBundle\Entity\Thread $threads)
     {
         $this->threads[] = $threads;
-
+        
+        return $this;
+    }
+    
+    /**    
+     * Add communities
+     *
+     * @param \Network\StoreBundle\Entity\UserCommunity $communities
+     * @return User
+     */
+    public function addCommunity(\Network\StoreBundle\Entity\UserCommunity $communities)
+    {
+        $this->communities[] = $communities;
+        
         return $this;
     }
 
@@ -461,5 +482,25 @@ class User extends BaseUser
     public function getThreads()
     {
         return $this->threads;
+    }
+    
+    /*
+     * Remove communities
+     *
+     * @param \Network\StoreBundle\Entity\UserCommunity $communities
+     */
+    public function removeCommunity(\Network\StoreBundle\Entity\UserCommunity $communities)
+    {
+        $this->communities->removeElement($communities);
+    }
+
+    /**
+     * Get communities
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getCommunities()
+    {
+        return $this->communities;
     }
 }
