@@ -157,8 +157,10 @@ class ProfileController extends BaseController
             return new JsonResponse(['error' => 'field "text" is empty']);
         }
         if (array_key_exists('threadId', $data)) {
-            $thread = $imService->getThreadById($data['threadId']);
-
+            $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+            if ($threadRepo->checkPermission($data['threadId'], $user->getId())) {
+                throw new AccessDeniedException('This user does not have access to this section.');
+            }
         } else {
             $recipientUser = $this->getDoctrine()
                                   ->getRepository('NetworkStoreBundle:User')
@@ -229,8 +231,6 @@ class ProfileController extends BaseController
 
     public function threadAction(Request $request)
     {
-        // TODO: check if user is a member of requested thread
-        // user shouldn't be able to see it if he's not a member
         $em = $this->getDoctrine()->getManager();
         $user = $this->getUser();
 
@@ -239,6 +239,10 @@ class ProfileController extends BaseController
             return new JsonResponse(['error' => 'field "id" is empty']);
         }
         $threadId = $data['id'];
+        $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+        if (!$threadRepo->checkPermission($threadId, $user->getId())) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
         $posts = $this->getDoctrine()
                       ->getRepository('NetworkStoreBundle:Post')
                       ->getThreadPosts($threadId);
