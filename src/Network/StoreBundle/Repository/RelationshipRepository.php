@@ -4,9 +4,32 @@ namespace Network\StoreBundle\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
+use Network\StoreBundle\Entity\Relationship;
 
 class RelationshipRepository extends EntityRepository
 {
+
+    /**
+     * @param $userId
+     * @param $partnerId
+     * @return Relationship
+     */
+    public function getRelationshipForUser($userId, $partnerId)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('r')
+            ->from('NetworkStoreBundle:Relationship', 'r')
+            ->where('r.user = :user')
+            ->andWhere('r.partner = :partner')
+            ->setParameters(['user' => $userId, 'partner' => $partnerId]);
+
+        $relationship = $qb->getQuery()->getOneOrNullResult();
+        if (!$relationship) {
+            $relationship = new Relationship();
+        }
+
+        return $relationship;
+    }
 
     /**
      * @param integer $userId

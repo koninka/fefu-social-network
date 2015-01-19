@@ -53,7 +53,7 @@ class ProfileController extends BaseController
         if ($this->get('security.context')->isGranted('ROLE_USER')) {
             $curUser = $this->getUser();
             $isCurUser = ($curUser->getId() === $user->getId());
-            $fsStatus = $curUser->getRelationshipStatus($id);
+            $fsStatus = $rels->getRelationshipForUser($curUser->getId(), $user->getId())->getStatus();
         }
 
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
