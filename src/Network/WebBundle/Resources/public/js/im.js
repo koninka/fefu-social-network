@@ -119,6 +119,7 @@ function updateThreadView(threadId) {
             lastDate = ts;
         }
         postsBlock.width(postsWidth);
+        postsBlock.trigger('slimscrolling');
     });
 }
 
