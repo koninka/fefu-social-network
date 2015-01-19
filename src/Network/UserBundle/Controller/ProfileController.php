@@ -207,12 +207,7 @@ class ProfileController extends BaseController
 
         date_default_timezone_set($oldTimeZone);
 
-        $r = ['threadId' => $thread->getId()];
-
-        $response = new JsonResponse();
-        $response->setData($r);
-
-        return $response;
+        return new JsonResponse(['threadId' => $thread->getId()]);
     }
 
     public function threadListAction(Request $request)
@@ -225,7 +220,6 @@ class ProfileController extends BaseController
 
         // TODO: sort threads by date; implement in repo
         $threads = $threadRepo->getThreadListForUser($user->getId());
-
 
         $response = new JsonResponse();
         $response->setData($threads);
