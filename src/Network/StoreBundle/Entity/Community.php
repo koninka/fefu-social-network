@@ -7,10 +7,10 @@ use Symfony\Component\Validator\Constraints as Assert;
 use Network\StoreBundle\DBAL\TypeCommunityEnumType;
 
 /**
- * Community
+ * community
  *
  * @ORM\Table(name="community")
- * @ORM\Entity
+ * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\CommunityRepository")
  */
 class Community
 {
