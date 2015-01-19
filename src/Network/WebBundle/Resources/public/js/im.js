@@ -50,6 +50,8 @@ function updateThreadList() {
                     .find('#user')
                     .attr('href', '/id' + thread.userId)
                     .html(thread.userName);
+            else
+                threadBlock.find('#topic').html(thread.topic);
             $('#thread-list').append(threadBlock);
             threadButton
                 .data('id', thread.id)
