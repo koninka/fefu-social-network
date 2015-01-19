@@ -127,10 +127,10 @@ class ProfileController extends BaseController
             $em->persist($user->getContactInfo());
             $em->flush();
 
-            return $this->redirect( $this->generateUrl('user_profile', ['id' => $user->getId()]));
+            return $this->redirect($this->generateUrl('user_profile', ['id' => $user->getId()]));
         }
 
-        return $this->render('FOSUserBundle:Profile:contact.html.twig',[
+        return $this->render('FOSUserBundle:Profile:contact.html.twig', [
             'form' =>  $formContact->createView()
         ]);
     }
