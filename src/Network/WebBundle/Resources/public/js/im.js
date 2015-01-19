@@ -52,6 +52,7 @@ function updateThreadList() {
       threadButton.data('id', thread.id);
       threadButton.click(function (e) {
         $('#thread-list-wrapper').hide();
+          $('#posts-wrapper').show();
         $('#posts').show();
         $('#post-form').show();
         var threadId = $(this).data().id;
@@ -104,6 +105,19 @@ function updateThreadView(threadId) {
 
 
 function InitIM(partnerId, partnerName) {
+    var $posts = $('#posts');
+    $posts.slimScroll().bind('slimscrolling', function(e, pos){
+    });;
+    var $sl = $('.slimScrollDiv:has(#posts)');
+
+    $('#posts-wrapper').resizable({
+        alsoResize: ['#posts'],
+        minWidth:  500,
+        minHeight: 300,
+        resize: function( event, ui ) {
+            $sl.height($posts.height()); //hack to resize scrollbar view
+        }
+    });
     $('#recipient').select2({
         width:'resolve',
         ajax: {
@@ -146,6 +160,7 @@ function InitIM(partnerId, partnerName) {
         $('#thread-list-wrapper').hide();
         $('#post-form').show();
         $('#post-form>#custom-recipient').show();
+        $('#posts-wrapper').show();
         e.preventDefault();
     });
     if (partnerId == null) {

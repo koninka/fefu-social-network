@@ -34,14 +34,25 @@
             overflow: hidden;
             width: 20%;
         }
+        #post-body {
+            white-space: pre;
+            overflow-wrap: break-word;
+        }
+        #recipient{
+            width:40%;
+        }
+        #post-text {
+            width:100%;
+        }
     </style>
 
-    <div id="post-header" style="display: none;">
-        <a id="author"></a>
-        <div id="ts"></div>
-    </div>
-
-    <div id="post" style="display: none; margin-left: 8px; font-size: small;">
+    <div id="post" style="display: none;">
+        <div id="post-header" style="display: none;">
+            <a id="author"></a>
+            <div id="ts"></div>
+        </div>
+        <div id="post-body" style="display: none; margin-left: 8px; font-size: small;">
+        </div>
     </div>
 
     <div id="thread-preview" style="display: none;">
@@ -56,19 +67,19 @@
             <div id="thread-list">
             </div>
         </div>
-
-        <div id="posts" style="display: none;">
-        </div>
-
-        <div id="post-form" style="display: none; margin-top: 4px;">
-            <textarea id="post-text" cols="80" rows="10"></textarea>
-            <div id="custom-recipient" style="display: none;">
-                <label for="recipient">Recipient</label>
-                    <input id="recipient" />
+        <div id="posts-wrapper" style="display:none;">
+            <div id="posts" style="display: none;">
             </div>
-            <input type="button" class="blue_button" id="send" value="Send"/>
-        </div>
 
+            <div id="post-form" style="display: none; margin-top: 4px;">
+                <textarea id="post-text" cols="80" rows="10"></textarea>
+                <div id="custom-recipient" style="display: none;">
+                    <label for="recipient">Recipient</label>
+                    <input id="recipient" />
+                </div>
+                <input type="button" class="blue_button" id="send" value="Send"/>
+            </div>
+        </div>
     </div></div>
     <script>
 
