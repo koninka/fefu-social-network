@@ -68,20 +68,19 @@ class Thread
      */
     public function __construct()
     {
+        $this->userThreads = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->users = new ArrayCollection();
     }
 
+
+    /**
+     * @ORM\OneToMany(targetEntity="userThread", mappedBy="thread", cascade={"persist"})
+     */
+    protected $userThreads;
     /**
      * @ORM\OneToMany(targetEntity="Post", mappedBy="thread")
      */
     protected $posts;
-
-    /**
-     * @ORM\ManyToMany(targetEntity="User", inversedBy="threads")
-     * @ORM\JoinTable(name="threads_users")
-     **/
-    protected $users;
 
     /**
      * Add posts
@@ -117,14 +116,15 @@ class Thread
     }
 
     /**
-     * Add users
+     * Create UserThread Entity that used as link
      *
-     * @param \Network\StoreBundle\Entity\User $users
+     * @param \Network\StoreBundle\Entity\User $user
+     *
      * @return Thread
      */
-    public function addUser(\Network\StoreBundle\Entity\User $users)
+    public function addUser(\Network\StoreBundle\Entity\User $user)
     {
-        $this->users[] = $users;
+        $userThread = new UserThread($user, $this);
 
         return $this;
     }
@@ -132,11 +132,16 @@ class Thread
     /**
      * Remove users
      *
-     * @param \Network\StoreBundle\Entity\User $users
+     * @param \Network\StoreBundle\Entity\User $user
      */
-    public function removeUser(\Network\StoreBundle\Entity\User $users)
+    public function removeUser(\Network\StoreBundle\Entity\User $user)
     {
-        $this->users->removeElement($users);
+        foreach ($this->userThreads as $userThreads) {
+            if ($userThreads->getUser() == $user) {
+                $userThreads->erase();
+                break;
+            }
+        }
     }
 
     /**
@@ -146,6 +151,33 @@ class Thread
      */
     public function getUsers()
     {
-        return $this->users;
+        $users = new ArrayCollection();
+        foreach ($this->userThreads as $ut) {
+            $users[] = $ut->getUser();
+        }
+
+        return $users;
+    }
+
+    /**
+     * @param UserThread $userThread
+     *
+     * @return $this
+     */
+    public function addUserThread($userThread)
+    {
+        $this->userThreads[] = $userThread;
+
+        return $this;
+    }
+
+    /**
+     * increase counters of unreadposts in UserThread
+     */
+    public function incUnreadPosts()
+    {
+        foreach ($this->userThreads as $ut) {
+            $ut->incUnreadPosts();
+        }
     }
 }
