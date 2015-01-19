@@ -1,0 +1,118 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkuser/js/community.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <div>
+        <div>
+        {{ 'community.show.name'|trans }}: {{ community.name }}
+        <br>
+        {{ community.type }}
+        <br>
+        {% if community.description %}
+            {{ 'community.show.description'|trans }}: {{ community.description }}
+        {% endif %}
+        <br>
+        {% if is_owner  %}
+             <a class="blue_button" href="{{ path('user_edit_community', {'id':community.id} ) }}">{{ 'profile.edit_community' }}</a>
+             <a class="gray_button" href="{{ path('user_delete_community', {'id':community.id} ) }}">{{ 'profile.delete_community' }}</a>
+        {% endif %}
+         </div>
+     </div>
+    <div>
+        <div>
+            <button class="blue_button" id="participants">participants</button> 
+            {% if community.type == 'open' and (is_owner  or is_role == 'role_community_participant')%}
+                <button class="blue_button" id="invite">invite friends</button> 
+            {% endif %}
+            {% if is_owner and  community.type == 'closed'%}
+                <button class="blue_button" id="invite">invite friends</button> 
+                <button class="blue_button" id="application">request</button>
+            {% endif %}
+            {% if is_role == 'role_community_owner'  or is_role == 'role_community_participant'%}
+                <a class="gray_button" href="{{ path('user_go_out_community', {'id':community.id} ) }}">{{ 'profile.go_out_community' }}</a>
+            {% elseif is_role == 'role_community_asking' %}
+                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':user.id, 'communityId':community.id} ) }}">{{ 'profile.cancel_request' }}</a>
+            {% else %}    
+                <a class="blue_button" href="{{ path('user_join_community', {'id':community.id} ) }}">{{ 'profile.join_community' }}</a>
+            {% endif %}
+        </div>
+        <div>
+            {{ 'community.show.owner'|trans }}: 
+            <a href="{{ path('user_profile', {'id':community.owner.id} ) }}">{{ community.owner.firstName }} {{ community.owner.lastName }}</a>
+        </div>
+    </div> 
+    <div id="modal_form" >
+        {% if friends or friends_invitee %}
+            <div>
+                {% if friends %}
+                    {% for friend in friends %}
+                        <p>
+                            <a href="{{ path('user_profile', {'id':friend.id} ) }}">{{ friend.firstName }} {{ friend.lastName }} </a>
+                            <a class="blue_button" href="{{ path('user_invite_friend', {'id':friend.id,'communityId': community.id}) }}">{{ 'profile.invite_friend' }}</a>    
+                        </p>
+                    {% endfor %}
+                {% endif %}
+                {% if friends_invitee %}
+                    {% for friend in friends_invitee %}
+                        <p>
+                            <a href="{{ path('user_profile', {'id':friend.user.id} ) }}">{{ friend.user.firstName }} {{ friend.user.lastName }} </a>
+                            <a class="gray_button" href="{{ path('user_uninvite_community', {'id':friend.user.id, 'communityId': community.id}) }}">{{ 'profile.uninvite_friend' }}</a>    
+                        </p>
+                    {% endfor %}
+                {% endif %}
+                    
+            </div>
+        {% else %}
+            <div>
+                <p> You have no friends or all your friends are made in this group</p>
+            </div>
+        {% endif %}
+    </div>  
+     <div id="modal_form_participant">
+        {% if participants %}
+            <div>
+                {% for participant in participants%}
+                    <p>
+                        <a href="{{ path('user_profile', {'id':participant.id} ) }}">{{ participant.firstName }} {{ participant.lastName }} </a>
+                        {% if is_owner  and community.owner.id != participant.id%}
+                            <a class="gray_button" href="{{ path('user_exclude_participant', {'id':participant.id,'communityId': community.id} ) }}">{{ 'profile.exclude_participant' }}</a>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div>
+                <p> In the community has no members </p>
+            </div>
+        {% endif %}
+    </div> 
+     <div id="modal_form_application" >
+        {% if asking %}
+            <div>
+                {% for request in asking%}
+                    <p>
+                        <a href="{{ path('user_profile', {'id':request.id} ) }}">{{ request.firstName }} {{ request.lastName }} </a>
+                        <a class="blue_button" href="{{ path('user_accept_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'profile.accept_request' }}</a>
+                        <a class="gray_button" href="{{ path('user_reject_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'profile.reject_request' }}</a>
+                    </p>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div>
+                <p> No requests to join the community </p>
+            </div>
+        {% endif %}
+    </div> 
+    
+
+{% endblock %}
+
