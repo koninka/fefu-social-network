@@ -177,7 +177,7 @@ class ProfileController extends BaseController
                                   ->find($data['recipientId']);
 
             if (!$recipientUser) {
-                // TODO: handle error case when there's no recipient user found by id
+                return new JsonResponse(['error' => $data['recipientId'] . ' not found']);
             }
 
 
