@@ -121,9 +121,9 @@ function updateThreadView(threadId, scroll) {
             } else {
                 tsString = ts.toLocaleDateString();
             }
-            var with_header = lastAuthor !== post.author || !diff_less_than(ts, lastDate, 1);
+            var with_header = lastAuthor !== post.userId || !diff_less_than(ts, lastDate, 1);
             postsBlock.append(new_post(post, tsString, with_header, unread));
-            lastAuthor = post.author;
+            lastAuthor = post.userId;
             lastDate = ts;
         }
         postsBlock.width(postsWidth);
