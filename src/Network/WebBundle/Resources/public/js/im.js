@@ -55,7 +55,6 @@ function updateThreadList() {
         $('#posts').show();
         $('#post-form').show();
         var threadId = $(this).data().id;
-        $('#recipient').val(threadId);
         updateThreadView(threadId);
         e.preventDefault();
       });
@@ -102,9 +101,9 @@ function updateThreadView(threadId) {
   });
 }
 
-$(function () {
-  updateThreadList();
 
+
+function InitIM(partnerId, partnerName) {
     $('#recipient').select2({
         width:'resolve',
         ajax: {
@@ -143,10 +142,16 @@ $(function () {
         e.preventDefault();
     });
 
-  $('#compose-post').click(function (e) {
-    $('#thread-list-wrapper').hide();
-    $('#post-form').show();
-    $('#post-form>#custom-recipient').show();
-    e.preventDefault();
-  });
-});
+    $('#compose-post').click(function (e) {
+        $('#thread-list-wrapper').hide();
+        $('#post-form').show();
+        $('#post-form>#custom-recipient').show();
+        e.preventDefault();
+    });
+    if (partnerId == null) {
+        updateThreadList();
+    } else {
+        $('#compose-post').click();
+        $('#recipient').select2('data', {id: partnerId, text: partnerName});
+    }
+}

@@ -70,4 +70,14 @@
         </div>
 
     </div></div>
+    <script>
+
+        $(function(){
+            {% if partnerId is null or partnerName is null %}
+                InitIM(null, null);
+            {% else %}
+                InitIM({{ partnerId }}, "{{ partnerName }}");
+            {% endif %}
+        })
+    </script>
 {% endblock %}

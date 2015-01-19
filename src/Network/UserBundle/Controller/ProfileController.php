@@ -135,16 +135,25 @@ class ProfileController extends BaseController
         ]);
     }
 
-
-    public function showIMAction()
+    public function showIMAction(Request $request)
     {
         $user = $this->getUser();
         if (empty($user)) {
             return $this->redirect($this->generateUrl('mainpage'));
         }
+        $partnerId = $request->query->get('partnerId', null);
+        $partnerName = null;
+        if ($partnerId != null && $partnerId != $user->getId()) {
+            $partner = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($partnerId);
+            if ($partner) {
+                $partnerName = $partner->getFirstName() . ' ' . $partner->getLastName();
+            }
+        }
 
         return $this->render('NetworkUserBundle:Profile:im.html.twig', [
-            'user_id' => $user->getId()
+            'user_id' => $user->getId(),
+            'partnerName' => $partnerName,
+            'partnerId' => $partnerId
         ]);
     }
 
