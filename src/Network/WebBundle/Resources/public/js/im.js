@@ -66,7 +66,7 @@ function updateThreadList() {
     });
 }
 
-function updateThreadView(threadId) {
+function updateThreadView(threadId, scroll) {
     // Currently reloads all posts from thread
     var lastAuthor = "";
     var lastDate = null;
@@ -112,7 +112,8 @@ function updateThreadView(threadId) {
         for (var j in posts) {
             var post = posts[j];
             var unread = post.unread;
-            var ts = new Date(post.ts.date + ' UTC');
+            var wtf = moment(post.ts.date);
+            var ts = new Date(wtf.format('YYYY/MM/DD HH:mm:ss') + ' UTC');
             var tsString;
             var now = new Date;
             if (diff_less_than(now, ts, 60 * 24)) {
@@ -126,6 +127,13 @@ function updateThreadView(threadId) {
             lastDate = ts;
         }
         postsBlock.width(postsWidth);
+        if (scroll) {
+            var scrollTo_int = postsBlock.prop('scrollHeight') + 'px';
+            postsBlock.slimScroll({
+                scrollTo: scrollTo_int,
+                start: 'bottom'
+            });
+        }
         postsBlock.trigger('slimscrolling');
     });
 }
@@ -200,12 +208,7 @@ function InitIM(partnerId, partnerName) {
                 return;
             }
             $('#post-text').val('');
-            updateThreadView(data.threadId);
-            var scrollTo_int = $posts.prop('scrollHeight') + 'px';
-            $posts.slimScroll({
-                scrollTo : scrollTo_int,
-                start: 'bottom'
-            }).trigger('slimscrolling');
+            updateThreadView(data.threadId, true);
         });
         e.preventDefault();
     });
