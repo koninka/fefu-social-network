@@ -179,10 +179,10 @@ class ProfileController extends BaseController
             if (!$recipientUser) {
                 return new JsonResponse(['error' => $data['recipientId'] . ' not found']);
             }
+            if ($recipientUser->getId() == $user->getId()) {
+                return new JsonResponse(['error' => 'unable to write to yourself']);
+            }
 
-
-            // TODO: decide what to do when posting to yourself
-            // currently it does Internal Server Error (500)
             $thread = $this->getDoctrine()
                            ->getRepository('NetworkStoreBundle:Thread')
                            ->findByUsers($user->getId(), $recipientUser->getId());
