@@ -32,4 +32,17 @@ class UserThreadRepository extends EntityRepository
 
         return $query->getSingleResult();
     }
+
+    public function getThreadsUnreadForUserCount($userId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT COUNT(ut) FROM NetworkStoreBundle:UserThread ut
+            WHERE ut.user = :user_id and ut.unreadPosts > 0
+        ";
+        $query = $em->createQuery($dql)
+            ->setParameter('user_id', $userId);
+
+        return $query->getSingleScalarResult();
+    }
 }
