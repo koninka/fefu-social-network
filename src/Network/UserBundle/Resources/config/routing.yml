@@ -76,3 +76,87 @@ threads:
 thread:
     path: /thread
     defaults: { _controller: NetworkUserBundle:Profile:thread }
+
+user_profile_show_community:
+    path: profile/group
+    defaults: { _controller: NetworkUserBundle:Profile:showProfileCommunity }
+
+user_profile_community:
+    path: id{id}/group
+    defaults: { _controller: NetworkUserBundle:Profile:community }
+    requirements:
+       id: \d+
+    
+user_show_community:
+    path: /club{id}
+    defaults: { _controller: NetworkUserBundle:Profile:showCommunity }
+    requirements:
+       id: \d+
+user_edit_community:
+    path: /club{id}/edit
+    defaults: { _controller: NetworkUserBundle:Profile:editCommunity }
+    requirements:
+       id: \d+
+user_go_out_community:
+    path: /community/go_out/{id}
+    defaults: { _controller: NetworkUserBundle:Community:goOutCommunity }
+    requirements:
+       id: \d+
+
+user_join_community:
+    path: /community/join/{id}
+    defaults: { _controller: NetworkUserBundle:Community:joinCommunity }
+    requirements:
+       id: \d+
+
+user_invite_friend:
+    path: /community{communityId}/invite/{id}
+    defaults: { _controller: NetworkUserBundle:Community:inviteCommunity }
+    requirements:
+       id: \d+
+       communityId: \d+
+
+user_exclude_participant:
+    path: /community{communityId}/exclude/{id}
+    defaults: { _controller: NetworkUserBundle:Community:excludeCommunity }
+    requirements:
+       id: \d+
+       communityId: \d+
+
+user_accept_request:
+    path: /community{communityId}/accept_request/{id}
+    defaults: { _controller: NetworkUserBundle:Community:acceptRequestCommunity }
+    requirements:
+       id: \d+
+       communityId: \d+
+user_reject_request:
+    path: /community{communityId}/reject_request/{id}
+    defaults: { _controller: NetworkUserBundle:Community:rejectRequestCommunity}
+    requirements:
+       id: \d+
+       communityId: \d+
+
+user_uninvite_community:
+    path: /community{communityId}/uninvite_community/{id}
+    defaults: { _controller: NetworkUserBundle:Community:uninviteCommunity}
+    requirements:
+       id: \d+
+       communityId: \d+
+
+user_cancel_request_community:
+    path: /community{communityId}/cancel_request_community/{id}
+    defaults: { _controller: NetworkUserBundle:Community:cancelRequestCommunity}
+    requirements:
+       id: \d+
+       communityId: \d+
+       
+user_delete_community:
+    path: /community/delete/{id}
+    defaults: { _controller: NetworkUserBundle:Community:deleteCommunity}
+    requirements:
+       id: \d+
+       
+user_search_community:
+    path: /search_community/
+    defaults: { _controller: NetworkUserBundle:Community:searchCommunity}
+    requirements: { _method: GET,_method: POST}
