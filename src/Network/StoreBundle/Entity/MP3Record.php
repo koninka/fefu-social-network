@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 
 /**
- * @ORM\Entity()
+ * @ORM\Entity(repositoryClass="Network\StoreBundle\Repository\MP3RecordRepository")
  * @ORM\Table(name="mp3s")
  */
 class MP3Record

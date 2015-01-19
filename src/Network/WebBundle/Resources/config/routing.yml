@@ -48,3 +48,28 @@ file_mp3_poster:
 audios:
   path: /audios/
   defaults: { _controller: NetworkWebBundle:Mp3Player:main }
+
+audios_json_search:
+  path: /audious/json/find.by.{by}.with.{what}
+  defaults: { _controller: NetworkWebBundle:Mp3Player:search }
+#  methods: [POST]
+  requirements:
+    options: artist|title
+  options:
+    expose: true
+
+audios_json_add:
+  path: /audious/json/add/{id}
+  defaults: { _controller: NetworkWebBundle:Mp3Player:add }
+  methods: [POST]
+  requirements:
+    id: \d+
+  options:
+    expose: true
+
+audios_json_edit:
+  path: /audious/json/edit/
+  defaults: { _controller: NetworkWebBundle:Mp3Player:edit }
+  methods: [POST]
+  options:
+    expose: true

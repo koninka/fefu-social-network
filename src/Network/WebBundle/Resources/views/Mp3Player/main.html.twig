@@ -5,6 +5,7 @@
 
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jquery.jplayer.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jplayer.playlist.js') }}"></script>
     <script src="http://hayageek.github.io/jQuery-Upload-File/jquery.uploadfile.min.js"></script>
@@ -33,6 +34,7 @@
                         title: "{{ mp3.getSong.getTitle }}",
                         artist: "{{ mp3.getSong.getArtist }}",
                         mp3: Routing.generate('file_mp3_get', {file_id: {{ mp3.getId }}}),
+                        id: {{ mp3.getId }},
                         poster: ""
                     },
                 {% endfor %}
@@ -123,12 +125,26 @@
 {% block stylesheets %}
     {{ parent() }}
 
-    <link href="{{ asset('bundles/networkweb/css/jplayer/jplayer.blue.monday.min.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkweb/css/jplayer/jplayer.blue.monday.css') }}" type="text/css" rel="stylesheet" />
     <link href="http://hayageek.github.io/jQuery-Upload-File/uploadfile.min.css" rel="stylesheet">
 
 {% endblock %}
 
 {% block edit_content %}
+
+    <div id="edit-dialog" title="Edit information" style="display: none">
+        <form>
+            <div>
+                <label for="title_input">Title: </label>
+                <input type="text" id="title_input">
+            </div>
+
+            <div>
+                <label for="artist_input">Artist: </label>
+                <input type="text" id="artist_input">
+            </div>
+        </form>
+    </div>
 
     <div id="jp_container_1" class="jp-video jp-video-270p" role="application" aria-label="media player">
         <div class="jp-type-playlist">
@@ -171,9 +187,25 @@
                 </div>
             </div>
             <div class="jp-playlist">
-                <ul>
+                <div class="jp-search-container">
+                    <label for="search_input">Search:</label>
+                    <input type="text" class="jp-search-what" id="search_input">
+                    <select class="jp-search-by">
+                        <option value="title">by title</option>
+                        <option value="artist">by artist</option>
+                    </select>
+                </div>
+                <ul class="jp-tracks-container">
                     <li>&nbsp;</li>
                 </ul>
+                <div class="jp-found-tracks">
+                    <span class="jp-found-tracks-title">1000 audious was found in database</span>
+                    <hr>
+                    <ul class="jp-found-tracks-container">
+                        <li>&nbsp;</li>
+                    </ul>
+                </div>
+
             </div>
             <div class="jp-no-solution">
                 <span>Update Required</span>

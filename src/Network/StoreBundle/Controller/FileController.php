@@ -195,7 +195,14 @@ class FileController extends Controller
         if (0 === $mp3->getUsers()->count()) {
             $em = $this->getDoctrine()->getManager();
 
-            unlink($mp3->getPath());
+            $file = $mp3->getFile();
+
+            $file->removeRecord($mp3);
+
+            if (0 === $file->getRecords()->count()) {
+                unlink($file->getPath());
+                $em->remove($file);
+            }
 
             $em->remove($mp3);
             $em->flush();
