@@ -344,6 +344,24 @@
                 }
             }
         },
+        _handleDeleteResponse: function (data, textStatus, jqXHR) {
+            if (data['status'] === 'ok') {
+                var id = data['id'];
+
+                for (var i = 0; i < this.userPlaylist.length; ++i) {
+                    if (id === this.userPlaylist[i]['id']) {
+                        if (this.userPlaylist.length > 1) {
+                            this.userPlaylist.splice(i, 1);
+                        } else {
+                            this.userPlaylist = [];
+                        }
+                    }
+                }
+
+                this._clearPlaylist();
+                this._fillPlaylist();
+            }
+        },
         _createFoundListItem: function(media) {
             var self = this;
 
@@ -500,6 +518,11 @@
 
 			return listItem;
 		},
+        addToUserPlaylist: function (media) {
+            this.userPlaylist.push(media);
+            this._clearPlaylist();
+            this._fillPlaylist();
+        },
 		_createItemHandlers: function() {
 			var self = this;
 			// Create live handlers for the playlist items
@@ -537,12 +560,7 @@
                             JSON.stringify({
                                 id: id
                             }),
-                            function (data, textStatus, jqXHR) {
-                                if (data['status'] == 'ok') {
-                                    self.remove(index);
-                                    self.blur(this);
-                                }
-                            }
+                            self._handleDeleteResponse.bind(self)
                         );
                 });
 

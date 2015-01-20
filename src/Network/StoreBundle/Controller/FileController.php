@@ -229,6 +229,7 @@ class FileController extends Controller
 
         return new JsonResponse([
             'status' => 'ok',
+            'id' => $id,
         ]);
     }
 

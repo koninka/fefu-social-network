@@ -92,7 +92,8 @@
                             var newMedia = {
                                 title: metadata['title'],
                                 artist: metadata['artist'],
-                                mp3: Routing.generate('file_mp3_get', { file_id: metadata['file_id'] })
+                                mp3: Routing.generate('file_mp3_get', { file_id: metadata['file_id'] }),
+                                id: metadata['file_id']
                             };
 
                             if (metadata['album_id'] !== undefined) {
@@ -101,7 +102,7 @@
                                 });
                             }
 
-                            myPlaylist.add(newMedia);
+                            myPlaylist.addToUserPlaylist(newMedia);
                             break;
 
                         case 'badFile':
