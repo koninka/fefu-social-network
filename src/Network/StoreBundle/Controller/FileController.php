@@ -69,6 +69,12 @@ class FileController extends Controller
 
         $uploadedFile = $request->files->get('file');
 
+        if (null === $uploadedFile) {
+            return new JsonResponse([
+                'status' => 'somethingWrong'
+            ]);
+        }
+
         if ('mp3' !== pathinfo($uploadedFile->getClientOriginalName())['extension']) {
             return new JsonResponse([
                 'status' => 'badFileExtension'
