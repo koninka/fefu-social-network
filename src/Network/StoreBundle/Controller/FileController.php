@@ -206,11 +206,12 @@ class FileController extends Controller
             ]);
         }
 
+        $em = $this->getDoctrine()->getManager();
+
         $mp3->removeUser($user);
         $user->removeMp3($mp3);
 
         if (0 === $mp3->getUsers()->count()) {
-            $em = $this->getDoctrine()->getManager();
 
             $file = $mp3->getFile();
 
@@ -222,8 +223,9 @@ class FileController extends Controller
             }
 
             $em->remove($mp3);
-            $em->flush();
         }
+
+        $em->flush();
 
         return new JsonResponse([
             'status' => 'ok',
