@@ -63,6 +63,7 @@ function updateThreadList() {
                     $('#posts-wrapper').show();
                     $('#posts').show();
                     $('#post-form').show();
+                    $('#conference-topic-div').hide();
                     var threadId = $(this).data().id;
                     updateThreadView(threadId);
                     e.preventDefault();
@@ -198,8 +199,15 @@ function InitIM(partnerId, partnerName) {
                 return { results: data.items, more: data.more };
             }
         }
+    }).on("change", function(e) {
+        var data = $('#recipient').select2('data');
+        if (data.length > 1)
+            $('#conference-topic-div').show();
+        else
+            $('#conference-topic-div').hide();
     });
     $('#send').click(function (e) {
+        $('#conference-topic-div').hide();
         var recipient = $('#recipient').select2('data');
         var recipientIds = [];
         if (recipient != null) {
@@ -210,7 +218,8 @@ function InitIM(partnerId, partnerName) {
         xhr('post', {
             recipientId: recipientIds,
             threadId: currentThreadId,
-            text: $('#post-text').val()
+            text: $('#post-text').val(),
+            topic: $('#conference-topic').val()
         }).then(function (data) {
             if(data.error){
                 console.log(data.error);
