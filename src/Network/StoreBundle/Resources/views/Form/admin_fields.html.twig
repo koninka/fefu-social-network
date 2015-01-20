@@ -28,9 +28,7 @@
                                 };
                             },
                             results: function (data, page) {
-                                var more = (page * data.itemsPerPage) < data.totalCount;
-
-                                return { results: data.items, more: more };
+                                return { results: data.items, more: data.more };
                             }
                         },
                         dropdownCssClass: "bigdrop",

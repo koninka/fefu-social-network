@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Yaml\Tests\A;
 
 /**
  * user
@@ -310,7 +311,7 @@ class User extends BaseUser
         $this->communities = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
-        $this->threads = new ArrayCollection();
+        $this->userThreads = new ArrayCollection();
     }
 
     /**
@@ -401,9 +402,9 @@ class User extends BaseUser
     protected $posts;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Thread", mappedBy="users")
+     * @ORM\OneToMany(targetEntity="UserThread", mappedBy="user", cascade={"persist"})
      **/
-    protected $threads;
+    protected $userThreads;
 
     /**
      * Add posts
@@ -439,18 +440,18 @@ class User extends BaseUser
     }
 
     /**
-     * Add threads
+     * Create UserThread Entity
      *
-     * @param \Network\StoreBundle\Entity\Thread $threads
+     * @param \Network\StoreBundle\Entity\Thread $thread
      * @return User
      */
-    public function addThread(\Network\StoreBundle\Entity\Thread $threads)
+    public function addThread(\Network\StoreBundle\Entity\Thread $thread)
     {
-        $this->threads[] = $threads;
-        
+        $userThread = new UserThread($this, $thread);
+
         return $this;
     }
-    
+
     /**    
      * Add communities
      *
@@ -460,18 +461,23 @@ class User extends BaseUser
     public function addCommunity(\Network\StoreBundle\Entity\UserCommunity $communities)
     {
         $this->communities[] = $communities;
-        
+
         return $this;
     }
 
     /**
      * Remove threads
      *
-     * @param \Network\StoreBundle\Entity\Thread $threads
+     * @param \Network\StoreBundle\Entity\Thread $thread
      */
-    public function removeThread(\Network\StoreBundle\Entity\Thread $threads)
+    public function removeThread(\Network\StoreBundle\Entity\Thread $thread)
     {
-        $this->threads->removeElement($threads);
+        foreach($this->userThreads as $userThread) {
+            if ($userThread->getThread() == $thread) {
+                $userThread->erase();
+                break;
+            }
+        }
     }
 
     /**
@@ -481,7 +487,24 @@ class User extends BaseUser
      */
     public function getThreads()
     {
-        return $this->threads;
+        $threads = new ArrayCollection();
+        foreach($this->userThreads as $userThread) {
+            $threads[] = $userThread->getThread();
+        }
+
+        return $threads;
+    }
+
+    /**
+     * @param UserThread $userThread
+     *
+     * @return User
+     */
+    public function addUserThread($userThread)
+    {
+        $this->userThreads[] = $userThread;
+
+        return $this;
     }
     
     /*

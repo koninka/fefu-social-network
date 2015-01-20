@@ -30,6 +30,12 @@ class ImService
         $this->em->persist($post);
         $this->em->flush();
     }
+    //WTF
+    public function persistUserThread($userThread)
+    {
+        $this->em->persist($userThread);
+        $this->em->flush();
+    }
 
     public function getThreadById($threadId)
     {

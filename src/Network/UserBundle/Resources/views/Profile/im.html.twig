@@ -3,6 +3,7 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/sonatacore/vendor/select2/select2.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -11,9 +12,15 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/im.js') }}"></script>
+    <script src="{{ asset('bundles/sonatacore/vendor/select2/select2.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/jquery.slimscroll.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/moment.js') }}"></script>
 {% endblock %}
 {% block right_content %}
     <style type="text/css">
+        #post {
+            width : 100%;
+        }
         #post-header {
             margin-top: 8px;
             margin-bottom: 4px;
@@ -28,19 +35,34 @@
             overflow: hidden;
             width: 20%;
         }
+        #post-body {
+            white-space: pre;
+            overflow-wrap: break-word;
+        }
+        #recipient{
+            width:40%;
+        }
+        #post-text {
+            width:100%;
+        }
+        .unread-post {
+            background: #cee2d3;
+        }
     </style>
 
-    <div id="post-header" style="display: none;">
-        <a id="author"></a>
-        <div id="ts"></div>
+    <div id="post" style="display: none;">
+        <div id="post-header" style="display: none;">
+            <a id="author"></a>
+            <div id="ts"></div>
+        </div>
+        <div id="post-body" style="display: none; margin-left: 8px; font-size: small;">
+        </div>
     </div>
-
-    <div id="post" style="display: none; margin-left: 8px; font-size: small;">
-    </div>
-
     <div id="thread-preview" style="display: none;">
-        <a id="user" href="" style="float: left;"></a>
-        <input id="open-thread" type="button" class="blue_button" value="Show Thread"/>
+        <a id="user" href="" style="display:inline-block;"></a>
+        <div id="topic" style="display:inline-block;"></div>
+        <input id="open-thread" type="button" class="blue_button" value="Show Thread" style="display:inline-block;"/>
+        <div id="unreadPosts" style="display:inline-block;"></div>
     </div>
 
     <div><div>
@@ -50,18 +72,28 @@
             <div id="thread-list">
             </div>
         </div>
-
-        <div id="posts" style="display: none;">
-        </div>
-
-        <div id="post-form" style="display: none; margin-top: 4px;">
-            <textarea id="post-text" cols="80" rows="10"></textarea>
-            <div id="custom-recipient" style="display: none;">
-                <label for="recipient">Recipient</label>
-                <input type="text" id="recipient"/>
+        <div id="posts-wrapper" style="display:none;">
+            <div id="posts" style="display: none;">
             </div>
-            <input type="button" class="blue_button" id="send" value="Send"/>
-        </div>
 
+            <div id="post-form" style="display: none; margin-top: 4px;">
+                <textarea id="post-text" cols="80" rows="10"></textarea>
+                <div id="custom-recipient" style="display: none;">
+                    <label for="recipient">Recipient</label>
+                    <input id="recipient" />
+                </div>
+                <input type="button" class="blue_button" id="send" value="Send"/>
+            </div>
+        </div>
     </div></div>
+    <script>
+
+        $(function(){
+            {% if partnerId is null or partnerName is null %}
+                InitIM(null, null);
+            {% else %}
+                InitIM({{ partnerId }}, "{{ partnerName }}");
+            {% endif %}
+        })
+    </script>
 {% endblock %}

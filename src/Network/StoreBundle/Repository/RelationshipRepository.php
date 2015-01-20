@@ -5,6 +5,7 @@ namespace Network\StoreBundle\Repository;
 use Doctrine\ORM\EntityRepository;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Relationship;
+use Network\StoreBundle\Service\Paginator;
 
 class RelationshipRepository extends EntityRepository
 {
@@ -33,19 +34,61 @@ class RelationshipRepository extends EntityRepository
 
     /**
      * @param integer $userId
+     * @param string  $relationshipStatus
+     *
+     * @return Query
+     */
+    private function getQueryFindRelationshipForUser($userId, $relationshipStatus)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $qb->select('r')
+            ->from('NetworkStoreBundle:Relationship', 'r')
+            ->where('r.user = :user')
+            ->andWhere('r.status = :status')
+            ->setParameters(['user' => $userId, 'status' => $relationshipStatus]);
+
+        return $qb->getQuery();
+    }
+
+    /**
+     * @param integer   $userId
+     * @param Paginator $paginator
+     * @param integer   $page
+     * @param integer   $limit
+     * @param string    $q
+     *
+     * @return array
+     */
+    public function getPaginatedFriends($userId, $paginator, $page, $limit, $q)
+    {
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $query = $qb->select('r')
+            ->from('NetworkStoreBundle:Relationship', 'r')
+            ->join('r.user', 'u')
+            ->join('r.partner', 'p')
+            ->where('u.id = :user')
+            ->andWhere('CONCAT(p.firstName, CONCAT(\' \', p.lastName)) LIKE :q')
+            ->andWhere('r.status = :status')
+            ->setParameters(['user' => $userId, 'status' => RelationshipStatusEnumType::FS_ACCEPTED])
+            ->setParameter('q', '%'. $q .'%')
+            ->getQuery();
+        $format = function($friend) {
+            $p = $friend->getPartner();
+
+            return ['id' => $p->getId(), 'text' => $p->getFirstName() . ' ' . $p->getLastName()];
+        };
+
+       return $paginator->getPaginatedResult($query, $page, $limit, $format);
+    }
+
+    /**
+     * @param integer $userId
      * @param string $relationshipStatus
      * @return array
      */
     private function findRelationshipsForUser($userId, $relationshipStatus)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
-        $qb->select('r')
-           ->from('NetworkStoreBundle:Relationship', 'r')
-           ->where('r.user = :user')
-           ->andWhere('r.status = :status')
-           ->setParameters(['user' => $userId, 'status' => $relationshipStatus]);
-
-        return $qb->getQuery()->getResult();
+        return $this->getQueryFindRelationshipForUser($userId, $relationshipStatus)->getResult();
     }
 
     /**

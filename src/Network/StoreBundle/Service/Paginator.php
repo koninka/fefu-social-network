@@ -5,7 +5,6 @@ namespace Network\StoreBundle\Service;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\EntityManager;
-use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 class Paginator
 {
@@ -38,8 +37,6 @@ class Paginator
         if ($query instanceof QueryBuilder) {
             $query = $query->getQuery();
         }
-        $paginator = new DoctrinePaginator($query, $fetchJoinCollection = true);
-        $count = count($paginator);
         $items = $query->getResult();
         if ($callback == null) {
             $callback = function ($item) {
@@ -47,11 +44,12 @@ class Paginator
             };
         }
         $data = array_map($callback, $items);
+        $more = count($data) >= $limit;
 
         return [
-            'totalCount' => $count,
             'items' => $data,
-            'itemsPerPage' => $limit
+            'itemsPerPage' => $limit,
+            'more' => $more
         ];
     }
 }
