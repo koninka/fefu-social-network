@@ -38,18 +38,21 @@ function xhr(action, message) {
 function updateThreadList() {
     xhr('thread_list').then(function (data) {
         $('#thread-list').empty();
-        for (var i in data) {
-            var thread = data[i];
+        var items = data.items;
+        var helpMap = data.helpMap;
+        for (var i in items) {
+            var thread = items[i];
             var threadBlock = $('#thread-preview').clone();
             threadBlock.show();
             var threadButton = threadBlock.find('#open-thread');
             if (thread.unreadPosts > 0)
                 threadBlock.find('#unreadPosts').html(thread.unreadPosts);
-            if (thread.userId)
+            var helpItem = helpMap[thread.id];
+            if (helpItem)
                 threadBlock
                     .find('#user')
-                    .attr('href', '/id' + thread.userId)
-                    .html(thread.userName);
+                    .attr('href', '/id' + helpItem.userId)
+                    .html(helpItem.userName);
             else
                 threadBlock.find('#topic').html(thread.topic);
             $('#thread-list').append(threadBlock);
