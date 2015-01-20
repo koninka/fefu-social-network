@@ -17,6 +17,53 @@ class FileController extends Controller
     const UPLOAD_DIR_NAME = 'uploads';
     const UPLOAD_MP3_DIR_NAME = 'mp3s';
 
+    private function analyzeMp3($path)
+    {
+        $id3Analyzer = new GetId3();
+
+        $mp3data = $id3Analyzer->analyze($path);
+
+        $metadata = [
+            'artist' => 'unknown',
+            'title' => 'unknown',
+            'genre' => 'unknown',
+        ];
+
+        if (array_key_exists('tags', $mp3data)) {
+            $mp3tags =$mp3data['tags'];
+
+            $flat = function (array $arr) {
+                $newArr = [];
+
+                foreach ($arr as $k => $v) {
+                    $newArr[$k] = is_array($v) ? $v[0] : $v;
+                }
+
+                return $newArr;
+            };
+
+            $metadata = array_key_exists('id3v2', $mp3tags)
+                ? $flat($mp3tags['id3v2'])
+                : (
+                    array_key_exists('id3v1', $mp3tags)
+                        ? $flat($mp3tags['id3v1'])
+                        : []
+                );
+
+            $setDefaultValue = function (array &$arr, $key) {
+                if (!array_key_exists($key, $arr)) {
+                    $arr[$key] = 'unknown';
+                }
+            };
+
+            $setDefaultValue($metadata, 'artist');
+            $setDefaultValue($metadata, 'title');
+            $setDefaultValue($metadata, 'genre');
+        }
+
+        return $metadata;
+    }
+
     /**
      * Return the absolute directory path where uploaded
      * documents should be saved.
@@ -89,45 +136,9 @@ class FileController extends Controller
                 . '.mp3'
         );
 
-        $id3Analyzer = new GetId3();
-
-        $song = null;
-        $mp3data = $id3Analyzer->analyze($file->getPathName());
-
-        if (array_key_exists('tags', $mp3data)) {
-            $mp3tags =$mp3data['tags'];
-
-            $flat = function (array $arr) {
-                $newArr = [];
-
-                foreach ($arr as $k => $v) {
-                    $newArr[$k] = is_array($v) ? $v[0] : $v;
-                }
-
-                return $newArr;
-            };
-
-            $metadata = array_key_exists('id3v2', $mp3tags)
-                        ? $flat($mp3tags['id3v2'])
-                        : (
-                            array_key_exists('id3v1', $mp3tags)
-                            ? $flat($mp3tags['id3v1'])
-                            : []
-                        );
-
-            $setDefaultValue = function (array &$arr, $key) {
-                if (!array_key_exists($key, $arr)) {
-                    $arr[$key] = 'unknown';
-                }
-            };
-
-            $setDefaultValue($metadata, 'artist');
-            $setDefaultValue($metadata, 'title');
-            $setDefaultValue($metadata, 'genre');
-
-            $song = $em->getRepository('NetworkStoreBundle:Song')
-                       ->getSongByMetadata($metadata);
-        }
+        $metadata = $this->analyzeMp3($file->getPathName());
+        $song = $em->getRepository('NetworkStoreBundle:Song')
+                   ->getSongByMetadata($metadata);
 
         $mp3file = new MP3File();
         $mp3file->setPath($file->getPathName());
