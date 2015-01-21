@@ -25,3 +25,11 @@ google_connect:
 registration_step_2:
     path: /registration-step-2
     defaults: { _controller: NetworkOAuthBundle:Registration:registrationStep2}
+
+show_links:
+    path: /link/all
+    defaults: { _controller: NetworkOAuthBundle:Links:showLinks}
+
+remove_link:
+    path: /link/remove/{service}
+    defaults: { _controller: NetworkOAuthBundle:Links:removeLink}

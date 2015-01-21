@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
 use Network\StoreBundle\Entity\ContactInfo;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
 {
@@ -30,8 +31,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     protected $oAuthToken;
 
-    public function __construct(ManagerRegistry $registry, $className)
+    protected $container;
+
+
+    public function __construct(ManagerRegistry $registry, $className, ContainerInterface $container)
     {
+        $this->container = $container;
         $this->em = $registry->getManager();
         $this->repository = $this->em->getRepository($className);
         $this->className = $className;
@@ -134,6 +139,21 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                 return null;
         }
 
+        $curToken = $this->container->get('security.context')->getToken();
+        if (null != $curToken && $curToken->getUser() && $curToken->getUser()->getEnabled()) {
+            $userByLogin = $this->repository->findOneBy(
+                [$data['loginField'] => $data['username']]
+            );
+
+            if (!empty($userByLogin)) {
+                $this->updateUserResourceLogin($userByLogin, $response->getResourceOwner()->getName(), null);
+            }
+
+            $this->updateUserResourceLogin($curToken->getUser(), $response->getResourceOwner()->getName(), $data['username']);
+
+            return $curToken->getUser();
+        }
+
         $user = $this->repository->findOneBy(
             [$data['loginField'] => $data['username']]
         );
@@ -152,28 +172,37 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setEmail($email)
                  ->setEnabled(false)
                  ->setContactInfo(new ContactInfo());
-            switch ($data['loginField']) {
-                case 'vkontakte' :
-                    $user->setVkLogin($data['username']);
-                    break;
-                case 'github' :
-                    $user->setGithubLogin($data['username']);
-                    break;
-                case 'facebook' :
-                    $user->setFbLogin($data['username']);
-                    break;
-                case 'google' :
-                    $user->setGoogleLogin($data['username']);
-                    break;
-                default :
-                    break;
-            }
+            $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $data['username']);
             $this->em->persist($user);
             $this->em->flush();
         }
 
         return $user;
     }
+
+
+    public function updateUserResourceLogin(UserInterface $user, $field, $login)
+    {
+        switch ($field) {
+            case 'vkontakte' :
+                $user->setVkLogin($login);
+                break;
+            case 'github' :
+                $user->setGithubLogin($login);
+                break;
+            case 'facebook' :
+                $user->setFbLogin($login);
+                break;
+            case 'google' :
+                $user->setGoogleLogin($login);
+                break;
+            default :
+                break;
+        }
+
+        return $user;
+    }
+
 
     public function loadUserByUsername($username)
     {
