@@ -21,3 +21,7 @@ google_login:
 
 google_connect:
     pattern: /connect/check-google
+
+registration_step_2:
+    path: /registration-step-2
+    defaults: { _controller: NetworkOAuthBundle:Registration:registrationStep2}
