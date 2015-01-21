@@ -11,7 +11,7 @@ class AlbumType extends BaseType
 
     public function setDefaultOptions(OptionsResolverInterface $resolver)
     {
-        $resolver->setDefaults(['data_class' => 'Application\Sonata\MediaBundle\Entity\Gallery', 'validation_groups' => false,]);
+        $resolver->setDefaults(['data_class' => 'Application\Sonata\MediaBundle\Entity\Gallery', 'validation_groups' => 'albumName',]);
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options)
