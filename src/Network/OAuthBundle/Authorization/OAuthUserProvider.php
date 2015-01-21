@@ -42,16 +42,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private function loginUserVK(UserResponseInterface $response)
     {
         $username = $response->getUsername();
-        $resource = $response->getResourceOwner()->getName();
         $realname = explode(' ', $response->getRealname());
         $firstName = $realname[1];
         $lastName = $realname[0];
         $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
-        $email = empty($email)
-                ? "$username@$resource.com"
-                : $email;
 
         return [
+            'loginField' => 'vkLogin',
             'username' => $username,
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -64,15 +61,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private function loginUserGitHub(UserResponseInterface $response)
     {
         $username = $response->getNickname();
-        $resource = $response->getResourceOwner()->getName();
         $firstName = 'Default first name';
         $lastName = 'Default last name';
         $rawToken = $this->oAuthToken->getOAuthToken($response)->getRawToken();
-        $email = isset($rawToken['email']) && !empty($rawToken['email'])
-            ? $rawToken['email']
-            : "$username@$resource.com";
+        $email = isset($rawToken['email']) && !empty($rawToken['email']) ? $rawToken['email'] : '';
 
         return [
+            'loginField' => 'githubLogin',
             'username' => $username,
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -85,15 +80,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private function loginUserFaceBook(UserResponseInterface $response)
     {
         $username = $response->getNickname();
-        $resource = $response->getResourceOwner()->getName();
         $firstName = $response->getResponse()['first_name'];
         $lastName = $response->getResponse()['last_name'];
         $gender = $response->getResponse()['gender'];
-        $email = empty($response->getEmail())
-            ? "$username@$resource.com"
-            : $response->getEmail();
+        $email = $response->getEmail();
 
         return [
+            'loginField' => 'fbLogin',
             'username' => $username,
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -106,15 +99,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     private function loginUserGoogle(UserResponseInterface $response)
     {
         $username = $response->getUsername();
-        $resource = $response->getResourceOwner()->getName();
         $firstName = $response->getResponse()['given_name'];
         $lastName = $response->getResponse()['family_name'];
         $gender = $response->getResponse()['gender'];
-        $email = empty($response->getEmail())
-            ? "$username@$resource.com"
-            : $response->getEmail();
+        $email = $response->getEmail();
 
         return [
+            'loginField' => 'googleLogin',
             'username' => $username,
             'firstName' => $firstName,
             'lastName' => $lastName,
@@ -144,10 +135,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         }
 
         $user = $this->repository->findOneBy(
-            ['email' => $data['email']]
+            [$data['loginField'] => $data['username']]
         );
 
         if (null === $user) {
+            $email = empty($data['email']) || !empty($this->repository->findOneBy(['email' => $data['email']]))
+                ? "@${data['username']}"
+                : $data['email'];
             $user = new $this->className();
             $user->setUsername($data['username'])
                  ->setPassword(md5(rand()))
@@ -155,9 +149,25 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setFirstName($data['firstName'])
                  ->setLastName($data['lastName'])
                  ->setGender($data['gender'])
-                 ->setEmail($data['email'])
-                 ->setEnabled(true)
+                 ->setEmail($email)
+                 ->setEnabled(false)
                  ->setContactInfo(new ContactInfo());
+            switch ($data['loginField']) {
+                case 'vkontakte' :
+                    $user->setVkLogin($data['username']);
+                    break;
+                case 'github' :
+                    $user->setGithubLogin($data['username']);
+                    break;
+                case 'facebook' :
+                    $user->setFbLogin($data['username']);
+                    break;
+                case 'google' :
+                    $user->setGoogleLogin($data['username']);
+                    break;
+                default :
+                    break;
+            }
             $this->em->persist($user);
             $this->em->flush();
         }
