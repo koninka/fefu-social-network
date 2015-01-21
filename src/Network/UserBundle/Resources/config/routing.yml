@@ -212,14 +212,6 @@ user_add_album_photo:
     requirements:
        albumId: \d+
 
-user_album_photo:
-    path: /id{id}/album{albumId}/photo{photoId}
-    defaults: { _controller: NetworkUserBundle:Album:showAlbumPhoto }
-    requirements:
-       id: \d+
-       albumId: \d+
-       photoId: \d+
-
 user_delete_album_photo:
     path: /album{albumId}/photo{photoId}/delete
     defaults: { _controller: NetworkUserBundle:Album:deleteAlbumPhoto }

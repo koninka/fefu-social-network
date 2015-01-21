@@ -208,28 +208,6 @@ class AlbumController extends Controller
         ]);
     }
 
-    public function showAlbumPhotoAction($id, $albumId, $photoId)
-    {
-        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
-
-        $photo = $this->getDoctrine()->getRepository('ApplicationSonataMediaBundle:Media')->find($photoId);
-        if (!$photo) {
-            return $this->render('NetworkWebBundle:User:msg.html.twig', [
-                'msg' => 'msg.show_inaccessible_photo'
-            ]);
-        }
-
-        $isUserAlbum = $this->getDoctrine()->getRepository('NetworkStoreBundle:UserGallery')->isUserAlbum($id, $albumId);
-
-        return $this->render('NetworkUserBundle:Albums:photo.html.twig', [
-            'is_cur_user' => $this->getUser()->getId() == $id,
-            'is_user_album' => $isUserAlbum,
-            'album_id' => $albumId,
-            'photo' => $photo,
-        ]);
-    }
-
     public function deleteAlbumPhotoAction($albumId, $photoId)
     {
         $user = $this->getUser();
