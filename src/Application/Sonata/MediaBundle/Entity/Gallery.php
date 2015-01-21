@@ -29,6 +29,13 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="media__gallery")
  * @ORM\Entity
+ * @ORM\AttributeOverrides({
+ *      @ORM\AttributeOverride(name="context",
+ *          column=@ORM\Column(
+ *              nullable = true,
+ *          )
+ *      )
+ * })
  */
 class Gallery extends BaseGallery
 {
