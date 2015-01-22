@@ -4,6 +4,12 @@ imports:
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
 
+sonata_admin:
+    title: VDolgah
+    templates:
+        # default global templates
+        layout: NetworkStoreBundle::standard_layout.html.twig
+
 framework:
     #esi:             ~
     #translator:      { fallback: "%locale%" }
