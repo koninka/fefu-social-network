@@ -22,27 +22,27 @@
         {% endif %}
         <br>
         {% if is_owner  %}
-             <a class="blue_button" href="{{ path('user_edit_community', {'id':community.id} ) }}">{{ 'profile.edit_community' }}</a>
-             <a class="gray_button" href="{{ path('user_delete_community', {'id':community.id} ) }}">{{ 'profile.delete_community' }}</a>
+             <a class="blue_button" href="{{ path('user_edit_community', {'id':community.id} ) }}">{{ 'commubity.edit'|trans  }}</a>
+             <a class="gray_button" href="{{ path('user_delete_community', {'id':community.id} ) }}">{{ 'community.delete'|trans  }}</a>
         {% endif %}
          </div>
      </div>
     <div>
         <div>
-            <button class="blue_button" id="participants">participants</button> 
+            <button class="blue_button" id="participants">{{'community.participants'|trans }}</button> 
             {% if community.type == 'open' and (is_owner  or is_role == 'role_community_participant')%}
-                <button class="blue_button" id="invite">invite friends</button> 
+                <button class="blue_button" id="invite">{{'community.invite_friends'|trans }}</button> 
             {% endif %}
             {% if is_owner and  community.type == 'closed'%}
-                <button class="blue_button" id="invite">invite friends</button> 
-                <button class="blue_button" id="application">request</button>
+                <button class="blue_button" id="invite">{{'community.invite_friends'|trans }}</button> 
+                <button class="blue_button" id="application">{{'community.request'|trans }}</button>
             {% endif %}
             {% if is_role == 'role_community_owner'  or is_role == 'role_community_participant'%}
-                <a class="gray_button" href="{{ path('user_go_out_community', {'id':community.id} ) }}">{{ 'profile.go_out_community' }}</a>
+                <a class="gray_button" href="{{ path('user_go_out_community', {'id':community.id} ) }}">{{ 'community.go_out'|trans  }}</a>
             {% elseif is_role == 'role_community_asking' %}
-                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':user.id, 'communityId':community.id} ) }}">{{ 'profile.cancel_request' }}</a>
+                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':user.id, 'communityId':community.id} ) }}">{{ 'community.cancel_request'|trans  }}</a>
             {% elseif user %}    
-                <a class="blue_button" href="{{ path('user_join_community', {'id':community.id} ) }}">{{ 'profile.join_community' }}</a>
+                <a class="blue_button" href="{{ path('user_join_community', {'id':community.id} ) }}">{{ 'community.join'|trans  }}</a>
             {% endif %}
         </div>
         <div>
@@ -57,7 +57,7 @@
                     {% for friend in friends %}
                         <p>
                             <a href="{{ path('user_profile', {'id':friend.id} ) }}">{{ friend.firstName }} {{ friend.lastName }} </a>
-                            <a class="blue_button" href="{{ path('user_invite_friend', {'id':friend.id,'communityId': community.id}) }}">{{ 'profile.invite_friend' }}</a>    
+                            <a class="blue_button" href="{{ path('user_invite_friend', {'id':friend.id,'communityId': community.id}) }}">{{ 'community.invite_friend'|trans  }}</a>    
                         </p>
                     {% endfor %}
                 {% endif %}
@@ -65,7 +65,7 @@
                     {% for friend in friends_invitee %}
                         <p>
                             <a href="{{ path('user_profile', {'id':friend.user.id} ) }}">{{ friend.user.firstName }} {{ friend.user.lastName }} </a>
-                            <a class="gray_button" href="{{ path('user_uninvite_community', {'id':friend.user.id, 'communityId': community.id}) }}">{{ 'profile.uninvite_friend' }}</a>    
+                            <a class="gray_button" href="{{ path('user_uninvite_community', {'id':friend.user.id, 'communityId': community.id}) }}">{{ 'community.uninvite_friend'|trans  }}</a>    
                         </p>
                     {% endfor %}
                 {% endif %}
@@ -84,7 +84,7 @@
                     <p>
                         <a href="{{ path('user_profile', {'id':participant.id} ) }}">{{ participant.firstName }} {{ participant.lastName }} </a>
                         {% if is_owner  and community.owner.id != participant.id%}
-                            <a class="gray_button" href="{{ path('user_exclude_participant', {'id':participant.id,'communityId': community.id} ) }}">{{ 'profile.exclude_participant' }}</a>
+                            <a class="gray_button" href="{{ path('user_exclude_participant', {'id':participant.id,'communityId': community.id} ) }}">{{ 'community.exclude_participant'|trans  }}</a>
                         {% endif %}
                     </p>
                 {% endfor %}
@@ -101,8 +101,8 @@
                 {% for request in asking%}
                     <p>
                         <a href="{{ path('user_profile', {'id':request.id} ) }}">{{ request.firstName }} {{ request.lastName }} </a>
-                        <a class="blue_button" href="{{ path('user_accept_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'profile.accept_request' }}</a>
-                        <a class="gray_button" href="{{ path('user_reject_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'profile.reject_request' }}</a>
+                        <a class="blue_button" href="{{ path('user_accept_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'community.accept_request'|trans  }}</a>
+                        <a class="gray_button" href="{{ path('user_reject_request', {'id':request.id,'communityId': community.id} ) }}">{{ 'community.reject_request'|trans  }}</a>
                     </p>
                 {% endfor %}
             </div>

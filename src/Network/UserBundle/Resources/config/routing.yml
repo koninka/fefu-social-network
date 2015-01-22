@@ -79,22 +79,22 @@ thread:
 
 user_profile_show_community:
     path: profile/group
-    defaults: { _controller: NetworkUserBundle:Profile:showProfileCommunity }
+    defaults: { _controller: NetworkUserBundle:Community:showProfileCommunity }
 
 user_profile_community:
     path: id{id}/group
-    defaults: { _controller: NetworkUserBundle:Profile:community }
+    defaults: { _controller: NetworkUserBundle:Community:community }
     requirements:
        id: \d+
     
 user_show_community:
     path: /club{id}
-    defaults: { _controller: NetworkUserBundle:Profile:showCommunity }
+    defaults: { _controller: NetworkUserBundle:Community:showCommunity }
     requirements:
        id: \d+
 user_edit_community:
     path: /club{id}/edit
-    defaults: { _controller: NetworkUserBundle:Profile:editCommunity }
+    defaults: { _controller: NetworkUserBundle:Community:editCommunity }
     requirements:
        id: \d+
 user_go_out_community:
