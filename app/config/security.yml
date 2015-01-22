@@ -21,7 +21,7 @@ security:
                     google:              google_login
                 login_path:        fos_user_security_login
                 failure_path:      mainpage
-                default_target_path: fos_user_profile_show
+                default_target_path: registration_step_2
                 oauth_user_provider:
                     service: network_oauth.oauth_user_provider
             form_login:

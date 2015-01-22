@@ -1,0 +1,46 @@
+{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
+{% block edit_content %}
+
+            <p> {{ 'link.vkontakte'|trans }}:
+                {% if user.vkLogin %}
+                    {{ user.vkLogin }}
+                    <a href="{{ url("remove_link", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.remove.vkontakte'|trans }} </a>
+                {% else %}
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
+                {% endif %}
+            </p>
+            <p> {{ 'link.github'|trans }} :
+                {% if user.githubLogin %}
+                    {{ user.githubLogin }}
+                    <a href="{{ url("remove_link", {service: "github"}) }}"> {{ 'profile.edit.link.remove.github'|trans }} </a>
+                {% else %}
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
+                {% endif %}
+            </p>
+            <p> {{ 'link.facebook'|trans }}:
+                {% if user.fbLogin %}
+                    {{ user.fbLogin }}
+                    <a href="{{ url("remove_link", {service: "facebook"}) }}"> {{ 'profile.edit.link.remove.facebook'|trans }} </a>
+                {% else %}
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}"> {{ 'profile.edit.link.add.facebook'|trans }} </a>
+                {% endif %}
+            </p>
+            <p> {{ 'link.google'|trans }}:
+                {% if user.googleLogin %}
+                    {{ user.googleLogin }}
+                    <a href="{{ url("remove_link", {service: "google"}) }}"> {{ 'profile.edit.link.remove.google'|trans }} </a>
+                {% else %}
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}"> {{ 'profile.edit.link.add.google'|trans }} </a>
+                {% endif %}
+            </p>
+
+{% endblock %}
+

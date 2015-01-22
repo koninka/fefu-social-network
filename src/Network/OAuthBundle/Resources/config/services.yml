@@ -7,3 +7,4 @@ services:
         arguments:
             - @doctrine
             - %user_class_name%
+            - @service_container

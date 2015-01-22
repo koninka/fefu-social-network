@@ -29,6 +29,18 @@
         {% for address in user.contactInfo.address  %}
              <p>{{ 'profile.show.address'|trans }}: {{ address }}</p>
         {% endfor %}
+        {% if user.vkLogin %}
+            <p> {{ 'link.vkontakte'|trans }}: {{ user.vkLogin }} </p>
+        {% endif %}
+        {% if user.githubLogin %}
+            <p> {{ 'link.github'|trans }}: {{ user.githubLogin }} </p>
+        {% endif %}
+        {% if user.fbLogin %}
+            <p> {{ 'link.facebook'|trans }}: {{ user.fbLogin }} </p>
+        {% endif %}
+        {% if user.googleLogin %}
+            <p> {{ 'link.google'|trans }}: {{ user.googleLogin }} </p>
+        {% endif %}
     </div>
     <div>
         <a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a>

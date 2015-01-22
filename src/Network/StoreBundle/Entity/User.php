@@ -113,6 +113,33 @@ class User extends BaseUser
      */
     private $birthday;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="vk_login", type="string", nullable=true)
+     */
+    private $vkLogin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="github_login", type="string", nullable=true)
+     */
+    private $githubLogin;
+
+     /**
+     * @var string
+     *
+     * @ORM\Column(name="google_login", type="string", nullable=true)
+     */
+    private $googleLogin;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="fb_login", type="string", nullable=true)
+     */
+    private $fbLogin;
 
     /**
      * @var ArrayCollection
@@ -178,6 +205,82 @@ class User extends BaseUser
     public function getGender()
     {
         return $this->gender;
+    }
+
+    /**
+     * @param string $vkLogin
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function setVkLogin($vkLogin)
+    {
+        $this->vkLogin = $vkLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getVkLogin()
+    {
+        return $this->vkLogin;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGithubLogin()
+    {
+        return $this->githubLogin;
+    }
+
+    /**
+     * @param string $githubLogin
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function setGithubLogin($githubLogin)
+    {
+        $this->githubLogin = $githubLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGoogleLogin()
+    {
+        return $this->googleLogin;
+    }
+
+    /**
+     * @param string $googleLogin
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function setGoogleLogin($googleLogin)
+    {
+        $this->googleLogin = $googleLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getFbLogin()
+    {
+        return $this->fbLogin;
+    }
+
+    /**
+     * @param string $fbLogin
+     * @return \Network\StoreBundle\Entity\User
+     */
+    public function setFbLogin($fbLogin)
+    {
+        $this->fbLogin = $fbLogin;
+
+        return $this;
     }
 
     /**
