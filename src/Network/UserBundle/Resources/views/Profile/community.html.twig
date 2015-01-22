@@ -19,8 +19,8 @@
     <div>
         {% if is_cur_user %}
             <div>
-                <button class="blue_button" id="create_community"> create community</button>
-                <a href="{{ path('user_search_community')}}">{{ 'profile.search_community' }}</a>
+                <button class="blue_button" id="create_community"> {{'community.create_community'|trans }}</button>
+                <a href="{{ path('user_search_community')}}">{{ 'community.search'|trans  }}</a>
             </div>
         {% endif %}
         {% if communities %}
@@ -30,8 +30,8 @@
                         {% if comm.role != 'role_community_asking' %}
                             <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
                             {% if comm.role == 'role_community_invitee' and is_cur_user %}
-                                <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.accept_request' }}</a>
-                                <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.reject_request' }}</a>
+                                <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.accept_request'|trans  }}</a>
+                                <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.reject_request'|trans  }}</a>
                             {% endif %}
                         {% endif %}      
                     </p>
@@ -43,7 +43,7 @@
                         {% if comm.role == 'role_community_asking' %}
                             <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
                             {% if is_cur_user %}
-                                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'profile.cancel_reques' }}</a>
+                                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.cancel_reques'|trans  }}</a>
                             {% endif %}
                         {% endif %}      
                     </p>
@@ -64,7 +64,7 @@
                {{ form_label(form.view) }}
                {{ form_widget(form.view) }}
                </div>
-               <input class="blue_button" type="submit" value="{{ 'profile.create.submit'|trans }}" />
+               <input class="blue_button" type="submit" value="{{ 'community.create.submit'|trans }}" />
            {{ form_end(form) }}
        </div>  
     {% endif %}
