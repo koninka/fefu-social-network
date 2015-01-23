@@ -148,7 +148,7 @@ class ProfileController extends BaseController
         return $this->render('NetworkUserBundle:Profile:im.html.twig', [
             'user_id' => $user->getId(),
             'partnerName' => $partnerName,
-            'partnerId' => $partnerId
+            'partnerId' => $partnerId,
         ]);
     }
 
@@ -253,6 +253,11 @@ class ProfileController extends BaseController
                       ->getRepository('NetworkStoreBundle:Post')
                       ->getThreadPosts($threadId);
         $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
+
+        $formatter =  $this->container->get('sonata.formatter.pool');
+        foreach ($posts as &$post) {
+            $post['text'] = $formatter->transform('markdown', $post['text']);
+        }
 
         return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts, 'selfId' => $user->getId()]);
     }
