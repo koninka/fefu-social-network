@@ -12,7 +12,7 @@ sonata_admin:
 
 framework:
     #esi:             ~
-    #translator:      { fallback: "%locale%" }
+    translator:      { fallback: "%locale%" }
     secret:          "%secret%"
     router:
         resource: "%kernel.root_dir%/config/routing.yml"
@@ -112,13 +112,6 @@ fos_user:
         form:
             type: network_user_profile
 
-parameters:
-    user_form_builder.class: Network\UserBundle\UserFormBuilder
-
-services:
-    user_form_builder:
-        class: %user_form_builder.class%
-
 sonata_formatter:
     formatters:
         markdown:
@@ -200,3 +193,15 @@ sonata_media:
     providers:
         image:
             resizer: sonata.media.resizer.square
+
+parameters:
+    user_form_builder.class: Network\UserBundle\UserFormBuilder
+
+services:
+    user_form_builder:
+        class: %user_form_builder.class%
+    network.locale_listener:
+        class: Network\StoreBundle\EventListener\LocaleListener
+        arguments: ["%kernel.default_locale%"]
+        tags:
+            - { name: kernel.event_subscriber }

@@ -118,13 +118,6 @@ file that was distributed with this source code.
                 {% block sonata_nav %}
                     {% if admin_pool is defined %}
                         <nav class="navbar navbar-static-top" role="navigation">
-                            <a href="#" class="navbar-btn sidebar-toggle" data-toggle="offcanvas" role="button">
-                                <span class="sr-only">Toggle navigation</span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                                <span class="icon-bar"></span>
-                            </a>
-
                             <div class="navbar-left">
                                 {% block sonata_breadcrumb %}
                                     <div class="hidden-xs">
@@ -158,6 +151,51 @@ file that was distributed with this source code.
                             {% block sonata_top_nav_menu %}
                                 <div class="navbar-right">
                                     <ul class="nav navbar-nav">
+                                        <li class="dropdown">
+                                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                                                <i class="fa fa fa-flag fa-fw"></i> <i class="fa fa-caret-down"></i>
+                                            </a>
+                                            <ul class="dropdown-menu col-md-1">
+                                                <table>
+                                                    <tr>
+                                                        <td>
+                                                            <ul>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'ar'}) }}">ar</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'bg'}) }}">bg</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'ca'}) }}">ca</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'cs'}) }}">cs</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'de'}) }}">de</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'en'}) }}">en</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'es'}) }}">es</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'eu'}) }}">eu</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'fa'}) }}">fa</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'fr'}) }}">fr</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'hr'}) }}">hr</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'hu'}) }}">hu</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'it'}) }}">it</a></li>
+                                                            </ul>
+                                                        </td>
+                                                        <td>
+                                                            <ul>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'ja'}) }}">ja</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'lb'}) }}">lb</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'lt'}) }}">lt</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'nl'}) }}">nl</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'pl'}) }}">pl</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'pt'}) }}">pt</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'pt_BR'}) }}">pt_BR</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'ro'}) }}">ro</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'ru'}) }}">ru</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'sk'}) }}">sk</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'sl'}) }}">sl</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'uk'}) }}">uk</a></li>
+                                                                <li role="presentation"><a role="menuitem" tabindex="-1" href="{{ path('change_locale', {'_locale':'zh_CH'}) }}">zn_CH</a></li>
+                                                            </ul>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </ul>
+                                        </li>
                                         <li class="dropdown">
                                             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                                                 <i class="fa fa-plus-square fa-fw"></i> <i class="fa fa-caret-down"></i>

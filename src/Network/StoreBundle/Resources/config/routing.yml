@@ -3,3 +3,9 @@ get_from_category:
     defaults: {_controller: NetworkStoreBundle:Category:getItemsFromCategory}
     options:
         expose: true
+
+change_locale:
+    pattern: /change/locale/{_locale}
+    defaults: {_controller: NetworkStoreBundle:Locale:changeLocale}
+    requirements:
+        _locale: ar|bg|ca|cs|de|en|es|eu|fa|fr|hr|hu|it|ja|lb|lt|nl|pl|pt|pt_RB|ro|ru|sk|sl|uk|zh_CH
