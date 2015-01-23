@@ -2,13 +2,16 @@
 
 namespace Network\WebBundle\Controller;
 
+
 use Network\StoreBundle\Form\Type\JobsCollectionType;
+use Network\WebBundle\NetworkWebBundle;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Network\StoreBundle\Form\Type\UserType;
 use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Common\Collections\ArrayCollection;
+use Network\WebBundle\Controller\FileController;
 
 class UserController extends Controller
 {
@@ -93,5 +96,4 @@ class UserController extends Controller
 
         return new JsonResponse($response);
     }
-
 }

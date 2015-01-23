@@ -16,3 +16,60 @@ user_profile_json:
 kladr_test_page:
     path:     /test/kladr
     defaults: { _controller: NetworkWebBundle:Kladr:test }
+
+file_mp3_upload:
+  path: /profile/upload/mp3
+  defaults: { _controller: NetworkStoreBundle:File:uploadMp3 }
+  methods: [POST]
+
+file_mp3_delete:
+  path: /profile/json/mp3.delete
+  defaults: { _controller: NetworkStoreBundle:File:deleteMp3 }
+  methods: [POST]
+  options:
+    expose: true
+
+file_mp3_get:
+  path: /mp3/get/{file_id}
+  defaults: { _controller: NetworkStoreBundle:File:mp3 }
+  requirements:
+    file_id: \d+
+  options:
+    expose: true
+
+file_mp3_poster:
+  path: /mp3/poster/{album_id}
+  defaults: { _controller: NetworkStoreBundle:File:poster }
+  requirements:
+    album_id: \d+
+  options:
+    expose: true
+
+audios:
+  path: /audios/
+  defaults: { _controller: NetworkWebBundle:Mp3Player:main }
+
+audios_json_search:
+  path: /audious/json/find.by.{by}.with.{what}
+  defaults: { _controller: NetworkWebBundle:Mp3Player:search }
+#  methods: [POST]
+  requirements:
+    options: artist|title
+  options:
+    expose: true
+
+audios_json_add:
+  path: /audious/json/add/{id}
+  defaults: { _controller: NetworkWebBundle:Mp3Player:add }
+  methods: [POST]
+  requirements:
+    id: \d+
+  options:
+    expose: true
+
+audios_json_edit:
+  path: /audious/json/edit/
+  defaults: { _controller: NetworkWebBundle:Mp3Player:edit }
+  methods: [POST]
+  options:
+    expose: true
