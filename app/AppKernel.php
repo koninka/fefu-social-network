@@ -30,6 +30,9 @@ class AppKernel extends Kernel
             new Network\OAuthBundle\NetworkOAuthBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Knp\Bundle\MarkdownBundle\KnpMarkdownBundle(),
+            new Ivory\CKEditorBundle\IvoryCKEditorBundle(),
+            new Sonata\FormatterBundle\SonataFormatterBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

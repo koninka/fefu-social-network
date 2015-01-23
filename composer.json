@@ -26,7 +26,8 @@
         "hwi/oauth-bundle": "0.3.*@dev",
         "friendsofsymfony/jsrouting-bundle": "@stable",
         "jms/serializer-bundle" : "@stable",
-        "phansys/getid3": "2.1.*@dev"
+        "phansys/getid3": "2.1.*@dev",
+        "sonata-project/formatter-bundle": "~2.3"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",
