@@ -226,3 +226,11 @@ add_user_to_conference:
 change_conference_topic:
     path: /thread/change_topic
     defaults: { _controller: NetworkUserBundle:Thread:changeTopic }
+
+kick_user_from_conference:
+    path: /thread/kick_user
+    defaults: { _controller: NetworkUserBundle:Thread:kickUser }
+
+get_users_in_thread:
+    path: /thread/users
+    defaults: { _controller: NetworkUserBundle:Thread:getUsersInThread }

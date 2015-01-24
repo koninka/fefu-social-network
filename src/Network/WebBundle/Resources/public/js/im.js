@@ -131,7 +131,7 @@ function updateThreadView(threadId, scroll) {
 
 function InitActions() {
     (function(){ //add friend to conference
-        var $friendList = $('#friend-list').select2({
+        var $friendList = $('#add-user-list').select2({
             width:'resolve',
             ajax: {
                 url: "/api/friends",
@@ -149,26 +149,61 @@ function InitActions() {
                 }
             }
         });
-        $('#friend-list-choose').click(function(){
+        $('#add-user-apply').click(function(){
             var friend = $friendList.select2('data');
-            var friendId;
-            if (friend != null) {
-                friendId = friend.id;
-            }
+            if (friend == null) return;
+            var friendId = friend.id;
             xhr('thread/add_user', {
                 conferenceId: currentThreadId,
                 userId: friendId
             }).then(function(data) {
-                $('#friend-list-cancel').click();
+                $('#add-user-cancel').click();
             });
         });
-        $('#friend-list-cancel').click(function(){
+        $('#add-user-cancel').click(function(){
             $friendList.select2("val", "");
-            $('#friend-list-wrapper').hide();
+            $('#add-user-wrapper').hide();
         });
         $('#add-user-action').click(function(e){
-            $('#friend-list-wrapper').show();
+            $('#add-user-wrapper').show();
         });
+    })();
+    (function(){
+        var initValues = function() {
+            xhr('thread/users', {
+                threadId: currentThreadId
+            }).then(function (data) {
+                var items = [];
+                for (var i = 0; i < data['users'].length; ++i) {
+                    var user = data['users'][i];
+                    if (user['id'] == data['userId']) continue;
+                    items.push({id: user['id'], text: user['firstName'] + ' ' + user['lastName']});
+                }
+                $('#kick-user-list').select2({
+                    data: items
+                })
+            });
+        };
+        $('#kick-user-cancel').click(function(){
+            $('#kick-user-wrapper').hide();
+        });
+        $('#kick-user-apply').click(function(){
+            var user = $('#kick-user-list').select2('data');
+            if (user == null) return;
+            var userId = user.id;
+            xhr('thread/kick_user', {
+               conferenceId: currentThreadId,
+               userId: userId
+            }).then(function(data){
+                $('#kick-user-cancel').click();
+                $('#kick-user-list').select2({data: []});
+            })
+        });
+        $('#kick-user-action').click(function(){
+            initValues();
+            $('#kick-user-wrapper').show();
+        });
+        $('#kick-user-list').select2({data: []});
     })();
     (function(){ //change topic
         $('#new-topic-cancel').click(function(){
