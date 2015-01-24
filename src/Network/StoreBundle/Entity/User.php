@@ -165,6 +165,17 @@ class User extends BaseUser
     private $mp3s;
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Thread", cascade="persist")
+     * @ORM\JoinTable(name="users_walls",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="thread_id", referencedColumnName="id", unique=true)}
+     * )
+     */
+    private $wallThreads;
+
+    /**
      * Set salt
      *
      * @param string $salt
@@ -424,6 +435,7 @@ class User extends BaseUser
         $this->posts = new ArrayCollection();
         $this->threads = new ArrayCollection();
         $this->mp3s = new ArrayCollection();
+        $this->wallThreads = new ArrayCollection();
     }
 
     /**
@@ -687,5 +699,49 @@ class User extends BaseUser
     public function hasMp3InPlaylist(MP3Record $mp3)
     {
         return $this->mp3s->contains($mp3);
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getWallThreads()
+    {
+        return $this->wallThreads;
+    }
+
+    /**
+     * @param ArrayCollection $wallThreads
+     *
+     * @return User
+     */
+    public function setWallThreads($wallThreads)
+    {
+        $this->wallThreads = $wallThreads;
+
+        return $this;
+    }
+
+    /**
+     * @param Thread $thread
+     *
+     * @return User
+     */
+    public function addWallThread(Thread $thread)
+    {
+        $this->wallThreads->add($thread);
+
+        return $this;
+    }
+
+    /**
+     * @param Thread $thread
+     *
+     * @return User
+     */
+    public function removeWallThread(Thread $thread)
+    {
+        $this->wallThreads->removeElement($thread);
+
+        return $this;
     }
 }

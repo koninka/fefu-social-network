@@ -2,6 +2,7 @@
 
 namespace Network\StoreBundle\Entity;
 
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Network\StoreBundle\DBAL\TypeCommunityEnumType;
@@ -67,9 +68,21 @@ class Community
      */
     private $view;
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="Thread", cascade="persist")
+     * @ORM\JoinTable(name="communities_walls",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="thread_id", referencedColumnName="id", unique=true)}
+     * )
+     */
+    private $wallThreads;
+
     public function __construct()
     {
         $this->type = TypeCommunityEnumType::C_OPEN;
+        $this->wallThreads = new ArrayCollection();
     }
  
     /**
@@ -223,5 +236,50 @@ class Community
     public function getSubjects()
     {
         return $this->subjects;
+    }
+
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getWallThreads()
+    {
+        return $this->wallThreads;
+    }
+
+    /**
+     * @param ArrayCollection $wallThreads
+     *
+     * @return User
+     */
+    public function setWallThreads($wallThreads)
+    {
+        $this->wallThreads = $wallThreads;
+
+        return $this;
+    }
+
+    /**
+     * @param Thread $thread
+     *
+     * @return Community
+     */
+    public function addWallThread(Thread $thread)
+    {
+        $this->wallThreads->add($thread);
+
+        return $this;
+    }
+
+    /**
+     * @param Thread $thread
+     *
+     * @return Community
+     */
+    public function removeWallThread(Thread $thread)
+    {
+        $this->wallThreads->removeElement($thread);
+
+        return $this;
     }
 }

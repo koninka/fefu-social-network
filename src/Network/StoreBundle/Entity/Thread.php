@@ -25,7 +25,7 @@ class Thread
     /**
      * @var string
      *
-     * @ORM\Column(name="topic", type="text")
+     * @ORM\Column(name="topic", type="text", nullable=true)
      */
     private $topic;
 
