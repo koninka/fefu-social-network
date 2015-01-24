@@ -221,7 +221,36 @@ function InitActions() {
             $('#new-topic-wrapper').show();
         });
     })();
-
+    (function(){
+        var $confirm = $('#dialog-leave-conference-confirm');
+        var yes_button = $confirm.attr('yes');
+        var no_button = $confirm.attr('no');
+        var buttons = {};
+        buttons[yes_button] = function(){
+            $confirm.dialog('close');
+            xhr('thread/leave', {
+                conferenceId: currentThreadId
+            }).then(function(data){
+                updateThreadList();
+                $('.vdolgah_wrapper').hide();
+                $('#im-menu').hide();
+                $('#thread-list-wrapper').show();
+            });
+        };
+        buttons[no_button] = function(){
+            $confirm.dialog('close');
+        };
+        $confirm.dialog({
+            resizable: true,
+            modal: true,
+            width: 700,
+            autoOpen: false,
+            buttons: buttons
+        });
+        $('#leave-conference-action').click(function(){
+            $confirm.dialog('open');
+        });
+    })();
 }
 
 function InitIM(partnerId, partnerName) {
