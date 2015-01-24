@@ -56,10 +56,11 @@ class RelationshipRepository extends EntityRepository
      * @param integer   $page
      * @param integer   $limit
      * @param string    $q
+     * @param           $filter
      *
      * @return array
      */
-    public function getPaginatedFriends($userId, $paginator, $page, $limit, $q)
+    public function getPaginatedAndFilteredFriends($userId, $paginator, $page, $limit, $q, $filter)
     {
         $qb = $this->getEntityManager()->createQueryBuilder();
         $query = $qb->select('r')
@@ -70,8 +71,11 @@ class RelationshipRepository extends EntityRepository
             ->andWhere('CONCAT(p.firstName, CONCAT(\' \', p.lastName)) LIKE :q')
             ->andWhere('r.status = :status')
             ->setParameters(['user' => $userId, 'status' => RelationshipStatusEnumType::FS_ACCEPTED])
-            ->setParameter('q', '%'. $q .'%')
-            ->getQuery();
+            ->setParameter('q', '%'. $q .'%');
+        if ($filter != null) {
+            $query = $filter($query);
+        }
+        $query = $query->getQuery();
         $format = function($friend) {
             $p = $friend->getPartner();
 
