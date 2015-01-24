@@ -250,6 +250,42 @@ class ThreadController extends Controller
         return new JsonResponse(['conferenceId' => $conferenceId, 'topic' => $newTopic]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     * @throws \Symfony\Component\Security\Acl\Exception\Exception
+     */
+    public function kickUserAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+        $userId = $request->request->get('userId');
+        if ($userId == null) {
+            return $this->errorJsonResponse('Invalid user id');
+        }
+        $conferenceId = $request->request->get('conferenceId');
+        if ($conferenceId == null) {
+            return $this->errorJsonResponse('Invalid conference id');
+        }
+        $this->checkAccessToThread($conferenceId, $user->getId());
+
+        return $this->get('network.store.im_service')->kickUserFromConference($userId, $conferenceId);
+    }
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getUsersInThreadAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+        $threadId = $request->request->get('threadId');
+        $imService = $this->get('network.store.im_service');
+        $users = $imService->getUsersInThreadByIdAndUserIdOrThrow($threadId, $user->getId());
+
+        return new JsonResponse(['users' => $users, 'userId' => $user->getId()]);
+    }
+
     static protected function errorJsonResponse($msg)
     {
         return new JsonResponse(['error' => $msg]);

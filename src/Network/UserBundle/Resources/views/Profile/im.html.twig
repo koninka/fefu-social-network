@@ -50,7 +50,7 @@
             white-space: pre;
             overflow-wrap: break-word;
         }
-        #recipient, #friend-list{
+        .extended-select {
             width:40%;
         }
         #post-text {
@@ -87,8 +87,8 @@
                         <li id="add-user-action">
                             <a>{{ 'conference.add.user' | trans }}</a>
                         </li>
-                        <li id="delete-user-action">
-                            <a>{{ 'conference.delete.user' | trans }}</a>
+                        <li id="kick-user-action">
+                            <a>{{ 'conference.kick.user' | trans }}</a>
                         </li>
                         <li id="new-topic-action">
                             <a>{{ 'conference.new_topic' | trans }}</a>
@@ -100,10 +100,15 @@
     </div>
     <div>
         <div>
-            <div id="friend-list-wrapper" style="display:none;">
-                <input id="friend-list"/>
-                <input type="button" class="blue_button" id="friend-list-choose" value="{{ 'IM.add.friend' | trans }}"/>
-                <input type="button" class="blue_button" id="friend-list-cancel" value="{{ 'IM.add.friend.cancel' | trans }}"/>
+            <div id="add-user-wrapper" style="display:none;">
+                <input id="add-user-list" class="extended-select"/>
+                <input type="button" class="blue_button" id="add-user-apply" value="{{ 'IM.add.user' | trans }}"/>
+                <input type="button" class="blue_button" id="add-user-cancel" value="{{ 'IM.add.user.cancel' | trans }}"/>
+            </div>
+            <div id="kick-user-wrapper" style="display:none;">
+                <input id="kick-user-list" class="extended-select"/>
+                <input type="button" class="blue_button" id="kick-user-apply" value="{{ 'IM.kick.user' | trans }}"/>
+                <input type="button" class="blue_button" id="kick-user-cancel" value="{{ 'IM.kick.user.cancel' | trans }}"/>
             </div>
             <div id="new-topic-wrapper" style="display:none;">
                 <input id="new-topic-field"/>
@@ -125,7 +130,7 @@
                     <textarea id="post-text" cols="80" rows="10"></textarea>
                     <div id="custom-recipient" style="display: none;">
                         <label for="recipient">{{ 'IM.recipient' | trans}}</label>
-                        <input id="recipient" />
+                        <input id="recipient" class="extended-select"/>
                     </div>
                     <div id="conference-topic-div" style="display: none;">
                         <label for="conference-topic">{{ 'conference.topic' | trans }}</label>

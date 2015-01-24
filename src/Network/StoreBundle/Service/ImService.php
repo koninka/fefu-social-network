@@ -38,6 +38,42 @@ class ImService
         return $thread;
     }
 
+    public function getUsersInThreadByIdAndUserIdOrThrow($threadId, $userId)
+    {
+        $threadRepo = $this->em->getRepository('NetworkStoreBundle:Thread');
+        $users = $threadRepo->getUsersInThread($threadId);
+        $userInThread = false;
+        foreach ($users as $user) {
+            if ($userId == $user['id']) {
+                $userInThread = true;
+                break;
+            }
+        }
+        if (!$userInThread) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+
+        return $users;
+    }
+
+    public function kickUserFromConference($userId, $conferenceId)
+    {
+        $manager = $this->em;
+        $userThread = $manager
+            ->getRepository('NetworkStoreBundle:UserThread')
+            ->findByUserAndThread($userId, $conferenceId);
+        if ($userThread == null) {
+            return new JsonResponse(['error' => 'user with given id not a member of given conference']);
+        }
+        if ($userThread->getThread()->getType() != ThreadEnumType::T_CONFERENCE) {
+            throw new AccessDeniedException('This user does not have access to this section.');
+        }
+        $manager->remove($userThread);
+        $manager->flush();
+
+        return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $userId]);
+    }
+
     public function getConferenceByIdAndUserIdOrThrow($threadId, $userId)
     {
         $thread = $this->getThreadByIdAndUserIdOrThrow($threadId, $userId);
