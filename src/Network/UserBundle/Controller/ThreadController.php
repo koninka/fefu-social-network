@@ -50,11 +50,14 @@ class ThreadController extends Controller
             }
         }
 
-        return $this->render('NetworkUserBundle:Profile:im.html.twig', [
+        return $this->render(
+            'NetworkUserBundle:Profile:im.html.twig',
+            [
                 'user_id' => $user->getId(),
                 'partnerName' => $partnerName,
                 'partnerId' => $partnerId
-            ]);
+            ]
+        );
     }
 
     /**
@@ -65,7 +68,7 @@ class ThreadController extends Controller
     public function postAction(Request $request)
     {
         $imService = $this->get('network.store.im_service');
-        $user = $this->getUser();
+        $user = $this->getUserAndCheckAccess();
         $text = $request->request->get('text', '');
         if (trim($text) == '') {
             return $this->errorJsonResponse('field \'text\' is empty');
@@ -105,7 +108,7 @@ class ThreadController extends Controller
      */
     public function threadListAction(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->getUserAndCheckAccess();
         $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
         $threads = $threadRepo->getThreadListForUser($user->getId());
         $response = new JsonResponse();
@@ -121,7 +124,7 @@ class ThreadController extends Controller
      */
     public function threadAction(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->getUserAndCheckAccess();
         $threadId = $request->request->get('id');
         if ($threadId == null) {
             return $this->errorJsonResponse('Invalid thread id');
@@ -143,26 +146,34 @@ class ThreadController extends Controller
      */
     public function getFriendsJsonAction(Request $request)
     {
-        $user = $this->getUser();
-        $this->checkAccess($user);
+        $user = $this->getUserAndCheckAccess();
         $limit = $request->get('limit', 10);
         $page = $request->get('page', 1);
         $q = $request->get('query', '');
         $threadId = $request->get('threadId');
         $notInThreadFilter = null;
         if ($threadId != null) {
-            $notInThreadFilter = function ($queryBuilder) use($threadId) {
+            $notInThreadFilter = function ($queryBuilder) use ($threadId) {
                 return $queryBuilder
-                    ->andWhere('NOT EXISTS(
+                    ->andWhere(
+                        'NOT EXISTS(
                         SELECT ut FROM NetworkStoreBundle:UserThread ut
                         WHERE ut.user = p AND ut.thread = :filter_thread_id
-                        )')
+                        )'
+                    )
                     ->setParameter('filter_thread_id', $threadId);
             };
         }
         $rels = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship');
         $paginator = $this->get('network.store.paginator');
-        $friends = $rels->getPaginatedAndFilteredFriends($user->getId(), $paginator, $page, $limit, $q, $notInThreadFilter);
+        $friends = $rels->getPaginatedAndFilteredFriends(
+            $user->getId(),
+            $paginator,
+            $page,
+            $limit,
+            $q,
+            $notInThreadFilter
+        );
 
         return new JsonResponse($friends);
     }
@@ -174,8 +185,7 @@ class ThreadController extends Controller
      */
     public function readPostsAction(Request $request)
     {
-        $user = $this->getUser();
-        $this->checkAccess($user);
+        $user = $this->getUserAndCheckAccess();
         $threadId = $request->request->get('threadId');
         $count = $request->request->get('count', 0);
         $imService = $this->get('network.store.im_service');
@@ -191,7 +201,7 @@ class ThreadController extends Controller
      */
     public function addUserToConferenceAction(Request $request)
     {
-        $user = $this->getUser();
+        $user = $this->getUserAndCheckAccess();
         $conferenceId = $request->request->get('conferenceId');
         $newUserId = $request->request->get('userId');
         if ($conferenceId == null) {
@@ -201,10 +211,7 @@ class ThreadController extends Controller
             return $this->errorJsonResponse('Invalid user Id');
         }
         $imService = $this->get('network.store.im_service');
-        $thread = $imService->getThreadByIdAndUserIdOrThrow($conferenceId, $user->getId());
-        if ($thread->getType() != ThreadEnumType::T_CONFERENCE) {
-            return $this->errorJsonResponse('Invalid conference Id');
-        }
+        $thread = $imService->getConferenceByIdAndUserIdOrThrow($conferenceId, $user->getId());
         $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($newUserId);
         if ($newUser == null) {
             return $this->errorJsonResponse('User with id ' . $newUserId . ' not found');
@@ -230,11 +237,11 @@ class ThreadController extends Controller
             return $this->errorJsonResponse('field \'topic\' is empty');
         }
         $conferenceId = $request->request->get('conferenceId');
-        $imService = $this->get('network.store.im_service');
-        $thread = $imService->getThreadByIdAndUserIdOrThrow($conferenceId, $user->getId());
-        if ($thread->getType() != ThreadEnumType::T_CONFERENCE) {
-            return $this->errorJsonResponse('Invalid conference Id');
+        if ($conferenceId == null) {
+            return $this->errorJsonResponse('Invalid conference id');
         }
+        $imService = $this->get('network.store.im_service');
+        $thread = $imService->getConferenceByIdAndUserIdOrThrow($conferenceId, $user->getId());
         $thread->setTopic($newTopic);
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($thread);
@@ -248,6 +255,13 @@ class ThreadController extends Controller
         return new JsonResponse(['error' => $msg]);
     }
 
+    protected function getUserAndCheckAccess()
+    {
+        $user = $this->getUser();
+        $this->checkAccess($user);
+
+        return $user;
+    }
     protected function checkAccess($user)
     {
         //TODO: push it in base class
