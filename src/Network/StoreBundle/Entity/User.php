@@ -62,6 +62,13 @@ class User extends BaseUser
     protected $communities;
 
     /**
+     * @var \Doctrine\Common\Collections\Collection
+     *
+     * @ORM\OneToMany(targetEntity="Poll", mappedBy="user", cascade={"persist"})
+     */
+    protected $poll;
+
+    /**
      * @var string
      *
      * @Assert\NotBlank()
@@ -694,6 +701,29 @@ class User extends BaseUser
 
         return $this;
     }
+     /**   
+     * Add poll
+     *
+     * @param \Network\StoreBundle\Entity\Poll $poll
+     * @return User
+     */
+    public function addPoll(\Network\StoreBundle\Entity\Poll $poll)
+    {
+        $this->poll[] = $poll;
+
+        return $this;
+    }
+    /**
+     * Remove poll
+     *
+     * @param \Network\StoreBundle\Entity\Poll $poll
+     */
+    public function removePoll(\Network\StoreBundle\Entity\Poll $poll)
+    {
+        $this->poll->removeElement($poll);
+
+        return $this;
+    }
 
     /**
      * @param MP3Record $mp3
@@ -838,5 +868,14 @@ class User extends BaseUser
     {
         return $this->albums;
     }
-
+        
+    /**
+     * Get poll
+     *
+     * @return \Doctrine\Common\Collections\Poll
+     */
+    public function getPoll()
+    {
+        return $this->poll;
+    }
 }
