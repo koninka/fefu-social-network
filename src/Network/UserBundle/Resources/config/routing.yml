@@ -234,3 +234,7 @@ kick_user_from_conference:
 get_users_in_thread:
     path: /thread/users
     defaults: { _controller: NetworkUserBundle:Thread:getUsersInThread }
+
+leave_conference:
+    path: /thread/leave
+    defaults: { _controller: NetworkUserBundle:Thread:leaveConference }

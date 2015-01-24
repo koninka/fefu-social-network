@@ -276,6 +276,22 @@ class ThreadController extends Controller
 
         return $this->get('network.store.im_service')->kickUserFromConference($userId, $conferenceId);
     }
+
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function leaveConferenceAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+        $conferenceId = $request->request->get('conferenceId');
+        if ($conferenceId == null) {
+            return $this->errorJsonResponse('Invalid conference id');
+        }
+
+        return $this->get('network.store.im_service')->kickUserFromConference($user->getId(), $conferenceId);
+    }
     /**
      * @param Request $request
      *
