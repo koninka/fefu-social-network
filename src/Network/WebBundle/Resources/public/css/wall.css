@@ -1,0 +1,16 @@
+.post_container {
+
+}
+
+.username {
+    float: left;
+}
+
+.timestamp, .controls {
+    float: right;
+    margin: 3px;
+}
+
+.msg {
+    margin: 10px;
+}

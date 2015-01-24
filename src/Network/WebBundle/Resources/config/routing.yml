@@ -73,3 +73,32 @@ audios_json_edit:
   methods: [POST]
   options:
     expose: true
+
+wall_show:
+  path: /{type}/id{id}
+  defaults: { _controller: NetworkWebBundle:Wall:main }
+  requirements:
+    type: user|club
+    id: \d+
+  options:
+    expose: true
+
+wall_write:
+  path: /{type}/id{id}/write
+  defaults: { _controller: NetworkWebBundle:Wall:write }
+  methods: [POST]
+  requirements:
+    type: user|club
+    id: \d+
+  options:
+    expose: true
+
+wall_delete:
+  path: /{type}/id{id}/delete/{post_id}
+  defaults: { _controller: NetworkWebBundle:Wall:delete }
+  requirements:
+      type: user|club
+      id: \d+
+      post_id: \d+
+  options:
+    expose: true
