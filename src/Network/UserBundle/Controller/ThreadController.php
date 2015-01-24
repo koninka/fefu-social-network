@@ -189,7 +189,38 @@ class ThreadController extends Controller
 
     }
 
-   
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function addUserToConferenceAction(Request $request)
+    {
+        $user = $this->getUser();
+        $conferenceId = $request->request->get('conferenceId');
+        $newUserId = $request->request->get('userId');
+        if ($conferenceId == null) {
+            return $this->errorJsonResponse('Invalid conference Id');
+        }
+        if ($newUserId == null) {
+            return $this->errorJsonResponse('Invalid user Id');
+        }
+        $imService = $this->get('network.store.im_service');
+        $thread = $imService->getThreadByIdAndUserIdOrThrow($conferenceId, $user->getId());
+        if ($thread->getType() != ThreadEnumType::T_CONFERENCE) {
+            return $this->errorJsonResponse('Invalid conference Id');
+        }
+        $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($newUserId);
+        if ($newUser == null) {
+            return $this->errorJsonResponse('User with id ' . $newUserId . ' not found');
+        }
+        $thread->addUser($newUser);
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($thread);
+        $manager->flush();
+
+        return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $newUserId]);
+    }
 
     static protected function errorJsonResponse($msg)
     {

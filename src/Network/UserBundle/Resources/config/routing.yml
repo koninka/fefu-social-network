@@ -218,3 +218,7 @@ user_delete_album_photo:
     requirements:
        albumId: \d+
        photoId: \d+
+
+add_user_to_conference:
+    path: /thread/add_user
+    defaults: { _controller: NetworkUserBundle:Thread:addUserToConference }
