@@ -120,6 +120,50 @@ function updateThreadView(threadId, scroll) {
             });
         }
         postsBlock.trigger('slimscrolling');
+        $('#im-menu').show();
+    });
+}
+
+function showPeopleList() {
+    $('#friend-list-wrapper').show();
+    var $friendList = $('#friend-list').select2({
+        width:'resolve',
+        ajax: {
+            url: "/api/friends",
+            dataType: 'json',
+            quietMillis: 250,
+            data: function (term, page) {
+                return {
+                    query:    term,
+                    page:     page,
+                    threadId: currentThreadId
+                };
+            },
+            results: function (data, page) {
+                return { results: data.items, more: data.more };
+            }
+        }
+    });
+    $('#friend-list-choose').click(function(){
+        var friend = $friendList.select2('data');
+        var friendId;
+        if (friend != null) {
+            friendId = friend.id;
+        }
+        xhr('thread/add_user', {
+            conferenceId: currentThreadId,
+            userId: friendId
+        }).then(function(data) {
+            if (data.error){
+                console.log(data.error);
+                return ;
+            }
+            $('#friend-list-cancel').click();
+        });
+    });
+    $('#friend-list-cancel').click(function(){
+        $friendList.select2("val", "");
+        $('#friend-list-wrapper').hide();
     });
 }
 
@@ -214,6 +258,10 @@ function InitIM(partnerId, partnerName) {
         $('#post-form').show();
         $('#post-form>#custom-recipient').show();
         $('#posts-wrapper').show();
+        e.preventDefault();
+    });
+    $('#add-user-action').click(function(e){
+        showPeopleList();
         e.preventDefault();
     });
     if (partnerId == null) {
