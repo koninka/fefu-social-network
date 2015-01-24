@@ -79,7 +79,7 @@
 
 
     <div>
-        <div id="im-menu" class="horizontal-menu">
+        <div id="im-menu" class="horizontal-menu" style="display: none;">
             <ul>
                 <li>
                     <a>{{ 'im.actions' | trans }}</a>
@@ -95,30 +95,37 @@
             </ul>
         </div>
         <div>
-        <div id="thread-list-wrapper">
-            <h1>Threads</h1>
-            <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
-            <div id="thread-list">
+            <div id="friend-list-wrapper" style="display:none;">
+                <input id="friend-list"/>
+                <input type="button" class="blue_button" id="friend-list-choose" value="{{ 'IM.add.friend' | trans }}"/>
+                <input type="button" class="blue_button" id="friend-list-cancel" value="{{ 'IM.add.friend.cancel' | trans }}"/>
             </div>
-        </div>
-        <div id="posts-wrapper" style="display:none;">
-            <div id="posts" style="display: none;">
+            <div id="thread-list-wrapper">
+                <h1>Threads</h1>
+                <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
+                <div id="thread-list">
+                </div>
             </div>
 
-            <div id="post-form" class="markItUp markdown" style="display: none; margin-top: 4px;">
-                <textarea id="post-text" cols="80" rows="10"></textarea>
-                <div id="custom-recipient" style="display: none;">
-                    <label for="recipient">{{ 'IM.recipient' | trans}}</label>
-                    <input id="recipient" />
+            <div id="posts-wrapper" style="display:none;">
+                <div id="posts" style="display: none;">
                 </div>
-                <div id="conference-topic-div" style="display: none;">
-                    <label for="conference-topic">{{ 'conference.topic' | trans }}</label>
-                    <input type="text" id="conference-topic"/>
+
+                <div id="post-form" class="markItUp markdown" style="display: none; margin-top: 4px;">
+                    <textarea id="post-text" cols="80" rows="10"></textarea>
+                    <div id="custom-recipient" style="display: none;">
+                        <label for="recipient">{{ 'IM.recipient' | trans}}</label>
+                        <input id="recipient" />
+                    </div>
+                    <div id="conference-topic-div" style="display: none;">
+                        <label for="conference-topic">{{ 'conference.topic' | trans }}</label>
+                        <input type="text" id="conference-topic"/>
+                    </div>
+                    <input type="button" class="blue_button" id="send" value="{{ 'IM.send' | trans }}"/>
                 </div>
-                <input type="button" class="blue_button" id="send" value="Send"/>
             </div>
         </div>
-    </div></div>
+    </div>
     <script>
 
         $(function(){
