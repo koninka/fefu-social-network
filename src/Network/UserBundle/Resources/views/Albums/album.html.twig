@@ -1,0 +1,25 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block right_content_sub_one %}
+    <div>
+        <p>{{ 'profile.show.photos'|trans }}: {{ photos|length }}</p>
+        {% if photos %}
+            {% for photo in photos %}
+                <p>
+                    <a href="{% path photo.media, 'big' %}" title="{{ photo.media.description }}">{% media photo.media, 'small' %}</a>
+                    {% if is_cur_user and is_user_album %}
+                        <a href="{{ path('user_delete_album_photo', {'albumId':album.id, 'photoId':photo.media.id}) }}">{{ 'album.delete_photo'|trans }}</a>
+                    {% endif %}
+                </p>
+            {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block right_content_sub_two %}
+    {% if is_cur_user and is_user_album %}
+        <div>
+            <p><a href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit'|trans }}</a></p>
+            <p><a href="{{ path('user_add_album_photo', {'albumId':album.id} ) }}">{{ 'album.add_photo'|trans }}</a></p>
+        </div>
+    {% endif %}
+{% endblock %}

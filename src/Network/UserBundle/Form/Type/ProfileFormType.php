@@ -15,7 +15,7 @@ class ProfileFormType extends UserType
     {
 
         $builder->add('avatar', 'sonata_media_type', [
-            'label' => 'Аватар',
+            'label' => false,
             'provider' => 'sonata.media.provider.image',
             'context' => 'avatar',
             'required' => false

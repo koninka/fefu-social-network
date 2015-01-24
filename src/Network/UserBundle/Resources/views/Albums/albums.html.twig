@@ -1,0 +1,24 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block right_content_sub_one %}
+    <div>
+        <p>{{ 'profile.show.albums'|trans }}: {{ albums|length }}</p>
+        {% if albums %}
+                {% for album in albums %}
+                    <p>
+                        <a href="{{ path('user_show_album', {'id':user_id, 'albumId':album.gallery.id} ) }}">{{ album.gallery.name }}</a>
+                        {% if is_cur_user %}
+                            <a href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit'|trans }}</a>
+                        {% endif %}
+                    </p>
+                {% endfor %}
+        {% endif %}
+    </div>
+{% endblock %}
+{% block right_content_sub_two %}
+    {% if is_cur_user %}
+        <div>
+            <p><a href="{{ path('user_add_album' ) }}">{{ 'profile.add_album'|trans }}</a></p>
+        </div>
+    {% endif %}
+{% endblock %}
