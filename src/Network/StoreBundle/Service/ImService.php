@@ -38,6 +38,16 @@ class ImService
         return $thread;
     }
 
+    public function getConferenceByIdAndUserIdOrThrow($threadId, $userId)
+    {
+        $thread = $this->getThreadByIdAndUserIdOrThrow($threadId, $userId);
+        if ($thread->getType() != ThreadEnumType::T_CONFERENCE) {
+            throw new Exception('Invalid conference Id');
+        }
+
+        return $thread;
+    }
+
     public function createPost(User $user, Thread $thread, $text)
     {
         $oldTimeZone = date_default_timezone_get();
