@@ -6,6 +6,11 @@ function xhr(action, message) {
     message = message || {};
     var dfd = $.Deferred();
     $.post(action, message).done(function(data, textStatus, jqXHR){
+        if (data.error) {
+            console.log(data.error);
+            dfd.reject();
+            return;
+        }
         dfd.resolve(data);
     }).fail(function(data, textStatus, jqXHR){
         document.write(data.responseText);
@@ -124,47 +129,64 @@ function updateThreadView(threadId, scroll) {
     });
 }
 
-function showPeopleList() {
-    $('#friend-list-wrapper').show();
-    var $friendList = $('#friend-list').select2({
-        width:'resolve',
-        ajax: {
-            url: "/api/friends",
-            dataType: 'json',
-            quietMillis: 250,
-            data: function (term, page) {
-                return {
-                    query:    term,
-                    page:     page,
-                    threadId: currentThreadId
-                };
-            },
-            results: function (data, page) {
-                return { results: data.items, more: data.more };
+function InitActions() {
+    (function(){ //add friend to conference
+        var $friendList = $('#friend-list').select2({
+            width:'resolve',
+            ajax: {
+                url: "/api/friends",
+                dataType: 'json',
+                quietMillis: 250,
+                data: function (term, page) {
+                    return {
+                        query:    term,
+                        page:     page,
+                        threadId: currentThreadId
+                    };
+                },
+                results: function (data, page) {
+                    return { results: data.items, more: data.more };
+                }
             }
-        }
-    });
-    $('#friend-list-choose').click(function(){
-        var friend = $friendList.select2('data');
-        var friendId;
-        if (friend != null) {
-            friendId = friend.id;
-        }
-        xhr('thread/add_user', {
-            conferenceId: currentThreadId,
-            userId: friendId
-        }).then(function(data) {
-            if (data.error){
-                console.log(data.error);
-                return ;
-            }
-            $('#friend-list-cancel').click();
         });
-    });
-    $('#friend-list-cancel').click(function(){
-        $friendList.select2("val", "");
-        $('#friend-list-wrapper').hide();
-    });
+        $('#friend-list-choose').click(function(){
+            var friend = $friendList.select2('data');
+            var friendId;
+            if (friend != null) {
+                friendId = friend.id;
+            }
+            xhr('thread/add_user', {
+                conferenceId: currentThreadId,
+                userId: friendId
+            }).then(function(data) {
+                $('#friend-list-cancel').click();
+            });
+        });
+        $('#friend-list-cancel').click(function(){
+            $friendList.select2("val", "");
+            $('#friend-list-wrapper').hide();
+        });
+        $('#add-user-action').click(function(e){
+            $('#friend-list-wrapper').show();
+        });
+    })();
+    (function(){ //change topic
+        $('#new-topic-cancel').click(function(){
+            $('#new-topic-wrapper').hide();
+        });
+        $('#new-topic-apply').click(function(){
+            xhr('thread/change_topic', {
+                topic: $('#new-topic-field').val(),
+                conferenceId: currentThreadId
+            }).then(function(data) {
+                $('#new-topic-cancel').click();
+            });
+        });
+        $('#new-topic-action').click(function(e){
+            $('#new-topic-wrapper').show();
+        });
+    })();
+
 }
 
 function InitIM(partnerId, partnerName) {
@@ -176,14 +198,11 @@ function InitIM(partnerId, partnerName) {
             count : posts.length,
             threadId : currentThreadId
         }).then(function(data){
-            if (data.error){
-                console.log(data.error);
-                posts = null;
-                return ;
-            }
             posts.removeClass('unread-post');
             posts = null;
             $posts.trigger('slimscrolling');
+        }, function () {
+            posts = null;
         })
     };
     $posts.slimScroll().bind('slimscrolling', function(e, pos){
@@ -244,10 +263,6 @@ function InitIM(partnerId, partnerName) {
             text: $('#post-text').val(),
             topic: $('#conference-topic').val()
         }).then(function (data) {
-            if(data.error){
-                console.log(data.error);
-                return;
-            }
             $('#post-text').val('');
             updateThreadView(data.threadId, true);
         });
@@ -260,10 +275,7 @@ function InitIM(partnerId, partnerName) {
         $('#posts-wrapper').show();
         e.preventDefault();
     });
-    $('#add-user-action').click(function(e){
-        showPeopleList();
-        e.preventDefault();
-    });
+    InitActions();
     if (partnerId == null) {
         updateThreadList();
     } else {

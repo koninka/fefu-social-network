@@ -50,7 +50,7 @@
             white-space: pre;
             overflow-wrap: break-word;
         }
-        #recipient{
+        #recipient, #friend-list{
             width:40%;
         }
         #post-text {
@@ -90,15 +90,25 @@
                         <li id="delete-user-action">
                             <a>{{ 'conference.delete.user' | trans }}</a>
                         </li>
+                        <li id="new-topic-action">
+                            <a>{{ 'conference.new_topic' | trans }}</a>
+                        </li>
                     </ul>
                 </li>
             </ul>
         </div>
+    </div>
+    <div>
         <div>
             <div id="friend-list-wrapper" style="display:none;">
                 <input id="friend-list"/>
                 <input type="button" class="blue_button" id="friend-list-choose" value="{{ 'IM.add.friend' | trans }}"/>
                 <input type="button" class="blue_button" id="friend-list-cancel" value="{{ 'IM.add.friend.cancel' | trans }}"/>
+            </div>
+            <div id="new-topic-wrapper" style="display:none;">
+                <input id="new-topic-field"/>
+                <input type="button" class="blue_button" id="new-topic-apply" value="{{ 'IM.new_topic.apply' | trans }}" />
+                <input type="button" class="blue_button" id="new-topic-cancel" value="{{ 'IM.new_topic.cancel' | trans }}"/>
             </div>
             <div id="thread-list-wrapper">
                 <h1>Threads</h1>

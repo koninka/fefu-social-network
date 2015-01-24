@@ -217,6 +217,32 @@ class ThreadController extends Controller
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $newUserId]);
     }
 
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function changeTopicAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+        $newTopic = $request->request->get('topic', '');
+        if (trim($newTopic) == '') {
+            return $this->errorJsonResponse('field \'topic\' is empty');
+        }
+        $conferenceId = $request->request->get('conferenceId');
+        $imService = $this->get('network.store.im_service');
+        $thread = $imService->getThreadByIdAndUserIdOrThrow($conferenceId, $user->getId());
+        if ($thread->getType() != ThreadEnumType::T_CONFERENCE) {
+            return $this->errorJsonResponse('Invalid conference Id');
+        }
+        $thread->setTopic($newTopic);
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($thread);
+        $manager->flush();
+
+        return new JsonResponse(['conferenceId' => $conferenceId, 'topic' => $newTopic]);
+    }
+
     static protected function errorJsonResponse($msg)
     {
         return new JsonResponse(['error' => $msg]);

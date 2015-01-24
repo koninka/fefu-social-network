@@ -222,3 +222,7 @@ user_delete_album_photo:
 add_user_to_conference:
     path: /thread/add_user
     defaults: { _controller: NetworkUserBundle:Thread:addUserToConference }
+
+change_conference_topic:
+    path: /thread/change_topic
+    defaults: { _controller: NetworkUserBundle:Thread:changeTopic }
