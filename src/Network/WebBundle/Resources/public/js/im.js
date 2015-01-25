@@ -2,6 +2,8 @@
 
 var currentThreadId;
 
+var openedThreads = [];
+
 function xhr(action, message) {
     message = message || {};
     var dfd = $.Deferred();
@@ -19,6 +21,18 @@ function xhr(action, message) {
     return dfd;
 }
 
+function addTab(threadId, threadName) {
+    if (!openedThreads[threadId]) {
+        openedThreads[threadId] = true;
+        $('<li/>').append($('<a/>', {
+            text: threadName
+        })).appendTo('#tabs-list').click(function () {
+            updateThreadView(threadId, false);
+        });
+        $('#show-opened-threads').show();
+    }
+}
+
 function updateThreadList() {
     xhr('thread_list').then(function (data) {
         $('#thread-list').empty();
@@ -32,23 +46,24 @@ function updateThreadList() {
             if (thread.unreadPosts > 0)
                 threadBlock.find('#unreadPosts').html(thread.unreadPosts);
             var helpItem = helpMap[thread.id];
-            if (helpItem)
+            var threadName = '';
+            if (helpItem) {
+                threadName = helpItem.userName;
                 threadBlock
                     .find('#user')
                     .attr('href', '/id' + helpItem.userId)
-                    .html(helpItem.userName);
-            else
+                    .html(helpItem.userName)
+            }
+            else {
+                threadName = thread.topic;
                 threadBlock.find('#topic').html(thread.topic);
+            }
             $('#thread-list').append(threadBlock);
             threadButton
-                .data('id', thread.id)
-                .click(function (e) {
-                    $('#thread-list-wrapper').hide();
-                    $('#posts-wrapper').show();
-                    $('#posts').show();
-                    $('#post-form').show();
-                    $('#conference-topic-div').hide();
-                    var threadId = $(this).data().id;
+                .click({id: thread.id, name: threadName},function (e) {
+                    var threadId = e.data.id;
+                    var threadName = e.data.name;
+                    addTab(threadId, threadName);
                     updateThreadView(threadId);
                     e.preventDefault();
                 });
@@ -58,6 +73,11 @@ function updateThreadList() {
 
 function updateThreadView(threadId, scroll) {
     // Currently reloads all posts from thread
+    $('#thread-tabs').show();
+    $('#thread-list-wrapper').hide();
+    $('#posts-wrapper').show();
+    $('#conference-topic-div').hide();
+    currentThreadId = threadId;
     var lastAuthor = "";
     var lastDate = null;
     var diff_less_than = function (date1, date2, min){
@@ -86,7 +106,6 @@ function updateThreadView(threadId, scroll) {
         var selfId = data.selfId;
         var posts = data.posts;
         var unreadPosts = data.unreadPosts || 0;
-        currentThreadId = threadId;
         $('#post-form>#custom-recipient').hide();
         var postsBlock = $('#posts');
         postsBlock.show();
@@ -125,8 +144,8 @@ function updateThreadView(threadId, scroll) {
             });
         }
         postsBlock.trigger('slimscrolling');
-        $('#im-menu').show();
     });
+    $('#im-menu-actions').show();
 }
 
 function InitActions() {
@@ -244,7 +263,7 @@ function InitActions() {
             }).then(function(data){
                 updateThreadList();
                 $('.vdolgah_wrapper').hide();
-                $('#im-menu').hide();
+                $('#im-menu-actions').hide();
                 $('#thread-list-wrapper').show();
             });
         };
@@ -345,9 +364,12 @@ function InitIM(partnerId, partnerName) {
     });
     $('#compose-post').click(function (e) {
         $('#thread-list-wrapper').hide();
+        $('#posts').hide();
         $('#post-form').show();
         $('#post-form>#custom-recipient').show();
         $('#posts-wrapper').show();
+        $('#post-text').val('');
+
         e.preventDefault();
     });
     InitActions();
