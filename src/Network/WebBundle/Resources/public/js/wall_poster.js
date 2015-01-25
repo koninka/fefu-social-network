@@ -1,30 +1,18 @@
-function addPost(data)
+function addPost(user_id, thread_id, post_id, username, msg, ts)
 {
-    var msg = data['msg'];
-    var user_id = data['user_id'];
-    var timestamp = new Date(data['ts']);
-    var username = data['username'];
-    var post_id = data['post_id'];
-    var thread_id = data['thread_id'];
-
-    var postContainer = $('<div class="post_container" class="' + thread_id + '"></div>');
+    var postContainer = $('<div class="post" id="thread_' + thread_id + '"></div>');
     var usernameContainer = $('<div class="username"></div>');
     var tsContainer = $('<div class="timestamp"></div>');
     var msgContainer = $('<div class="msg"></div>');
     var controlsContainer = $('<div class="controls"></div>');
-    var commentContainer = $('<div class="comment"><form><textarea class="comment_text"></textarea>' +
+    var commentContainer = $('<div class="to_comment"><form><textarea class="comment_text"></textarea>' +
         '<button class="comment_btn" id="comment_' + thread_id + '">Comment!</button></form></div>');
 
     usernameContainer.append($(
-        '<a href="' + Routing.generate(
-            'wall_show', {
-                id: user_id,
-                type: 'user'
-            }
-        ) + '">' + username + '</a>'
+        '<a href="' + Routing.generate('user_profile', {id: user_id}) + '">' + username + '</a>'
     ));
 
-    tsContainer.text(timestamp.toDateString());
+    tsContainer.text(ts);
 
     if (user_id === userId) {
         controlsContainer.append($(
@@ -48,30 +36,18 @@ function addPost(data)
     $('#posts').prepend(postContainer);
 }
 
-function addComment(data) {
-    var msg = data['msg'];
-    var user_id = data['user_id'];
-    var timestamp = new Date(data['ts']);
-    var username = data['username'];
-    var post_id = data['post_id'];
-    var thread_id = data['thread_id'];
-
-    var commentContainer = $('<div class="comment_container"></div>');
+function addComment(user_id, thread_id, post_id, username, msg, ts) {
+    var commentContainer = $('<div class="comment"></div>');
     var usernameContainer = $('<div class="username"></div>');
     var tsContainer = $('<div class="timestamp"></div>');
     var controlsContainer = $('<div class="controls"></div>');
     var msgContainer = $('<div class="msg"></div>');
 
     usernameContainer.append($(
-        '<a href="' + Routing.generate(
-            'wall_show', {
-                id: user_id,
-                type: 'user'
-            }
-        ) + '">' + username + '</a>'
+        '<a href="' + Routing.generate('user_profile', {id: user_id}) + '">' + username + '</a>'
     ));
 
-    tsContainer.text(timestamp.toDateString());
+    tsContainer.text(ts);
 
     if (user_id === userId || userId === objectId) {
         controlsContainer.append($(
@@ -102,13 +78,32 @@ function createEditInterface(e)
     // place for dahin's code
 }
 
+function diff_less_than(date1, date2, min){
+    return date1 - date2 < min * 60 * 1000;
+}
+
 function handleWriteResponse(data, textStatus, jqXHR)
 {
     if (data['status'] === 'ok') {
-        if (data['new_thread']) {
-            addPost(data);
+        var msg = data['msg'];
+        var user_id = data['user_id'];
+        var username = data['username'];
+        var post_id = data['post_id'];
+        var thread_id = data['thread_id'];
+
+        var ts = new Date(moment(data['ts'].date).format('YYYY/MM/DD HH:mm:ss') + ' UTC');
+        var tsString;
+        var now = new Date;
+        if (diff_less_than(now, ts, 60 * 24)) {
+            tsString = ts.toLocaleTimeString();
         } else {
-            addComment(data);
+            tsString = ts.toLocaleDateString();
+        }
+
+        if (data['new_thread']) {
+            addPost(user_id, thread_id, post_id, username, msg, tsString);
+        } else {
+            addComment(user_id, thread_id, post_id, username, msg, tsString);
         }
     }
 }
