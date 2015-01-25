@@ -3,6 +3,7 @@
 namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Network\StoreBundle\DBAL\TypePostEnumType;
 
 /**
  * post
@@ -34,6 +35,13 @@ class Post
      * @ORM\Column(name="text", type="text")
      */
     private $text;
+    
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="typePostEnumType")
+     */
+    private $type;
 
 
     /**
@@ -148,5 +156,33 @@ class Post
     public function getThread()
     {
         return $this->thread;
+    }
+    
+     /**
+     * Set type
+     *
+     * @param string $type
+     * @return \Network\StoreBundle\Entity\Post
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
+
+    /**
+     * Get type
+     *
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
+    
+    public function __construct()
+    {
+        $this->type = TypePostEnumType::TP_TEXT;
     }
 }

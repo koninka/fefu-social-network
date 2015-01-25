@@ -48,6 +48,12 @@ class Poll
      * @ORM\Column(name="is_anonymously", type="boolean")
      */
     private $isAnonymously;
+    
+    /**
+     * @ORM\OneToOne(targetEntity="Post")
+     * @ORM\JoinColumn(name="post_id", referencedColumnName="id")
+     */
+    private $post;
 
 
     /**
@@ -202,5 +208,28 @@ class Poll
     public function getIsAnonymously()
     {
         return $this->isAnonymously;
+    }
+
+    /**
+     * Set post
+     *
+     * @param \Network\StoreBundle\Entity\Post $post
+     * @return Poll
+     */
+    public function setPost(\Network\StoreBundle\Entity\Post $post = null)
+    {
+        $this->post = $post;
+
+        return $this;
+    }
+
+    /**
+     * Get post
+     *
+     * @return \Network\StoreBundle\Entity\Post 
+     */
+    public function getPost()
+    {
+        return $this->post;
     }
 }
