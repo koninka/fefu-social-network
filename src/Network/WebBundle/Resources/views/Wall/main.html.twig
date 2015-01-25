@@ -1,0 +1,103 @@
+{% extends 'NetworkWebBundle:Default:edit.base.html.twig' %}
+
+{% block javascripts %}
+    {{ parent() }}
+
+    <script type="text/javascript">
+        var objectType = "{{ type }}";
+        var objectId = {{ id }};
+        var userId = {{ user.getId }};
+    </script>
+
+    <script type="text/javascript" src="{{ asset('bundles/networkweb/js/wall_poster.js') }}"></script>
+
+{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+
+    <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
+{% endblock %}
+
+{% block right_content %}
+    <div>
+        <div>
+            <form>
+                <label for="msg_input">What's new?</label>
+                <input type="text" id="msg_input">
+                <button id="tell_btn">Tell!</button>
+            </form>
+        </div>
+
+        <div id="posts">
+            {% for thread in wall | reverse %}
+                <div class="post_container" id="thread_{{ thread.getId }}">
+                    {% set post = thread.getPosts[0] %}
+
+                    <div class="username">
+                        <a href="{{ path('wall_show', {type: 'user', id: post.getUser.getId}) }}">
+                            {{ post.getUser.getUsername }}
+                        </a>
+                    </div>
+
+                    <div class="timestamp">
+                        {{ post.getTs|date('h:m:s d.m.Y') }}
+                    </div>
+
+                    <div class="controls">
+                        {% if post.getUser.getId == user.getId %}
+                            <a href="{{ post.getId }}" class="edit_control">Edit</a>
+                        {% endif %}
+
+                        {% if (post.getUser.getId == user.getId) or (id == user.getId) %}
+                            <a href="{{ post.getId }}" class="delete_control">Delete</a>
+                        {% endif %}
+                    </div>
+
+                    <div class="msg">
+                        {{ post.getText }}
+                    </div>
+
+                    {% set commentsCount = thread.getPosts|length - 1%}
+                    {% if commentsCount > 0 %}
+                        <div class="comments">
+                            {% for comment in thread.getPosts|slice(1, commentsCount) %}
+                                <div class="username">
+                                    <a href="{{ path('wall_show', {type: 'user', id: comment.getUser.getId}) }}">
+                                        {{ comment.getUser.getUsername }}
+                                    </a>
+                                </div>
+
+                                <div class="timestamp">
+                                    {{ comment.getTs|date('h:m:s d.m.Y') }}
+                                </div>
+
+                                <div class="controls">
+                                    {% if (comment.getUser.getId == user.getId) or (id == user.getId) %}
+                                        <a href="{{ comment.getId }}" class="delete_control">Delete</a>
+                                    {% endif %}
+                                </div>
+
+                                <div class="msg">
+                                    {{ comment.getText }}
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+
+                    <div class="comment">
+                        <form>
+                            <textarea class="comment_text">
+
+                            </textarea>
+
+                            <button class="comment_btn" id="comment_{{ thread.getId }}">
+                                Comment!
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
