@@ -50,7 +50,7 @@ form div ul li{
 header a{
     color: #fff;
     text-decoration: none;
-    display: block;
+    display: inline-block;
     font-size: 14px;
 }
 
@@ -64,7 +64,7 @@ header div{
     margin: 10px;
 }
 
-#logout_box{
+#logout_box, #locale_box{
     float: right;
     padding: 20px 10px 0 0;
 }
