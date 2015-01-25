@@ -29,13 +29,6 @@ use Symfony\Component\Validator\Constraints as Assert;
  *
  * @ORM\Table(name="media__gallery")
  * @ORM\Entity
- * @ORM\AttributeOverrides({
- *      @ORM\AttributeOverride(name="context",
- *          column=@ORM\Column(
- *              nullable = true,
- *          )
- *      )
- * })
  */
 class Gallery extends BaseGallery
 {
@@ -204,6 +197,32 @@ class Gallery extends BaseGallery
         }
 
         return null;
+    }
+
+    /**
+     * @var string $description
+     *
+     * @ORM\Column(name="description", type="string", nullable=true)
+     */
+    protected $description;
+
+    /**
+     * @param string $description
+     * @return \Aplication\Sonata\MediaBundle\Entity\Gallery
+     */
+    public function setDescription($description)
+    {
+        $this->description = $description;
+
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription()
+    {
+        return $this->description;
     }
 
 }

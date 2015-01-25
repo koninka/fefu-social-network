@@ -17,7 +17,7 @@ class AlbumType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('name', 'text', ['label' => 'Название'])
-                ->add('context', 'textarea', ['label' => 'Описание', 'required' => false]);
+                ->add('description', 'textarea', ['label' => 'Описание', 'required' => false]);
     }
 
     public function getName()

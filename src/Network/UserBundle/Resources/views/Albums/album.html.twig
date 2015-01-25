@@ -12,6 +12,8 @@
 {% endblock %}
 {% block right_content_sub_one %}
     <div>
+        <p><strong>{{ album.name }}</strong></p>
+        <p>{{ album.description }}</p>
         <p>{{ 'profile.show.photos'|trans }}: {{ photos|length }}</p>
         {% if photos %}
             {% for photo in photos %}
