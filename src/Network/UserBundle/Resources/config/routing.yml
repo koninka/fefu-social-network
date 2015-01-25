@@ -170,3 +170,51 @@ get_friends:
 read_posts:
     path: /api/read_posts
     defaults: { _controller: NetworkUserBundle:Profile:readPosts }
+
+user_profile_show_albums:
+    path: /profile/albums
+    defaults: { _controller: NetworkUserBundle:Profile:showProfileAlbums }
+    requirements:
+       id: \d+
+
+user_show_albums:
+    path: /id{id}/albums
+    defaults: { _controller: NetworkUserBundle:Profile:showAlbums }
+    requirements:
+       id: \d+
+
+user_show_album:
+    path: /id{id}/album{albumId}
+    defaults: { _controller: NetworkUserBundle:Album:showAlbum }
+    requirements:
+       id: \d+
+       albumId: \d+
+
+user_delete_album:
+    path: /album{albumId}/delete
+    defaults: { _controller: NetworkUserBundle:Album:deleteAlbum }
+    requirements:
+       albumId: \d+
+
+user_add_album:
+    path: /album/add
+    defaults: { _controller: NetworkUserBundle:Album:addAlbum }
+
+user_edit_album:
+    path: /album{albumId}/edit
+    defaults: { _controller: NetworkUserBundle:Album:editAlbum }
+    requirements:
+       albumId: \d+
+
+user_add_album_photo:
+    path: /album{albumId}/photo/add
+    defaults: { _controller: NetworkUserBundle:Album:addAlbumPhoto }
+    requirements:
+       albumId: \d+
+
+user_delete_album_photo:
+    path: /album{albumId}/photo{photoId}/delete
+    defaults: { _controller: NetworkUserBundle:Album:deleteAlbumPhoto }
+    requirements:
+       albumId: \d+
+       photoId: \d+

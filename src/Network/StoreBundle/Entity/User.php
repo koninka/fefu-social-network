@@ -9,6 +9,7 @@ use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Yaml\Tests\A;
+use Application\Sonata\MediaBundle\Entity\Media as MediaInterface;
 
 /**
  * user
@@ -431,6 +432,7 @@ class User extends BaseUser
         $this->jobs = new ArrayCollection();
         $this->relationships = new ArrayCollection();
         $this->communities = new ArrayCollection();
+        $this->albums = new ArrayCollection();
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->threads = new ArrayCollection();
@@ -576,7 +578,7 @@ class User extends BaseUser
         return $this;
     }
 
-    /**    
+    /**
      * Add communities
      *
      * @param \Network\StoreBundle\Entity\UserCommunity $communities
@@ -670,6 +672,7 @@ class User extends BaseUser
 
         return $this;
     }
+
      /**
      * @param MP3Record $mp3
      * @return User
@@ -754,4 +757,86 @@ class User extends BaseUser
     {
         return 'user';
     }
+
+     /**
+     * @var \Application\Sonata\MediaBundle\Entity\Media
+     * @ORM\OneToOne(targetEntity="Application\Sonata\MediaBundle\Entity\Media", cascade={"persist"})
+     */
+    protected $avatar;
+
+    /**
+     * Set avatar
+     *
+     * @param MediaInterface $avatar
+     * @return User
+     */
+    public function setAvatar(MediaInterface $avatar = null)
+    {
+        if ($avatar) {
+            $this->avatar = $avatar;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Get avatar
+     *
+     * @return MediaInterface
+     */
+    public function getAvatar()
+    {
+        return $this->avatar;
+    }
+
+    /**
+     * Remove avatar
+     *
+     * @param MediaInterface $avatar
+     */
+    public function removeAvatar(MediaInterface $avatar)
+    {
+        $this->avatar->removeElement($avatar);
+    }
+
+    /**
+     * @ORM\OneToMany(targetEntity="UserGallery", mappedBy="owner", cascade={"persist"})
+     */
+    protected $albums;
+
+    /**
+     * Add albums
+     *
+     * @param \Network\StoreBundle\Entity\UserGallery $album
+     * @return User
+     */
+    public function addAlbum(\Network\StoreBundle\Entity\UserGallery $album)
+    {
+        if (!$this->getAlbums()->contains($album)) {
+            $this->albums[] = $album;
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove albums
+     *
+     * @param \Network\StoreBundle\Entity\UserGallery $album
+     */
+    public function removeAlbum(\Network\StoreBundle\Entity\UserGallery $album)
+    {
+        $this->albums->removeElement($album);
+    }
+
+    /**
+     * Get albums
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getAlbums()
+    {
+        return $this->albums;
+    }
+
 }

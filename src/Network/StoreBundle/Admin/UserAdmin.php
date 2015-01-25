@@ -132,6 +132,16 @@ class UserAdmin extends VDolgahAdmin
                 parent::NOT_SHOW_IN_LIST_KEY => true,
                 parent::NOT_SHOW_IN_FORM_KEY => true,
             ],
+            [
+                parent::FIELD_KEY => 'avatar',
+                parent::TYPE_KEY => 'sonata_media_type',
+                parent::OPTIONS_KEY =>
+                [
+                    'required' => false,
+                    'provider' => 'sonata.media.provider.image',
+                    'context' => 'avatar',
+                ],
+            ],
         ]);
     }
 

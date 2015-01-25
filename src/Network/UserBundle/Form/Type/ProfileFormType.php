@@ -13,6 +13,16 @@ class ProfileFormType extends UserType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+
+        $builder->add('avatar', 'sonata_media_type', [
+            'label' => false,
+            'provider' => 'sonata.media.provider.image',
+            'context' => 'avatar',
+            'required' => false
+        ]);
+        $builder->get('avatar')->add('unlink', 'hidden', ['mapped' => false, 'data' => false]);
+        $builder->get('avatar')->add('binaryContent', 'file', ['label' => 'Выберите файл']);
+
         UserFormBuilder::baseBuildForm($builder);
         $builder->add('birthday', 'date', [
             'label' => 'Дата рождения',

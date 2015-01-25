@@ -1,5 +1,25 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/run_gallery.js') }}"></script>
+{% endblock %}
+{% block ava_content %}
+    {% if user.avatar %}
+        <p class="popup-gallery">
+            <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" /></a>
+        </p>
+    {% else %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}
+
 {% block right_content_sub_two %}
     {{ parent() }}
     {% if is_granted('ROLE_USER') and not is_cur_user %}
@@ -43,9 +63,9 @@
         {% endif %}
     </div>
     <div>
-        <a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a>
-        <br>
-        <a href="{{ path('user_profile_community', {'id':user.id} ) }}">{{ 'layout.show_community'|trans }}</a>
+        <p><a href="{{ path('user_profile_community', {'id':user.id} ) }}">{{ 'layout.show_community'|trans }}</a></p>
+        <p><a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a></p>
+        <p><a href="{{ path('user_show_albums', {'id':user.id} ) }}">{{ 'layout.show_albums'|trans }}</a></p>
     </div>
 
     {{ render(controller('NetworkWebBundle:Wall:main', {type: 'user', object: user})) }}

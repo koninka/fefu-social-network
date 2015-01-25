@@ -31,6 +31,7 @@ class ProfileController extends BaseController
     public function showAction()
     {
         $user = $this->getUser();
+
         if (!is_object($user) || !$user instanceof UserInterface) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
@@ -303,4 +304,33 @@ class ProfileController extends BaseController
 
         return new JsonResponse(['count' => $count]);
     }
+
+    public function showProfileAlbumsAction()
+    {
+        $user = $this->getUser();
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        return $this->showAlbumsAction($user->getId());
+    }
+
+    public function showAlbumsAction($id)
+    {
+        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        $albums = $this->getDoctrine()->getRepository('NetworkStoreBundle:UserGallery');
+
+        $isCurUser = false;
+        if ($this->get('security.context')->isGranted('ROLE_USER')) {
+            $curUser = $this->getUser();
+            $isCurUser = ($curUser->getId() === $user->getId());
+        }
+
+        return $this->render('NetworkUserBundle:Albums:albums.html.twig', [
+            'user_id' => $user->getId(),
+            'is_cur_user' => $isCurUser,
+            'albums' => $albums->findAlbumsForUser($user->getId()),
+        ]);
+    }
+
 }
