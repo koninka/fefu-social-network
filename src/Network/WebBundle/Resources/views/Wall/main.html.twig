@@ -1,9 +1,10 @@
+{% set type = object.getTypeForJsonRoute %}
 
 {% block javascripts %}
     <script type="text/javascript">
         var objectType = "{{ type }}";
-        var objectId = {{ id }};
-        var userId = {{ user.getId }};
+        var objectId = {{ object.id }};
+        var userId = {{ app.user.getId }};
     </script>
 
     <script src="{{ asset('bundles/networkweb/js/moment.js') }}"></script>
@@ -27,12 +28,12 @@
 
         <div id="posts">
             {% for thread in wall | reverse %}
-                <div class="post_container" id="thread_{{ thread.getId }}">
+                <div class="post" id="thread_{{ thread.getId }}">
                     {% set post = thread.getPosts[0] %}
 
                     <div class="username">
-                        <a href="{{ path('wall_show', {type: 'user', id: post.getUser.getId}) }}">
-                            {{ post.getUser.getUsername }}
+                        <a href="{{ path('user_profile', {id: post.getUser.getId}) }}">
+                            {{ [post.getUser.getFirstName, post.getUser.getLastName]|join(' ') }}
                         </a>
                     </div>
 
@@ -41,11 +42,15 @@
                     </div>
 
                     <div class="controls">
-                        {% if post.getUser.getId == user.getId %}
+                        {% if post.getUser.getId == app.user.getId %}
                             <a href="{{ post.getId }}" class="edit_control">Edit</a>
                         {% endif %}
 
-                        {% if (post.getUser.getId == user.getId) or (id == user.getId) %}
+                        {%
+                            if (post.getUser.getId == app.user.getId)
+                                or (object == app.user)
+                                or (type == 'club' and object.getOwner.getId == app.user.getId)
+                        %}
                             <a href="{{ post.getId }}" class="delete_control">Delete</a>
                         {% endif %}
                     </div>
@@ -58,24 +63,30 @@
                     {% if commentsCount > 0 %}
                         <div class="comments">
                             {% for comment in thread.getPosts|slice(1, commentsCount) %}
-                                <div class="username">
-                                    <a href="{{ path('wall_show', {type: 'user', id: comment.getUser.getId}) }}">
-                                        {{ comment.getUser.getUsername }}
-                                    </a>
-                                </div>
+                                <div class="comment">
+                                    <div class="username">
+                                        <a href="{{ path('user_profile', {id: comment.getUser.getId}) }}">
+                                            {{ [comment.getUser.getFirstName, comment.getUser.getLastName]|join(' ') }}
+                                        </a>
+                                    </div>
 
-                                <div class="timestamp">
-                                    {{ comment.getTs|date('h:m:s d.m.Y') }}
-                                </div>
+                                    <div class="timestamp">
+                                        {{ comment.getTs|date('h:m:s d.m.Y') }}
+                                    </div>
 
-                                <div class="controls">
-                                    {% if (comment.getUser.getId == user.getId) or (id == user.getId) %}
-                                        <a href="{{ comment.getId }}" class="delete_control">Delete</a>
-                                    {% endif %}
-                                </div>
+                                    <div class="controls">
+                                        {%
+                                            if (comment.getUser.getId == app.user.getId)
+                                                or (object == app.user)
+                                                or (type == 'club' and object.getOwner.getId == app.user.getId)
+                                        %}
+                                            <a href="{{ comment.getId }}" class="delete_control">Delete</a>
+                                        {% endif %}
+                                    </div>
 
-                                <div class="msg">
-                                    {{ comment.getText }}
+                                    <div class="msg">
+                                        {{ comment.getText }}
+                                    </div>
                                 </div>
                             {% endfor %}
                         </div>

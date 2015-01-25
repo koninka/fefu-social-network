@@ -282,4 +282,14 @@ class Community
 
         return $this;
     }
+
+    /**
+     * Get object type for wall-routes.
+     *
+     * @return string
+     */
+    public function getTypeForJsonRoute()
+    {
+        return 'club';
+    }
 }
