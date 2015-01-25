@@ -1,7 +1,16 @@
 {% extends "NetworkWebBundle:Default:base.html.twig" %}
 {% block stylesheets %}
     {{ parent() }}
+
     <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
+    <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
 {% endblock %}
 {% block body %}
     <div id="header_box">
