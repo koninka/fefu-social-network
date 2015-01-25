@@ -130,6 +130,17 @@ function updateThreadView(threadId, scroll) {
 }
 
 function InitActions() {
+    $('#show-thread-list').click(function(){
+        $('#thread-list-wrapper').show();
+        $('#posts-wrapper').hide();
+        $('#conference-topic-div').hide();
+        $('#thread-tabs').hide();
+        $('#im-menu-actions').hide();
+    });
+    $('#show-opened-threads').click(function(){
+        if (currentThreadId)
+            updateThreadView(currentThreadId, false);
+    });
     (function(){ //add friend to conference
         var $friendList = $('#add-user-list').select2({
             width:'resolve',
