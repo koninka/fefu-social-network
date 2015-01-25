@@ -2,7 +2,11 @@
 
 var currentThreadId;
 
+var lastThreadId;
+
 var openedThreads = [];
+
+var conferences = [];
 
 function xhr(action, message) {
     message = message || {};
@@ -21,16 +25,18 @@ function xhr(action, message) {
     return dfd;
 }
 
-function addTab(threadId, threadName) {
-    if (!openedThreads[threadId]) {
-        openedThreads[threadId] = true;
+function setTab(threadId, threadName) {
+    if (!threadName) return;
+    if (openedThreads[threadId]) {
+        openedThreads[threadId].find('a').val(threadName);
+    }
+    openedThreads[threadId] =
         $('<li/>').append($('<a/>', {
             text: threadName
         })).appendTo('#tabs-list').click(function () {
-            updateThreadView(threadId, false);
+            updateThreadView(threadId, null, false);
         });
-        $('#show-opened-threads').show();
-    }
+    $('#show-opened-threads').show();
 }
 
 function updateThreadList() {
@@ -55,6 +61,7 @@ function updateThreadList() {
                     .html(helpItem.userName)
             }
             else {
+                conferences[thread.id] = true;
                 threadName = thread.topic;
                 threadBlock.find('#topic').html(thread.topic);
             }
@@ -63,21 +70,21 @@ function updateThreadList() {
                 .click({id: thread.id, name: threadName},function (e) {
                     var threadId = e.data.id;
                     var threadName = e.data.name;
-                    addTab(threadId, threadName);
-                    updateThreadView(threadId);
+                    updateThreadView(threadId, threadName, false);
                     e.preventDefault();
                 });
         }
     });
 }
 
-function updateThreadView(threadId, scroll) {
+function updateThreadView(threadId, topic, scroll) {
     // Currently reloads all posts from thread
+    setTab(threadId, topic);
     $('#thread-tabs').show();
     $('#thread-list-wrapper').hide();
     $('#posts-wrapper').show();
     $('#conference-topic-div').hide();
-    currentThreadId = threadId;
+    lastThreadId = currentThreadId = threadId;
     var lastAuthor = "";
     var lastDate = null;
     var diff_less_than = function (date1, date2, min){
@@ -145,7 +152,10 @@ function updateThreadView(threadId, scroll) {
         }
         postsBlock.trigger('slimscrolling');
     });
-    $('#im-menu-actions').show();
+    if (conferences[threadId])
+        $('#im-menu-actions').show();
+    else
+        $('#im-menu-actions').hide();
 }
 
 function InitActions() {
@@ -157,8 +167,8 @@ function InitActions() {
         $('#im-menu-actions').hide();
     });
     $('#show-opened-threads').click(function(){
-        if (currentThreadId)
-            updateThreadView(currentThreadId, false);
+        if (lastThreadId)
+            updateThreadView(lastThreadId, null, false);
     });
     (function(){ //add friend to conference
         var $friendList = $('#add-user-list').select2({
@@ -358,7 +368,9 @@ function InitIM(partnerId, partnerName) {
             topic: $('#conference-topic').val()
         }).then(function (data) {
             $('#post-text').val('');
-            updateThreadView(data.threadId, true);
+            if (recipientIds.length > 1)
+                conferences[data.threadId] = true;
+            updateThreadView(data.threadId, data.topic, true);
         });
         e.preventDefault();
     });
@@ -369,7 +381,7 @@ function InitIM(partnerId, partnerName) {
         $('#post-form>#custom-recipient').show();
         $('#posts-wrapper').show();
         $('#post-text').val('');
-
+        currentThreadId = null;
         e.preventDefault();
     });
     InitActions();

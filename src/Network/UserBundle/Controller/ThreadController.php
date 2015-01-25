@@ -74,6 +74,7 @@ class ThreadController extends Controller
             return $this->errorJsonResponse('field \'text\' is empty');
         }
         $threadId = $request->request->get('threadId');
+        $res = [];
         if ($threadId != null) {
             $thread = $imService->getThreadByIdAndUserIdOrThrow($threadId, $user->getId());
         } else {
@@ -92,12 +93,20 @@ class ThreadController extends Controller
             if ($recipientUsers->isEmpty()) {
                 return $this->errorJsonResponse('users with given ids not found');
             }
+            if ($recipientUsers->count() == 1) {
+                $rUser = $recipientUsers[0];
+                $res['topic'] = $rUser->getFirstName() . ' ' . $rUser->getLastName();
+            }
             $topic = $request->request->get('topic', '');
             $thread = $imService->createDialogOrConference($user, $recipientUsers, $topic);
+            if (!array_key_exists('topic', $res)) {
+                $res['topic'] = $thread->getTopic();
+            }
         }
         $imService->createPost($user, $thread, $text);
+        $res['threadId'] = $thread->getId();
 
-        return new JsonResponse(['threadId' => $thread->getId()]);
+        return new JsonResponse($res);
     }
 
     /**
