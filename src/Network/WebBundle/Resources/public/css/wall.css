@@ -1,4 +1,4 @@
-.post_container {
+.post {
 
 }
 
@@ -13,4 +13,8 @@
 
 .msg {
     margin: 10px;
+}
+
+.comment {
+    background: #bfbfbf;
 }

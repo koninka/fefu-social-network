@@ -16,6 +16,8 @@ user_profile:
     defaults: { _controller: NetworkUserBundle:Profile:profile }
     requirements:
        id: \d+
+    options:
+      expose: true
 
 user_send_friendship_request:
     path: /friendship/send_request/{id}

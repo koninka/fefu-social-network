@@ -37,14 +37,14 @@ class WallController extends Controller
         return $wall;
     }
 
-    public function mainAction($type, $id)
+    public function mainAction($object)
     {
         $user = $this->getUser();
         if (null === $user) {
             return $this->redirect($this->generateUrl('mainpage'));
         }
 
-        $wall = $this->fetchWall($type, $id);
+        $wall = $object->getWallThreads();
 
         if (null === $wall) {
             throw new \Exception('Wrong object or id');
@@ -52,9 +52,7 @@ class WallController extends Controller
 
         return $this->render('NetworkWebBundle:Wall:main.html.twig', [
             'wall' => $wall,
-            'user' => $user,
-            'type' => $type,
-            'id' => $id,
+            'object' => $object,
         ]);
     }
 

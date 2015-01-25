@@ -744,4 +744,14 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * Get object type for wall-routes.
+     *
+     * @return string
+     */
+    public function getTypeForJsonRoute()
+    {
+        return 'user';
+    }
 }
