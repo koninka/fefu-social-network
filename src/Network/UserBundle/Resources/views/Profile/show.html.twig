@@ -1,9 +1,20 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/run_gallery.js') }}"></script>
+{% endblock %}
 {% block ava_content %}
     {% if user.avatar %}
-        <img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" />
+        <p class="popup-gallery">
+            <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" /></a>
+        </p>
     {% else %}
         {{ parent() }}
     {% endif %}
