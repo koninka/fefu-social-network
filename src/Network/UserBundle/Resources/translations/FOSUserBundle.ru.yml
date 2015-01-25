@@ -1,0 +1,283 @@
+# Community
+community:
+    create:
+        submit: Создать
+        caption: Создание группы
+        name: Название
+        view: Тип
+    edit:
+        name: Название
+        subjects: Тема
+        description: Описание
+        type: Тип
+        submit: Обновить
+    create_community: Создать группу
+    show:
+        name: Название
+        type: Тип
+        description: Описание
+        owner: Владелец
+    edit_community: Редактировать группу
+    delete: Удалить группу
+    participants: Участники группы
+    exclude_participant: Исключить участника
+    invite_friends: Пригласить друзей
+    invite_friend: Пригласить друга
+    uninvite_friend: Отменить приглашение
+    go_out: Отписаться
+    join: Подписаться
+    search: Поиск группы
+    request: Запросы
+    accept_request: Подтвердить
+    reject_request: Отклонить
+    cancel_request: Закрыть
+
+# Profile
+profile:
+    show:
+        firstName: Фамилия
+        lastName: Имя
+        gender: Пол
+        skype: Skype
+        additionalEmail: Дополнительная почта
+        friends: Друзья
+        subscribers: Подписчики
+        subscribed_on: Подписан на
+        phonenumber: Телефон
+        address: Адрес
+        send_friendship_request: Добавить в друзья
+        unsubscribe: Отписаться
+        albums: Все альбомы
+    edit:
+        link:
+            add:
+                vkontakte: добавить VKontakte
+                github: добавить Github
+                facebook: добавить Facebook
+                google: добавить Google
+            remove:
+                vkontakte: удалить VKontakte
+                github: удалить Github
+                facebook: удалить Facebook
+                google: удалить Google
+    add:
+        album: Добавить альбом
+    back_to_profile: Вернуться в профиль
+    requests:
+        count: Все друзья
+        accept: Принять
+        decline: Отклонить
+        empty: Пусто
+    delete_friendship: Удалить из друзей
+    delete_subscription: Отписаться
+    search_community: Поиск группы
+
+# Global strings
+layout:
+    profile: Профиль
+    profile_edit: Редактировать профиль
+    change_password: Изменть пароль
+    change_email: Изменить почту
+    show_friends: Друзья
+    show_community: Группы
+    show_messages: Сообщения
+    show_albums: Фотографии
+    friendship_requests: Запросы дружбы
+    write_message: Отправить сообщение
+    links: Ссылки
+    reset_password: Сбросить пароль
+    audios: Аудиозаписи
+
+# Email change
+change_email:
+    submit: Изменить почту
+
+# Link
+link:
+    vkontakte: VKontakte
+    github: Github
+    facebook: Facebook
+    google: Google
+
+# Album
+album:
+    edit:
+        name: Редактировать альбом
+        submit: Редактировать альбом
+    delete:
+        name: Удалить альбом
+        photo: Удалить фото
+    add:
+        photo:
+            name: Добавить фото
+            submit: Добавить фото
+        submit: Добавить альбом
+    show:
+        photos: Все фото
+
+# Threads
+threads:
+    name: Диалоги
+    compose:
+        submit: Написать сообщение
+    send:
+         submit: Отправить
+    show:
+        submit: Показать диалог
+    recipient: Получатель
+
+# Im
+im:
+    show:
+        thread_list: Показать список диалогов
+    opened:
+        threads: Открытые диалоги
+    actions: Действия
+    add:
+        user:
+            name: Добавить пользователя
+            cancel: Отмена
+    kick:
+        user:
+            name: Исключить пользователя
+            cancel: Отмена
+    new_topic:
+        apply: Применить
+        cancel: Отменить
+    recipient: Получатель
+    send: Отправить
+    leave:
+        conference:
+            confirm:
+                title: Тема
+                yes: Да
+                no: Нет
+                text: Текст
+
+# Conference
+conference:
+    add:
+        user: Добавить пользователя
+    kick:
+        user: Исключить пользователя
+    new_topic: Новая тема
+    leave: Покинуть конференцию
+    topic: Тема
+
+# Wall
+wall:
+    question: Что нового?
+    say: Рассказать всем!
+    only_my: Только мое
+    delete: Удалить
+    edit: Редактировать
+    comment:
+        submit: Комментировать
+
+# Message
+msg:
+    not_authorized: Пользователь не авторизован.
+    friendship_accepted: Дружба подтверждена.
+    friendship_deleted: Дружба отклонена.
+    friendship_request_sent: Запрос дружбы отправлен.
+    friendship_request_deleted: Запрос дружбы удален.
+    friendship_request_declined: Запрос дружбы откланен.
+    community_not_found: Группа не найдена.
+    community_deleted: Группа удалена.
+    user_not_found: Пользователь не найден.
+    user_in_community: Пользователь состоит в группе.
+    user_not_in_community: Пользователь не состоит в группе.
+    joined_in_community: Пользователь вступил в группу.
+    joined_in_community_considered: Вступление в группу будет рассмотрено.
+    go_out_community: Пользователь покинул группу.
+    community_invite_denied: Недостаточно прав, чтобы приглашать кого-либо в группу.
+    community_delete_denied: Недостаточно прав, чтобы удалить группу.
+    invitation_sent: Приглашение отправлено.
+    reject_request_community: Запрос на вступление в группу отклонен.
+    uninvite_community: Приглашение в группу отменено.
+    show_nonexistent_album: Такого альбома не существует.
+    edit_inaccessible_album: Вы пытаетесь редактировать чужой альбом.
+    album_not_found: Альбом не найден.
+    delete_inaccessible_album: Вы пытаетесь удалить чужой альбом.
+    user_album_deleted: Альбом удален.
+    add_photo_to_inaccessible_album: Вы пытаетесь добавить фото в чужой альбом.
+    add_photo_to_nonexistent_album: Вы пытаетесь добавить фото в несуществующий альбом.
+    photo_not_found: Фото не найдено.
+    user_album_photo_deleted: Фото удалено из альбома.
+
+form:
+    new_email: Новая почта
+    profile:
+        firstName: Фамилия
+        lastName: Имя
+        gender: Пол
+        date: Дата рождения
+        loadFile: Выберите файл
+        name: Профиль
+    contact:
+        name: Контакты
+        address:
+            name: Адрес
+            country: Страна
+            city: Город
+            street: Улица
+            house: Дом
+            edit:
+                submit: Редактировать адрес
+            delete:
+                submit: Удалить адрес
+            add:
+                submit: Добавить адрес
+            save:
+                submit: Сохранить адрес
+            cancel:
+                submit: Отменить
+        phone:
+            name: Телефон
+            add:
+                submit: Добавить телефон
+            delete:
+                submit: Удалить телефон
+        additionalEmail: Дополнительная почта
+        skype: Skype
+    job:
+        name: Работа
+        save:
+            submit: Сохранить
+        add:
+            submit: Добавить
+        delete:
+            submit: Удалить
+    employer: Работодатель
+    country: Страна
+    city: Город
+    start_date: Дата начала работы
+    finish_date: Дата конца работы
+    post: Должность
+    album:
+        name: Название
+        description: Описание
+    photo:
+        name: Название
+        description: Описание
+    poll:
+        anonymously: Анонимно
+        answer: Ответ
+        question: Вопрос
+    community:
+        type:
+            open: Открытая
+            closed: Закрытая
+        view_type:
+            group: Группа
+            action: Мероприятие
+    gender:
+        male: Ж
+        female: М
+    msg:
+        community:
+            invite:
+                nobody: У вас нет друзей или все ваши друзья уже состоят в этой группе.
+            join_requests:
+                nobody: Запросы о вступлении в группу отсутствуют.
+            empty: В группе нет ни одного участника.

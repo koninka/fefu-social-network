@@ -83,7 +83,7 @@
         </div>
 
         <div>
-            <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+            <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" />
         </div>
 
         {% do form.address.setRendered %}

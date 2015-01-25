@@ -13,7 +13,7 @@
 {% block right_content %}
     <div>
         <div>
-            <a href="{{ path('user_profile_show_friends') }}">{{ 'profile.show_friends' }}</a>
+            <a href="{{ path('user_profile_show_friends') }}">{{ 'profile.show.friends'|trans }}</a>
         </div>
         {% if friendship_requests %}
             <div>

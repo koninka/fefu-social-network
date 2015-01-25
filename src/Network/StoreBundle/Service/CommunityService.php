@@ -22,13 +22,13 @@ class CommunityService
     {
         $this->em = $em;
     }
-  
+
     public function persist($community)
     {
         $this->em->persist($community);
         $this->em->flush();
     }
-    
+
     public function remove($userCom)
     {
         $this->em->remove($userCom);
@@ -40,64 +40,64 @@ class CommunityService
         return $this->em->getRepository('NetworkStoreBundle:Community')
                 ->getUserRole($communityId, RoleCommunityEnumType::RC_ASKING);
     }
-    
+
     public function getUserInviteeById($user)
     {
         return $this->em->getRepository('NetworkStoreBundle:Community')
                 ->getUserRole($user->getId(), RoleCommunityEnumType::RC_INVITEE);
     }
-    
+
     public function getFindByUserId($id)
     {
         return $this->em->getRepository('NetworkStoreBundle:Community')
                 ->getFindBy($id, 'User');
     }
-    
+
     public function getFindByCommunityId($id)
     {
         return $this->em->getRepository('NetworkStoreBundle:Community')
                 ->getFindBy($id, 'Community');
     }
-    
-    function excludeUser($user, $communityId, $class) 
+
+    function excludeUser($user, $communityId, $class)
     {
         $community = $this->getFindByCommunityId($communityId);
         if (empty($user)) return 'msg.not_authorized';
         if ($this->em->getRepository('NetworkStoreBundle:Community')
-                ->isUserInCommunity($user->getId(), $community->getId())) return 'msg.user_not_member_in_community';
+                ->isUserInCommunity($user->getId(), $community->getId())) return 'msg.user_not_in_community';
         $this->em->getRepository('NetworkStoreBundle:Community')
                 ->excludeUser($user->getId(), $community->getId());
         return 'msg.'.$class.'_community';
     }
-    
+
     function deleteCommunity($user, $communityId) 
     {
         $community = $this->getFindByCommunityId($communityId);
         if (empty($user)) return 'msg.not_authorized';
-        if (empty($community)) return 'msg.not_this_community';
-        if ($community->getOwner() !== $user) { 
-            return 'msg.user_does_not_have_the_right_to_delete_the_community';
+        if (empty($community)) return 'msg.community_not_found';
+        if ($community->getOwner() !== $user) {
+            return 'msg.community_delete_denied';
         }
         $this->em->getRepository('NetworkStoreBundle:Community')
                 ->excludeUsers($community->getId());
         $this->remove($community);
-        $msg = 'msg.delete_community';  
+        $msg = 'msg.community_deleted';
         return $msg;
     }
-    
-    function joinCommunity($user, $communityId) 
+
+    function joinCommunity($user, $communityId)
     {
         $community = $this->getFindByCommunityId($communityId);
         $repository = $this->em->getRepository('NetworkStoreBundle:Community');
         if (empty($user)) return 'msg.not_authorized';
-        if (empty($community)) return 'msg.not_this_community';
+        if (empty($community)) return 'msg.community_not_found';
         if (!($repository->isUserInCommunity($user->getId(), $community->getId()))) {
-            $rel = $repository->userInCommunityRole($user->getId(), 
+            $rel = $repository->userInCommunityRole($user->getId(),
                         $community->getId(), RoleCommunityEnumType::RC_INVITEE);
             if (!empty($rel)) {
                 $rel[0]->setRole(RoleCommunityEnumType::RC_PARTICIPANT);
                 $this->persist($rel[0]);
-                $msg = 'msg.user_joined_into_community';
+                $msg = 'msg.joined_in_community';
             } else {
                 $msg = 'msg.user_in_community';
             }
@@ -105,35 +105,35 @@ class CommunityService
             $rel = new UserCommunity();
             $rel->setUser($user)->setCommunity($community);
             if ($community->getOwner() === $user) {
-                $rel->setRole(RoleCommunityEnumType::RC_OWNER); 
-                $msg = 'msg.user_joined_into_community';
+                $rel->setRole(RoleCommunityEnumType::RC_OWNER);
+                $msg = 'msg.joined_in_community';
             } else if ($community->getType() === TypeCommunityEnumType::C_OPEN) {
                 $rel->setRole(RoleCommunityEnumType::RC_PARTICIPANT);
-                $msg = 'msg.user_joined_into_community';
+                $msg = 'msg.joined_in_community';
             } else {
-               $rel->setRole(RoleCommunityEnumType::RC_ASKING); 
-               $msg = 'msg.user_application_is_considered';
+               $rel->setRole(RoleCommunityEnumType::RC_ASKING);
+               $msg = 'msg.joined_in_community_considered';
             }
             $this->persist($rel);
         }
         
         return $msg;
     }
-    
-    function inviteCommunity($user, $id, $communityId) 
+
+    function inviteCommunity($user, $id, $communityId)
     {
         $community = $this->getFindByCommunityId($communityId);
         $repository = $this->em->getRepository('NetworkStoreBundle:Community');
         if (empty($user)) return 'msg.not_authorized';
-        if (empty($community)) return 'msg.not_this_community';
+        if (empty($community)) return 'msg.community_not_found';
         $userFriend = $this->getFindByUserId($id);
         $msg = 'msg.user_not_found';
         if (!$this->em->getRepository('NetworkStoreBundle:Community')
                 ->isUserInCommunity($userFriend->getId(), $community->getId())) {
             $msg = 'msg.user_in_community';
-        } elseif (empty($repository->userInCommunityRole($user->getId(), 
-                        $community->getId(), RoleCommunityEnumType::RC_OWNER))) {   
-            $msg = 'msg.user_does_not_have_the_right_to_invite_the_community';
+        } elseif (empty($repository->userInCommunityRole($user->getId(),
+                        $community->getId(), RoleCommunityEnumType::RC_OWNER))) {
+            $msg = 'msg.community_invite_denied';
         } else {
             $rel = new UserCommunity();
             $rel->setUser($userFriend)->setCommunity($community);
@@ -141,20 +141,20 @@ class CommunityService
             $this->persist($rel);
             $msg = 'msg.invitation_sent';
         }
-        
+
         return $msg;
     }
-    
-    function excludeCommunity($user, $id, $communityId) 
+
+    function excludeCommunity($user, $id, $communityId)
     {
         $community = $this->getFindByCommunityId($communityId);
         if (empty($user)) return 'msg.not_authorized';
-        if ($community->getOwner()->getId() !== $user->getId())return 'msg.user_does_not_have_the_right_to_invite_the_community';
+        if ($community->getOwner()->getId() !== $user->getId())return 'msg.community_invite_denied';
         $userFriend = $this->getFindByUserId($id);
-         
+
         return $this->excludeUser($userFriend, $communityId, 'go_out');
     }
-    
+
     function  acceptRequestCommunity ($user, $id, $communityId)
     {
         $community = $this->getFindByCommunityId($communityId);
@@ -162,32 +162,32 @@ class CommunityService
         if (empty($user)) 
             return 'msg.not_authorized';
         if (($community->getOwner() !== $user) && ($userFriend->getId() !== $user->getId()))
-            return 'msg.user_does_not_have_the_right_to_invite_the_community';
-        if (($community->getOwner() === $user) && ($userFriend->getId() !== $user->getId()) ) {
+            return 'msg.community_invite_denied';
+        if (($community->getOwner() === $user) && ($userFriend->getId() !== $user->getId())) {
             $rel = $this->em->getRepository('NetworkStoreBundle:Community')
-                    ->userInCommunityRole($userFriend->getId(), 
+                    ->userInCommunityRole($userFriend->getId(),
                       $community->getId(), RoleCommunityEnumType::RC_ASKING);
             if ($rel) {
                 $rel[0]->setRole(RoleCommunityEnumType::RC_INVITEE);
                 $this->persist($rel[0]);
             }
         }
-        
+
         return $this->joinCommunity($userFriend, $communityId);
     }
-    
-    function  deleteUserCommunity ($user, $id, $communityId, $class) 
+
+    function deleteUserCommunity ($user, $id, $communityId, $class)
     {
         $community = $this->getFindByCommunityId($communityId);
         $userFriend = $this->getFindByUserId($id);
         if (empty($user)) 
             return 'msg.not_authorized';
         if (($community->getOwner() !== $user) && ($userFriend->getId() !== $user->getId()))
-            return 'msg.user_does_not_have_the_right_to_invite_the_community';
+            return 'msg.community_invite_denied';
 
         return $this->excludeUser($userFriend, $communityId, $class);
     }
-    
+
     public function createCommunity($community, $user)
     {
         $community->setOwner($user);
@@ -200,8 +200,8 @@ class CommunityService
         
         return $community;
     }
-    
-    public function updateCommunity($community, $isClose) 
+
+    public function updateCommunity($community, $isClose)
     {
         if ($isClose && $community->getType() === TypeCommunityEnumType::C_OPEN) {
             $asking = $this->getUserAskingById($community->getId());
@@ -214,7 +214,7 @@ class CommunityService
         
         return $community;
     }
-    
+
     public function showCommunity($id, $user) 
     {
         $rels = $this->em->getRepository('NetworkStoreBundle:Relationship');
@@ -242,17 +242,17 @@ class CommunityService
             if ($value->getRole() === RoleCommunityEnumType::RC_ASKING) {
                 array_push($asking, $value->getUser());
             } 
-            if ($value->getRole() == RoleCommunityEnumType::RC_PARTICIPANT 
+            if ($value->getRole() == RoleCommunityEnumType::RC_PARTICIPANT
                     || $value->getRole() == RoleCommunityEnumType::RC_OWNER) {
                 array_push($participants, $value->getUser());
-            } 
+            }
         }
-        
+
         return [
-                 $friends_invitee, $ans_friends, $participants, $asking 
+                 $friends_invitee, $ans_friends, $participants, $asking
             ];
     }
-    
+
     public function getSearchCommunity($search)
     {
         return $query = $this->em->createQuery(

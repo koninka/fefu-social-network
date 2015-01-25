@@ -37,7 +37,7 @@ function addButton(newDiv, save) {
     var error = $('<div>Complete all fields</div>');
     error.css("display", "none");
     newDiv.append(error);
-    var linkSave = $('<button class="blue_button" type="button">save</button>');
+    var linkSave = $('<button class="blue_button" type="button">Save</button>');
     newDiv.append(linkSave);
     $(linkSave).click(function(e) {
         var bool;
@@ -55,7 +55,7 @@ function addButton(newDiv, save) {
             newDiv.css("display", "none");
         }
     });
-    var linkCancel = $('<button class="blue_button" type="button">cancel</button>');
+    var linkCancel = $('<button class="blue_button" type="button">Cancel</button>');
     newDiv.append(linkCancel);
     $(linkCancel).click(function(e) {
         e.preventDefault();
