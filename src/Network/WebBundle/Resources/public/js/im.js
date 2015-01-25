@@ -252,9 +252,15 @@ function InitActions() {
                 threadId: currentThreadId
             }).then(function (data) {
                 var items = [];
-                for (var i = 0; i < data['users'].length; ++i) {
-                    var user = data['users'][i];
-                    if (user['id'] == data['userId']) continue;
+                var users = data.users;
+                var canBeKicked = data.canBeKicked;
+                var k = {};
+                for (var i = 0; i < canBeKicked.length; ++i) {
+                    k[canBeKicked[i]] = true;
+                }
+                for (var i in users) {
+                    var user = users[i];
+                    if (user['id'] == data['userId'] || !k[user['id']]) continue;
                     items.push({id: user['id'], text: user['firstName'] + ' ' + user['lastName']});
                 }
                 $('#kick-user-list').select2({

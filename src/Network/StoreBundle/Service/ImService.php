@@ -42,28 +42,34 @@ class ImService
     {
         $threadRepo = $this->em->getRepository('NetworkStoreBundle:Thread');
         $users = $threadRepo->getUsersInThread($threadId);
-        $userInThread = false;
-        foreach ($users as $user) {
-            if ($userId == $user['id']) {
-                $userInThread = true;
-                break;
-            }
-        }
-        if (!$userInThread) {
+        if (!array_key_exists($userId, $users)) {
             throw new AccessDeniedException('This user does not have access to this section.');
         }
 
         return $users;
     }
 
-    public function kickUserFromConference($userId, $conferenceId)
+    public function isThreadOwner($threadId, $userId) {
+        $threadRepo = $this->em->getRepository('NetworkStoreBundle:UserThread');
+        $ownerId = $threadRepo->getThreadOwnerId($threadId);
+
+        return $ownerId == $userId;
+    }
+
+    public function getInvitedUsersByUserInThread($threadId, $userId)
+    {
+        $utRepo = $this->em->getRepository('NetworkStoreBundle:UserThread');
+
+        return $utRepo->getInvitedUsersByUserInThread($threadId, $userId);
+    }
+
+    public function kickUserFromConference($userId, $conferenceId, $challengerId)
     {
         $manager = $this->em;
-        $userThread = $manager
-            ->getRepository('NetworkStoreBundle:UserThread')
-            ->findByUserAndThread($userId, $conferenceId);
+        $utRepo = $manager->getRepository('NetworkStoreBundle:UserThread');
+        $userThread = $utRepo->getChallengerIfCanBeKickedByUserFromThread($conferenceId, $userId, $challengerId);
         if ($userThread == null) {
-            return new JsonResponse(['error' => 'user with given id not a member of given conference']);
+            return new JsonResponse(['error' => 'user with given id cannot be kicked from this thread by you']);
         }
         if ($userThread->getThread()->getType() != ThreadEnumType::T_CONFERENCE) {
             throw new AccessDeniedException('This user does not have access to this section.');
@@ -71,7 +77,7 @@ class ImService
         $manager->remove($userThread);
         $manager->flush();
 
-        return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $userId]);
+        return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
     }
 
     public function getConferenceByIdAndUserIdOrThrow($threadId, $userId)
@@ -138,10 +144,12 @@ class ImService
             ->setTopic($topic)
             ->setType(ThreadEnumType::T_CONFERENCE);
         $this->persistAndFlush($thread);
+        $userId = $user->getId();
+        $thread->addUser($user, $userId);
         foreach ($recipientUsers as $recipientUser) {
-            $thread->addUser($recipientUser);
+            $thread->addUser($recipientUser, $userId);
         }
-        $thread->addUser($user);
+
         $this->persistAndFlush($thread);
 
         return $thread;
@@ -158,7 +166,7 @@ class ImService
             $thread = new Thread();
             $thread->setTopic('no topic');
             $this->persistAndFlush($thread); //because of foreign key error
-            $thread->addUser($user)->addUser($recipientUser);
+            $thread->addUser($user, $user->getId())->addUser($recipientUser, $user->getId());
             $this->persistAndFlush($thread);
 
         } elseif (count($thread) > 1) {

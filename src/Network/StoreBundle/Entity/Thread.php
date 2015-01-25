@@ -146,12 +146,13 @@ class Thread
      * Create UserThread Entity that used as link
      *
      * @param \Network\StoreBundle\Entity\User $user
+     * @param integer $inviter
      *
      * @return Thread
      */
-    public function addUser(\Network\StoreBundle\Entity\User $user)
+    public function addUser(\Network\StoreBundle\Entity\User $user, $inviter)
     {
-        $userThread = new UserThread($user, $this);
+        $userThread = new UserThread($user, $this, $inviter);
 
         return $this;
     }
