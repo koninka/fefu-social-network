@@ -25,18 +25,52 @@ function xhr(action, message) {
     return dfd;
 }
 
+function removeTab(threadId) {
+    openedThreads[threadId].remove();
+    delete openedThreads[threadId];
+    if (threadId == currentThreadId) {
+        var existOpenedThread = false;
+        for(var id in openedThreads) { // get any opened thread
+            if (openedThreads[id] == null) continue;
+            updateThreadView(id, null, false);
+            existOpenedThread = true;
+            break;
+        }
+        if (!existOpenedThread) {
+            $('#show-opened-threads').hide();
+            updateThreadList();
+        }
+    }
+}
+
 function setTab(threadId, threadName) {
     if (!threadName) return;
     if (openedThreads[threadId]) {
-        openedThreads[threadId].find('a').val(threadName);
+        openedThreads[threadId].find('a').text(threadName);
+        return;
     }
     openedThreads[threadId] =
         $('<li/>').append($('<a/>', {
             text: threadName
+        })).append($('<span/>', {
+            class: 'ui-icon ui-icon-close',
+            role: 'presentation',
+            click: function(){
+                removeTab(threadId);
+            }
         })).appendTo('#tabs-list').click(function () {
             updateThreadView(threadId, null, false);
         });
     $('#show-opened-threads').show();
+}
+
+function selectTab(threadId) {
+    $('#tabs-list li').removeClass('selected-thread');
+    openedThreads[threadId].addClass('selected-thread');
+}
+
+function closeActions() {
+    $('#add-user-wrapper, #kick-user-wrapper, #new-topic-wrapper').hide();
 }
 
 function updateThreadList() {
@@ -75,11 +109,19 @@ function updateThreadList() {
                 });
         }
     });
+    $('#thread-list-wrapper').show();
+    $('#posts-wrapper').hide();
+    $('#conference-topic-div').hide();
+    $('#thread-tabs').hide();
+    $('#im-menu-actions').hide();
+    closeActions();
 }
 
 function updateThreadView(threadId, topic, scroll) {
     // Currently reloads all posts from thread
     setTab(threadId, topic);
+    selectTab(threadId);
+    closeActions();
     $('#thread-tabs').show();
     $('#thread-list-wrapper').hide();
     $('#posts-wrapper').show();
@@ -160,11 +202,7 @@ function updateThreadView(threadId, topic, scroll) {
 
 function InitActions() {
     $('#show-thread-list').click(function(){
-        $('#thread-list-wrapper').show();
-        $('#posts-wrapper').hide();
-        $('#conference-topic-div').hide();
-        $('#thread-tabs').hide();
-        $('#im-menu-actions').hide();
+        updateThreadList();
     });
     $('#show-opened-threads').click(function(){
         if (lastThreadId)
@@ -255,6 +293,7 @@ function InitActions() {
                 conferenceId: currentThreadId
             }).then(function(data) {
                 $('#new-topic-cancel').click();
+                setTab(data.conferenceId, data.topic);
             });
         });
         $('#new-topic-action').click(function(e){
