@@ -1,25 +1,21 @@
-{% extends 'NetworkWebBundle:Default:edit.base.html.twig' %}
 
 {% block javascripts %}
-    {{ parent() }}
-
     <script type="text/javascript">
         var objectType = "{{ type }}";
         var objectId = {{ id }};
         var userId = {{ user.getId }};
     </script>
 
+    <script src="{{ asset('bundles/networkweb/js/moment.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/wall_poster.js') }}"></script>
 
 {% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-
     <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
 
-{% block right_content %}
+<div id="wall">
     <div>
         <div>
             <form>
@@ -85,7 +81,7 @@
                         </div>
                     {% endif %}
 
-                    <div class="comment">
+                    <div class="to_comment">
                         <form>
                             <textarea class="comment_text">
 
@@ -100,4 +96,4 @@
             {% endfor %}
         </div>
     </div>
-{% endblock %}
+</div>

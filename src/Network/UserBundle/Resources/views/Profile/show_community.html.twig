@@ -111,8 +111,8 @@
                 <p> No requests to join the community </p>
             </div>
         {% endif %}
-    </div> 
-    
+    </div>
 
+    {{ render(controller('NetworkWebBundle:Wall:main', {type: 'club', object: community})) }}
 {% endblock %}
 

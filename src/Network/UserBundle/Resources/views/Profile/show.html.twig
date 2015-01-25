@@ -47,4 +47,6 @@
         <br>
         <a href="{{ path('user_profile_community', {'id':user.id} ) }}">{{ 'layout.show_community'|trans }}</a>
     </div>
+
+    {{ render(controller('NetworkWebBundle:Wall:main', {type: 'user', object: user})) }}
 {% endblock %}

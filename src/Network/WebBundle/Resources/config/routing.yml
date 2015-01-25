@@ -74,15 +74,6 @@ audios_json_edit:
   options:
     expose: true
 
-wall_show:
-  path: /{type}/id{id}
-  defaults: { _controller: NetworkWebBundle:Wall:main }
-  requirements:
-    type: user|club
-    id: \d+
-  options:
-    expose: true
-
 wall_write:
   path: /{type}/id{id}/write
   defaults: { _controller: NetworkWebBundle:Wall:write }
