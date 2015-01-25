@@ -230,7 +230,7 @@ class ThreadController extends Controller
         if ($newUser == null) {
             return $this->errorJsonResponse('User with id ' . $newUserId . ' not found');
         }
-        $thread->addUser($newUser);
+        $thread->addUser($newUser, $user->getId());
         $manager = $this->getDoctrine()->getManager();
         $manager->persist($thread);
         $manager->flush();
@@ -273,8 +273,8 @@ class ThreadController extends Controller
     public function kickUserAction(Request $request)
     {
         $user = $this->getUserAndCheckAccess();
-        $userId = $request->request->get('userId');
-        if ($userId == null) {
+        $challengerId = $request->request->get('userId');
+        if ($challengerId == null) {
             return $this->errorJsonResponse('Invalid user id');
         }
         $conferenceId = $request->request->get('conferenceId');
@@ -283,7 +283,7 @@ class ThreadController extends Controller
         }
         $this->checkAccessToThread($conferenceId, $user->getId());
 
-        return $this->get('network.store.im_service')->kickUserFromConference($userId, $conferenceId);
+        return $this->get('network.store.im_service')->kickUserFromConference($user->getId(), $conferenceId, $challengerId);
     }
 
     /**
@@ -299,7 +299,7 @@ class ThreadController extends Controller
             return $this->errorJsonResponse('Invalid conference id');
         }
 
-        return $this->get('network.store.im_service')->kickUserFromConference($user->getId(), $conferenceId);
+        return $this->get('network.store.im_service')->kickUserFromConference($user->getId(), $conferenceId, $user->getId());
     }
     /**
      * @param Request $request
@@ -312,8 +312,13 @@ class ThreadController extends Controller
         $threadId = $request->request->get('threadId');
         $imService = $this->get('network.store.im_service');
         $users = $imService->getUsersInThreadByIdAndUserIdOrThrow($threadId, $user->getId());
+        if ($imService->isThreadOwner($threadId, $user->getId())) {
+            $canBeKicked = array_keys($users);
+        } else {
+            $canBeKicked = $imService->getInvitedUsersByUserInThread($threadId, $user->getId());
+        }
 
-        return new JsonResponse(['users' => $users, 'userId' => $user->getId()]);
+        return new JsonResponse(['users' => $users, 'userId' => $user->getId(), 'canBeKicked' => $canBeKicked]);
     }
 
     static protected function errorJsonResponse($msg)

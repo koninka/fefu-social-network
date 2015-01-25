@@ -107,13 +107,13 @@ class ThreadRepository extends EntityRepository
     public function getUsersInThread($threadId)
     {
         $em = $this->getEntityManager();
-        $dql = "SELECT u.id, u.firstName, u.lastName FROM NetworkStoreBundle:User u
+        $dql = "SELECT u.id, u.firstName, u.lastName FROM NetworkStoreBundle:User u INDEX BY u.id
                 JOIN u.userThreads ut
                 WHERE ut.thread = :thread_id";
         $query = $em->createQuery($dql)
             ->setParameter('thread_id', $threadId);
 
-        return $query->getResult();
+        return $query->getArrayResult();
     }
 
     public function checkPermission($threadId, $userId)
