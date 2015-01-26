@@ -168,8 +168,12 @@ $(document).on('ready', function () {
 
     $('#tell_btn').on('click', function (e) {
         e.preventDefault();
-        
-        var msg = $('#msg_input').val();
+
+        var input = $('#msg_input');
+
+        var msg = input.val();
+
+        input.val('');
 
         if (msg.length === 0) {
             return;
