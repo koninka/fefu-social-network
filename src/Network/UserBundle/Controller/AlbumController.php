@@ -70,6 +70,7 @@ class AlbumController extends Controller
 
             $album->setName($data->getName())
                   ->setContext('default')
+                  ->setDescription($data->getDescription())
                   ->setDefaultFormat('default_small')
                   ->setEnabled(true);
 
