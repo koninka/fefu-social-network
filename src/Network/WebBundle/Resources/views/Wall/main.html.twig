@@ -1,5 +1,5 @@
 {% set type = object.getTypeForJsonRoute %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block javascripts %}
     <script type="text/javascript">
         var objectType = "{{ type }}";
@@ -20,10 +20,10 @@
     <div>
         <div>
             <form id='form' method="post">
-                <label for="msg_input">What's new?</label>
+                <label for="msg_input">{{ 'wall.question'|trans }}</label>
                 <input type="text" id="msg_input">
-                <button id="tell_btn">Tell!</button>
-                <button id="show_my_btn">Only my</button>
+                <button id="show_my_btn">{{ 'wall.only_my'|trans }}</button>
+                <button id="tell_btn">{{ 'wall.say'|trans }}</button>
                 <button id="create_poll">create poll</button>
             </form>
             <div id="poll_form" class="form_poll">
@@ -54,7 +54,7 @@
 
                     <div class="controls">
                         {% if post.getUser.getId == app.user.getId %}
-                            <a href="{{ post.getId }}" class="edit_control">Edit</a>
+                            <a href="{{ post.getId }}" class="edit_control">{{ 'wall.edit'|trans }}</a>
                         {% endif %}
 
                         {%
@@ -62,7 +62,7 @@
                                 or (object == app.user)
                                 or (type == 'club' and object.getOwner.getId == app.user.getId)
                         %}
-                            <a href="{{ post.getId }}" class="delete_control">Delete</a>
+                            <a href="{{ post.getId }}" class="delete_control">{{ 'wall.delete'|trans }}</a>
                         {% endif %}
                     </div>
 
@@ -99,7 +99,7 @@
                                                 or (object == app.user)
                                                 or (type == 'club' and object.getOwner.getId == app.user.getId)
                                         %}
-                                            <a href="{{ comment.getId }}" class="delete_control">Delete</a>
+                                            <a href="{{ comment.getId }}" class="delete_control">{{ 'wall.delete'|trans }}</a>
                                         {% endif %}
                                     </div>
 
@@ -120,8 +120,8 @@
 
                             </textarea>
 
-                            <button class="comment_btn" id="comment_{{ thread.getId }}">
-                                Comment!
+                            <button deleteBtnName="{{ 'wall.delete'|trans }}" editBtnName="{{ 'wall.edit'|trans }}" value="{{ 'wall.comment.submit'|trans }}" class="comment_btn" id="comment_{{ thread.getId }}">
+                                {{ 'wall.comment.submit'|trans }}
                             </button>
                         </form>
                     </div>

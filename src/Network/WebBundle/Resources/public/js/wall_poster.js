@@ -2,6 +2,9 @@ var postsCount = 0;
 var allPostsLoaded = false;
 var lazyLoadRequestSent = false;
 var onlyMyDisplayed = false;
+var commentBtnName = '';
+var deleteBtnName = '';
+var editBtnName = '';
 
 
 function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
@@ -17,7 +20,7 @@ function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
     var controlsContainer = $('<div class="controls"></div>');
     var commentsContainer = $('<div class="comments"></div>');
     var commentContainer = $('<div class="to_comment"><form><textarea class="comment_text"></textarea>' +
-    '<button class="comment_btn" id="comment_' + thread_id + '">Comment!</button></form></div>');
+        '<button class="comment_btn" id="comment_' + thread_id + '">' + commentBtnName + '</button></form></div>');
 
     usernameContainer.append($(
         '<a href="' + Routing.generate('user_profile', {id: user_id}) + '">' + username + '</a>'
@@ -27,13 +30,13 @@ function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
 
     if (user_id === userId) {
         controlsContainer.append($(
-            '<a href="' + post_id + '" class="edit_control">Edit</a>'
+            '<a href="' + post_id + '" class="edit_control">' + editBtnName + '</a>'
         ));
     }
 
     if (user_id === userId || userId === objectId) {
         controlsContainer.append($(
-            '<a href="' + post_id + '" class="delete_control">Delete</a>'
+            '<a href="' + post_id + '" class="delete_control">' + deleteBtnName + '</a>'
         ));
     }
      msgContainer.text(msg);
@@ -81,7 +84,7 @@ function createComment(user_id, thread_id, post_id, username, msg, ts)
 
     if (user_id === userId || userId === objectId) {
         controlsContainer.append($(
-            '<a href="' + post_id + '" class="delete_control">Delete</a>'
+            '<a href="' + post_id + '" class="delete_control">' + deleteBtnName + '</a>'
         ));
     }
 
@@ -419,6 +422,10 @@ $(document).on('ready', function () {
 
     wallContainer.on('click', '.comment_btn', function (e) {
         e.preventDefault();
+
+        commentBtnName = $(this).attr('value');
+        deleteBtnName = $(this).attr('deleteBtnName');
+        editBtnName = $(this).attr('editBtnName');
 
         var commentText= $(this).parent().find('.comment_text');
 
