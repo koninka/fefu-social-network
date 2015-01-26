@@ -12,10 +12,15 @@ use Network\StoreBundle\Entity\Post;
 use Network\StoreBundle\Entity\Thread;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Network\StoreBundle\Entity\Poll;
+use Network\UserBundle\Form\Type\PollType;
 
 class WallController extends Controller
 {
+    const LAZY_LOAD_PATCH_SIZE = 5;
+
     /**
      * @param string $objectType
      * @param int $id
@@ -49,13 +54,13 @@ class WallController extends Controller
         if (null === $wall) {
             throw new \Exception('Wrong object or id');
         }
-
         return $this->render('NetworkWebBundle:Wall:main.html.twig', [
             'wall' => $wall,
             'object' => $object,
+            'patchSize' => static::LAZY_LOAD_PATCH_SIZE,
         ]);
     }
-
+         
     public function writeAction(Request $request, $type, $id)
     {
         $user = $this->getUser();
@@ -75,12 +80,11 @@ class WallController extends Controller
 
         $data = json_decode($request->getContent(), true);
 
-        if (null === $data || !array_key_exists('msg', $data)) {
+        if (null === $data || (!array_key_exists('msg', $data) && (!array_key_exists('poll', $data)))) {
             return new JsonResponse([
                 'status' => 'badMsg',
             ]);
         }
-
         $threadId = array_key_exists('threadId', $data) ? $data['threadId'] : -1;
         $em = $this->getDoctrine()->getManager();
         $post = new Post();
@@ -98,11 +102,26 @@ class WallController extends Controller
                                ->getRepository('NetworkStoreBundle:Thread')
                                ->find($threadId);
         }
-
         $post->setUser($user)
              ->setTs(new \DateTime())
-             ->setThread($wallThread)
-             ->setText($data['msg']);
+             ->setThread($wallThread);
+        $isPoll = false;
+        if (array_key_exists('poll', $data)) {
+            $pollId = $data['poll'];
+            $poll = $this->getDoctrine()->getRepository('NetworkStoreBundle:Poll')->find($pollId);
+            if (null === $poll) {
+                return new JsonResponse([
+                    'status' => 'badPoll',
+                ]);
+            }
+            $poll->setPost($post);
+            $post->setText('')
+                 ->setType('poll');
+            $isPoll = true;
+        }  
+        if (array_key_exists('msg', $data)) {
+            $post->setText($data['msg']);
+        }
 
         $wallThread->addPost($post);
 
@@ -114,10 +133,11 @@ class WallController extends Controller
             'msg' => $post->getText(),
             'user_id' => $user->getId(),
             'ts' => $post->getTs(),
-            'username' => $user->getUsername(),
+            'username' => $user->getFirstName() . ' ' . $user->getLastName(),
             'thread_id' => $wallThread->getId(),
             'post_id' => $post->getId(),
             'new_thread' => $newThread,
+            'is_poll' => $isPoll,
         ]);
     }
 
@@ -153,6 +173,7 @@ class WallController extends Controller
 
             $wallThread->removePost($post);
             $em->remove($post);
+            $em->remove($post);
 
             if ($threadDied) {
                 foreach ($wallThread->getPosts() as $wallPost) {
@@ -166,6 +187,65 @@ class WallController extends Controller
             $em->flush();
         } else {
             $responseBody['status'] = 'badPost';
+        }
+
+        return new JsonResponse($responseBody);
+    }
+
+    public function loadPostsAction($type, $id, $start)
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $responseBody = [
+            'status' => 'ok',
+            'threads' => [],
+        ];
+
+        $wall = $this->fetchWall($type, $id);
+
+        $reverseStartFrom = $wall->count() - $start - 1;
+
+        if ($reverseStartFrom < 0) {
+            return new JsonResponse([
+                'status' => 'nothingMore',
+            ]);
+        }
+
+        $offset = $reverseStartFrom - static::LAZY_LOAD_PATCH_SIZE + 1;
+
+        $threads = $wall->slice(
+            $offset < 0 ? 0 : $offset,
+            static::LAZY_LOAD_PATCH_SIZE + ($offset < 0 ? $offset : 0)
+        );
+
+        for ($i = count($threads) - 1; $i > -1; --$i) {
+            $thread = $threads[$i];
+
+            $threadJsonObject = [
+                'id' => $thread->getId(),
+                'posts' => [],
+            ];
+
+            foreach ($thread->getPosts() as $post) {
+                $postUser = $post->getUser();
+                $isPoll = $post->getType() === 'poll';
+
+                $threadJsonObject['posts'][] = [
+                    'user_id' => $postUser->getId(),
+                    'post_id' => $post->getId(),
+                    'username' => $postUser->getFirstName() . ' ' . $postUser->getLastName(),
+                    'msg' => $post->getText(),
+                    'ts' => $post->getTs(),
+                    'is_poll' => $isPoll
+                ];
+            }
+
+            $responseBody['threads'][] = $threadJsonObject;
         }
 
         return new JsonResponse($responseBody);

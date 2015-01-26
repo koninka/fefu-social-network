@@ -18,3 +18,20 @@
 .comment {
     background: #bfbfbf;
 }
+.poll_open_result:hover {
+    color: #ffe; 
+    cursor: pointer;
+}
+
+.poll_post {
+    border: 4px double black;
+    background: #fef;
+    padding: 5px;
+}
+
+.form_poll {
+    border: 4px double black;
+    background: #fef; 
+    padding: 3%;
+}
+    

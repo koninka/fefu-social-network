@@ -71,7 +71,7 @@ class Community
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="Thread", cascade="persist")
+     * @ORM\ManyToMany(targetEntity="Thread", cascade="persist", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="communities_walls",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
      *      inverseJoinColumns={@ORM\JoinColumn(name="thread_id", referencedColumnName="id", unique=true)}

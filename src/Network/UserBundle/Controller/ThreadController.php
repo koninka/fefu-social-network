@@ -145,6 +145,11 @@ class ThreadController extends Controller
             ->getThreadPosts($threadId);
         $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
 
+        $formatter =  $this->container->get('sonata.formatter.pool');
+        foreach ($posts as &$post) {
+            $post['text'] = $formatter->transform('markdown', $post['text']);
+        }
+
         return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts, 'selfId' => $user->getId()]);
     }
 

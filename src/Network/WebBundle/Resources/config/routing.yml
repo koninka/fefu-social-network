@@ -93,3 +93,45 @@ wall_delete:
       post_id: \d+
   options:
     expose: true
+
+wall_load_posts:
+  path: /{type}/id{id}/load/{start}
+  defaults: { _controller: NetworkWebBundle:Wall:loadPosts }
+  requirements:
+    type: user|club
+    id: \d+
+    start: \d+
+  options:
+    expose: true
+
+user_poll_create:
+  path:     /poll/
+  defaults: { _controller: NetworkWebBundle:Poll:create }
+  options:
+    expose: true
+
+user_poll_edit:
+    path:     /poll{id}/edit
+    defaults: { _controller: NetworkWebBundle:Poll:edit }
+    requirements:
+       id: \d+
+
+user_poll_delete:
+    path:     /poll{id}/delete
+    defaults: { _controller: NetworkWebBundle:Poll:delete }
+    requirements:
+       id: \d+
+
+user_poll:
+  path:     /poll{id}/
+  defaults: { _controller: NetworkWebBundle:Poll:poll }
+  requirements:
+    id: \d+
+  options:
+    expose: true
+    
+users_poll:
+  path: /users/poll
+  defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }
+  options:
+    expose: true
