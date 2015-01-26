@@ -4,35 +4,14 @@ var currentThreadId;
 
 function xhr(action, message) {
     message = message || {};
-    return new Promise(function (resolve, reject) {
-        var oReq = new XMLHttpRequest();
-        oReq.open('POST', '/' + action);
-        oReq.responseType = 'text';
-
-        oReq.onreadystatechange = function () {
-            if (oReq.readyState === 4) {
-                switch (oReq.status) {
-                case 200:
-                    resolve(JSON.parse(oReq.response));
-                break;
-
-                case 500:
-                    // it's an internal server error so we're assuming for response text
-                    // to be a html document describing the error
-                    // TODO: ensure this only happens in dev mode
-                    document.write(oReq.responseText);
-                    reject();
-
-                default:
-                    reject(oReq.response);
-                    break;
-                }
-            }
-        };
-
-        var strMessage = JSON.stringify(message);
-        oReq.send(strMessage);
+    var dfd = $.Deferred();
+    $.post(action, message).done(function(data, textStatus, jqXHR){
+        dfd.resolve(data);
+    }).fail(function(data, textStatus, jqXHR){
+        document.write(data.responseText);
+        dfd.reject();
     });
+    return dfd;
 }
 
 function updateThreadList() {

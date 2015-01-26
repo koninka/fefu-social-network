@@ -65,19 +65,19 @@ user_show_friends:
 
 user_profile_show_messages:
     path: /im
-    defaults: { _controller: NetworkUserBundle:Profile:showIM }
+    defaults: { _controller: NetworkUserBundle:Thread:showIM }
 
 post:
     path: /post
-    defaults: { _controller: NetworkUserBundle:Profile:post }
+    defaults: { _controller: NetworkUserBundle:Thread:post }
 
 threads:
     path: /thread_list
-    defaults: { _controller: NetworkUserBundle:Profile:threadList }
+    defaults: { _controller: NetworkUserBundle:Thread:threadList }
 
 thread:
     path: /thread
-    defaults: { _controller: NetworkUserBundle:Profile:thread }
+    defaults: { _controller: NetworkUserBundle:Thread:thread }
 
 user_profile_show_community:
     path: profile/group
@@ -165,11 +165,11 @@ user_search_community:
 
 get_friends:
     path: /api/friends
-    defaults: { _controller: NetworkUserBundle:Profile:getFriendsJson }
+    defaults: { _controller: NetworkUserBundle:Thread:getFriendsJson }
 
 read_posts:
     path: /api/read_posts
-    defaults: { _controller: NetworkUserBundle:Profile:readPosts }
+    defaults: { _controller: NetworkUserBundle:Thread:readPosts }
 
 user_profile_show_albums:
     path: /profile/albums
