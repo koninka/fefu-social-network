@@ -101,6 +101,21 @@ wall_load_posts:
     type: user|club
     id: \d+
     start: \d+
+like:
+  path: /like/write
+  defaults: { _controller: NetworkWebBundle:Like:like }
+  options:
+    expose: true
+
+like_count:
+  path: /like_count
+  defaults: { _controller: NetworkWebBundle:Like:getCount }
+  options:
+    expose: true
+
+like_user:
+  path: /like_user
+  defaults: { _controller: NetworkWebBundle:Like:getUser }
   options:
     expose: true
 
