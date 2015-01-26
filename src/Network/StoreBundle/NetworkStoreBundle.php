@@ -32,6 +32,9 @@ class NetworkStoreBundle extends Bundle
         if (!Type::hasType('threadEnumType')) {
             Type::addType('threadEnumType', 'Network\StoreBundle\DBAL\ThreadEnumType');
         }
+        if (!Type::hasType('typePostEnumType')) {
+            Type::addType('typePostEnumType', 'Network\StoreBundle\DBAL\TypePostEnumType');
+        }
     }
 
 }
