@@ -65,19 +65,19 @@ user_show_friends:
 
 user_profile_show_messages:
     path: /im
-    defaults: { _controller: NetworkUserBundle:Profile:showIM }
+    defaults: { _controller: NetworkUserBundle:Thread:showIM }
 
 post:
     path: /post
-    defaults: { _controller: NetworkUserBundle:Profile:post }
+    defaults: { _controller: NetworkUserBundle:Thread:post }
 
 threads:
     path: /thread_list
-    defaults: { _controller: NetworkUserBundle:Profile:threadList }
+    defaults: { _controller: NetworkUserBundle:Thread:threadList }
 
 thread:
     path: /thread
-    defaults: { _controller: NetworkUserBundle:Profile:thread }
+    defaults: { _controller: NetworkUserBundle:Thread:thread }
 
 user_profile_show_community:
     path: profile/group
@@ -165,11 +165,11 @@ user_search_community:
 
 get_friends:
     path: /api/friends
-    defaults: { _controller: NetworkUserBundle:Profile:getFriendsJson }
+    defaults: { _controller: NetworkUserBundle:Thread:getFriendsJson }
 
 read_posts:
     path: /api/read_posts
-    defaults: { _controller: NetworkUserBundle:Profile:readPosts }
+    defaults: { _controller: NetworkUserBundle:Thread:readPosts }
 
 user_profile_show_albums:
     path: /profile/albums
@@ -218,3 +218,23 @@ user_delete_album_photo:
     requirements:
        albumId: \d+
        photoId: \d+
+
+add_user_to_conference:
+    path: /thread/add_user
+    defaults: { _controller: NetworkUserBundle:Thread:addUserToConference }
+
+change_conference_topic:
+    path: /thread/change_topic
+    defaults: { _controller: NetworkUserBundle:Thread:changeTopic }
+
+kick_user_from_conference:
+    path: /thread/kick_user
+    defaults: { _controller: NetworkUserBundle:Thread:kickUser }
+
+get_users_in_thread:
+    path: /thread/users
+    defaults: { _controller: NetworkUserBundle:Thread:getUsersInThread }
+
+leave_conference:
+    path: /thread/leave
+    defaults: { _controller: NetworkUserBundle:Thread:leaveConference }

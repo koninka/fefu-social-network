@@ -7,6 +7,7 @@ use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 
+use Network\StoreBundle\DBAL\ThreadEnumType;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\User;
 
@@ -41,7 +42,7 @@ class ThreadRepository extends EntityRepository
         //sorted by last post date
         $em = $this->getEntityManager();
         $dql =
-       "SELECT
+        "SELECT
           t1.id as id,
           t1.topic as topic,
           ut1.unreadPosts as unreadPosts,
@@ -56,8 +57,23 @@ class ThreadRepository extends EntityRepository
         ORDER BY lastDate DESC";
         $query = $em->createQuery($dql)->setParameter('id', $userId);
         $r = $query->getResult();
+        $d =
+        "SELECT t1.id as threadId, u.id as userId, CONCAT(u.firstName, CONCAT(' ', u.lastName)) as userName
+        FROM NetworkStoreBundle:Thread t1
+        JOIN t1.userThreads ut
+        JOIN t1.userThreads ut2
+        JOIN ut.user u
+        WHERE t1.type = :dialogType AND ut.user != :userId AND ut2.user = :userId";
+        $query = $em->createQuery($d)
+            ->setParameter('dialogType', ThreadEnumType::T_DIALOG)
+            ->setParameter('userId', $userId);
+        $rr = $query->getResult();
+        $w = [];
+        foreach ($rr as $v) {
+            $w[$v['threadId']] = ['userId' => $v['userId'], 'userName' => $v['userName']];
+        }
 
-        return $r;
+        return ['items' => $r, 'helpMap' => $w];
     }
 
     public function getUnreadPostsByUser($threadId, $userId)
@@ -86,6 +102,18 @@ class ThreadRepository extends EntityRepository
             ->setParameter('thread_id', $threadId);
 
         return $query->getOneOrNullResult();
+    }
+
+    public function getUsersInThread($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "SELECT u.id, u.firstName, u.lastName FROM NetworkStoreBundle:User u INDEX BY u.id
+                JOIN u.userThreads ut
+                WHERE ut.thread = :thread_id";
+        $query = $em->createQuery($dql)
+            ->setParameter('thread_id', $threadId);
+
+        return $query->getArrayResult();
     }
 
     public function checkPermission($threadId, $userId)

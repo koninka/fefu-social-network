@@ -4,6 +4,8 @@ namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use Network\StoreBundle\DBAL\ThreadEnumType;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * thread
@@ -29,8 +31,13 @@ class Thread
      */
     private $topic;
 
-
-
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="type", type="threadEnumType")
+     * @Assert\NotBlank()
+     */
+    private $type = ThreadEnumType::T_DIALOG;
     /**
      * Get id
      *
@@ -41,7 +48,25 @@ class Thread
         return $this->id;
     }
 
+    /**
+     * @return string
+     */
+    public function getType()
+    {
+        return $this->type;
+    }
 
+    /**
+     * @param string $type
+     *
+     * @return Thread
+     */
+    public function setType($type)
+    {
+        $this->type = $type;
+
+        return $this;
+    }
     /**
      * Set topic
      *
@@ -121,12 +146,13 @@ class Thread
      * Create UserThread Entity that used as link
      *
      * @param \Network\StoreBundle\Entity\User $user
+     * @param integer $inviter
      *
      * @return Thread
      */
-    public function addUser(\Network\StoreBundle\Entity\User $user)
+    public function addUser(\Network\StoreBundle\Entity\User $user, $inviter)
     {
-        $userThread = new UserThread($user, $this);
+        $userThread = new UserThread($user, $this, $inviter);
 
         return $this;
     }
@@ -164,7 +190,7 @@ class Thread
     /**
      * @param UserThread $userThread
      *
-     * @return $this
+     * @return Thread
      */
     public function addUserThread($userThread)
     {

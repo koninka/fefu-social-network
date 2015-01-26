@@ -573,7 +573,7 @@ class User extends BaseUser
      */
     public function addThread(\Network\StoreBundle\Entity\Thread $thread)
     {
-        $userThread = new UserThread($this, $thread);
+        $userThread = new UserThread($this, $thread, $this->getId());
 
         return $this;
     }

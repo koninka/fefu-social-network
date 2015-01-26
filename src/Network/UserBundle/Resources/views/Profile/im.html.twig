@@ -6,6 +6,7 @@
     <link href="{{ asset('bundles/sonatacore/vendor/select2/select2.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('bundles/sonataformatter/markitup/skins/sonata/style.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('bundles/sonataformatter/markitup/sets/markdown/style.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkweb/css/horizontal-menu.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -49,7 +50,7 @@
             white-space: pre;
             overflow-wrap: break-word;
         }
-        #recipient{
+        .extended-select {
             width:40%;
         }
         #post-text {
@@ -58,6 +59,20 @@
         .unread-post {
             background: #cee2d3;
         }
+        .inline-block {
+            display: inline-block;
+        }
+        #tabs-list li .ui-icon-close {
+            float: left;
+            cursor: pointer;
+        }
+        #tabs-list li a {
+            float: left;
+        }
+        .selected-thread {
+            background: #46ead6;
+        }
+
     </style>
 
     <div id="post" style="display: none;">
@@ -74,28 +89,88 @@
         <input id="open-thread" type="button" class="blue_button" value="Show Thread" style="display:inline-block;"/>
         <div id="unreadPosts" style="display:inline-block;"></div>
     </div>
-
-    <div><div>
-        <div id="thread-list-wrapper">
-            <h1>Threads</h1>
-            <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
-            <div id="thread-list">
+    <div id="im-menu" class="horizontal-menu" style="display:block;">
+        <ul>
+            <li id="show-thread-list">
+                <a>{{ 'IM.show.thread_list' | trans }}</a>
+            </li>
+            <li id="show-opened-threads" style="display: none;">
+                <a>{{ 'IM.opened.threads' | trans }}</a>
+            </li>
+            <li id="im-menu-actions" style="display: none;">
+                <a>{{ 'im.actions' | trans }}</a>
+                <ul>
+                    <li id="add-user-action">
+                        <a>{{ 'conference.add.user' | trans }}</a>
+                    </li>
+                    <li id="kick-user-action">
+                        <a>{{ 'conference.kick.user' | trans }}</a>
+                    </li>
+                    <li id="new-topic-action">
+                        <a>{{ 'conference.new_topic' | trans }}</a>
+                    </li>
+                    <li id="leave-conference-action">
+                        <a>{{ 'conference.leave' | trans }}</a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+    <div>
+        <div>
+            <div id="add-user-wrapper" style="display:none;">
+                <input id="add-user-list" class="extended-select"/>
+                <input type="button" class="blue_button inline-block" id="add-user-apply" value="{{ 'IM.add.user' | trans }}"/>
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="add-user-cancel">{{ 'IM.add.user.cancel' | trans }}</span>
             </div>
-        </div>
-        <div id="posts-wrapper" style="display:none;">
-            <div id="posts" style="display: none;">
+            <div id="kick-user-wrapper" class="vdolgah_wrapper" style="display:none;">
+                <input id="kick-user-list" class="extended-select"/>
+                <input type="button" class="blue_button inline-block" id="kick-user-apply" value="{{ 'IM.kick.user' | trans }}"/>
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="kick-user-cancel">{{ 'IM.kick.user.cancel' | trans }}</span>
             </div>
-
-            <div id="post-form" class="markItUp markdown" style="display: none; margin-top: 4px;">
-                <textarea id="post-text" cols="80" rows="10"></textarea>
-                <div id="custom-recipient" style="display: none;">
-                    <label for="recipient">Recipient</label>
-                    <input id="recipient" />
+            <div id="new-topic-wrapper" class="vdolgah_wrapper" style="display:none;">
+                <input id="new-topic-field"/>
+                <input type="button" class="blue_button inline-block" id="new-topic-apply" value="{{ 'IM.new_topic.apply' | trans }}" />
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="new-topic-cancel">{{ 'IM.new_topic.cancel' | trans }}</span>
+            </div>
+            <div id="thread-list-wrapper" class="vdolgah_wrapper">
+                <h1>Threads</h1>
+                <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
+                <div id="thread-list">
                 </div>
-                <input type="button" class="blue_button" id="send" value="Send"/>
+            </div>
+            <div id="thread-tabs" class="horizontal-menu" style="display: none;">
+                <ul id="tabs-list" style="z-index: 99;">
+                    <!--<li><a>opened thread 1</a></li>-->
+                </ul>
+            </div>
+            <div id="posts-wrapper" class="vdolgah_wrapper" style="display:none;">
+                <div id="posts">
+                </div>
+
+                <div id="post-form" class="markItUp markdown" style="margin-top: 4px;">
+                    <textarea id="post-text" cols="80" rows="10"></textarea>
+                    <div id="custom-recipient" style="display: none;">
+                        <label for="recipient">{{ 'IM.recipient' | trans}}</label>
+                        <input id="recipient" class="extended-select"/>
+                    </div>
+                    <div id="conference-topic-div" style="display: none;">
+                        <label for="conference-topic">{{ 'conference.topic' | trans }}</label>
+                        <input type="text" id="conference-topic"/>
+                    </div>
+                    <input type="button" class="blue_button" id="send" value="{{ 'IM.send' | trans }}"/>
+                </div>
             </div>
         </div>
-    </div></div>
+    </div>
+    <div id="dialog-leave-conference-confirm" style="width:700px;" title="{{ 'IM.leave.conference.confirm.title' | trans}}"
+            yes="{{ 'IM.leave.conference.confirm.yes' | trans }}"
+            no="{{ 'IM.leave.conference.confirm.no' | trans  }}">
+        <p>
+            <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
+            {{ 'IM.leave.conference.confirm.text' | trans }}
+        </p>
+    </div>
     <script>
 
         $(function(){

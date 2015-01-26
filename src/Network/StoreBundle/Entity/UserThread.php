@@ -33,13 +33,21 @@ class UserThread
     private $unreadPosts = 0;
 
     /**
-     * @param User   $user
-     * @param Thread $thread
+     * @var integer
+     * @ORM\Column(name="inviter", type="integer")
      */
-    public function __construct($user, $thread)
+    private $inviter;
+
+    /**
+     * @param User    $user
+     * @param Thread  $thread
+     * @param integer $inviter
+     */
+    public function __construct($user, $thread, $inviter)
     {
         $this->user = $user;
         $this->thread = $thread;
+        $this->inviter = $inviter;
         $user->addUserThread($this);
         $thread->addUserThread($this);
     }
@@ -70,6 +78,13 @@ class UserThread
         return $this->user;
     }
 
+    /**
+     * @return integer
+     */
+    public function getInviter()
+    {
+        return $this->inviter;
+    }
     /**
      * @return Thread
      */

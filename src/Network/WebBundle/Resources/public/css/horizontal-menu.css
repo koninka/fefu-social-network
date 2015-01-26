@@ -1,0 +1,57 @@
+.horizontal-menu {
+    text-align: center;
+}
+
+.horizontal-menu ul ul {
+    display: none;
+}
+
+.horizontal-menu ul li:hover > ul {
+    display: block;
+}
+
+.horizontal-menu ul {
+    background: #f2f5f6;
+    padding: 0 20px;
+    list-style: none;
+    position: relative;
+    display: inline-table;
+    z-index: 100;
+}
+
+.horizontal-menu ul:after {
+    content: "";
+    clear: both;
+    display: block;
+}
+
+.horizontal-menu ul li {
+    float: left;
+    cursor: pointer;
+}
+.horizontal-menu ul li:hover {
+    background: #e6e9ea;
+}
+
+.horizontal-menu ul li a {
+    display: block;
+    padding: 2px 5px;
+    color: #3f6285;
+    text-decoration: none;
+}
+
+.horizontal-menu ul ul {
+    padding: 0;
+    position: absolute;
+    top: 100%;
+}
+.horizontal-menu ul ul li {
+    float: none;
+    position: relative;
+}
+
+.horizontal-menu ul ul ul {
+    position: absolute;
+    left: 100%;
+    top:0;
+}
