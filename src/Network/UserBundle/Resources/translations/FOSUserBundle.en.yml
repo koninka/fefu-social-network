@@ -48,6 +48,7 @@ profile:
         send_friendship_request: Add to friends
         unsubscribe: Unsubscribe
         albums: All albums
+        photos: All photos
     edit:
         link:
             add:

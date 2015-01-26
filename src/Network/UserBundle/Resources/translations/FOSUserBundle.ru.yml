@@ -48,6 +48,7 @@ profile:
         send_friendship_request: Добавить в друзья
         unsubscribe: Отписаться
         albums: Все альбомы
+        photos: Все фото
     edit:
         link:
             add:
