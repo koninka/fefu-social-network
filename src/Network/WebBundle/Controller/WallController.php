@@ -12,11 +12,14 @@ use Network\StoreBundle\Entity\Post;
 use Network\StoreBundle\Entity\Thread;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
+use Network\StoreBundle\Entity\Poll;
+use Network\UserBundle\Form\Type\PollType;
 
 class WallController extends Controller
 {
-    const LAZY_LOAD_PATCH_SIZE = 10;
+    const LAZY_LOAD_PATCH_SIZE = 5;
 
     /**
      * @param string $objectType
@@ -51,14 +54,13 @@ class WallController extends Controller
         if (null === $wall) {
             throw new \Exception('Wrong object or id');
         }
-
         return $this->render('NetworkWebBundle:Wall:main.html.twig', [
             'wall' => $wall,
             'object' => $object,
             'patchSize' => static::LAZY_LOAD_PATCH_SIZE,
         ]);
     }
-
+         
     public function writeAction(Request $request, $type, $id)
     {
         $user = $this->getUser();
@@ -78,12 +80,11 @@ class WallController extends Controller
 
         $data = json_decode($request->getContent(), true);
 
-        if (null === $data || !array_key_exists('msg', $data)) {
+        if (null === $data || (!array_key_exists('msg', $data) && (!array_key_exists('poll', $data)))) {
             return new JsonResponse([
                 'status' => 'badMsg',
             ]);
         }
-
         $threadId = array_key_exists('threadId', $data) ? $data['threadId'] : -1;
         $em = $this->getDoctrine()->getManager();
         $post = new Post();
@@ -101,11 +102,26 @@ class WallController extends Controller
                                ->getRepository('NetworkStoreBundle:Thread')
                                ->find($threadId);
         }
-
         $post->setUser($user)
              ->setTs(new \DateTime())
-             ->setThread($wallThread)
-             ->setText($data['msg']);
+             ->setThread($wallThread);
+        $isPoll = false;
+        if (array_key_exists('poll', $data)) {
+            $pollId = $data['poll'];
+            $poll = $this->getDoctrine()->getRepository('NetworkStoreBundle:Poll')->find($pollId);
+            if (null === $poll) {
+                return new JsonResponse([
+                    'status' => 'badPoll',
+                ]);
+            }
+            $poll->setPost($post);
+            $post->setText('')
+                 ->setType('poll');
+            $isPoll = true;
+        }  
+        if (array_key_exists('msg', $data)) {
+            $post->setText($data['msg']);
+        }
 
         $wallThread->addPost($post);
 
@@ -121,6 +137,7 @@ class WallController extends Controller
             'thread_id' => $wallThread->getId(),
             'post_id' => $post->getId(),
             'new_thread' => $newThread,
+            'is_poll' => $isPoll,
         ]);
     }
 
@@ -155,6 +172,7 @@ class WallController extends Controller
                           || $wallThread->getPosts()[0] == $post;
 
             $wallThread->removePost($post);
+            $em->remove($post);
             $em->remove($post);
 
             if ($threadDied) {
@@ -215,6 +233,7 @@ class WallController extends Controller
 
             foreach ($thread->getPosts() as $post) {
                 $postUser = $post->getUser();
+                $isPoll = $post->getType() === 'poll';
 
                 $threadJsonObject['posts'][] = [
                     'user_id' => $postUser->getId(),
@@ -222,6 +241,7 @@ class WallController extends Controller
                     'username' => $postUser->getFirstName() . ' ' . $postUser->getLastName(),
                     'msg' => $post->getText(),
                     'ts' => $post->getTs(),
+                    'is_poll' => $isPoll
                 ];
             }
 

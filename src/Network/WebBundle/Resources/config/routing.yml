@@ -105,8 +105,10 @@ wall_load_posts:
     expose: true
 
 user_poll_create:
-    path:     /poll
-    defaults: { _controller: NetworkWebBundle:Poll:create }
+  path:     /poll/
+  defaults: { _controller: NetworkWebBundle:Poll:create }
+  options:
+    expose: true
 
 user_poll_edit:
     path:     /poll{id}/edit
@@ -121,7 +123,15 @@ user_poll_delete:
        id: \d+
 
 user_poll:
-    path:     /poll{id}/
-    defaults: { _controller: NetworkWebBundle:Poll:poll }
-    requirements:
-       id: \d+
+  path:     /poll{id}/
+  defaults: { _controller: NetworkWebBundle:Poll:poll }
+  requirements:
+    id: \d+
+  options:
+    expose: true
+    
+users_poll:
+  path: /users/poll
+  defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }
+  options:
+    expose: true

@@ -25,7 +25,7 @@
                 newWidget = newWidget.replace(/__name__/g, answerCount);
                 addAnswer(newWidget);
             }); 
-            $.fn.serializeObject = function(){
+            $.fn.nullObject = function(){
                 var o = {};
                 var a = this.serializeArray();
                 $.each(a, function() {
@@ -33,14 +33,13 @@
                         if (!o[this.name].push) {
                             o[this.name] = [o[this.name]];
                         }
-                        o[this.name].push(this.value || '');
+                        o[this.name].push('');
                     } else {
-                        o[this.name] = this.value || '';
+                        o[this.name] = '';
                     }
                 });
                 return o;
             };
-
        });
     </script>
     <div>
@@ -71,7 +70,6 @@
                 <button class="blue_button"  type="button" id="add-answer">Add answer</button>
             </div>
             <div>
-                <input id="submit" class="blue_button" type="submit" value="{{ 'poll.submit'|trans }}" />
             </div>
             {% do form.answers.setRendered %}
         {{ form_end(form) }}

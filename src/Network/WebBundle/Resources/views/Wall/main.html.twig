@@ -9,24 +9,28 @@
 
     <script src="{{ asset('bundles/networkweb/js/moment.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/wall_poster.js') }}"></script>
-
 {% endblock %}
 
 {% block stylesheets %}
     <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 <div id="wall">
     <div>
         <div>
-            <form>
+            <form id='form' method="post">
                 <label for="msg_input">What's new?</label>
                 <input type="text" id="msg_input">
                 <button id="tell_btn">Tell!</button>
                 <button id="show_my_btn">Only my</button>
+                <button id="create_poll">create poll</button>
             </form>
+            <div id="poll_form" class="form_poll">
+                {{ render(controller('NetworkWebBundle:Poll:create')) }}
+            </div>
+                   
         </div>
-
         <div id="posts">
             {% for thread in wall | reverse | slice(0, patchSize) %}
                 {% set post = thread.getPosts[0] %}
@@ -57,7 +61,12 @@
                     </div>
 
                     <div class="msg">
-                        {{ post.getText }}
+                        <div>{{ post.getText }}</div>
+                        {% if post.getType == 'poll'%}
+                            <script> getPoll(JSON.stringify({
+                                        postId: {{post.getId}}}))</script>
+                        {% endif %}
+                            
                     </div>
 
                     {% set commentsCount = thread.getPosts|length - 1%}
@@ -107,5 +116,7 @@
                 </div>
             {% endfor %}
         </div>
+    </div>
+    <div id="poll_post" class="poll_post" style="display:none">
     </div>
 </div>
