@@ -33,7 +33,7 @@
                                 <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.accept_request'|trans }}</a>
                                 <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.reject_request'|trans }}</a>
                             {% endif %}
-                        {% endif %}      
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
@@ -45,13 +45,13 @@
                             {% if is_cur_user %}
                                 <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.cancel_request'|trans }}</a>
                             {% endif %}
-                        {% endif %}      
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
         {% endif %}
         {% if is_cur_user %}
-            <div id="modal_form" title="Create community">
+            <div id="modal_form" title="{{ 'community.create.caption'|trans }}">
                 {{ form_start(form) }}
                     {{ form_errors(form) }}
                     <div>

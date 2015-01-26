@@ -10,11 +10,24 @@ use Network\StoreBundle\DBAL\TypeCommunityEnumType;
 
 class CreateCommunityType extends AbstractType
 {
+
+    public function prepareChoice()
+    {
+        $res = [];
+        $arr = Type::getType('viewCommunityEnumType')->getChoices();
+        foreach($arr as $key => $value) {
+            $res[$key] = 'form.community.view_type.'.$key;
+        }
+
+        return $res;
+    }
+
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('name', 'text', []);
+        $builder->add('name', 'text', ['label' => 'community.create.name']);
         $builder->add('view', 'choice', [
-            'choices' => Type::getType('viewCommunityEnumType')->getChoices()
+            'choices' => $this->prepareChoice(),
+            'label' => 'community.create.view',
         ]);
     }
 
@@ -22,7 +35,8 @@ class CreateCommunityType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\Community',
-            'cascade_validation'  => true,
+            'cascade_validation' => true,
+            'translation_domain' => 'FOSUserBundle',
         ]);
     }
 

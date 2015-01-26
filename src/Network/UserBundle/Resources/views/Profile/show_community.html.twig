@@ -13,18 +13,15 @@
 {% block right_content %}
     <div>
         <div>
-        {{ 'community.show.name'|trans }}: {{ community.name }}
-        <br>
-        {{ community.type }}
-        <br>
-        {% if community.description %}
-            {{ 'community.show.description'|trans }}: {{ community.description }}
-        {% endif %}
-        <br>
-        {% if is_owner  %}
-             <a class="blue_button" href="{{ path('user_edit_community', {'id':community.id} ) }}">{{ 'community.edit_community'|trans }}</a>
-             <a class="gray_button" href="{{ path('user_delete_community', {'id':community.id} ) }}">{{ 'community.delete'|trans }}</a>
-        {% endif %}
+            <p>{{ 'community.show.name'|trans }}: {{ community.name }}</p>
+            <p>{{ 'community.show.type'|trans }}: {{ community.type }}</p>
+            {% if community.description %}
+                <p>{{ 'community.show.description'|trans }}: {{ community.description }}</p>
+            {% endif %}
+            {% if is_owner %}
+                 <p><a class="blue_button" href="{{ path('user_edit_community', {'id':community.id} ) }}">{{ 'community.edit_community'|trans }}</a></p>
+                 <p><a class="gray_button" href="{{ path('user_delete_community', {'id':community.id} ) }}">{{ 'community.delete'|trans }}</a></p>
+            {% endif %}
          </div>
      </div>
     <div>
@@ -50,7 +47,7 @@
             <a href="{{ path('user_profile', {'id':community.owner.id} ) }}">{{ community.owner.firstName }} {{ community.owner.lastName }}</a>
         </div>
     </div>
-    <div id="modal_form" >
+    <div id="modal_form">
         {% if friends or friends_invitee %}
             <div>
                 {% if friends %}
@@ -72,7 +69,7 @@
             </div>
         {% else %}
             <div>
-                <p> You have no friends or all your friends are made in this group</p>
+                <p>{{ 'form.msg.community.invite.nobody'|trans }}</p>
             </div>
         {% endif %}
     </div>
@@ -90,11 +87,11 @@
             </div>
         {% else %}
             <div>
-                <p> In the community has no members </p>
+                <p>{{ 'form.msg.community.empty'|trans }}</p>
             </div>
         {% endif %}
     </div>
-     <div id="modal_form_application" >
+     <div id="modal_form_application">
         {% if asking %}
             <div>
                 {% for request in asking%}
@@ -107,7 +104,7 @@
             </div>
         {% else %}
             <div>
-                <p> No requests to join the community </p>
+                <p>{{ 'form.msg.community.join_requests.nobody'|trans }}</p>
             </div>
         {% endif %}
     </div>
