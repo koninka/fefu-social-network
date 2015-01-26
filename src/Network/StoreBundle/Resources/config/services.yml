@@ -37,6 +37,11 @@ services:
   network.store.community_service:
       class: Network\StoreBundle\Service\CommunityService
       arguments: ["@doctrine.orm.entity_manager"]
+      
   network.store.poll_service:
       class: Network\StoreBundle\Service\PollService
+      arguments: ["@doctrine.orm.entity_manager"] 
+      
+  network.store.like_service:
+      class: Network\StoreBundle\Service\LikeService
       arguments: ["@doctrine.orm.entity_manager"]
