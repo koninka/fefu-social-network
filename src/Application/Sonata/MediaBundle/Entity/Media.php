@@ -62,6 +62,7 @@ class Media extends BaseMedia
     public function __construct()
     {
         $this->galleryHasMedias = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->likes = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     /**
@@ -96,5 +97,50 @@ class Media extends BaseMedia
     {
         return $this->galleryHasMedias;
     }
+    
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="\Network\StoreBundle\Entity\User", cascade="persist")
+     * @ORM\JoinTable(name="media_like",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="post_id", referencedColumnName="id")}
+     * )
+     */
+    private $likes;
+
+    /**
+     * Add likes
+     *
+     * @param \Network\StoreBundle\Entity\User $likes
+     * @return Post
+     */
+    public function addLike(\Network\StoreBundle\Entity\User $likes)
+    {
+        $this->likes[] = $likes;
+
+        return $this;
+    }
+
+    /**
+     * Remove likes
+     *
+     * @param \Network\StoreBundle\Entity\User $likes
+     */
+    public function removeLike(\Network\StoreBundle\Entity\User $likes)
+    {
+        $this->likes->removeElement($likes);
+    }
+
+    /**
+     * Get likes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLikes()
+    {
+        return $this->likes;
+    }
+
 
 }
