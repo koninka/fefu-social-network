@@ -15,6 +15,8 @@ class JobType extends BaseType
             'attr' => [
                 'class' => 'vdolgah_searchable_field_by_name',
             ],
+            'label' => 'form.post',
+            'translation_domain' => 'FOSUserBundle',
         ]);
     }
 

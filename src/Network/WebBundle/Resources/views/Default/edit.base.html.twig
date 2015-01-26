@@ -1,5 +1,5 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
 
@@ -14,19 +14,19 @@
 
                 <li>
                     <a href="{{ path('fos_user_profile_edit') }}">
-                        Profile
+                        {{ 'form.profile.name'|trans }}
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ path('user_edit_contact') }}">
-                        ContactInfo
+                        {{ 'form.contact.name'|trans }}
                     </a>
                 </li>
 
                 <li>
                     <a href="{{ path('user_jobs_profile') }}">
-                        Jobs
+                        {{ 'form.job.name'|trans }}
                     </a>
                 </li>
 
