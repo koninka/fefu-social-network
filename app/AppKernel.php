@@ -30,6 +30,7 @@ class AppKernel extends Kernel
             new Network\OAuthBundle\NetworkOAuthBundle(),
             new FOS\JsRoutingBundle\FOSJsRoutingBundle(),
             new JMS\SerializerBundle\JMSSerializerBundle(),
+            new Network\StatisticBundle\NetworkStatisticBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

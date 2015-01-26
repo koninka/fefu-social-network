@@ -25,7 +25,8 @@
         "friendsofsymfony/user-bundle": "dev-master",
         "hwi/oauth-bundle": "0.3.*@dev",
         "friendsofsymfony/jsrouting-bundle": "@stable",
-        "jms/serializer-bundle" : "@stable"
+        "jms/serializer-bundle" : "@stable",
+        "wrench/wrench": "dev-master"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

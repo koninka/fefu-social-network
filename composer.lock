@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "42ee9532c15521b6770a2f0cd63f6dc5",
+    "hash": "efe601b072333ebdc6b0b8162b06531a",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -2830,6 +2830,65 @@
             ],
             "description": "JSONP callback validator.",
             "time": "2014-01-20 22:35:06"
+        },
+        {
+            "name": "wrench/wrench",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/varspool/Wrench.git",
+                "reference": "964e69bfc8d1cfa7df95fd284265be1fdbb198e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/varspool/Wrench/zipball/964e69bfc8d1cfa7df95fd284265be1fdbb198e8",
+                "reference": "964e69bfc8d1cfa7df95fd284265be1fdbb198e8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sockets": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Wrench": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Dominic Scheirlinck",
+                    "email": "dominic@varspool.com",
+                    "homepage": "http://www.somethingemporium.com/"
+                },
+                {
+                    "name": "Simon Samtleben",
+                    "email": "web@lemmingzshadow.net",
+                    "homepage": "http://lemmingzshadow.net/"
+                },
+                {
+                    "name": "Nico Kaiser",
+                    "email": "nico@kaiser.me",
+                    "homepage": "http://siriux.net/"
+                }
+            ],
+            "description": "PHP WebSocket client/server library",
+            "homepage": "http://github.com/varspool/Wrench",
+            "keywords": [
+                "WebSockets",
+                "hybi",
+                "websocket"
+            ],
+            "time": "2014-11-19 11:43:44"
         }
     ],
     "packages-dev": [
@@ -2960,9 +3019,11 @@
         "friendsofsymfony/user-bundle": 20,
         "hwi/oauth-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 0,
-        "jms/serializer-bundle": 0
+        "jms/serializer-bundle": 0,
+        "wrench/wrench": 20
     },
     "prefer-stable": false,
+    "prefer-lowest": false,
     "platform": {
         "php": ">=5.3.3"
     },

@@ -1,0 +1,12 @@
+network_statistic_home:
+    path:     /admin/parse
+    defaults: { _controller: NetworkStatisticBundle:Parse:home }
+
+network_statistic_parse:
+    path:     /admin/parse/{startYear}/{endYear}
+    defaults: { _controller: NetworkStatisticBundle:Parse:parse }
+    requirements:
+        _method: GET
+        startYear: \d+
+        endYear: \d+
+
