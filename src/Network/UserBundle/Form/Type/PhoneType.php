@@ -12,6 +12,7 @@ class PhoneType extends AbstractType
     {
         $builder->add('phonenumber', 'text', [
             'error_bubbling' => true,
+            'label' => 'form.contact.phone.name'
         ]);
     }
 
@@ -19,7 +20,8 @@ class PhoneType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\Phonenumber',
-            'cascade_validation'  => true,
+            'cascade_validation' => true,
+            'translation_domain' => 'FOSUserBundle',
         ]);
     }
 
