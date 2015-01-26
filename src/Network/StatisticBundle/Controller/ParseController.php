@@ -45,6 +45,12 @@ class ParseController extends Controller
         return $this->render('NetworkStatisticBundle:Parse:home.html.twig');
     }
 
+    public function calcAction()
+    {
+        $this->get('network_statistic.achievement_manager')->calcAchievements();
+        return $this->render('NetworkStatisticBundle:Parse:ok.html.twig');
+    }
+
     public function parseAction($startYear, $endYear)
     {
         set_time_limit(0);
@@ -322,6 +328,6 @@ class ParseController extends Controller
         $em->flush();
 
 
-        return $this->render('NetworkStatisticBundle:Parse:parse.html.twig');
+        return $this->render('NetworkStatisticBundle:Parse:ok.html.twig');
     }
 }

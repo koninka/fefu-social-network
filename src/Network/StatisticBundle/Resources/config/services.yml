@@ -1,4 +1,4 @@
 services:
-#    network_statistic.example:
-#        class: Network\StatisticBundle\Example
-#        arguments: [@service_id, "plain_value", %parameter%]
+    network_statistic.achievement_manager:
+        class: Network\StatisticBundle\Service\AchievementManager
+        arguments: [ "@doctrine.orm.entity_manager" ]

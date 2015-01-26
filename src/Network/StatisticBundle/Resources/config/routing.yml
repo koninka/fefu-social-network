@@ -10,3 +10,6 @@ network_statistic_parse:
         startYear: \d+
         endYear: \d+
 
+network_statistic_calc_achievements:
+    path:     /admin/parse/calc
+    defaults: { _controller: NetworkStatisticBundle:Parse:calc }
