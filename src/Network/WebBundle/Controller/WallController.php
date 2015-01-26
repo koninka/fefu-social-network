@@ -117,7 +117,7 @@ class WallController extends Controller
             'msg' => $post->getText(),
             'user_id' => $user->getId(),
             'ts' => $post->getTs(),
-            'username' => $user->getUsername(),
+            'username' => $user->getFirstName() . ' ' . $user->getLastName(),
             'thread_id' => $wallThread->getId(),
             'post_id' => $post->getId(),
             'new_thread' => $newThread,
