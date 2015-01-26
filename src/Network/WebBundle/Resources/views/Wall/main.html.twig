@@ -27,7 +27,7 @@
         </div>
 
         <div id="posts">
-            {% for thread in wall | reverse %}
+            {% for thread in wall | reverse | slice(0, patchSize) %}
                 <div class="post" id="thread_{{ thread.getId }}">
                     {% set post = thread.getPosts[0] %}
 

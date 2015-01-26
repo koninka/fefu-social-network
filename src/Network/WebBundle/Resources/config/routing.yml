@@ -93,3 +93,13 @@ wall_delete:
       post_id: \d+
   options:
     expose: true
+
+wall_load_posts:
+  path: /{type}/id{id}/load/{start}
+  defaults: { _controller: NetworkWebBundle:Wall:loadPosts }
+  requirements:
+    type: user|club
+    id: \d+
+    start: \d+
+  options:
+    expose: true
