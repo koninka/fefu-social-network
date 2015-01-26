@@ -23,14 +23,15 @@
                 <label for="msg_input">What's new?</label>
                 <input type="text" id="msg_input">
                 <button id="tell_btn">Tell!</button>
+                <button id="show_my_btn">Only my</button>
             </form>
         </div>
 
         <div id="posts">
-            {% for thread in wall | reverse %}
-                <div class="post" id="thread_{{ thread.getId }}">
-                    {% set post = thread.getPosts[0] %}
+            {% for thread in wall | reverse | slice(0, patchSize) %}
+                {% set post = thread.getPosts[0] %}
 
+                <div class="post{% if post.getUser.getId == app.user.getId %} my{% endif %}" id="thread_{{ thread.getId }}">
                     <div class="username">
                         <a href="{{ path('user_profile', {id: post.getUser.getId}) }}">
                             {{ [post.getUser.getFirstName, post.getUser.getLastName]|join(' ') }}

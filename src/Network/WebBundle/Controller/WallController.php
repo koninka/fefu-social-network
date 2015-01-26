@@ -16,6 +16,8 @@ use Symfony\Component\HttpFoundation\Request;
 
 class WallController extends Controller
 {
+    const LAZY_LOAD_PATCH_SIZE = 10;
+
     /**
      * @param string $objectType
      * @param int $id
@@ -53,6 +55,7 @@ class WallController extends Controller
         return $this->render('NetworkWebBundle:Wall:main.html.twig', [
             'wall' => $wall,
             'object' => $object,
+            'patchSize' => static::LAZY_LOAD_PATCH_SIZE,
         ]);
     }
 
@@ -114,7 +117,7 @@ class WallController extends Controller
             'msg' => $post->getText(),
             'user_id' => $user->getId(),
             'ts' => $post->getTs(),
-            'username' => $user->getUsername(),
+            'username' => $user->getFirstName() . ' ' . $user->getLastName(),
             'thread_id' => $wallThread->getId(),
             'post_id' => $post->getId(),
             'new_thread' => $newThread,
@@ -166,6 +169,63 @@ class WallController extends Controller
             $em->flush();
         } else {
             $responseBody['status'] = 'badPost';
+        }
+
+        return new JsonResponse($responseBody);
+    }
+
+    public function loadPostsAction($type, $id, $start)
+    {
+        $user = $this->getUser();
+        if (null === $user) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $responseBody = [
+            'status' => 'ok',
+            'threads' => [],
+        ];
+
+        $wall = $this->fetchWall($type, $id);
+
+        $reverseStartFrom = $wall->count() - $start - 1;
+
+        if ($reverseStartFrom < 0) {
+            return new JsonResponse([
+                'status' => 'nothingMore',
+            ]);
+        }
+
+        $offset = $reverseStartFrom - static::LAZY_LOAD_PATCH_SIZE + 1;
+
+        $threads = $wall->slice(
+            $offset < 0 ? 0 : $offset,
+            static::LAZY_LOAD_PATCH_SIZE + ($offset < 0 ? $offset : 0)
+        );
+
+        for ($i = count($threads) - 1; $i > -1; --$i) {
+            $thread = $threads[$i];
+
+            $threadJsonObject = [
+                'id' => $thread->getId(),
+                'posts' => [],
+            ];
+
+            foreach ($thread->getPosts() as $post) {
+                $postUser = $post->getUser();
+
+                $threadJsonObject['posts'][] = [
+                    'user_id' => $postUser->getId(),
+                    'post_id' => $post->getId(),
+                    'username' => $postUser->getFirstName() . ' ' . $postUser->getLastName(),
+                    'msg' => $post->getText(),
+                    'ts' => $post->getTs(),
+                ];
+            }
+
+            $responseBody['threads'][] = $threadJsonObject;
         }
 
         return new JsonResponse($responseBody);
