@@ -24,12 +24,11 @@
                 <input type="text" id="msg_input">
                 <button id="show_my_btn">{{ 'wall.only_my'|trans }}</button>
                 <button id="tell_btn">{{ 'wall.say'|trans }}</button>
-                <button id="create_poll">create poll</button>
+                <button id="create_poll">{{ 'poll.create'|trans }}</button>
             </form>
             <div id="poll_form" class="form_poll">
                 {{ render(controller('NetworkWebBundle:Poll:create')) }}
             </div>
-                   
         </div>
         <div id="like_post" class="like" style="display:none">
             <div>

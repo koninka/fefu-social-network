@@ -175,6 +175,13 @@ wall:
     comment:
         submit: Comment
 
+# Poll
+poll:
+    create: Create poll
+    add:
+        answer:
+            submit: Add poll
+
 # Message
 msg:
     not_authorized: User is not authorized.

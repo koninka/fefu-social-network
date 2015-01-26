@@ -11,15 +11,18 @@ class PollType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('question', 'textarea', []);
+        $builder->add('question', 'textarea', [
+            'label' => 'form.poll.question',
+        ]);
         $builder->add('isAnonymously', 'checkbox', [
-            'required'  => false,
-            'label' => 'Anonymously',
+            'required' => false,
+            'label' => 'form.poll.anonymously',
         ]);
         $builder->add('answers', 'collection', [
             'type' => new AnswerPollType(),
             'allow_add' => true,
             'allow_delete' => true,
+            'label' => 'form.poll.answer',
         ]);
     }
 
@@ -27,7 +30,8 @@ class PollType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\Poll',
-            'cascade_validation'  => true,
+            'cascade_validation' => true,
+            'translation_domain' => 'FOSUserBundle',
         ]);
     }
 

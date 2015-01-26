@@ -175,6 +175,13 @@ wall:
     comment:
         submit: Комментировать
 
+# Poll
+poll:
+    create: Создать опрос
+    add:
+        answer:
+            submit: Добавить ответ
+
 # Message
 msg:
     not_authorized: Пользователь не авторизован.
