@@ -125,6 +125,7 @@ function updateThreadView(threadId, topic, scroll) {
     $('#thread-tabs').show();
     $('#thread-list-wrapper').hide();
     $('#posts-wrapper').show();
+    $('#posts').show();
     $('#conference-topic-div').hide();
     lastThreadId = currentThreadId = threadId;
     var lastAuthor = "";
@@ -316,10 +317,7 @@ function InitActions() {
             xhr('thread/leave', {
                 conferenceId: currentThreadId
             }).then(function(data){
-                updateThreadList();
-                $('.vdolgah_wrapper').hide();
-                $('#im-menu-actions').hide();
-                $('#thread-list-wrapper').show();
+                removeTab(data.conferenceId);
             });
         };
         buttons[no_button] = function(){
@@ -422,7 +420,6 @@ function InitIM(partnerId, partnerName) {
     $('#compose-post').click(function (e) {
         $('#thread-list-wrapper').hide();
         $('#posts').hide();
-        $('#post-form').show();
         $('#post-form>#custom-recipient').show();
         $('#posts-wrapper').show();
         $('#post-text').val('');

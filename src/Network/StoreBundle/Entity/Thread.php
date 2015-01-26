@@ -59,7 +59,7 @@ class Thread
     /**
      * @param string $type
      *
-     * @return $this
+     * @return Thread
      */
     public function setType($type)
     {
@@ -190,7 +190,7 @@ class Thread
     /**
      * @param UserThread $userThread
      *
-     * @return $this
+     * @return Thread
      */
     public function addUserThread($userThread)
     {
