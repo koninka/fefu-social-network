@@ -1,10 +1,15 @@
 var postsCount = 0;
 var allPostsLoaded = false;
 var lazyLoadRequestSent = false;
+var onlyMyDisplayed = false;
 
 function createPost(user_id, thread_id, post_id, username, msg, ts)
 {
     var postContainer = $('<div class="post" id="thread_' + thread_id + '"></div>');
+    if (user_id == userId) {
+        $(postContainer).addClass('my');
+    }
+
     var usernameContainer = $('<div class="username"></div>');
     var tsContainer = $('<div class="timestamp"></div>');
     var msgContainer = $('<div class="msg"></div>');
@@ -284,6 +289,28 @@ $(document).on('ready', function () {
 
                 lazyLoadRequestSent = true;
             }
+        }
+    });
+
+    $('#show_my_btn').click(function (e) {
+        e.preventDefault();
+
+        onlyMyDisplayed = !onlyMyDisplayed;
+
+        $('.post').each(function (_, el) {
+            if (!$(this).hasClass('my')) {
+                if (onlyMyDisplayed) {
+                    $(this).hide();
+                } else {
+                    $(this).show()
+                }
+            }
+        });
+
+        if (onlyMyDisplayed) {
+            $(this).text('All');
+        } else {
+            $(this).text('Only my');
         }
     });
 
