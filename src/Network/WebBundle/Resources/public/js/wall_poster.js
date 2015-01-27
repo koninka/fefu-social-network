@@ -172,8 +172,8 @@ function handleLoadPostsResponse(data, textStatus, jqXHR)
                 postData['post_id'],
                 postData['username'],
                 postData['msg'],
-                fixDate(postData['ts'], 
-                postData['is_poll'])
+                fixDate(postData['ts']), 
+                postData['is_poll']
             );
 
             var commentsContainer = post.find('.comments');
