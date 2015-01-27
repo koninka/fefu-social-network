@@ -79,7 +79,7 @@ function addLike(postEdit, id, clas)
 }
 
 function mediaLike (post_id) {
-    var postEdit = $('.like').clone();
+    var postEdit = $('#like_post').clone();
     postEdit.show();
     var msgContainer = $('#' + post_id + '_like');
     addLike(postEdit, post_id, 'media');
