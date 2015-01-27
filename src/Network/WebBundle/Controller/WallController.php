@@ -172,9 +172,11 @@ class WallController extends Controller
                           || $wallThread->getPosts()[0] == $post;
 
             $wallThread->removePost($post);
-            $em->remove($this->getDoctrine()
-                    ->getRepository('NetworkStoreBundle:PollAnswer')
-                    ->getPoll($post->getId())[0]);
+            if ($post->getType() == 'poll') {
+                $em->remove($this->getDoctrine()
+                        ->getRepository('NetworkStoreBundle:PollAnswer')
+                        ->getPoll($post->getId())[0]);
+            }
             $em->remove($post);
 
             if ($threadDied) {
