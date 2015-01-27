@@ -3,6 +3,7 @@
 namespace Network\StatisticBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Network\StoreBundle\Entity\User;
 
 /**
  * @ORM\Table(name="parsed_students")
@@ -18,6 +19,11 @@ class ParsedStudent
      *
      */
     private $id;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Network\StoreBundle\Entity\User")
+     */
+    protected $user;
 
     /**
      * @var string
@@ -96,6 +102,22 @@ class ParsedStudent
     public function __construct($id)
     {
         $this->id = $id;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getUser()
+    {
+        return $this->user;
+    }
+
+    /**
+     * @param mixed $user
+     */
+    public function setUser($user)
+    {
+        $this->user = $user;
     }
 
 }

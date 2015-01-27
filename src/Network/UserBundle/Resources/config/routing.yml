@@ -61,6 +61,16 @@ user_show_friends:
     requirements:
        id: \d+
 
+user_profile_show_achievements:
+    path: /profile/achievements
+    defaults: { _controller: NetworkUserBundle:Achievement:showProfileAchievements }
+
+user_show_achievements:
+    path: /id{id}/achievements
+    defaults: { _controller: NetworkUserBundle:Achievement:showAchievements }
+    requirements:
+           id: \d+
+
 user_profile_show_messages:
     path: /im
     defaults: { _controller: NetworkUserBundle:Profile:showIM }

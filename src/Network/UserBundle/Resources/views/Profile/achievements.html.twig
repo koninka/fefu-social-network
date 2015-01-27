@@ -1,0 +1,44 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/achievements.js') }}"></script>
+{% endblock %}
+{% block right_content %}
+    <div>
+        {% if is_cur_user %}
+        <div>
+            <h1>Выбрать студента из базы</h1>
+            <label for="search_input">Поиск по имени:</label>
+            <input id="search_input">
+            <button id="search_btn" class="blue_button">Искать</button>
+            <div id="search_results">
+
+            </div>
+        </div>
+        {% endif %}
+        {% if achievements %}
+            <div>
+                <h1>Достижения</h1>
+                <table>
+                    <tr>
+                        <td>Название</td>
+                        <td>Описание</td>
+                    </tr>
+
+                    {% for achievement in achievements %}
+                        <tr>
+                            <td>{{ achievement.name }}</td>
+                            <td>{{ achievement.description }}</td>
+                        </tr>
+                    {% endfor %}
+                </table>
+            </div>
+        {% else %}
+            <div>
+                Достижений нет
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

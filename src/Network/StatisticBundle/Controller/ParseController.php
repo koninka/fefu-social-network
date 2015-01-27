@@ -91,12 +91,14 @@ class ParseController extends Controller
         $em = $this->getDoctrine()->getManager();
 
         //clear tables
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedTask')->execute();
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedCourse')->execute();
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedCrit')->execute();
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudentMark')->execute();
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudentRating')->execute();
-//        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudent')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedTask')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedCourse')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedCrit')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudentMark')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudentRating')->execute();
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:ParsedStudent')->execute();
+
+        $em->createQuery('DELETE FROM NetworkStatisticBundle:Achievements')->execute();
 
         //got from imcs and fixed
         $groupCourses =
@@ -225,6 +227,7 @@ class ParseController extends Controller
 
         echoString('Inserting ratings...');
         $em->flush();
+        $em->clear();
 
         echoString('Inserting students...');
 
@@ -240,6 +243,7 @@ class ParseController extends Controller
             $em->persist($studentObj);
         }
         $em->flush();
+        $em->clear();
 
         echoString('Inserting tasks...');
 
@@ -254,6 +258,7 @@ class ParseController extends Controller
             $em->persist($taskObj);
         }
         $em->flush();
+        $em->clear();
 
         echoString('Inserting marks...');
 
@@ -274,10 +279,12 @@ class ParseController extends Controller
             $f++;
             if ($f % 100 == 0) {
                 $em->flush();
+                $em->clear();
                 $f = 0;
             }
         }
         $em->flush();
+        $em->clear();
 
         echoString('Inserting courses...');
 
@@ -296,10 +303,12 @@ class ParseController extends Controller
             $f++;
             if ($f % 100 == 0) {
                 $em->flush();
+                $em->clear();
                 $f = 0;
             }
         }
         $em->flush();
+        $em->clear();
 
         echoString('Inserting crits...');
 
@@ -322,6 +331,7 @@ class ParseController extends Controller
             $f++;
             if ($f % 100 == 0) {
                 $em->flush();
+                $em->clear();
                 $f = 0;
             }
         }

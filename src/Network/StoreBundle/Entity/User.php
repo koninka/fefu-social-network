@@ -8,6 +8,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 use FOS\UserBundle\Model\User as BaseUser;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Network\StatisticBundle\Entity\ParsedStudent;
 use Symfony\Component\Yaml\Tests\A;
 
 /**
@@ -28,6 +29,12 @@ class User extends BaseUser
      * NotShowInForm!
      */
     protected $id;
+
+    /**
+     * @ORM\OneToOne(targetEntity="Network\StatisticBundle\Entity\ParsedStudent", inversedBy="user")
+     * @ORM\JoinColumn(name="student_id", referencedColumnName="id")
+     */
+    protected $parsedStudent;
 
     /**
      * @var string
@@ -526,4 +533,21 @@ class User extends BaseUser
     {
         return $this->communities;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getParsedStudent()
+    {
+        return $this->parsedStudent;
+    }
+
+    /**
+     * @param mixed $parsedStudent
+     */
+    public function setParsedStudent($parsedStudent)
+    {
+        $this->parsedStudent = $parsedStudent;
+    }
+
 }

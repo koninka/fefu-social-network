@@ -13,3 +13,11 @@ network_statistic_parse:
 network_statistic_calc_achievements:
     path:     /admin/parse/calc
     defaults: { _controller: NetworkStatisticBundle:Parse:calc }
+
+network_statistic_find_student:
+    path:     /api/find_student/{name}
+    defaults: { _controller: NetworkUserBundle:Achievement:findStudent }
+
+network_statistic_set_student:
+    path:     /api/set_student/{id}
+    defaults: { _controller: NetworkUserBundle:Achievement:setStudentForUser }

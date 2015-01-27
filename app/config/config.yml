@@ -25,6 +25,8 @@ framework:
         handler_id:  ~
     fragments:       ~
     http_method_override: true
+    serializer:
+                    enabled: true
 
 # Twig Configuration
 twig:
@@ -106,3 +108,7 @@ parameters:
 services:
     user_form_builder:
         class: %user_form_builder.class%
+    object_normalizer:
+            class: Symfony\Component\Serializer\Normalizer\GetSetMethodNormalizer
+            tags:
+              - { name: serializer.normalizer }
