@@ -214,10 +214,6 @@ class Post
     {
         return $this->type;
     }
-    
-    public function __construct()
-    {
-        $this->type = TypePostEnumType::TP_TEXT;
 
      /**
      * Remove likes

@@ -3,6 +3,8 @@
 {% block stylesheets %}
     {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkweb/css/like.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -10,11 +12,16 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/run_gallery.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
 {% block ava_content %}
     {% if user.avatar %}
         <p class="popup-gallery">
             <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" /></a>
+            <div id="{{user.avatar.getId}}_like">
+                <script>mediaLike({{user.avatar.getId}}) </script>
+            </div>
         </p>
     {% else %}
         {{ parent() }}

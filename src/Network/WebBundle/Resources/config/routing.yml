@@ -101,6 +101,8 @@ wall_load_posts:
     type: user|club
     id: \d+
     start: \d+
+  options:
+    expose: true
 like:
   path: /like/write
   defaults: { _controller: NetworkWebBundle:Like:like }

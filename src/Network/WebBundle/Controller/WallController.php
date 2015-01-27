@@ -233,7 +233,7 @@ class WallController extends Controller
 
             foreach ($thread->getPosts() as $post) {
                 $postUser = $post->getUser();
-                $isPoll = $post->getType() === 'poll';
+                $isPoll = $post->getType() == 'poll';
 
                 $threadJsonObject['posts'][] = [
                     'user_id' => $postUser->getId(),
