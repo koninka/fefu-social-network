@@ -470,7 +470,7 @@ $(document).on('ready', function () {
     });
 
     $(window).scroll(function(e) {
-        if($(window).scrollTop() + $(window).height() == $(document).height()) {
+        if($(window).scrollTop() + $(window).height() >= $(document).height() - 10) {
             if (!allPostsLoaded && !lazyLoadRequestSent) {
                 $.post(
                     Routing.generate(
