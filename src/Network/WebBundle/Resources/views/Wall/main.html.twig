@@ -31,6 +31,12 @@
             </div>
                    
         </div>
+        <div id="like_post" class="like" style="display:none">
+            <div>
+               <div id="count" class="count"> </div> <button id="like" >{{ 'like'|trans }}</button>
+            </div>
+        </div>
+
         <div id="posts">
             {% for thread in wall | reverse | slice(0, patchSize) %}
                 {% set post = thread.getPosts[0] %}
@@ -68,6 +74,9 @@
                         {% endif %}
                             
                     </div>
+                    <div id="{{post.getId}}_like">
+                        <script>postLike({{post.getId}}) </script>
+                    </div>
 
                     {% set commentsCount = thread.getPosts|length - 1%}
                     {% if commentsCount > 0 %}
@@ -96,6 +105,9 @@
 
                                     <div class="msg">
                                         {{ comment.getText }}
+                                    </div>
+                                    <div id="{{comment.getId}}_like">
+                                        <script>postLike({{comment.getId}}) </script>
                                     </div>
                                 </div>
                             {% endfor %}

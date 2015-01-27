@@ -103,6 +103,23 @@ wall_load_posts:
     start: \d+
   options:
     expose: true
+like:
+  path: /like/write
+  defaults: { _controller: NetworkWebBundle:Like:like }
+  options:
+    expose: true
+
+like_count:
+  path: /like_count
+  defaults: { _controller: NetworkWebBundle:Like:getCount }
+  options:
+    expose: true
+
+like_user:
+  path: /like_user
+  defaults: { _controller: NetworkWebBundle:Like:getUser }
+  options:
+    expose: true
 
 user_poll_create:
   path:     /poll/

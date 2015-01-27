@@ -36,29 +36,33 @@ function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
             '<a href="' + post_id + '" class="delete_control">Delete</a>'
         ));
     }
-    msgContainer.append(msg);
+     msgContainer.text(msg);
     if (is_poll) {
         getPoll(JSON.stringify({
             postId: post_id}))
     }
+    var likeContainer = $('<div id="'+ post_id+'_like"></div>');
+
 
     $([
         usernameContainer,
         tsContainer,
         controlsContainer,
         msgContainer,
+        likeContainer,
         commentsContainer,
         commentContainer
     ]).each(function (_, element) {
         postContainer.append(element);
     });
-
+    
     return postContainer;
 }
 
 function addPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
 {
     $('#posts').prepend(createPost(user_id, thread_id, post_id, username, msg, ts, is_poll));
+    postLike(post_id);
 }
 
 function createComment(user_id, thread_id, post_id, username, msg, ts)
@@ -82,12 +86,13 @@ function createComment(user_id, thread_id, post_id, username, msg, ts)
     }
 
     msgContainer.text(msg);
+    var likeContainer = $('<div id="'+ post_id+'_like"></div>');
 
-    $([usernameContainer, tsContainer, controlsContainer, msgContainer])
+    $([usernameContainer, tsContainer, controlsContainer, msgContainer, likeContainer])
         .each(function (_, element) {
             commentContainer.append(element);
         });
-
+    
     return commentContainer;
 }
 
@@ -97,6 +102,8 @@ function addComment(user_id, thread_id, post_id, username, msg, ts)
     var commentsContainer = threadContainer.find('.comments');
 
     commentsContainer.append(createComment(user_id, thread_id, post_id, username, msg, ts));
+    postLike(post_id);
+
 }
 
 function createEditInterface(e)
@@ -143,6 +150,15 @@ function handleWriteResponse(data, textStatus, jqXHR)
     }
 }
 
+function postLike (post_id) {
+    var wall = $('#wall');
+    var postEdit = wall.find('#like_post').clone();
+    postEdit.show();
+    var msgContainer = wall.find('#' + post_id + '_like');
+    addLike(postEdit, post_id, 'post');
+    msgContainer.append(postEdit);
+}
+
 function handleDeleteResponse(data, textStatus, jqXHR)
 {
     if (data['status'] === 'ok') {
@@ -175,7 +191,7 @@ function handleLoadPostsResponse(data, textStatus, jqXHR)
                 fixDate(postData['ts']), 
                 postData['is_poll']
             );
-
+             postLike(postData['post_id']);
             var commentsContainer = post.find('.comments');
 
             for (var i = 1; i < thread.posts.length; ++i) {
@@ -191,6 +207,8 @@ function handleLoadPostsResponse(data, textStatus, jqXHR)
                         fixDate(comment['ts'])
                     )
                 );
+        
+                postLike(comment['post_id']);
             }
 
             $('#posts').append(post);

@@ -1,0 +1,9 @@
+.count:hover {
+ color: #0000ff;
+ cursor: pointer;
+}
+.like {
+    position: relative;
+    margin-left: 80%;
+}
+

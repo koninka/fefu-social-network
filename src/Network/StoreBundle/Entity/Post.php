@@ -42,6 +42,18 @@ class Post
      * @ORM\Column(name="type", type="typePostEnumType")
      */
     private $type;
+    
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="User", cascade="persist")
+     * @ORM\JoinTable(name="post_like",
+     *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *      inverseJoinColumns={@ORM\JoinColumn(name="post_id", referencedColumnName="id")}
+     * )
+     */
+    private $likes;
+
 
 
     /**
@@ -167,7 +179,29 @@ class Post
     public function setType($type)
     {
         $this->type = $type;
+        
+        return $this;
+    }
+    
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->likes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->type = TypePostEnumType::TP_TEXT;
+    }
 
+    /**
+     * Add likes
+     *
+     * @param \Network\StoreBundle\Entity\User $likes
+     * @return Post
+     */
+    public function addLike(\Network\StoreBundle\Entity\User $likes)
+    {
+        $this->likes[] = $likes;
+        
         return $this;
     }
 
@@ -180,9 +214,24 @@ class Post
     {
         return $this->type;
     }
-    
-    public function __construct()
+
+     /**
+     * Remove likes
+     *
+     * @param \Network\StoreBundle\Entity\User $likes
+     */
+    public function removeLike(\Network\StoreBundle\Entity\User $likes)
     {
-        $this->type = TypePostEnumType::TP_TEXT;
+        $this->likes->removeElement($likes);
+    }
+
+    /**
+     * Get likes
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getLikes()
+    {
+        return $this->likes;
     }
 }
