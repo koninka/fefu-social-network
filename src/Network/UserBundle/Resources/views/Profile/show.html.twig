@@ -35,11 +35,11 @@
             <p>
                 <a class="blue_button" href="{{ path('user_profile_show_messages', {'partnerId':user.id} )}}">{{ 'layout.write_message'|trans }}</a>
                 {% if rl_status == 'relationship_none' or rl_status == 'friendship_subscribed_by_user' %}
-                    <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans  }}</a>
+                    <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans }}</a>
                 {% elseif rl_status == 'friendship_accepted' %}
-                    <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.show.delete_friendship'|trans  }}</a>
+                    <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
                 {% elseif rl_status == 'friendship_subscribed_by_me' %}
-                    <a class="gray_button" href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans  }}</a>
+                    <a class="gray_button" href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans }}</a>
                 {% endif %}
             </p>
         </div>

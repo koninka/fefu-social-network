@@ -10,7 +10,7 @@
             <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
         </div>
         {% block authorization %}
-            {% block  oauth_service_buttons %}
+            {% block oauth_service_buttons %}
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>

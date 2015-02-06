@@ -15,11 +15,9 @@
         <div>
             <form>
             <dd><input name="search" value="{{search}}"></dd>
-            <button class="blue_button" type="submit">{{ 'profile.search_community' }}</button>
+            <button class="blue_button" type="submit">{{ 'community.search'|trans }}</button>
             </form>
         </div>
-    
-
     {% if community %}
 
             <div>
@@ -29,7 +27,6 @@
                     </p>
                 {% endfor %}
             </div>
-
     {% endif %}
     </div>
 {% endblock %}

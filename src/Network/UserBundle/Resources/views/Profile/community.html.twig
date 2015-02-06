@@ -30,10 +30,10 @@
                         {% if comm.role != 'role_community_asking' %}
                             <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
                             {% if comm.role == 'role_community_invitee' and is_cur_user %}
-                                <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.accept_request'|trans  }}</a>
-                                <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.reject_request'|trans  }}</a>
+                                <a class="blue_button" href="{{ path('user_accept_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.accept_request'|trans }}</a>
+                                <a class="gray_button" href="{{ path('user_reject_request', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.reject_request'|trans }}</a>
                             {% endif %}
-                        {% endif %}      
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
@@ -43,38 +43,38 @@
                         {% if comm.role == 'role_community_asking' %}
                             <a href="{{ path('user_show_community', {'id':comm.community.id} ) }}">{{ comm.community.name }} </a>
                             {% if is_cur_user %}
-                                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.cancel_reques'|trans  }}</a>
+                                <a class="gray_button" href="{{ path('user_cancel_request_community', {'id':comm.user.id,'communityId': comm.community.id} ) }}">{{ 'community.cancel_request'|trans }}</a>
                             {% endif %}
-                        {% endif %}      
+                        {% endif %}
                     </p>
                 {% endfor %}
             </div>
         {% endif %}
-     {% if is_cur_user %}
-        <div id="modal_form" title="Create community">
-           {{ form_start(form) }}
-               {{ form_errors(form) }}
-               <div>
-               {{ form_errors(form.name) }}
-               {{ form_label(form.name) }}
-               {{ form_widget(form.name) }}
-               </div>
-               <div>
-               {{ form_errors(form.view) }}
-               {{ form_label(form.view) }}
-               {{ form_widget(form.view) }}
-               </div>
-               <input class="blue_button" type="submit" value="{{ 'community.create.submit'|trans }}" />
-           {{ form_end(form) }}
-       </div>  
-    {% endif %}
-    {% if is_error_form  %}
-        <script>
-            $(document).ready(function(){
-                $('#create_community').click();
-            });
-        </script>
-    {% endif %}
+        {% if is_cur_user %}
+            <div id="modal_form" title="{{ 'community.create.caption'|trans }}">
+                {{ form_start(form) }}
+                    {{ form_errors(form) }}
+                    <div>
+                        {{ form_errors(form.name) }}
+                        {{ form_label(form.name) }}
+                        {{ form_widget(form.name) }}
+                    </div>
+                    <div>
+                        {{ form_errors(form.view) }}
+                        {{ form_label(form.view) }}
+                        {{ form_widget(form.view) }}
+                    </div>
+                    <input class="blue_button" type="submit" value="{{ 'community.create.submit'|trans }}" />
+                {{ form_end(form) }}
+            </div>
+        {% endif %}
+        {% if is_error_form  %}
+            <script>
+                $(document).ready(function(){
+                    $('#create_community').click();
+                });
+            </script>
+        {% endif %}
     </div>
 
 {% endblock %}

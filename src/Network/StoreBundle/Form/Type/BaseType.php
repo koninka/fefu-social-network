@@ -62,7 +62,7 @@ class BaseType extends AbstractType
         if (array_key_exists('length', $params)) {
             $options['max_length'] = $params['length'];
         }
-
+        $options['label'] = 'form.'.$params['name'];
         $builder->add($name, $type, $options);
     }
 
@@ -96,6 +96,7 @@ class BaseType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => $this->entityClass,
+            'translation_domain' => 'FOSUserBundle',
         ]);
     }
 

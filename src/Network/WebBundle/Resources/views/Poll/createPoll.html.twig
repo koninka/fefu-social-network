@@ -43,35 +43,33 @@
        });
     </script>
     <div>
-    <div id="poll_form" display="none">
-        {{ form_start(form) }}
-        <div>
-                {{ form_errors(form.question) }}
-                {{ form_label(form.question) }}
-                {{ form_widget(form.question) }}
-        </div>
-        <div>
-                {{ form_errors(form.isAnonymously) }}
-                {{ form_label(form.isAnonymously) }}
-                {{ form_widget(form.isAnonymously) }}
-        </div>
-        <div>
-                {{ form_errors(form.answers) }}
-                {{ form_errors(form) }}
-                {{ form_label(form.answers) }}
-                <div id="answer-fields-list" data-prototype="{{ form_widget(form.answers.vars.prototype.answer)|e }}">
-                    {% for ans in form.answers %}
+        <div id="poll_form" display="none">
+            {{ form_start(form) }}
+                <div>
+                    {{ form_errors(form.question) }}
+                    {{ form_label(form.question) }}
+                    {{ form_widget(form.question) }}
+                </div>
+                <div>
+                    {{ form_errors(form.isAnonymously) }}
+                    {{ form_label(form.isAnonymously) }}
+                    {{ form_widget(form.isAnonymously) }}
+                </div>
+                <div>
+                    {{ form_errors(form.answers) }}
+                    {{ form_errors(form) }}
+                    {{ form_label(form.answers) }}
+                    <div id="answer-fields-list" data-prototype="{{ form_widget(form.answers.vars.prototype.answer)|e }}">
+                        {% for ans in form.answers %}
                             {{ form_errors(ans) }}
                             <script type="text/javascript">
                                  addAnswer('{{ form_widget(ans.answer) }}');
-                            </script> 
-                    {% endfor %}
+                            </script>
+                        {% endfor %}
+                    </div>
+                    <button class="blue_button" type="button" id="add-answer">{{ 'poll.add.answer.submit'|trans({}, 'FOSUserBundle') }}</button>
                 </div>
-                <button class="blue_button"  type="button" id="add-answer">Add answer</button>
-            </div>
-            <div>
-            </div>
-            {% do form.answers.setRendered %}
-        {{ form_end(form) }}
+                {% do form.answers.setRendered %}
+            {{ form_end(form) }}
+        </div>
     </div>
- </div>

@@ -12,7 +12,7 @@ class AnswerPollType extends AbstractType
     {
         $builder->add('answer', 'text', [
             'error_bubbling' => true,
-            'label' => ''
+            'label' => false
         ]);
     }
 
@@ -20,7 +20,7 @@ class AnswerPollType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => 'Network\StoreBundle\Entity\PollAnswer',
-            'cascade_validation'  => true,
+            'cascade_validation' => true,
         ]);
     }
 

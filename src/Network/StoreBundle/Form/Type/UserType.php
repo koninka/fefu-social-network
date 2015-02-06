@@ -2,8 +2,7 @@
 
 namespace Network\StoreBundle\Form\Type;
 
-use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\FormBuilderInterface;
+use Network\StoreBundle\Form\Type\BaseType;
 
 class UserType extends BaseType
 {

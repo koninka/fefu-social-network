@@ -12,7 +12,7 @@ class PhotoType extends BaseType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder->add('media', 'sonata_media_type', ['label' => false, 'provider' => 'sonata.media.provider.image', 'context' => 'default'])
-                ->add('description', 'textarea', ['label' => 'Описание', 'required' => false]);
+                ->add('description', 'textarea', ['label' => 'form.photo.description', 'required' => false]);
 
         $builder->get('media')->add('unlink', 'hidden', ['mapped' => false, 'data' => false]);
         $builder->get('media')->add('binaryContent', 'file', ['label' => false]);

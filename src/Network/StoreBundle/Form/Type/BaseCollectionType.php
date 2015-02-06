@@ -25,9 +25,11 @@ class BaseCollectionType extends CollectionType
                 'options' => [
                     'label' => false,
                 ],
+                'label' => 'form.job.name',
+                'translation_domain' => 'FOSUserBundle',
             ]
         );
-        $builder->add('save', 'submit');
+        $builder->add('save', 'submit', ['label' => 'form.job.save.submit', 'translation_domain' => 'FOSUserBundle',]);
     }
 
     public function getName()

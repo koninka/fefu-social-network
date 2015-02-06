@@ -1,5 +1,5 @@
 {% extends 'NetworkWebBundle:Default:edit.base.html.twig' %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block edit_content %}
 
     {{ form_start(form) }}
@@ -15,7 +15,7 @@
             <script src="{{ asset('bundles/networkweb/js/collectionHolder.class.js') }}"></script>
 
             <script type="text/javascript">
-                new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}');
+                new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}', "{{ 'form.job.add.submit'|trans }}", "{{ 'form.job.delete.submit'|trans }}");
             </script>
 
         {% endblock %}

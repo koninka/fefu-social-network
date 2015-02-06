@@ -86,31 +86,32 @@
     <div id="thread-preview" style="display: none;">
         <a id="user" href="" style="display:inline-block;"></a>
         <div id="topic" style="display:inline-block;"></div>
-        <input id="open-thread" type="button" class="blue_button" value="Show Thread" style="display:inline-block;"/>
+        <input id="open-thread" type="button" class="blue_button" value="{{ 'threads.show.submit'|trans }}" style="display:inline-block;"/>
         <div id="unreadPosts" style="display:inline-block;"></div>
     </div>
+
     <div id="im-menu" class="horizontal-menu" style="display:block;">
         <ul>
             <li id="show-thread-list">
-                <a>{{ 'IM.show.thread_list' | trans }}</a>
+                <a>{{ 'im.show.thread_list'|trans }}</a>
             </li>
             <li id="show-opened-threads" style="display: none;">
-                <a>{{ 'IM.opened.threads' | trans }}</a>
+                <a>{{ 'im.opened.threads'|trans }}</a>
             </li>
             <li id="im-menu-actions" style="display: none;">
-                <a>{{ 'im.actions' | trans }}</a>
+                <a>{{ 'im.actions'|trans }}</a>
                 <ul>
                     <li id="add-user-action">
-                        <a>{{ 'conference.add.user' | trans }}</a>
+                        <a>{{ 'conference.add.user'|trans }}</a>
                     </li>
                     <li id="kick-user-action">
-                        <a>{{ 'conference.kick.user' | trans }}</a>
+                        <a>{{ 'conference.kick.user'|trans }}</a>
                     </li>
                     <li id="new-topic-action">
-                        <a>{{ 'conference.new_topic' | trans }}</a>
+                        <a>{{ 'conference.new_topic'|trans }}</a>
                     </li>
                     <li id="leave-conference-action">
-                        <a>{{ 'conference.leave' | trans }}</a>
+                        <a>{{ 'conference.leave'|trans }}</a>
                     </li>
                 </ul>
             </li>
@@ -120,22 +121,22 @@
         <div>
             <div id="add-user-wrapper" style="display:none;">
                 <input id="add-user-list" class="extended-select"/>
-                <input type="button" class="blue_button inline-block" id="add-user-apply" value="{{ 'IM.add.user' | trans }}"/>
-                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="add-user-cancel">{{ 'IM.add.user.cancel' | trans }}</span>
+                <input type="button" class="blue_button inline-block" id="add-user-apply" value="{{ 'im.add.user.name'|trans }}"/>
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="add-user-cancel">{{ 'im.add.user.cancel'|trans }}</span>
             </div>
             <div id="kick-user-wrapper" class="vdolgah_wrapper" style="display:none;">
                 <input id="kick-user-list" class="extended-select"/>
-                <input type="button" class="blue_button inline-block" id="kick-user-apply" value="{{ 'IM.kick.user' | trans }}"/>
-                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="kick-user-cancel">{{ 'IM.kick.user.cancel' | trans }}</span>
+                <input type="button" class="blue_button inline-block" id="kick-user-apply" value="{{ 'im.kick.user.name'|trans }}"/>
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="kick-user-cancel">{{ 'im.kick.user.cancel'|trans }}</span>
             </div>
             <div id="new-topic-wrapper" class="vdolgah_wrapper" style="display:none;">
                 <input id="new-topic-field"/>
-                <input type="button" class="blue_button inline-block" id="new-topic-apply" value="{{ 'IM.new_topic.apply' | trans }}" />
-                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="new-topic-cancel">{{ 'IM.new_topic.cancel' | trans }}</span>
+                <input type="button" class="blue_button inline-block" id="new-topic-apply" value="{{ 'im.new_topic.apply'|trans }}" />
+                <span class='ui-icon ui-icon-close inline-block' role='presentation' id="new-topic-cancel">{{ 'im.new_topic.cancel'|trans }}</span>
             </div>
             <div id="thread-list-wrapper" class="vdolgah_wrapper">
-                <h1>Threads</h1>
-                <input type="button" class="blue_button" id="compose-post" value="Compose Message"/>
+                <h1>{{ 'threads.name'|trans }}</h1>
+                <input type="button" class="blue_button" id="compose-post" value="{{ 'threads.compose.submit'|trans }}"/>
                 <div id="thread-list">
                 </div>
             </div>
@@ -151,24 +152,24 @@
                 <div id="post-form" class="markItUp markdown" style="margin-top: 4px;">
                     <textarea id="post-text" cols="80" rows="10"></textarea>
                     <div id="custom-recipient" style="display: none;">
-                        <label for="recipient">{{ 'IM.recipient' | trans}}</label>
+                        <label for="recipient">{{ 'im.recipient'|trans}}</label>
                         <input id="recipient" class="extended-select"/>
                     </div>
                     <div id="conference-topic-div" style="display: none;">
-                        <label for="conference-topic">{{ 'conference.topic' | trans }}</label>
+                        <label for="conference-topic">{{ 'conference.topic'|trans }}</label>
                         <input type="text" id="conference-topic"/>
                     </div>
-                    <input type="button" class="blue_button" id="send" value="{{ 'IM.send' | trans }}"/>
+                    <input type="button" class="blue_button" id="send" value="{{ 'im.send'|trans }}"/>
                 </div>
             </div>
         </div>
     </div>
-    <div id="dialog-leave-conference-confirm" style="width:700px;" title="{{ 'IM.leave.conference.confirm.title' | trans}}"
-            yes="{{ 'IM.leave.conference.confirm.yes' | trans }}"
-            no="{{ 'IM.leave.conference.confirm.no' | trans  }}">
+    <div id="dialog-leave-conference-confirm" style="width:700px;" title="{{ 'im.leave.conference.confirm.title'|trans}}"
+            yes="{{ 'im.leave.conference.confirm.yes'|trans }}"
+            no="{{ 'im.leave.conference.confirm.no'|trans }}">
         <p>
             <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
-            {{ 'IM.leave.conference.confirm.text' | trans }}
+            {{ 'im.leave.conference.confirm.text'|trans }}
         </p>
     </div>
     <script>

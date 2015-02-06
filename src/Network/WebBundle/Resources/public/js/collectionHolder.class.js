@@ -1,8 +1,8 @@
-function CollectionHolder(startIndex, container) {
+function CollectionHolder(startIndex, container, add_, delete_) {
     this.index = startIndex;
     this.domContainer = $(container);
     this.form_prototype = this.domContainer.data('prototype');
-    this.init();
+    this.init(add_, delete_);
 }
 
 CollectionHolder.prototype.initSearchSuggestors = function (container) {
@@ -13,15 +13,15 @@ CollectionHolder.prototype.initSearchSuggestors = function (container) {
         });
 };
 
-CollectionHolder.prototype.init = function() {
-    var addBtn = $('<button>Add</button>');
+CollectionHolder.prototype.init = function(add_, delete_) {
+    var addBtn = $('<button>'+add_+'</button>');
     var th = this;
 
     addBtn.on('click', function(e) {
         e.preventDefault();
 
         var newForm = $(th.form_prototype.replace(/__name__/g, th.index++));
-        newForm.append(th.createDeleteBtn());
+        newForm.append(th.createDeleteBtn(delete_));
 
         th.domContainer.append(newForm);
 
@@ -32,14 +32,14 @@ CollectionHolder.prototype.init = function() {
     this.domContainer.prepend(addBtn);
 
     this.domContainer.children('div').each(function(idx, elem) {
-        $(elem).append(th.createDeleteBtn());
+        $(elem).append(th.createDeleteBtn(delete_));
     });
 
     this.initSearchSuggestors(this.domContainer);
 };
 
-CollectionHolder.prototype.createDeleteBtn = function() {
-    var btn = $('<button>Delete</button>');
+CollectionHolder.prototype.createDeleteBtn = function(delete_) {
+    var btn = $('<button>'+delete_+'</button>');
 
     btn.on('click', function(e) {
         e.preventDefault();

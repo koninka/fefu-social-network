@@ -13,7 +13,7 @@
             {{ form_errors(form) }}
             {{ form_widget(form) }}
             <div>
-                <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+                <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans({}, 'FOSUserBundle') }}" />
             </div>
         </form>
 

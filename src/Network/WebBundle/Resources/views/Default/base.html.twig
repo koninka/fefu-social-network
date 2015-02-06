@@ -11,6 +11,10 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block javascripts %}
         {% endblock %}
+        <div>
+            <a class="white_a" href="{{ path('change_locale', {'_locale':'en'}) }}">EN</a>
+            <a class="white_a" href="{{ path('change_locale', {'_locale':'ru'}) }}">RU</a>
+        </div>
     </head>
     <body>
         {% block body %}

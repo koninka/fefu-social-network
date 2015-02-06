@@ -21,11 +21,12 @@ class ProfileFormType extends UserType
             'required' => false
         ]);
         $builder->get('avatar')->add('unlink', 'hidden', ['mapped' => false, 'data' => false]);
-        $builder->get('avatar')->add('binaryContent', 'file', ['label' => 'Выберите файл']);
+        $builder->get('avatar')->add('binaryContent', 'file', ['label' => false]);
 
         UserFormBuilder::baseBuildForm($builder);
         $builder->add('birthday', 'date', [
-            'label' => 'Дата рождения',
+            'label' => 'form.profile.date',
+            'translation_domain' => 'FOSUserBundle',
             'widget' => 'single_text',
             'input' => 'datetime',
             'attr' => ['class' => 'datepicker']

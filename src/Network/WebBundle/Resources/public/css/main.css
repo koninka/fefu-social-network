@@ -55,6 +55,13 @@ label{
     font-size: 14px;
 }
 
+.white_a{
+    color: #fff;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+}
+
 /*------------------------------ buttons ---------------------------------*/
 
 .blue_button, .gray_button{

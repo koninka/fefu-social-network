@@ -63,4 +63,4 @@ class JobPostModelTransformer implements DataTransformerInterface
         return $object;
     }
 
-} 
+}

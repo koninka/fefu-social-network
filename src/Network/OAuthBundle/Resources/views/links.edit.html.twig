@@ -1,5 +1,5 @@
 {% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block javascripts %}
     {{ parent() }}
 
@@ -17,7 +17,7 @@
                     <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
                 {% endif %}
             </p>
-            <p> {{ 'link.github'|trans }} :
+            <p> {{ 'link.github'|trans }}:
                 {% if user.githubLogin %}
                     {{ user.githubLogin }}
                     <a href="{{ url("remove_link", {service: "github"}) }}"> {{ 'profile.edit.link.remove.github'|trans }} </a>
