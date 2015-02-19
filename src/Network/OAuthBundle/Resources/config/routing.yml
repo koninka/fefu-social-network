@@ -1,3 +1,9 @@
+instagram_login:
+    pattern: /authorization/check-instagram
+
+instagram_connect:
+    pattern: /connect/check-instagram
+
 vkontakte_login:
     pattern: /authorization/check-vkontakte
 

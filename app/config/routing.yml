@@ -1,5 +1,8 @@
 network_web_socket:
     resource: "@NetworkWebSocketBundle/Resources/config/routing.yml"
+
+network_import:
+    resource: "@NetworkImportBundle/Resources/config/routing.yml"
     prefix:   /
 
 network_oauth:
