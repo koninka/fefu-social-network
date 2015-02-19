@@ -1,0 +1,5 @@
+services:
+#    network_import.example:
+#        class: Network\ImportBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]
+

@@ -150,6 +150,209 @@ class User extends BaseUser
     private $fbLogin;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="instagram_id", type="integer", nullable=true)
+     */
+    private $instagramId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="instagram_access_token", type="string", nullable=true)
+     */
+    private $instagramAccessToken;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vkontakte_id", type="integer", nullable=true)
+     */
+    private $vkontakteId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vkontakte_access_token", type="string", nullable=true)
+     */
+    private $vkontakteAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getVkontakteAccessToken()
+    {
+        return $this->vkontakteAccessToken;
+    }
+
+    /**
+     * @param int $vkontakteAccessToken
+     */
+    public function setVkontakteAccessToken($vkontakteAccessToken)
+    {
+        $this->vkontakteAccessToken = $vkontakteAccessToken;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVkontakteId()
+    {
+        return $this->vkontakteId;
+    }
+
+    /**
+     * @param int $vkontakteId
+     */
+    public function setVkontakteId($vkontakteId)
+    {
+        $this->vkontakteId = $vkontakteId;
+    }
+
+
+    /**
+     * @param int $incstagramTokenUpdateTimestamp
+     */
+    public function setInstagramTokenUpdateTimestamp($incstagramTokenUpdateTimestamp)
+    {
+        $this->instagramTokenUpdateTimestamp = $incstagramTokenUpdateTimestamp;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInstagramAccessToken()
+    {
+        return $this->instagramAccessToken;
+    }
+
+    /**
+     * @param int $instagramAcessToken
+     */
+    public function setInstagramAccessToken($instagramAcessToken)
+    {
+        $this->instagramAccessToken = $instagramAcessToken;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInstagramId()
+    {
+        return $this->instagramId;
+    }
+
+    /**
+     * @param int $instagramId
+     */
+    public function setInstagramId($instagramId)
+    {
+        $this->instagramId = $instagramId;
+    }
+
+    /**
+     * @param int $instagramMediaUpdateTimestamp
+     */
+    public function setInstagramMediaUpdateTimestamp($instagramMediaUpdateTimestamp)
+    {
+        $this->instagramMediaUpdateTimestamp = $instagramMediaUpdateTimestamp;
+    }
+
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="google_id", type="integer", nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="google_access_token", type="string", nullable=true)
+     */
+    private $googleAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getGoogleAccessToken()
+    {
+        return $this->googleAccessToken;
+    }
+
+    /**
+     * @param int $googleAccessToken
+     */
+    public function setGoogleAccessToken($googleAccessToken)
+    {
+        $this->googleAccessToken = $googleAccessToken;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param int $googleId
+     */
+    public function setGoogleId($googleId)
+    {
+        $this->googleId = $googleId;
+    }
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="github_id", type="integer", nullable=true)
+     */
+    private $githubId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="github_access_token", type="string", nullable=true)
+     */
+    private $githubAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getGithubId()
+    {
+        return $this->githubId;
+    }
+
+    /**
+     * @param int $githubId
+     */
+    public function setGithubId($githubId)
+    {
+        $this->githubId = $githubId;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGithubAccessToken()
+    {
+        return $this->githubAccessToken;
+    }
+
+    /**
+     * @param int $githubAccessToken
+     */
+    public function setGithubAccessToken($githubAccessToken)
+    {
+        $this->githubAccessToken = $githubAccessToken;
+    }
+
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Job", mappedBy="user", cascade="persist")
