@@ -14,24 +14,42 @@ user_profile_json:
     expose: true
 
 kladr_test_page:
-    path:     /test/kladr
-    defaults: { _controller: NetworkWebBundle:Kladr:test }
+  path:     /test/kladr
+  defaults: { _controller: NetworkWebBundle:Kladr:test }
+
+file_upload:
+  path: /profile/upload/file
+  defaults: { _controller: NetworkStoreBundle:File:upload }
+  methods: [POST]
+
+file_delete:
+  path: /profile/json/file.delete
+  defaults: { _controller: NetworkStoreBundle:File:delete }
+  methods: [POST]
+  options:
+    expose: true
+
+file_download:
+  path: /download/{file_id}
+  defaults: { _controller: NetworkStoreBundle:File:download }
+  requirements:
+    file_id: \d+
 
 file_mp3_upload:
   path: /profile/upload/mp3
-  defaults: { _controller: NetworkStoreBundle:File:uploadMp3 }
+  defaults: { _controller: NetworkStoreBundle:Mp3File:uploadMp3 }
   methods: [POST]
 
 file_mp3_delete:
   path: /profile/json/mp3.delete
-  defaults: { _controller: NetworkStoreBundle:File:deleteMp3 }
+  defaults: { _controller: NetworkStoreBundle:Mp3File:deleteMp3 }
   methods: [POST]
   options:
     expose: true
 
 file_mp3_get:
   path: /mp3/get/{file_id}
-  defaults: { _controller: NetworkStoreBundle:File:mp3 }
+  defaults: { _controller: NetworkStoreBundle:Mp3File:mp3 }
   requirements:
     file_id: \d+
   options:
@@ -39,7 +57,7 @@ file_mp3_get:
 
 file_mp3_poster:
   path: /mp3/poster/{album_id}
-  defaults: { _controller: NetworkStoreBundle:File:poster }
+  defaults: { _controller: NetworkStoreBundle:Mp3File:poster }
   requirements:
     album_id: \d+
   options:
