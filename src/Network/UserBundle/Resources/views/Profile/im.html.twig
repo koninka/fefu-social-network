@@ -19,6 +19,10 @@
     <script src="{{ asset('bundles/networkweb/js/jquery.slimscroll.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/moment.js') }}"></script>
 
+    <link href="http://hayageek.github.io/jQuery-Upload-File/uploadfile.min.css" rel="stylesheet">
+
+    <script src="http://hayageek.github.io/jQuery-Upload-File/jquery.uploadfile.min.js"></script>
+
     <script src="{{ asset('bundles/sonataformatter/vendor/markitup-markitup/markitup/jquery.markitup.js') }}" type="text/javascript"></script>
     <script src="{{ asset('bundles/sonataformatter/markitup/sets/markdown/set.js') }}" type="text/javascript"></script>
     <script type="text/javascript" >
@@ -75,13 +79,15 @@
 
     </style>
 
-    <div id="post" style="display: none;">
+    <div id="post" style="display: none; border: 1px solid #efefef; margin: 3px 0 3px 0;">
         <div id="post-header" style="display: none;">
             <a id="author"></a>
             <div id="ts"></div>
+
         </div>
         <div id="post-body" style="display: none; margin-left: 8px; font-size: small;">
         </div>
+        <div style="display: block;margin: 0 0 3px 3px" id="post-files-wrap"></div>
     </div>
     <div id="thread-preview" style="display: none;">
         <a id="user" href="" style="display:inline-block;"></a>
@@ -148,7 +154,6 @@
             <div id="posts-wrapper" class="vdolgah_wrapper" style="display:none;">
                 <div id="posts">
                 </div>
-
                 <div id="post-form" class="markItUp markdown" style="margin-top: 4px;">
                     <textarea id="post-text" cols="80" rows="10"></textarea>
                     <div id="custom-recipient" style="display: none;">
@@ -160,13 +165,16 @@
                         <input type="text" id="conference-topic"/>
                     </div>
                     <input type="button" class="blue_button" id="send" value="{{ 'im.send'|trans }}"/>
+                    <div style="margin: 10px 0 10px 0; display: block;" >
+                        <div id="add_file">add file</div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
     <div id="dialog-leave-conference-confirm" style="width:700px;" title="{{ 'im.leave.conference.confirm.title'|trans}}"
-            yes="{{ 'im.leave.conference.confirm.yes'|trans }}"
-            no="{{ 'im.leave.conference.confirm.no'|trans }}">
+         yes="{{ 'im.leave.conference.confirm.yes'|trans }}"
+         no="{{ 'im.leave.conference.confirm.no'|trans }}">
         <p>
             <span class="ui-icon ui-icon-alert" style="float:left; margin:0 7px 20px 0;"></span>
             {{ 'im.leave.conference.confirm.text'|trans }}
@@ -176,9 +184,9 @@
 
         $(function(){
             {% if partnerId is null or partnerName is null %}
-                InitIM(null, null);
+            InitIM(null, null);
             {% else %}
-                InitIM({{ partnerId }}, "{{ partnerName }}");
+            InitIM({{ partnerId }}, "{{ partnerName }}");
             {% endif %}
         })
     </script>
