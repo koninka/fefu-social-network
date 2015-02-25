@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Network\StoreBundle\DBAL\TypePostEnumType;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * post
@@ -55,6 +56,12 @@ class Post
     private $likes;
 
 
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="PostFile", mappedBy="post", cascade={"persist"})
+     */
+    protected $postFiles;
 
     /**
      * Get id
@@ -188,8 +195,9 @@ class Post
      */
     public function __construct()
     {
-        $this->likes = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->likes = new ArrayCollection();
         $this->type = TypePostEnumType::TP_TEXT;
+        $this->postFiles = new ArrayCollection();
     }
 
     /**
@@ -234,4 +242,38 @@ class Post
     {
         return $this->likes;
     }
+
+    /**
+     * Add file
+     *
+     * @param \Network\StoreBundle\Entity\PostFile $file
+     * @return Post
+     */
+    public function addFile(\Network\StoreBundle\Entity\PostFile $file )
+    {
+        $this->postFiles[] = $file;
+
+        return $this;
+    }
+
+    /**
+     * Remove file
+     *
+     * @param \Network\StoreBundle\Entity\PostFile $file
+     */
+    public function removeFile(\Network\StoreBundle\Entity\PostFile $file)
+    {
+        $this->postFiles->removeElement($file);
+    }
+
+    /**
+     * Get likes
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getFiles()
+    {
+        return $this->postFiles;
+    }
+
 }

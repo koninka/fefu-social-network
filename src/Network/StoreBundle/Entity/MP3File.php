@@ -6,7 +6,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * @ORM\Entity
- * @ORM\Table(name="files")
+ * @ORM\Table(name="mp3files")
  */
 class MP3File
 {
