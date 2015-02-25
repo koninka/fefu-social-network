@@ -9,6 +9,7 @@ use Symfony\Component\Security\Acl\Exception\Exception;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\Post;
 use Network\StoreBundle\Entity\User;
+use Network\StoreBundle\Entity\PostFile;
 use Network\StoreBundle\DBAL\ThreadEnumType;
 use Symfony\Component\HttpFoundation\JsonResponse;
 
@@ -90,19 +91,30 @@ class ImService
         return $thread;
     }
 
-    public function createPost(User $user, Thread $thread, $text)
+    public function createPost(User $user, Thread $thread, $text, $files_id = NULL)
     {
         $oldTimeZone = date_default_timezone_get();
         date_default_timezone_set("UTC");
+
+        $file = NULL;
 
         $post = new Post();
         $post->setText($text)
             ->setTs(new \DateTime('now'))
             ->setUser($user)
             ->setThread($thread);
+        if($files_id && count($files_id > 0)) {
+            foreach ($files_id['postFile'] as $f_id) {
+                $file = $this->em->getRepository('NetworkStoreBundle:PostFile')->find($f_id);
+//                if ($file) {
+                    $file->setPost($post);
+                    $this->em->persist($file);
+//                }
+            }
+        }
         $thread->incUnreadPosts($user);
-
-        $this->persistAndFlush($post);
+        $this->em->persist($post);
+        $this->em->flush();
 
         date_default_timezone_set($oldTimeZone);
 
