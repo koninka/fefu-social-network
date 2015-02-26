@@ -27,14 +27,15 @@ class ResumeRegistrationController extends ContainerAware
     {
         $serial_token = $request->getSession()->get('_security_secured_area');
         $token = unserialize($serial_token);
-        $userInformation = $this
-            ->getResourceOwnerByName($token->getResourceOwnerName());
-        $form = $this->container->get('hwi_oauth.registration.form.factory')
-            ->createForm(new RegistrationType(User::class, $request->getSession()));
+        $userInformation = $this->getResourceOwnerByName($token->getResourceOwnerName());
+        $form = $this->container
+                     ->get('hwi_oauth.registration.form.factory')
+                     ->createForm(new RegistrationType(User::class, $request->getSession()));
 
         $key = time();
 
-        return $this->container->get('templating')->renderResponse('NetworkOAuthBundle:ResumeRegistration:resume.html.' . $this->getTemplatingEngine(), array(
+        return $this->container->get('templating')
+            ->renderResponse('NetworkOAuthBundle:ResumeRegistration:resume.html.' . $this->getTemplatingEngine(), array(
             'key' => $key,
             'form' => $form->createView(),
             'userInformation' => $userInformation,
@@ -67,7 +68,7 @@ class ResumeRegistrationController extends ContainerAware
 
     protected function getResourceOwnerByName($name)
     {
-        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.'.$this->container->getParameter('hwi_oauth.firewall_name'));
+        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.' . $this->container->getParameter('hwi_oauth.firewall_name'));
 
         if (null === $resourceOwner = $ownerMap->getResourceOwnerByName($name)) {
             throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));

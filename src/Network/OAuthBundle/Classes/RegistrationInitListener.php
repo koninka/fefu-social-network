@@ -61,14 +61,16 @@ class RegistrationInitListener extends ContainerAware implements EventSubscriber
             // Authenticate the user
             $this->authenticateUser($request, $form->getData(), $token->getResourceOwnerName(), $token->getRawToken());
 
-            return $this->container->get('templating')->renderResponse('HWIOAuthBundle:Connect:registration_success.html.' . $this->getTemplatingEngine(), array(
+            return $this->container->get('templating')
+                ->renderResponse('HWIOAuthBundle:Connect:registration_success.html.' . $this->getTemplatingEngine(), array(
                 'userInformation' => $userInformation,
             ));
         }
 
         $key = time();
 
-        return $this->container->get('templating')->renderResponse('HWIOAuthBundle:Connect:registration.html.' . $this->getTemplatingEngine(), array(
+        return $this->container->get('templating')
+            ->renderResponse('HWIOAuthBundle:Connect:registration.html.' . $this->getTemplatingEngine(), array(
             'key' => $key,
             'form' => $form->createView(),
             'userInformation' => $userInformation,
@@ -77,7 +79,7 @@ class RegistrationInitListener extends ContainerAware implements EventSubscriber
 
     protected function getResourceOwnerByName($name)
     {
-        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.'.$this->container->getParameter('hwi_oauth.firewall_name'));
+        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.' . $this->container->getParameter('hwi_oauth.firewall_name'));
 
         if (null === $resourceOwner = $ownerMap->getResourceOwnerByName($name)) {
             throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));

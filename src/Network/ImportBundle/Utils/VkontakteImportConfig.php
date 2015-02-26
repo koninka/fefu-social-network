@@ -27,6 +27,8 @@ class VkontakteImportConfig {
     public function setType($type)
     {
         $this->type = $type;
+
+        return $this;
     }
 
     function __construct()
@@ -47,5 +49,7 @@ class VkontakteImportConfig {
     public function setAlbum($album)
     {
         $this->album = $album;
+
+        return $this;
     }
 }
