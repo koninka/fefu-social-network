@@ -84,15 +84,15 @@ class AuthProvider extends BaseClass
             $user->$setter_token($response->getAccessToken());
             //I have set all requested data with the user's username
             //modify here with relevant data
-            $user->setUsername($username);
-            $user->setEmail($username.'@'.'.com');
-            $user->setPassword(md5(rand()));
-            $user->setEnabled(true);
-            $user->setSalt(md5(rand()));
-            $user->setGender('male');
-            $user->setFirstName('adfnbl');
-            $user->setLastName(' ');
-            $user->setContactInfo(new ContactInfo());
+            $user->setUsername($username)
+                 ->setEmail($username.'@'.'.com')
+                 ->setPassword(md5(rand()))
+                 ->setEnabled(true)
+                 ->setSalt(md5(rand()))
+                 ->setGender('male')
+                 ->setFirstName('adfnbl')
+                 ->setLastName(' ')
+                 ->setContactInfo(new ContactInfo());
             $this->userManager->updateUser($user);
             $token = new OAuthToken($response->getAccessToken(), $user->getRoles());
             $token->setResourceOwnerName($service);

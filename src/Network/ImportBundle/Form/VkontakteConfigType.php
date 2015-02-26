@@ -31,14 +31,16 @@ class VkontakteConfigType extends AbstractType
         $albums = $this->doctrine->getRepository('NetworkStoreBundle:UserGallery');
         $albums = $albums->findAlbumsForUser($user->getId());
         $names = array();
-        if ($albums === null) {
+        if (null === $albums) {
             $names[$vkAlbumName] = $vkAlbumName;
         } else {
             foreach ($albums as $album) {
                 $name = $album->getGallery()->getName();
                 $names[$name] = $name;
             }
-            !isset($namse[$vkAlbumName]) ? $names[$vkAlbumName] = $vkAlbumName : 1;
+            if (!isset($names[$vkAlbumName])) {
+                $names[$vkAlbumName] = $vkAlbumName;
+            }
         }
         $builder
             ->add('album', 'choice', array(
