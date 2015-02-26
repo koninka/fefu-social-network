@@ -147,6 +147,7 @@ im:
         cancel: Cancel
     recipient: Recipient
     send: Send
+    add_file: Add file
     leave:
         conference:
             confirm:

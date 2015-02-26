@@ -8,6 +8,78 @@ var openedThreads = [];
 
 var conferences = [];
 
+var addedPostFile = [];
+var addedImg = [];
+var addedMp3 = [];
+var addedVideo = [];
+
+var uploader;
+
+window.onbeforeunload = function () {
+    for (var file in addedPostFile) {
+        deleteFile(addedPostFile[file]);
+    }
+};
+
+function deleteFile(fileId) {
+    $.post(
+        "/profile/json/file.delete",
+        {
+            file_id: fileId
+        },
+        function(resp, textStatus, jqXHR)
+        {
+            addedPostFile.splice(addedPostFile.indexOf(resp.fileId) - 1, 1);
+            $('#send').removeAttr('disabled');
+        }
+    );
+}
+
+$(document).ready(function() {
+    uploader = $("#add_file").uploadFile({
+        url: "/profile/upload/file", //not good
+        multiple: false,
+        dragDrop: false,
+        showDelete: true,
+        showDone: false,
+        showProgress : true,
+        maxFileSize: 2097152,
+        onSubmit:function(files)
+        {
+            $('#send').attr('disabled','disabled');
+        },
+        onSuccess: function(file, data, xhr) {
+            $('#send').removeAttr('disabled');
+            var status = data.status;
+            switch (status) {
+                case 'ok':
+                    addedPostFile.push(data.metadata.file_id);
+                    break;
+                case 'badFile':
+                    alert('Unable to upload a file!');
+                    break;
+                default:
+                    break;
+            }
+        },
+        deleteCallback: function(data, pd) {
+            $('#send').attr('disabled','disabled');
+            $.post(
+                "/profile/json/file.delete",
+                {
+                    file_id: data.metadata.file_id
+                },
+                function(resp, textStatus, jqXHR)
+                {
+                    addedPostFile.splice(addedPostFile.indexOf(resp.fileId) - 1, 1);
+                    $('#send').removeAttr('disabled');
+                }
+            );
+            pd.statusbar.hide().remove();
+        }
+    });
+});
+
 function xhr(action, message) {
     message = message || {};
     var dfd = $.Deferred();
@@ -138,10 +210,16 @@ function updateThreadView(threadId, topic, scroll) {
         if (with_header) {
             var postHeader = postDiv.find('#post-header');
             var pAuthor = postHeader.find('#author');
+
             pAuthor.attr('href', '/id' + post.userId);
             pAuthor.html(post.author);
             postHeader.find('#ts').html(tsString);
             postHeader.show();
+        }
+        var pFiles = postDiv.find('#post-files-wrap');
+        for (var i in post.postFiles) {
+            pFiles.append('<a style="font-size: 12px;" target="_blank" href="/download/' +
+                post.postFiles[i].id + '?h='+post.postFiles[i].hash+'">' + post.postFiles[i].name + '</a></br>');
         }
         if (unread)
             postDiv.addClass('unread-post');
@@ -395,7 +473,15 @@ function InitIM(partnerId, partnerName) {
         else
             $('#conference-topic-div').hide();
     });
+
     $('#send').click(function (e) {
+        var files = {
+            postFile: addedPostFile,
+            imgFile: addedImg,
+            mp3File: addedMp3,
+            videoFile: addedVideo
+        };
+
         $('#conference-topic-div').hide();
         var recipient = $('#recipient').select2('data');
         var recipientIds = [];
@@ -408,15 +494,26 @@ function InitIM(partnerId, partnerName) {
             recipientId: recipientIds,
             threadId: currentThreadId,
             text: $('#post-text').val(),
-            topic: $('#conference-topic').val()
+            topic: $('#conference-topic').val(),
+            files: files
         }).then(function (data) {
             $('#post-text').val('');
             if (recipientIds.length > 1)
                 conferences[data.threadId] = true;
+
+            $('.ajax-file-upload-statusbar').each(function ()
+            {
+                $(this).hide().remove();
+            });
+            addedPostFile = [];
+            addedImg = [];
+            addedMp3 = [];
+            addedVideo = [];
             updateThreadView(data.threadId, data.topic, true);
         });
         e.preventDefault();
     });
+
     $('#compose-post').click(function (e) {
         $('#thread-list-wrapper').hide();
         $('#posts').hide();
@@ -433,4 +530,5 @@ function InitIM(partnerId, partnerName) {
         $('#compose-post').click();
         $('#recipient').select2('data', {id: partnerId, text: partnerName});
     }
+
 }

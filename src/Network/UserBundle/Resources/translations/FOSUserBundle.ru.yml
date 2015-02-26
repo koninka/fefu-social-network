@@ -147,6 +147,7 @@ im:
         cancel: Отменить
     recipient: Получатель
     send: Отправить
+    add_file: Прикрепить файл
     leave:
         conference:
             confirm:

@@ -70,40 +70,54 @@ class ThreadController extends Controller
         $imService = $this->get('network.store.im_service');
         $user = $this->getUserAndCheckAccess();
         $text = $request->request->get('text', '');
+        $files = $request->request->get('files');
+
         if (trim($text) == '') {
             return $this->errorJsonResponse('field \'text\' is empty');
         }
+
         $threadId = $request->request->get('threadId');
         $res = [];
+
         if ($threadId != null) {
             $thread = $imService->getThreadByIdAndUserIdOrThrow($threadId, $user->getId());
         } else {
             $recipientIds = $request->request->get('recipientId');
+
             if (!is_array($recipientIds) || empty($recipientIds)) {
                 return $this->errorJsonResponse('field \'recipientId\' is empty or not array_type');
             }
+
             $recipientUsers = $this->getDoctrine()
                 ->getRepository('NetworkStoreBundle:User')
                 ->findBy(['id' => $recipientIds]);
+
             if (!$recipientUsers) {
                 return $this->errorJsonResponse('users with given ids not found');
             }
+
             $recipientUsers = new ArrayCollection($recipientUsers);
             $recipientUsers->removeElement($user); // to be sure that client does not send yourself
+
             if ($recipientUsers->isEmpty()) {
                 return $this->errorJsonResponse('users with given ids not found');
             }
+
             if ($recipientUsers->count() == 1) {
                 $rUser = $recipientUsers[0];
                 $res['topic'] = $rUser->getFirstName() . ' ' . $rUser->getLastName();
             }
+
             $topic = $request->request->get('topic', '');
             $thread = $imService->createDialogOrConference($user, $recipientUsers, $topic);
+
             if (!array_key_exists('topic', $res)) {
                 $res['topic'] = $thread->getTopic();
             }
         }
-        $imService->createPost($user, $thread, $text);
+
+        $imService->createPost($user, $thread, $text, $files);
+
         $res['threadId'] = $thread->getId();
 
         return new JsonResponse($res);
@@ -135,22 +149,49 @@ class ThreadController extends Controller
     {
         $user = $this->getUserAndCheckAccess();
         $threadId = $request->request->get('id');
+
         if ($threadId == null) {
             return $this->errorJsonResponse('Invalid thread id');
         }
+
         $this->checkAccessToThread($threadId, $user->getId());
         $threadRepo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+
         $posts = $this->getDoctrine()
             ->getRepository('NetworkStoreBundle:Post')
-            ->getThreadPosts($threadId);
+            ->findBy(['thread' => $threadId]);
+
         $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
 
         $formatter =  $this->container->get('sonata.formatter.pool');
-        foreach ($posts as &$post) {
-            $post['text'] = $formatter->transform('markdown', $post['text']);
+        $postResult = [];
+
+        foreach ($posts as $post) {
+            $postFiles = [];
+
+            foreach ($post->getFiles()->toArray() as $file) {
+                $postFiles[] = [
+                    'id'   => $file->getId(),
+                    'name' => $file->getName(),
+                    'hash' => $file->getHash()
+                ];
+            }
+
+            $postResult[] = [
+                'id'        => $post->getId(),
+                'ts'        => $post->getTs(),
+                'text'      => $formatter->transform('markdown', $post->getText()),
+                'author'    => $post->getUser()->getFirstName() .' '. $post->getUser()->getLastName(),
+                'postFiles' => $postFiles,
+                'userId'    => $post->getUser()->getId()
+            ];
         }
 
-        return new JsonResponse(['posts' => $posts, 'unreadPosts' => $unreadPosts, 'selfId' => $user->getId()]);
+        return new JsonResponse([
+            'posts'       => $postResult,
+            'unreadPosts' => $unreadPosts,
+            'selfId'      => $user->getId()
+        ]);
     }
 
     /**
