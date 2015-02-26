@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
+use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken as Token;
 use Network\StoreBundle\Entity\ContactInfo;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
@@ -138,46 +139,38 @@ class OAuthUserProvider extends BaseClass
         $username = $data['username'];
         $id = $data['id'];
         $user = $this->userManager->findUserBy(array($this->getProperty($response) => $id));
-        //when the user is registrating
         if (null === $user) {
-            $service = $response->getResourceOwner()->getName();
-            $setter = 'set' . ucfirst($service);
+            $service = $response->getResourceOwner();
+            $setter = 'set' . ucfirst($service->getName());
             $setter_id = $setter . 'Id';
             $setter_token = $setter . 'AccessToken';
-            // create new user here
             $user = $this->userManager->createUser();
             $user->$setter_id($id);
             $user->$setter_token($response->getAccessToken());
-            //I have set all requested data with the user's username
-            //modify here with relevant data
-            $curData = new \DateTime('now');
-            $user->setInstagramTokenUpdateTimestamp($curData->getTimestamp());
             $user->setUsername($username);
             $user->setEmail($username . '@' . '.com');
             $user->setPassword(md5(rand()));
-            $user->setEnabled(true);
+            $user->setEnabled(false);
             $user->setSalt(md5(rand()));
             $user->setGender('male');
             $user->setFirstName('adfnbl');
             $user->setLastName(' ');
             $user->setContactInfo(new ContactInfo());
             $this->userManager->updateUser($user);
-            $token = new OAuthToken($response->getAccessToken(), $user->getRoles());
-            $token->setResourceOwner($service);
+            $token = new Token($response->getAccessToken(), $user->getRoles());
+            $token->setResourceOwnerName($service->getName());
             $token->setUser($user);
-            $token->setAuthenticated(true);
-            // update session
+            $token->setAuthenticated(false);
+
             return $user;
         }
-
         $user = parent::loadUserByOAuthUserResponse($response);
-
         $serviceName = $response->getResourceOwner()->getName();
         $setter = 'set' . ucfirst($serviceName) . 'AccessToken';
-
         //update access token
         $user->$setter($response->getAccessToken());
         $this->userManager->updateUser($user);
+
         return $user;
     }
 

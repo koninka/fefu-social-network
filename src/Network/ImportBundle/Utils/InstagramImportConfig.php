@@ -30,5 +30,7 @@ class InstagramImportConfig {
     public function setAlbum($album)
     {
         $this->album = $album;
+
+        return $this;
     }
 }

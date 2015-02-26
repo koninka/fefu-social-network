@@ -91,9 +91,11 @@ class ContentLoader extends PageRequestor {
                               ->setGallery($gallery);
                     $em->persist($gallery);
                     $em->persist($userAlbum);
+                    //$em->flush();
                     $user->addAlbum($userAlbum);
                     self::$idUserMap[$owner] = $user;
-                    $userManager = $this->container->get('fos_user.user_manager');
+                    $userManager = $this->container
+                                        ->get('fos_user.user_manager');
                     $userManager->updateUser($user);
                     self::$userGalleryMap[$owner] = $gallery;
                 }
@@ -102,7 +104,8 @@ class ContentLoader extends PageRequestor {
             $media->setBinaryContent($file);
             $media->setContext('default');
             $media->setProviderName('sonata.media.provider.image');
-            $mediaManager = $this->container->get('sonata.media.manager.media');
+            $mediaManager = $this->container
+                                 ->get('sonata.media.manager.media');
             $mediaManager->save($media);
             $ghm = new GalleryHasMedia();
             $ghm->setGallery($gallery)

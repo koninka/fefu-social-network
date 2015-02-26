@@ -30,7 +30,6 @@ class ImportController extends Controller
 
     private function constructFormClass($owner)
     {
-
         $class = 'Network\\ImportBundle\\Form\\' . ucfirst($owner) . 'ConfigType';
         if (!class_exists($class)) {
             throw new Exception('UnknownFormException');

@@ -3,10 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
-<<<<<<< HEAD
     - { resource: @NetworkWebSocketBundle/Resources/config/sockets.yml }
-=======
->>>>>>> caa7482... update Symfony system files after composer install
     - { resource: @NetworkImportBundle/Resources/config/import_properties.yml }
 
 sonata_admin:

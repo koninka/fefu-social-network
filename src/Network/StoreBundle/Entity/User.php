@@ -214,16 +214,10 @@ class User extends BaseUser
     public function setVkontakteId($vkontakteId)
     {
         $this->vkontakteId = $vkontakteId;
+
+        return $this;
     }
 
-
-    /**
-     * @param int $incstagramTokenUpdateTimestamp
-     */
-    public function setInstagramTokenUpdateTimestamp($incstagramTokenUpdateTimestamp)
-    {
-        $this->instagramTokenUpdateTimestamp = $incstagramTokenUpdateTimestamp;
-    }
 
     /**
      * @return int
@@ -239,6 +233,8 @@ class User extends BaseUser
     public function setInstagramAccessToken($instagramAcessToken)
     {
         $this->instagramAccessToken = $instagramAcessToken;
+
+        return $this;
     }
 
     /**
@@ -255,14 +251,8 @@ class User extends BaseUser
     public function setInstagramId($instagramId)
     {
         $this->instagramId = $instagramId;
-    }
 
-    /**
-     * @param int $instagramMediaUpdateTimestamp
-     */
-    public function setInstagramMediaUpdateTimestamp($instagramMediaUpdateTimestamp)
-    {
-        $this->instagramMediaUpdateTimestamp = $instagramMediaUpdateTimestamp;
+        return $this;
     }
 
 
@@ -294,6 +284,8 @@ class User extends BaseUser
     public function setGoogleAccessToken($googleAccessToken)
     {
         $this->googleAccessToken = $googleAccessToken;
+
+        return $this;
     }
 
     /**
@@ -310,6 +302,8 @@ class User extends BaseUser
     public function setGoogleId($googleId)
     {
         $this->googleId = $googleId;
+
+        return $this;
     }
 
     /**
@@ -340,6 +334,8 @@ class User extends BaseUser
     public function setGithubId($githubId)
     {
         $this->githubId = $githubId;
+
+        return $this;
     }
 
     /**
@@ -356,6 +352,8 @@ class User extends BaseUser
     public function setGithubAccessToken($githubAccessToken)
     {
         $this->githubAccessToken = $githubAccessToken;
+
+        return $this;
     }
 
 
