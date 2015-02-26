@@ -20,26 +20,32 @@ class ImportController extends Controller
 
     private function constructConfigClass($owner)
     {
-        $class = 'Network\\ImportBundle\\Utils\\'.ucfirst($owner).'ImportConfig';
-        if (!class_exists($class)) { throw new Exception('UnknownConfigException'); }
+        $class = 'Network\\ImportBundle\\Utils\\' . ucfirst($owner) . 'ImportConfig';
+        if (!class_exists($class)) {
+            throw new Exception('UnknownConfigException');
+        }
+
         return $class;
     }
 
     private function constructFormClass($owner)
     {
-        $class = 'Network\\ImportBundle\\Form\\'.ucfirst($owner).'ConfigType';
-        if (!class_exists($class)) { throw new Exception('UnknownFormException'); }
+        $class = 'Network\\ImportBundle\\Form\\' . ucfirst($owner) . 'ConfigType';
+        if (!class_exists($class)) {
+            throw new Exception('UnknownFormException');
+        }
+
         return $class;
     }
 
     public function configAction(Request $request, $service)
     {
         $endpoints = $this->container->getParameter('endpoints');
-        $formAction = $this->container->getParameter('config_import_path').$service;
+        $formAction = $this->container->getParameter('config_import_path') . $service;
         $configClass = self::constructConfigClass($service);
         $formClass = self::constructFormClass($service);
         $config = new $configClass();
-        $url = 'NetworkImportBundle::'.$service.'_import_config.html.twig';
+        $url = 'NetworkImportBundle::' . $service . '_import_config.html.twig';
         $form = $this->createForm(new $formClass($this->get('security.context'), $this->get('doctrine'), $config));
         $params = array(
             'user' => $this->getUser(),
@@ -78,10 +84,15 @@ class ImportController extends Controller
                     ->setParams($configs)
                     ->setLastUpdateTimestamp(0)
                     ->setOffset(0);
-                $tasks = $em->createQueryBuilder()->select('u')->from('NetworkStoreBundle:SyncTask', 'u')
-                    ->andWhere('u.endpoint = :key')->setParameter('key', $key)
-                    ->andWhere('u.userId = :id')->setParameter('id', $this->getUser()->getId())
-                    ->getQuery()->getResult();
+                $tasks = $em->createQueryBuilder()
+                    ->select('u')
+                    ->from('NetworkStoreBundle:SyncTask', 'u')
+                    ->andWhere('u.endpoint = :key')
+                    ->setParameter('key', $key)
+                    ->andWhere('u.userId = :id')
+                    ->setParameter('id', $this->getUser()->getId())
+                    ->getQuery()
+                    ->getResult();
                 if (empty($tasks)) {
                     $em->persist($task);
                 }

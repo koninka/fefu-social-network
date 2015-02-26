@@ -31,3 +31,4 @@ services:
           arguments:
               - @service_container
               - @fos_user.user_manager
+

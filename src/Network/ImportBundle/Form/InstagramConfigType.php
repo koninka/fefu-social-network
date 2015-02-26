@@ -31,14 +31,14 @@ class InstagramConfigType extends AbstractType
         $albums = $this->doctrine->getRepository('NetworkStoreBundle:UserGallery');
         $albums = $albums->findAlbumsForUser($user->getId());
         $names = array();
-        if ($albums === null) {
+        if (null === $albums) {
             $names[$instagramAlbumName] = $instagramAlbumName;
         } else {
             foreach ($albums as $album) {
                 $name = $album->getGallery()->getName();
                 $names[$name] = $name;
             }
-            !isset($namse[$instagramAlbumName]) ? $names[$instagramAlbumName] = $instagramAlbumName : 1;
+            !isset($names[$instagramAlbumName]) ? $names[$instagramAlbumName] = $instagramAlbumName : 1;
         }
         $builder
             ->add('album', 'choice', array(
@@ -65,4 +65,3 @@ class InstagramConfigType extends AbstractType
         return 'InstagramConfigType';
     }
 }
-

@@ -27,10 +27,10 @@ class ResumeRegistrationController extends ContainerAware
     {
         $serial_token = $request->getSession()->get('_security_secured_area');
         $token = unserialize($serial_token);
-        $userInformation = $this
-            ->getResourceOwnerByName($token->getResourceOwnerName());
-        $form = $this->container->get('hwi_oauth.registration.form.factory')
-            ->createForm(new RegistrationType(User::class, $request->getSession()));
+        $userInformation = $this->getResourceOwnerByName($token->getResourceOwnerName());
+        $form = $this->container
+                     ->get('hwi_oauth.registration.form.factory')
+                     ->createForm(new RegistrationType(User::class, $request->getSession()));
 
         $key = time();
 

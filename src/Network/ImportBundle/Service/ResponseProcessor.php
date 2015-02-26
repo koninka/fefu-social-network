@@ -26,7 +26,9 @@ class ResponseProcessor
     private function constructItemClass($owner)
     {
         $class = 'Network\\StoreBundle\\Entity\\'.ucfirst($owner) . 'Item';
-        if (!class_exists($class)) { throw new Exception('UnknownItemException'); }
+        if (!class_exists($class)) {
+            throw new Exception('UnknownItemException');
+        }
 
         return $class;
     }
@@ -47,7 +49,9 @@ class ResponseProcessor
         $mediaClass = self::constructItemClass($owner);
         $medias = array();
         $json = json_decode($response, true);
-        if (!isset($json[$jsonRoot])) { throw new Exception('WrongRootException'); }
+        if (!isset($json[$jsonRoot])) {
+            throw new Exception('WrongRootException');
+        }
         $data = $json[$jsonRoot];
         foreach ($data as $i => $item) {
             if (!is_array($item)) {
