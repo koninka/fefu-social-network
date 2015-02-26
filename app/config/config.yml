@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
+    - { resource: @NetworkImportBundle/Resources/config/import_properties.yml }
 
 sonata_admin:
     title: VDolgah
@@ -205,31 +206,3 @@ services:
         arguments: ["%kernel.default_locale%"]
         tags:
             - { name: kernel.event_subscriber }
-
-network_import:
-    config_import_path: /import/config/
-    endpoints:
-        instagram_recent:
-            owner: instagram
-            url: https://api.instagram.com/v1/users/Id/media/recent/?access_token=AccessToken&min_timestamp=MIN_TIMESTAMP
-            method: GET
-            json_root: data
-            paths:
-                - 'Id'
-                - 'AccessToken'
-            schedule_params:
-                - 'LastUpdateTimestamp'
-
-
-        vk_photo:
-            owner: vkontakte
-            url: https://api.vk.com/method/photos.getAll?owner_id=Id&access_token=AccessToken&offset=Offset
-            method: GET
-            paths:
-                - 'Id'
-                - 'AccessToken'
-            json_root: response
-            config:
-                type: image
-            schedule_params:
-                - 'Offset'
