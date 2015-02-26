@@ -19,7 +19,33 @@ class Configuration implements ConfigurationInterface
     {
         $treeBuilder = new TreeBuilder();
         $rootNode = $treeBuilder->root('network_import')
-
+            ->children()
+                ->scalarNode('config_import_path')->end()
+                ->arrayNode('endpoints')
+                    ->useAttributeAsKey('name')
+                    ->prototype('array')
+                    ->children()
+                        ->enumNode('owner')
+                            ->values(array('instagram', 'github', 'vkontakte'))
+                        ->end()
+                        ->scalarNode('url')->end()
+                        ->enumNode('method')
+                            ->values(array('POST', 'GET', 'PUT', 'DELETE'))
+                        ->end()
+                        ->arrayNode('paths')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->scalarNode('json_root')->end()
+                        ->arrayNode('config')
+                            ->useAttributeAsKey('name')
+                            ->prototype('scalar')->end()
+                        ->end()
+                        ->arrayNode('schedule_params')
+                            ->prototype('scalar')->end()
+                        ->end()
+                    ->end()
+                ->end()
+            ->end()
             ->end();
 
         // Here you should define the parameters that are allowed to
