@@ -14,6 +14,7 @@ use Application\Sonata\MediaBundle\Entity\GalleryHasMedia;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+
 use Network\StoreBundle\Entity\MP3File;
 use Network\StoreBundle\Entity\MP3Record;
 use Network\StoreBundle\Entity\UserGallery;
@@ -90,7 +91,6 @@ class ContentLoader extends PageRequestor {
                               ->setGallery($gallery);
                     $em->persist($gallery);
                     $em->persist($userAlbum);
-                    //$em->flush();
                     $user->addAlbum($userAlbum);
                     self::$idUserMap[$owner] = $user;
                     $userManager = $this->container->get('fos_user.user_manager');
@@ -102,8 +102,7 @@ class ContentLoader extends PageRequestor {
             $media->setBinaryContent($file);
             $media->setContext('default');
             $media->setProviderName('sonata.media.provider.image');
-            $mediaManager = $this->container
-                                 ->get('sonata.media.manager.media');
+            $mediaManager = $this->container->get('sonata.media.manager.media');
             $mediaManager->save($media);
             $ghm = new GalleryHasMedia();
             $ghm->setGallery($gallery)

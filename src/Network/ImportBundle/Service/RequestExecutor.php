@@ -3,8 +3,6 @@ namespace Network\ImportBundle\Service;
 
 use Application\Sonata\MediaBundle\Entity\Media;
 use Buzz\Exception\RequestException;
-use Network\ImportBundle\Exceptions\GetItemContentException;
-use Network\ImportBundle\Exceptions\UnknownItemException;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\DependencyInjection\ContainerAware;
 use Symfony\Component\HttpFoundation\File\File;
