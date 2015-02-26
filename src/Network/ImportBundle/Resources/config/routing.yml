@@ -1,0 +1,7 @@
+import_page:
+    path: /import
+    defaults: { _controller: NetworkImportBundle:Import:index}
+
+config_import:
+    path: /import/config/{service}
+    defaults: { _controller: NetworkImportBundle:Import:config }

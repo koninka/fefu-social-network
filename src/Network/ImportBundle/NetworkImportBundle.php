@@ -7,4 +7,8 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 
 class NetworkImportBundle extends Bundle
 {
+    public function getContainerExtension()
+    {
+        return new NetworkImportExtension();
+    }
 }

@@ -3,3 +3,31 @@ services:
 #        class: Network\ImportBundle\Example
 #        arguments: [@service_id, "plain_value", %parameter%]
 
+   network_import.form.type.instagram_config:
+          class: Network\ImportBundle\Form\InstagramConfigType
+          arguments: ["@security.context", "@service_container"]
+
+   network_import.form.type.instagram_config:
+          class: Network\ImportBundle\Form\VkontakteConfigType
+          arguments: ["@security.context", "@service_container"]
+
+   request_executor:
+          class: Network\ImportBundle\Service\RequestExecutor
+          arguments:
+              - @service_container
+
+   response_processor:
+          class: Network\ImportBundle\Service\ResponseProcessor
+          arguments:
+              - @doctrine
+
+   content_loader:
+          class: Network\ImportBundle\Service\ContentLoader
+          arguments:
+              - @service_container
+
+   network_import.task_executor:
+          class: Network\ImportBundle\Service\TaskExecutor
+          arguments:
+              - @service_container
+              - @fos_user.user_manager
