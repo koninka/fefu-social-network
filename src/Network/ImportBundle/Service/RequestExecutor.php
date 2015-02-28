@@ -29,14 +29,6 @@ class RequestExecutor extends ContainerAware
 
     public function request($method, $url, $headers, $params)
     {
-       /* $buzz = $this->container->get('buzz');
-        $response = new Response();
-        switch ($method) {
-            case 'GET':
-                $formattedUrl = strtr($url, $params);
-                $response = $buzz->get($formattedUrl);
-                break;
-        }*/
         $em = $this->container->get('doctrine')->getManager();
         $curl = curl_init();
         $formattedUrl = strtr($url, $params);
@@ -61,7 +53,7 @@ class RequestExecutor extends ContainerAware
         $etag = null;
         foreach ($headers_arr as $h) {
             if (isset($h[0]) && $h[0] == 'ETag') {
-                $etag = $h[0];
+                $etag = $h[1];
             }
         }
         curl_close($curl);

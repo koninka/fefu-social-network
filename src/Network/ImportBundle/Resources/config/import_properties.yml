@@ -41,12 +41,14 @@ network_import:
 
         facebook_photo:
             owner: facebook
-            url: https://graph.facebook.com/me/photos/uploaded?access_token=AccessToken
+            url: https://graph.facebook.com/me/photos/uploaded?access_token=AccessToken&since=LastUpdateTimestamp
             method: GET
             paths:
-              - 'AccessToken'
+                - 'AccessToken'
             json_root: data
             config:
               type: image
+            schedule_params:
+                - 'LastUpdateTimestamp'
             headers:
-              - 'If-None-Match'
+                - 'If-None-Match'

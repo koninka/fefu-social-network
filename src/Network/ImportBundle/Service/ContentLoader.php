@@ -25,7 +25,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 class ContentLoader extends PageRequestor {
     protected $container;
 
-    protected static $tables = ['InstagramItem', 'VkontakteItem'];
+    protected static $tables = ['InstagramItem', 'VkontakteItem', 'FacebookItem'];
     private static $loadedStatus = 1;
     private static  $userGalleryMap = array();
     private static $idUserMap = array();
@@ -111,8 +111,12 @@ class ContentLoader extends PageRequestor {
             $em->persist($ghm);
             $gallery->addGalleryHasMedia($ghm);
         } else if ($item->getType() == 'audio') {
-            $query = $em->createQueryBuilder()->select('u')->from('NetworkStoreBundle:User', 'u')->
-                    andWhere('u.'.$resourceOwner.'Id = :id')->setParameter('id', $owner)->getQuery();
+            $query = $em->createQueryBuilder()
+                        ->select('u')
+                        ->from('NetworkStoreBundle:User', 'u')
+                        ->andWhere('u.'.$resourceOwner.'Id = :id')
+                        ->setParameter('id', $owner)
+                        ->getQuery();
             $results = $query->getResult();
             if (!empty($results)) {
                 if (!method_exists($item, 'getTitle')
@@ -122,12 +126,14 @@ class ContentLoader extends PageRequestor {
                 }
                 $metadata['title'] = $item->getTitle();
                 $metadata['artist'] = $item->getArtist();
-                $metadata['genre'] = $item->getGenre();
-                $song = $this->container ->get('doctrine')
-                    ->getRepository('NetworkStoreBundle:Song')->getSongByMetadata($metadata);
+                $metadata['genre'] = $item->getGenre() !== null ? $item->getGenre() : "none";
+                $song = $this->container
+                             ->get('doctrine')
+                             ->getRepository('NetworkStoreBundle:Song')
+                             ->getSongByMetadata($metadata);
                 $user = $results[0];
                 $mp3 = new MP3File();
-                $mp3->setPath($file->getFilename());
+                $mp3->setPath($file->getRealPath());
                 $em->persist($mp3);
                 $record = new MP3Record();
                 $record->addUser($user);
