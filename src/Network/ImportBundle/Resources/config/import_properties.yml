@@ -52,4 +52,3 @@ network_import:
                 - 'LastUpdateTimestamp'
             headers:
                 - 'If-None-Match'
-

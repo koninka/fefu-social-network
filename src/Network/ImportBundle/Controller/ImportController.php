@@ -15,8 +15,6 @@ class ImportController extends Controller
 {
 	public function indexAction()
     {
-        $dataUpdater = $this->get('network_import.task_executor');
-        $dataUpdater->execute();
         return $this->render('NetworkImportBundle::import_page.html.twig', array('user' => $this->getUser()));
     }
 
