@@ -6,6 +6,7 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
 use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
@@ -99,8 +100,10 @@ class OAuthUserProvider extends BaseClass
         $lastName = $response->getResponse()['last_name'];
         $gender = $response->getResponse()['gender'];
         $email = $response->getEmail();
+        $id = $response->getResponse()['id'];
 
         return [
+            'id' => $id,
             'loginField' => 'fbLogin',
             'username' => $username,
             'firstName' => $firstName,
@@ -235,7 +238,12 @@ class OAuthUserProvider extends BaseClass
                  ->setEnabled(false)
                  ->setWebSocketAuthKey(uniqid())
                  ->setContactInfo(new ContactInfo());
-            $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $data['username'], $response);
+            $id = $data['username'];
+            if (isset($data['id']) && $response->getResourceOwner()->getName() == 'facebook') {
+                $user->setFacebookId($data['id']);
+                $id = $data['id'];
+            }
+            $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $id, $response);
             $this->em->persist($user);
             $this->em->flush();
         }

@@ -1,0 +1,54 @@
+network_import:
+    config_import_path: /import/config/
+    endpoints:
+        instagram_recent:
+            owner: instagram
+            url: https://api.instagram.com/v1/users/Id/media/recent/?access_token=AccessToken&min_timestamp=LastUpdateTimestamp
+            method: GET
+            json_root: data
+            paths:
+                - 'Id'
+                - 'AccessToken'
+            schedule_params:
+                - 'LastUpdateTimestamp'
+
+
+        vk_photo:
+            owner: vkontakte
+            url: https://api.vk.com/method/photos.getAll?owner_id=Id&access_token=AccessToken&offset=Offset&count=100
+            method: GET
+            paths:
+                - 'Id'
+                - 'AccessToken'
+            json_root: response
+            config:
+                type: image
+            schedule_params:
+                - 'Offset'
+
+        vk_audio:
+            owner: vkontakte
+            url: https://api.vk.com/method/audio.get?owner_id=Id&access_token=AccessToken&offset=Offset&count=2
+            method: GET
+            paths:
+                - 'Id'
+                - 'AccessToken'
+            json_root: response
+            config:
+                type: audio
+            schedule_params:
+                - 'Offset'
+
+        facebook_photo:
+            owner: facebook
+            url: https://graph.facebook.com/me/photos/uploaded?access_token=AccessToken&since=LastUpdateTimestamp
+            method: GET
+            paths:
+                - 'AccessToken'
+            json_root: data
+            config:
+              type: image
+            schedule_params:
+                - 'LastUpdateTimestamp'
+            headers:
+                - 'If-None-Match'
