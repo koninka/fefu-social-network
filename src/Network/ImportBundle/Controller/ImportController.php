@@ -73,7 +73,6 @@ class ImportController extends Controller
         return $this->render($url, $params);
     }
 
-
     public function registerSyncTasks($service, $key, $endpoint, $config)
     {
         $configs = get_object_vars($config);;
