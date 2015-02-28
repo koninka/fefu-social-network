@@ -14,6 +14,8 @@ use Application\Sonata\MediaBundle\Entity\GalleryHasMedia;
 use Application\Sonata\MediaBundle\Entity\Media;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Exception;
+use Network\StoreBundle\Entity\MP3File;
+use Network\StoreBundle\Entity\MP3Record;
 use Network\StoreBundle\Entity\UserGallery;
 use Symfony\Component\Console\Output\ConsoleOutput;
 use Symfony\Component\Filesystem\Filesystem;
@@ -37,7 +39,9 @@ class ContentLoader extends PageRequestor {
 
     private function getItemContent($item)
     {
-        $em = $this->container ->get('doctrine')->getManager();
+        $resourceOwner = $item->getResourceOwner();
+        $owner = $item->getOwnerId();
+        $em = $this->container->get('doctrine')->getManager();
         $media = new Media();
         if (!method_exists($item, 'getUrl')) {
             throw new Exception('UnknownItemException');
@@ -50,16 +54,14 @@ class ContentLoader extends PageRequestor {
         if (!method_exists($item, 'getType')) {
             throw new Exception('UnknownItemException');
         }
-        if ($item->getType() === 'image') {
-            $owner = $item->getOwnerId();
+        if ($item->getType() == 'image') {
             if (!isset(self::$userGalleryMap[$owner])) {
-                $resourceOwner = $item->getResourceOwner();
                 $query = $em->createQueryBuilder()
-                            ->select('u')
-                            ->from('NetworkStoreBundle:User', 'u')
-                            ->andWhere('u.'.$resourceOwner.'Id = :id')
-                            ->setParameter('id', $owner)
-                            ->getQuery();
+                    ->select('u')
+                    ->from('NetworkStoreBundle:User', 'u')
+                    ->andWhere('u.'.$resourceOwner.'Id = :id')
+                    ->setParameter('id', $owner)
+                    ->getQuery();
                 $results = $query->getResult();
                 if (empty($results)) {
                     return;
@@ -91,8 +93,7 @@ class ContentLoader extends PageRequestor {
                     //$em->flush();
                     $user->addAlbum($userAlbum);
                     self::$idUserMap[$owner] = $user;
-                    $userManager = $this->container
-                                        ->get('fos_user.user_manager');
+                    $userManager = $this->container->get('fos_user.user_manager');
                     $userManager->updateUser($user);
                     self::$userGalleryMap[$owner] = $gallery;
                 }
@@ -109,8 +110,35 @@ class ContentLoader extends PageRequestor {
                 ->setMedia($media);
             $em->persist($ghm);
             $gallery->addGalleryHasMedia($ghm);
+        } else if ($item->getType() == 'audio') {
+            $query = $em->createQueryBuilder()->select('u')->from('NetworkStoreBundle:User', 'u')->
+                    andWhere('u.'.$resourceOwner.'Id = :id')->setParameter('id', $owner)->getQuery();
+            $results = $query->getResult();
+            if (!empty($results)) {
+                if (!method_exists($item, 'getTitle')
+                    || !method_exists($item, 'getArtist')
+                    || !method_exists($item, 'getGenre')) {
+                    throw new Exception('UnknownItemException');
+                }
+                $metadata['title'] = $item->getTitle();
+                $metadata['artist'] = $item->getArtist();
+                $metadata['genre'] = $item->getGenre();
+                $song = $this->container ->get('doctrine')
+                    ->getRepository('NetworkStoreBundle:Song')->getSongByMetadata($metadata);
+                $user = $results[0];
+                $mp3 = new MP3File();
+                $mp3->setPath($file->getFilename());
+                $em->persist($mp3);
+                $record = new MP3Record();
+                $record->addUser($user);
+                $record->setFile($mp3);
+                $record->setUploaded(new \DateTime());
+                $record->setSong($song);
+                $em->persist($record);
+            }
+
         }
-    }
+}
 
     public function loadContent()
     {

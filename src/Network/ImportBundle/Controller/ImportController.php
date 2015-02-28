@@ -56,6 +56,7 @@ class ImportController extends Controller
             $form->handleRequest($request);
             if ($form->isValid()) {
                 $config = $form->getData();
+                $em = $this->getDoctrine()->getManager();
                 foreach ($endpoints as $key => $endpoint) {
                     if ($endpoint['owner'] == $service && isset($endpoint['config'])) {
                         foreach ($endpoint['config'] as $k => $c) {
@@ -63,8 +64,8 @@ class ImportController extends Controller
                             method_exists($config, $setter) ? $config->$setter($c) : 1;
                         }
                     }
+                    self::registerSyncTasks($service, $key, $endpoint, $config);
                 }
-                self::registerSyncTasks($service, $endpoints, $config);
                 $url =  'NetworkImportBundle::import_wait.html.twig';
             }
         }
@@ -72,30 +73,28 @@ class ImportController extends Controller
         return $this->render($url, $params);
     }
 
-    public function registerSyncTasks($service, $endpoints, $config)
+    public function registerSyncTasks($service, $key, $endpoint, $config)
     {
         $configs = get_object_vars($config);;
         $em = $this->getDoctrine()->getManager();
-        foreach ($endpoints as $key => $endpoint) {
-            if ($endpoint['owner'] == $service) {
-                $task = new SyncTask();
-                $task->setEndpoint($key)
-                    ->setUserId($this->getUser()->getId())
-                    ->setParams($configs)
-                    ->setLastUpdateTimestamp(0)
-                    ->setOffset(0);
-                $tasks = $em->createQueryBuilder()
-                    ->select('u')
-                    ->from('NetworkStoreBundle:SyncTask', 'u')
-                    ->andWhere('u.endpoint = :key')
-                    ->setParameter('key', $key)
-                    ->andWhere('u.userId = :id')
-                    ->setParameter('id', $this->getUser()->getId())
-                    ->getQuery()
-                    ->getResult();
-                if (empty($tasks)) {
-                    $em->persist($task);
-                }
+        if ($endpoint['owner'] == $service) {
+            $task = new SyncTask();
+            $task->setEndpoint($key)
+                ->setUserId($this->getUser()->getId())
+                ->setParams($configs)
+                ->setLastUpdateTimestamp(0)
+                ->setOffset(0);
+            $tasks = $em->createQueryBuilder()
+                ->select('u')
+                ->from('NetworkStoreBundle:SyncTask', 'u')
+                ->andWhere('u.endpoint = :key')
+                ->setParameter('key', $key)
+                ->andWhere('u.userId = :id')
+                ->setParameter('id', $this->getUser()->getId())
+                ->getQuery()
+                ->getResult();
+            if (empty($tasks)) {
+                $em->persist($task);
             }
         }
         $em->flush();

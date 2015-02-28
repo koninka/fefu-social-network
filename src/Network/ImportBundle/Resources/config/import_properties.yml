@@ -25,3 +25,16 @@ network_import:
                 type: image
             schedule_params:
                 - 'Offset'
+
+        vk_audio:
+            owner: vkontakte
+            url: https://api.vk.com/method/audio.get?owner_id=Id&access_token=AccessToken&offset=Offset&count=2
+            method: GET
+            paths:
+                - 'Id'
+                - 'AccessToken'
+            json_root: response
+            config:
+                type: audio
+            schedule_params:
+                - 'Offset'

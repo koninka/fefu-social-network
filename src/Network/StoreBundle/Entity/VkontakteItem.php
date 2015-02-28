@@ -77,6 +77,32 @@ class VkontakteItem
      */
     private $album;
 
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="genre", type="string", length=255, nullable=true)
+     */
+    private $genre;
+
+    /**
+     * @return string
+     */
+    public function getGenre()
+    {
+        return $this->genre;
+    }
+
+    /**
+     * @param string $genre
+     */
+    public function setGenre($genre)
+    {
+        $this->genre = $genre;
+
+        return $this;
+    }
+
     /**
      * @return string
      */
