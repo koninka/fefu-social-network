@@ -356,6 +356,51 @@ class User extends BaseUser
         return $this;
     }
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="facebook_id", type="integer", nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @return int
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param int $facebookId
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
+    }
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="facebook_access_token", type="string", nullable=true)
+     */
+    private $facebookAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getFacebookAccessToken()
+    {
+        return $this->facebookAccessToken;
+    }
+
+    /**
+     * @param int $facebookAccessToken
+     */
+    public function setFacebookAccessToken($facebookAccessToken)
+    {
+        $this->facebookAccessToken = $facebookAccessToken;
+    }
 
     /**
      * @var ArrayCollection

@@ -3,7 +3,7 @@
 namespace Network\ImportBundle\Service;
 
 use Doctrine\ORM\Tools\Pagination\Paginator;
-use Symfony\Component\Console\Output\ConsoleOutput;
+use Exception;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class TaskExecutor extends PageRequestor
@@ -16,6 +16,17 @@ class TaskExecutor extends PageRequestor
     {
         $this->container = $container;
         $this->userManager = $userManager;
+    }
+
+    private function constructHeaderName($header)
+    {
+        return preg_replace_callback(
+            '/(-\w)/i',
+            function ($match) {
+                return strtoupper(substr($match[0], 1));
+            },
+            $header
+        );
     }
 
     public function execute()
@@ -65,6 +76,7 @@ class TaskExecutor extends PageRequestor
                     $user = $userMap[$task->getUserId()];
                     $paths = $endpoint['paths'];
                     $scheduleParams = $endpoint['schedule_params'];
+                    $header = $endpoint['headers'];
                     $getter = 'get' . ucfirst($service);
                     foreach ($paths as $path) {
                         $pathGetter = $getter . $path;
@@ -75,18 +87,29 @@ class TaskExecutor extends PageRequestor
                         $pathGetter = $getter.$p;
                         $params[$p] = $task->$pathGetter();
                     }
-                    $response = $executor->request($endpoint['method'], $endpoint['url'], null, $params);
+                    $headers = array();
+                    foreach ($header as $h) {
+                        $pathGetter = $getter.self::constructHeaderName($h);
+                        $headers[$h] = $task->$pathGetter();
+                    }
+                    $arr = $executor->request($endpoint['method'], $endpoint['url'], $headers, $params);
+                    if (!isset($arr['response'])) {
+                        throw new Exception('Bad response received from RequestExecutor');
+                    }
+                    $response = $arr['response'];
+                    $etag = isset($arr['etag']) ? $arr['etag'] : 0;
                     $offset = $processor->process($service, $response, $config, $endpoint['json_root']);
                     //TODO optimize this query
-                    $q = $em->createQueryBuilder()
-                            ->update('NetworkStoreBundle:SyncTask', 'u')
-                            ->set('u.lastUpdateTimestamp', '?1')
-                            ->set('u.offset', '?2')
-                            ->where('u.id = :id')
-                            ->setParameter('id', $task->getId())
-                            ->setParameter('1', $now->getTimestamp())
-                            ->setParameter('2', $task->getOffset() + $offset)
-                            ->getQuery();
+                    $q = $em->createQueryBuilder()->update('NetworkStoreBundle:SyncTask', 'u')
+                        ->set('u.lastUpdateTimestamp', '?1')
+                        ->set('u.offset', '?2')
+                        ->set('u.ifNoneMatch', '?3')
+                        ->where('u.id = :id')
+                        ->setParameter('id', $task->getId())
+                        ->setParameter('1', $now->getTimestamp())
+                        ->setParameter('2', $task->getOffset() + $offset)
+                        ->setParameter('3', $etag)
+                        ->getQuery();
                     $q->execute();
                 }
                 $em->flush();
