@@ -15,6 +15,8 @@ class ImportController extends Controller
 {
 	public function indexAction()
     {
+        $dataUpdater = $this->get('network_import.task_executor');
+        $dataUpdater->execute();
         return $this->render('NetworkImportBundle::import_page.html.twig', array('user' => $this->getUser()));
     }
 
@@ -83,7 +85,8 @@ class ImportController extends Controller
                 ->setUserId($this->getUser()->getId())
                 ->setParams($configs)
                 ->setLastUpdateTimestamp(0)
-                ->setOffset(0);
+                ->setOffset(0)
+                ->setIfNoneMatch(0);
             $tasks = $em->createQueryBuilder()
                 ->select('u')
                 ->from('NetworkStoreBundle:SyncTask', 'u')

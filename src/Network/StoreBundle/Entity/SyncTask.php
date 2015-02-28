@@ -77,6 +77,31 @@ class SyncTask
     private $offset;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="etag", type="string", nullable=true)
+     */
+    private $ifNoneMatch;
+
+    /**
+     * @return string
+     */
+    public function getIfNoneMatch()
+    {
+        return $this->ifNoneMatch;
+    }
+
+    /**
+     * @param string $IfNoneMatch
+     */
+    public function setIfNoneMatch($IfNoneMatch)
+    {
+        $this->ifNoneMatch = $IfNoneMatch;
+
+        return $this;
+    }
+
+    /**
      * @return int
      */
     public function getOffset()

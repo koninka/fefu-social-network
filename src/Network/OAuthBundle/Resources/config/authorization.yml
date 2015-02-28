@@ -23,9 +23,9 @@ hwi_oauth:
 
         facebook:
             type:             facebook
-            client_id:        "278935655649323"
-            client_secret:    "9005fb2aee66302e460da34160624002"
-            scope:            "email"
+            client_id:        "459203570901678" #"278935655649323"
+            client_secret:    "0e479eac95041fc5a93d6817fd17da53" #"9005fb2aee66302e460da34160624002"
+            scope:            "email,user_photos"
 
         google:
             type:             google
