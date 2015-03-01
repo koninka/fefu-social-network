@@ -41,6 +41,9 @@ twig:
         resources:
             - 'SonataFormatterBundle:Form:formatter.html.twig'
             - 'SonataMediaBundle:Form:media_widgets.html.twig'
+    globals:
+        valid_openid_providers:
+                - { name: Steam, url: http://steamcommunity.com/openid }
 
 # Assetic Configuration
 assetic:
@@ -206,3 +209,7 @@ services:
         arguments: ["%kernel.default_locale%"]
         tags:
             - { name: kernel.event_subscriber }
+
+fp_open_id:
+    db_driver: orm
+    identity_class: Network\StoreBundle\Entity\OpenIdIdentity
