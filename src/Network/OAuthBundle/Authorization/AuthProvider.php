@@ -42,9 +42,9 @@ class AuthProvider extends BaseClass
         //on connect - get the access token and the user ID
         $service = $response->getResourceOwner()->getName();
 
-        $setter = 'set'.ucfirst($service);
-        $setter_id = $setter.'Id';
-        $setter_token = $setter.'AccessToken';
+        $setter = 'set' . ucfirst($service);
+        $setter_id = $setter . 'Id';
+        $setter_token = $setter . 'AccessToken';
 
         //we "disconnect" previously connected users
         if (null !== $previousUser = $this->userManager->findUserBy(array($property => $username))) {
@@ -75,9 +75,9 @@ class AuthProvider extends BaseClass
         //when the user is registrating
         if (null === $user) {
             $service = $response->getResourceOwner()->getName();
-            $setter = 'set'.ucfirst($service);
-            $setter_id = $setter.'Id';
-            $setter_token = $setter.'AccessToken';
+            $setter = 'set' . ucfirst($service);
+            $setter_id = $setter . 'Id';
+            $setter_token = $setter . 'AccessToken';
             // create new user here
             $user = $this->userManager->createUser();
             $user->$setter_id($response->getId());
@@ -85,7 +85,7 @@ class AuthProvider extends BaseClass
             //I have set all requested data with the user's username
             //modify here with relevant data
             $user->setUsername($username)
-                 ->setEmail($username.'@'.'.com')
+                 ->setEmail($username . '@' . '.com')
                  ->setPassword(md5(rand()))
                  ->setEnabled(true)
                  ->setSalt(md5(rand()))
@@ -101,6 +101,7 @@ class AuthProvider extends BaseClass
            // update session
             $this->session->set('_security_secured_area', serialize($token));
             $this->session->save();
+
             return $user;
         }
 

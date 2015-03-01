@@ -147,15 +147,15 @@ class OAuthUserProvider extends BaseClass
             $user = $this->userManager->createUser();
             $user->$setter_id($id);
             $user->$setter_token($response->getAccessToken());
-            $user->setUsername($username);
-            $user->setEmail($username . '@' . '.com');
-            $user->setPassword(md5(rand()));
-            $user->setEnabled(false);
-            $user->setSalt(md5(rand()));
-            $user->setGender('male');
-            $user->setFirstName('adfnbl');
-            $user->setLastName(' ');
-            $user->setContactInfo(new ContactInfo());
+            $user->setUsername($username)
+                 ->setEmail($username . '@' . '.com')
+                 ->setPassword(md5(rand()))
+                 ->setEnabled(false)
+                 ->setSalt(md5(rand()))
+                 ->setGender('male')
+                 ->setFirstName('adfnbl')
+                 ->setLastName(' ')
+                 ->setContactInfo(new ContactInfo());
             $this->userManager->updateUser($user);
             $token = new Token($response->getAccessToken(), $user->getRoles());
             $token->setResourceOwnerName($service->getName());

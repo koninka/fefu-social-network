@@ -62,12 +62,13 @@ class ResumeRegistrationController extends ContainerAware
         }
         $url = $this->container->get('router')->generate('fos_user_profile_show');
         $response = new RedirectResponse($url);
+
         return $response;
     }
 
     protected function getResourceOwnerByName($name)
     {
-        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.'.$this->container->getParameter('hwi_oauth.firewall_name'));
+        $ownerMap = $this->container->get('hwi_oauth.resource_ownermap.' . $this->container->getParameter('hwi_oauth.firewall_name'));
 
         if (null === $resourceOwner = $ownerMap->getResourceOwnerByName($name)) {
             throw new \RuntimeException(sprintf("No resource owner with name '%s'.", $name));

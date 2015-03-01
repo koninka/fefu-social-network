@@ -42,5 +42,15 @@
                 {% endif %}
             </p>
 
+            <p> {{ 'Steam'|trans }}:
+                {% if identity %}
+                    <a href="{{ url("remove_link", {service: "steam"}) }}"> {{ 'steam'|trans }} </a>
+                {% else %}
+                    {% for provider in valid_openid_providers %}
+                        <a class="button authentication" href="{{ path("fp_openid_security_check", {'openid_identifier': provider.url}) }}">{{ provider.name }}</a>
+                    {% endfor %}
+                {% endif %}
+            </p>
+
 {% endblock %}
 

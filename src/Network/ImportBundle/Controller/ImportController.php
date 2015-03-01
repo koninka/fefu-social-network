@@ -61,7 +61,9 @@ class ImportController extends Controller
                     if ($endpoint['owner'] == $service && isset($endpoint['config'])) {
                         foreach ($endpoint['config'] as $k => $c) {
                             $setter = 'set' . ucfirst($k);
-                            method_exists($config, $setter) ? $config->$setter($c) : 1;
+                            if (method_exists($config, $setter)) {
+                                $config->$setter($c);
+                            }
                         }
                     }
                     self::registerSyncTasks($service, $key, $endpoint, $config);

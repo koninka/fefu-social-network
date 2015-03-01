@@ -69,8 +69,9 @@ class OpenIdIdentity implements IdentityInterface
         if ($this->identity) {
             throw new \LogicException('The identity was set before. It is not allowed update it');
         }
-
         $this->identity = $identity;
+
+        return $this;
     }
 
     /**
@@ -87,6 +88,8 @@ class OpenIdIdentity implements IdentityInterface
     public function setAttributes(array $attributes)
     {
         $this->attributes = $attributes;
+
+        return $this;
     }
 
     /**
@@ -125,5 +128,3 @@ class OpenIdIdentity implements IdentityInterface
         return $this->id;
     }
 }
-
-
