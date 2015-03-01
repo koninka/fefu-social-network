@@ -21,7 +21,7 @@ services:
           arguments:
               - @doctrine
 
-   content_loader:
+   network_import.content_loader:
           class: Network\ImportBundle\Service\ContentLoader
           arguments:
               - @service_container
@@ -31,4 +31,9 @@ services:
           arguments:
               - @service_container
               - @fos_user.user_manager
+
+   network_import.fetch_content_consumer_service:
+          class: Network\ImportBundle\Service\FetchContentConsumer
+          arguments:
+              - @service_container
 

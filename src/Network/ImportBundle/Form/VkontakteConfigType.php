@@ -38,7 +38,9 @@ class VkontakteConfigType extends AbstractType
                 $name = $album->getGallery()->getName();
                 $names[$name] = $name;
             }
-            !isset($names[$vkAlbumName]) ? $names[$vkAlbumName] = $vkAlbumName : 1;
+            if (!isset($names[$vkAlbumName])) {
+                $names[$vkAlbumName] = $vkAlbumName;
+            }
         }
         $builder
             ->add('album', 'choice', array(

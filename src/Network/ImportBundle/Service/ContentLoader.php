@@ -37,7 +37,7 @@ class ContentLoader extends PageRequestor {
         $this->container = $container;
     }
 
-    private function getItemContent($item)
+    public function getItemContent($item)
     {
         $resourceOwner = $item->getResourceOwner();
         $owner = $item->getOwnerId();
@@ -59,7 +59,7 @@ class ContentLoader extends PageRequestor {
                 $query = $em->createQueryBuilder()
                     ->select('u')
                     ->from('NetworkStoreBundle:User', 'u')
-                    ->andWhere('u.'.$resourceOwner.'Id = :id')
+                    ->andWhere('u.' . $resourceOwner . 'Id = :id')
                     ->setParameter('id', $owner)
                     ->getQuery();
                 $results = $query->getResult();
@@ -98,6 +98,9 @@ class ContentLoader extends PageRequestor {
                     self::$userGalleryMap[$owner] = $gallery;
                 }
             }
+            if (!isset(self::$userGalleryMap[$owner])) {
+                return;
+            }
             $gallery = self::$userGalleryMap[$owner];
             $media->setBinaryContent($file);
             $media->setContext('default');
@@ -110,11 +113,11 @@ class ContentLoader extends PageRequestor {
                 ->setMedia($media);
             $em->persist($ghm);
             $gallery->addGalleryHasMedia($ghm);
-        } else if ($item->getType() == 'audio') {
+        } else if ('audio' === $item->getType()) {
             $query = $em->createQueryBuilder()
                         ->select('u')
                         ->from('NetworkStoreBundle:User', 'u')
-                        ->andWhere('u.'.$resourceOwner.'Id = :id')
+                        ->andWhere('u.' . $resourceOwner . 'Id = :id')
                         ->setParameter('id', $owner)
                         ->getQuery();
             $results = $query->getResult();
@@ -137,13 +140,14 @@ class ContentLoader extends PageRequestor {
                 $em->persist($mp3);
                 $record = new MP3Record();
                 $record->addUser($user);
-                $record->setFile($mp3);
-                $record->setUploaded(new \DateTime());
-                $record->setSong($song);
+                $record->setFile($mp3)
+                       ->setUploaded(new \DateTime())
+                       ->setSong($song);
                 $em->persist($record);
             }
 
         }
+        $item->setStatus(self::$loadedStatus);
 }
 
     public function loadContent()
@@ -153,26 +157,19 @@ class ContentLoader extends PageRequestor {
             if (class_exists('Network\\StoreBundle\\Entity\\' . $table)) {
                 $query = $em->createQueryBuilder()
                             ->select('t')
-                            ->from('NetworkStoreBundle:'.$table, 't')
+                            ->from('NetworkStoreBundle:' . $table, 't')
                             ->andWhere('t.status != 1');
                 $countQuery = $em->createQueryBuilder('t')
                                  ->select('count(t.id)')
-                                 ->from('NetworkStoreBundle:'.$table, 't')
+                                 ->from('NetworkStoreBundle:' . $table, 't')
                                  ->andWhere('t.status != 1');
                 $pages= self::countPages($countQuery, static::PAGE_SIZE);
-                $i = 1;
-                while ($i <= $pages) {
+                for ($i = 1; $i <= $pages; ++$i) {
                     $page = self::paginate($query, static::PAGE_SIZE, $i);
-                    $items = $page->getQuery()
-                                  ->getResult();
-                    foreach ($items as $item) {
-                        //TODO install message queue server
-                        self::getItemContent($item);
-                        $item->setStatus(self::$loadedStatus);
-                    }
-                    $em->flush();
-                    $em->clear();
-                    ++$i;
+                    $itemsDQL = $page->getQuery()->getDQL();
+                    $this->container
+                         ->get('old_sound_rabbit_mq.fetch_content_producer')
+                         ->publish($itemsDQL);
                 }
                 if ($pages) {
                     self::clearMetaInf($table);

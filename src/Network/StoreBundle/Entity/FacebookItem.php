@@ -376,6 +376,8 @@ class FacebookItem
     public function setFrom($from)
     {
         isset($from['id']) ? $this->ownerId = $from['id'] : 1;
+
+        return $this;
     }
 
     public function getResourceOwner()

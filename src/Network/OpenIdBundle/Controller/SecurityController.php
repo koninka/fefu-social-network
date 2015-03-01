@@ -54,12 +54,11 @@ class SecurityController extends Controller
             }
         }
         $curToken = $this->container->get('security.context')->getToken();
-        if (null != $curToken && $curToken->getUser() && $curToken->getUser()->getEnabled()) {
+        if (null !== $curToken && $curToken->getUser() && $curToken->getUser() !== 'anon.') {
             $user = $curToken->getUser();
             $identity = $this->getIdentityManager()->create();
-            $identity->setIdentity($token->getIdentity());
-            $identity->setAttributes($attributes);
-            $identity->setUser($user);
+            $identity->setAttributes($attributes)
+                     ->setUser($user);
             $this->getIdentityManager()->update($identity);
             $url = $this->generateUrl('fos_user_profile_show');
             $response = new RedirectResponse($url);
@@ -68,9 +67,9 @@ class SecurityController extends Controller
         }
         $this->getDoctrine()->getManager();
         $user = $this->getUserManager()->createUser();
-        $user->setEmail($attributes['contact/email']);
-        $user->setFirstName($attributes['namePerson/first']);
-        $user->setLastName($attributes['namePerson/last']);
+        $user->setEmail($attributes['contact/email'])
+            ->setFirstName($attributes['namePerson/first'])
+            ->setLastName($attributes['namePerson/last']);
 
         /** @var $formFactory \FOS\UserBundle\Form\Factory\FactoryInterface */
         $formFactory = $this->get('fos_user.registration.form.factory');
@@ -91,13 +90,13 @@ class SecurityController extends Controller
         $form->handleRequest($request);
 
         if ($form->isValid()) {
-            $user->setEnabled(true);
-            $user->setUsername($user->getEmail());
+            $user->setEnabled(true)
+                 ->setUsername($user->getEmail());
             $userManager->updateUser($user);
             $identity = $this->getIdentityManager()->create();
-            $identity->setIdentity($token->getIdentity());
-            $identity->setAttributes($attributes);
-            $identity->setUser($user);
+            $identity->setIdentity($token->getIdentity())
+                     ->setAttributes($attributes)
+                     ->setUser($user);
             $this->getIdentityManager()->update($identity);
             $url = $this->generateUrl('fos_user_profile_show');
             $response = new RedirectResponse($url);

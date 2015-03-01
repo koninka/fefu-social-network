@@ -38,7 +38,9 @@ class FacebookConfigType extends AbstractType
                 $name = $album->getGallery()->getName();
                 $names[$name] = $name;
             }
-            !isset($namse[$AlbumName]) ? $names[$AlbumName] = $AlbumName : 1;
+            if (!isset($namse[$AlbumName])) {
+                $names[$AlbumName] = $AlbumName;
+            }
         }
         $builder
             ->add('album', 'choice', array(

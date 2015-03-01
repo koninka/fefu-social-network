@@ -12,4 +12,3 @@ class NetworkOpenIdBundle extends Bundle
         return new NetworkOpenIdExtension();
     }
 }
-

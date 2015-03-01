@@ -24,7 +24,7 @@ class NetworkImportExtension extends Extension
         $container->setParameter('endpoints', $config['endpoints']);
         $container->setParameter('config_import_path', $config['config_import_path']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

@@ -38,7 +38,9 @@ class InstagramConfigType extends AbstractType
                 $name = $album->getGallery()->getName();
                 $names[$name] = $name;
             }
-            !isset($names[$instagramAlbumName]) ? $names[$instagramAlbumName] = $instagramAlbumName : 1;
+            if (!isset($names[$instagramAlbumName])) {
+                $names[$instagramAlbumName] = $instagramAlbumName;
+            }
         }
         $builder
             ->add('album', 'choice', array(

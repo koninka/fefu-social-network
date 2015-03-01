@@ -25,7 +25,7 @@ class ResponseProcessor
 
     private function constructItemClass($owner)
     {
-        $class = 'Network\\StoreBundle\\Entity\\'.ucfirst($owner) . 'Item';
+        $class = 'Network\\StoreBundle\\Entity\\' . ucfirst($owner) . 'Item';
         if (!class_exists($class)) {
             throw new Exception('UnknownItemException');
         }
@@ -60,13 +60,19 @@ class ResponseProcessor
             $mediaItem = new $mediaClass();
             foreach ($item as $key => $field) {
                 $setter = self::constructSetterName($key);
-                method_exists($mediaItem, $setter) ? $mediaItem->$setter($field) : 1;
+                if (method_exists($mediaItem, $setter)) {
+                    $mediaItem->$setter($field);
+                }
             }
             foreach ($config as $k => $param) {
-                $setter = 'set'.ucfirst($k);
-                method_exists($mediaItem, $setter) ? $mediaItem->$setter($param) : 1;
+                $setter = 'set' . ucfirst($k);
+                if (method_exists($mediaItem, $setter)) {
+                    $mediaItem->$setter($param);
+                }
             }
-            method_exists($mediaItem, 'setStatus') ? $mediaItem->setStatus(0) : 1;
+            if (method_exists($mediaItem, 'setStatus')) {
+                $mediaItem->setStatus(0);
+            }
             $medias[$i] = $mediaItem;
         }
         self::insert($medias);

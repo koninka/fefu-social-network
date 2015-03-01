@@ -38,7 +38,7 @@ class RequestExecutor extends ContainerAware
         if (!empty($headers)) {
             $params = array();
             foreach ($headers as $header => $value) {
-                array_push($params, $header.': '.$value);
+                array_push($params, $header . ': ' . $value);
             }
             curl_setopt($curl, CURLOPT_HTTPHEADER, $params);
         }
@@ -63,6 +63,7 @@ class RequestExecutor extends ContainerAware
             $body = array();
         }
         $ret['response'] = $body;
+
         return $ret;
     }
 
