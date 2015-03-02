@@ -1,0 +1,41 @@
+#video_box {
+    width: 600px;
+    min-height: 600px;
+}
+
+#video_header {
+    background-color: #eee;
+}
+
+input#seach{
+    width: 300px;
+    height: 24px;
+    font-size: 16px;
+    line-height: 24px;
+    padding: 0 0 0 5px;
+}
+
+.popup_video a{
+    text-decoration: none;
+    font-size: 12px;
+    color: #000;
+}
+
+.popup_video img {
+    width: 240px;
+    margin-top: 5px;
+}
+
+.popup_video{
+    display: inline-block;
+    background-color: #f9f9f9;
+    margin: 5px;
+    padding: 5px;
+    width: 250px;
+    vertical-align: top;
+}
+
+iframe{
+    margin: 0 auto;
+    display: block;
+}
