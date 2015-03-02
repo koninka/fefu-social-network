@@ -181,6 +181,15 @@ sonata_media:
                 small: { width: 100 , quality: 70}
                 big:   { width: 1024 , quality: 70}
 
+        video:
+            download:
+                strategy: sonata.media.security.superadmin_strategy
+                mode: http
+            providers:
+                - sonata.media.provider.youtube
+            formats:
+                small: { width: 320 , quality: 160}
+                big:   { width: 640 , quality: 480}
     cdn:
         server:
             path: /uploads/media # http://media.sonata-project.org/
@@ -193,6 +202,14 @@ sonata_media:
     providers:
         image:
             resizer: sonata.media.resizer.square
+        youtube:
+             service:    sonata.media.provider.youtube
+             resizer:    sonata.media.resizer.simple
+             filesystem: sonata.media.filesystem.local
+             cdn:        sonata.media.cdn.server
+             generator:  sonata.media.generator.default
+             thumbnail:  sonata.media.thumbnail.format
+             html5: false
 
 parameters:
     user_form_builder.class: Network\UserBundle\UserFormBuilder
