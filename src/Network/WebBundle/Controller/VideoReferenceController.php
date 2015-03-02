@@ -8,6 +8,7 @@ use Network\UserBundle\Form\Type\VideoReferenceType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class VideoReferenceController extends Controller
 {
@@ -147,6 +148,43 @@ class VideoReferenceController extends Controller
         return $this->render('NetworkUserBundle:Video:edit_video.html.twig', [
             'form'  => $form->createView(),
             'video' => $videoReference,
+        ]);
+    }
+
+    public function bindVideoReferenceAction(Request $request){
+
+        $user = $this->getUser();
+
+        if (null === $user) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
+
+        $id = $request->request->get('video_id');
+
+        $videoReference = $this->getDoctrine()->getRepository('NetworkStoreBundle:VideoReference')->find($id);
+
+        if(null === $videoReference) {
+            return new JsonResponse([
+                'status' => 'bad',
+            ]);
+        } else if ($user->getId() === $videoReference->getUser()->getId()) {
+            return new JsonResponse([
+                'status' => 'already',
+            ]);
+        }
+
+        $newVideoReference = new Video();
+        $newVideoReference->setVideo($videoReference->getVideo())
+            ->setName($videoReference->getName())
+            ->setDescription($videoReference->getDescription())
+            ->setUser($user);
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($newVideoReference);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 'ok',
         ]);
     }
 }

@@ -106,6 +106,13 @@ edit_video:
   requirements:
     id: \d+
 
+bind_video:
+  path: /video/bind/
+  defaults: { _controller: NetworkWebBundle:VideoReference:bindVideoReference }
+  methods: [POST]
+  options:
+    expose: true
+
 wall_write:
   path: /{type}/id{id}/write
   defaults: { _controller: NetworkWebBundle:Wall:write }
