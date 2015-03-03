@@ -19,11 +19,11 @@
                 {% if search %}
                     <input name="search" id="seach" value="{{ search }}" type="text">
                 {% else %}
-                    <input name="search" id="seach" placeholder="{{ 'video.search_placeholder'|trans({}, 'FOSUserBundle') }}" type="text">
+                    <input name="search" id="seach" placeholder="{{ 'video.search.placeholder'|trans({}, 'FOSUserBundle') }}" type="text">
                 {% endif %}
-                <button type="submit">{{ 'video.search_submit'|trans({}, 'FOSUserBundle') }}</button>
+                <button type="submit">{{ 'video.search.submit'|trans({}, 'FOSUserBundle') }}</button>
             </form>
-            <a href="{{ path('add_video') }}" class="blue_button" id="add_video">{{ 'video.add_video'|trans({}, 'FOSUserBundle') }}</a>
+            <a href="{{ path('add_video') }}" class="blue_button" id="add_video">{{ 'video.add.name'|trans({}, 'FOSUserBundle') }}</a>
         </div>
         {% for video in videos %}
             <div class="popup_video">
@@ -31,9 +31,9 @@
                     <p>{{ video.title }}</p>
                     <img src="{{ video.thumbnail }}">
                 </a>
-                <a href="{{ path('edit_video', {'id': video.id} ) }}">{{ 'video.edit_video'|trans({}, 'FOSUserBundle') }}</a>
-                <button value="{{ video.id }}" class="bind_video">{{ 'video.bind_video'|trans({}, 'FOSUserBundle') }}</button>
-                <button value="{{ video.id }}" class="delete_video">{{ 'video.delete_video'|trans({}, 'FOSUserBundle') }}</button>
+                <a href="{{ path('edit_video', {'id': video.id} ) }}">{{ 'video.edit.name'|trans({}, 'FOSUserBundle') }}</a>
+                <button value="{{ video.id }}" class="bind_video">{{ 'video.bind.name'|trans({}, 'FOSUserBundle') }}</button>
+                <button value="{{ video.id }}" class="delete_video">{{ 'video.delete.name'|trans({}, 'FOSUserBundle') }}</button>
             </div>
         {% endfor %}
     </div>
