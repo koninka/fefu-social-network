@@ -88,6 +88,7 @@ layout:
     links: Ссылки
     reset_password: Сбросить пароль
     audios: Аудиозаписи
+    videos: Видеозаписи
 
 # Email change
 change_email:
@@ -115,6 +116,23 @@ album:
         submit: Добавить альбом
     show:
         photos: Все фото
+
+# Video
+video:
+  add:
+    name: Добавить видео
+    submit: Загрузить
+  edit:
+    submit: Сохранить
+    name: Редактировать видео
+  bind:
+    name: Добавить к себе
+  delete:
+    name: Удалить видео
+  search:
+    submit: Найти
+    placeholder: Введите название
+
 
 # Threads
 threads:
@@ -290,3 +308,7 @@ form:
             join_requests:
                 nobody: Запросы о вступлении в группу отсутствуют.
             empty: В группе нет ни одного участника.
+    video:
+        name: Название
+        description: Описание
+        link: Ссылка на видео
