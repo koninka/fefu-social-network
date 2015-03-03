@@ -106,6 +106,13 @@ edit_video:
   requirements:
     id: \d+
 
+delete_video:
+  path: /video/delete/
+  defaults: { _controller: NetworkWebBundle:VideoReference:deleteVideoReference }
+  methods: [POST]
+  options:
+    expose: true
+
 bind_video:
   path: /video/bind/
   defaults: { _controller: NetworkWebBundle:VideoReference:bindVideoReference }

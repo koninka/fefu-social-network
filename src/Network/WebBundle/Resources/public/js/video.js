@@ -4,6 +4,10 @@ $(document).ready(function() {
     $('.bind_video').click(function(){
         bindVideo($(this).val());
     });
+
+    $('.delete_video').click(function(){
+        deleteVideo($(this).val(), $(this));
+    });
 });
 
 function bindVideo(id) {
@@ -23,6 +27,32 @@ function bindVideo(id) {
                     break;
                 case 'bad':
                     alert('failed to add video');
+                    break;
+                default:
+                    break;
+            }
+        }
+    );
+}
+
+function deleteVideo(id, sender) {
+    $.post(
+        "/video/delete/",
+        {
+            video_id: id
+        },
+        function(resp, textStatus, jqXHR)
+        {
+            switch (resp['status']) {
+                case 'ok':
+                    sender.parent().remove();
+                    alert('video delete');
+                    break;
+                case 'no_rights':
+                    alert('you can\'t delete this video');
+                    break;
+                case 'bad':
+                    alert('failed to delete video');
                     break;
                 default:
                     break;
