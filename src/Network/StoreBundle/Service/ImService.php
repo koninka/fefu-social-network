@@ -4,6 +4,8 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Network\WebSocketBundle\Message\Message;
+use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Network\StoreBundle\Entity\Thread;
@@ -21,11 +23,18 @@ class ImService
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @var ServerManager
      */
-    public function __construct($em)
+    private $serverManager;
+
+    /**
+     * @param EntityManager $em
+     * @param ServerManager $serverManager
+     */
+    public function __construct($em, $serverManager)
     {
         $this->em = $em;
+        $this->serverManager = $serverManager;
     }
 
     public function getThreadByIdAndUserIdOrThrow($threadId, $userId)
@@ -77,6 +86,10 @@ class ImService
         }
         $manager->remove($userThread);
         $manager->flush();
+        
+        $this->serverManager->sendNotifyMessage(new Message($userId,
+                'Вас удалили из конференции ' . $userThread->getThread()->getTopic(),
+                Message::TYPE_FAIL));
 
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
     }
@@ -115,6 +128,14 @@ class ImService
         $thread->incUnreadPosts($user);
         $this->em->persist($post);
         $this->em->flush();
+
+        foreach ($thread->getUsers() as $threadUser) {
+            if ($user->getId() != $threadUser->getId()) {
+                $this->serverManager->sendNotifyMessage(new Message($threadUser->getId(),
+                        'Новое сообщение от' . $user->getFirstName() . ' ' . $user->getLastName(),
+                        Message::TYPE_SUCCESS));
+            }
+        }
 
         date_default_timezone_set($oldTimeZone);
 
@@ -160,6 +181,9 @@ class ImService
         $thread->addUser($user, $userId);
         foreach ($recipientUsers as $recipientUser) {
             $thread->addUser($recipientUser, $userId);
+            $this->serverManager->sendNotifyMessage(new Message($recipientUser->getId(),
+                    'Вас пригласили в конференцию ' . $topic,
+                    Message::TYPE_SUCCESS));
         }
 
         $this->persistAndFlush($thread);
