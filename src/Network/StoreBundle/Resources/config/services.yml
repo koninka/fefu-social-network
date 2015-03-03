@@ -1,7 +1,7 @@
 services:
   network_store.relationship_manager:
       class: Network\StoreBundle\Service\RelationshipManager
-      arguments: [ "@doctrine.orm.entity_manager", "@security.context" ]
+      arguments: [ "@doctrine.orm.entity_manager", "@security.context", "@network_web_socket.server_manager" ]
 
   network_store.form.type.job:
       class: Network\StoreBundle\Form\Type\JobType

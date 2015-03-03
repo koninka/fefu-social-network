@@ -204,6 +204,7 @@ network_web_socket:
             applications:
                 - echo
 
+
             # Origin control
             check_origin: true
             allow_origin: # default: just localhost (not useful!)
@@ -214,6 +215,7 @@ network_web_socket:
             max_clients:             30
             max_connections_per_ip:  5
             max_requests_per_minute: 50
+
 
 parameters:
     user_form_builder.class: Network\UserBundle\UserFormBuilder

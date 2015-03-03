@@ -4,19 +4,23 @@ namespace Network\StoreBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Relationship;
+use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
+use Network\WebSocketBundle\Message\Message;
 
 class RelationshipManager extends Controller
 {
     protected $em;
     protected $user;
+    protected $serverManager;
 
-    public function __construct(EntityManager $em, SecurityContext $securityContext)
+    public function __construct(EntityManager $em, SecurityContext $securityContext, ServerManager $serverManager)
     {
         $this->em   = $em;
         $this->user = $securityContext->getToken()->getUser();
+        $this->serverManager = $serverManager;
     }
 
     /**
@@ -68,8 +72,11 @@ class RelationshipManager extends Controller
             $this->em->persist($relationship);
 
             $this->em->flush();
+            $this->serverManager->sendNotifyMessage(new Message($id, '123', Message::TYPE_SUCCESS));
 
-            return 'friendship_accepted';
+            $this->serverManager->sendNotifyMessage(new Message($id,
+                    $this->user->getFirstName() . ' ' .$this->user->getLastName() . 'Принял вашу заявку в друзья',
+                    Message::TYPE_SUCCESS));
         }
 
         if ($relationship->getStatus() != RelationshipStatusEnumType::FS_NONE) {
@@ -88,6 +95,10 @@ class RelationshipManager extends Controller
         $this->em->persist($newFriendRelationship);
 
         $this->em->flush();
+
+        $this->serverManager->sendNotifyMessage(new Message($id,
+                'Вам пришло приглашение в друзья от ' . $this->user->getFirstName() . ' ' .$this->user->getLastName(),
+                Message::TYPE_SUCCESS));
 
         return 'friendship_request_sent';
     }
@@ -114,7 +125,9 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        return 'friendship_accepted';
+        $this->serverManager->sendNotifyMessage(new Message($id,
+                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' принял вашу заявку в друзья',
+                Message::TYPE_SUCCESS));
     }
 
     /**
@@ -140,6 +153,10 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
+        $this->serverManager->sendNotifyMessage(new Message($id,
+                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' отклонил вашу заявку в друзья',
+                Message::TYPE_FAIL));
+
         return 'friendship_request_declined';
     }
 
@@ -163,6 +180,10 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
+        $this->serverManager->sendNotifyMessage(new Message($id,
+                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' удалил Вас из друзей',
+                Message::TYPE_FAIL));
+
         return 'friendship_deleted';
     }
 
@@ -182,6 +203,10 @@ class RelationshipManager extends Controller
         $this->em->remove($relationship);
 
         $this->em->flush();
+
+        $this->serverManager->sendNotifyMessage(new Message($id,
+                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' отписался от вас',
+                Message::TYPE_FAIL));
 
         return 'friendship_request_deleted';
     }

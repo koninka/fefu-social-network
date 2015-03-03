@@ -47,6 +47,4 @@ class NetworkWebSocketExtension extends Extension
     {
         return __DIR__ . '/../Resources/config/';
     }
-
-
 }

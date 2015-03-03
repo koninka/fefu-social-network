@@ -9,6 +9,12 @@ use \Closure;
 abstract class Application extends BaseApplication
 {
     /**
+     * EntityManager
+     */
+    protected $em;
+
+
+    /**
      * Active clients
      *
      * @var array
@@ -79,5 +85,10 @@ abstract class Application extends BaseApplication
             $collected[] = $client->send($data);
         }
         return $collected;
+    }
+
+    public function setEm(\Doctrine\ORM\EntityManager $em)
+    {
+        $this->em = $em;
     }
 }

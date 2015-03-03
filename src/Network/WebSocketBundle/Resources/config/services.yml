@@ -4,7 +4,7 @@ parameters:
 services:
     network_web_socket.server_manager:
         class: %network_web_socket.server_manager.class%
-#        arguments: [@monolog.logger]
+        arguments: [@doctrine.orm.entity_manager]
     websocket_example:
         class: Network\WebSocketBundle\Application\EchoApplication
         tags:

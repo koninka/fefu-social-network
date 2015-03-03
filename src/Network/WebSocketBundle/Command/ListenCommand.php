@@ -38,10 +38,6 @@ class ListenCommand extends ContainerAwareCommand
         $name = $input->getArgument('server_name');
 
         $manager = $this->getContainer()->get('network_web_socket.server_manager');
-        $manager->setLogger(function ($message, $level) use ($output) {
-                $output->writeln($level . ': ' . $message);
-            });
-
         $server = $manager->getServer($name);
         $server->run();
     }

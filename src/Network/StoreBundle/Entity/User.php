@@ -71,6 +71,13 @@ class User extends BaseUser
     /**
      * @var string
      *
+     * @ORM\Column(name="websocket_auth_key", type="string", length=255, nullable=true)
+     */
+    protected $webSocketAuthKey;
+
+    /**
+     * @var string
+     *
      * @Assert\NotBlank()
      */
     protected $username;
@@ -877,5 +884,24 @@ class User extends BaseUser
     public function getPoll()
     {
         return $this->poll;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebSocketAuthKey()
+    {
+        return $this->webSocketAuthKey;
+    }
+
+    /**
+     * @param string $webSocketAuthKey
+     * @return User
+     */
+    public function setWebSocketAuthKey($webSocketAuthKey)
+    {
+        $this->webSocketAuthKey = $webSocketAuthKey;
+
+        return $this;
     }
 }
