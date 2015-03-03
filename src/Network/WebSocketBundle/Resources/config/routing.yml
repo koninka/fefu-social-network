@@ -1,3 +1,0 @@
-network_web_socket_homepage:
-    path:     /socket/test
-    defaults: { _controller: NetworkWebSocketBundle:Default:index }

@@ -7,10 +7,50 @@
             <link href="{{ asset('bundles/networkweb/css/reset.css') }}" type="text/css" rel="stylesheet" />
             <link href="{{ asset('bundles/networkweb/css/main.css') }}" type="text/css" rel="stylesheet" />
             <link href="{{ asset('bundles/networkweb/css/form.css') }}" type="text/css" rel="stylesheet" />
+            <link href="{{ asset('bundles/networkweb/css/jBox.css') }}" type="text/css" rel="stylesheet" />
         {% endblock %}
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block javascripts %}
+            <script src="{{ asset('bundles/networkweb/js/jBox.min.js') }}"></script>
         {% endblock %}
+        <script>
+            {% if app.user %}
+            websocket = new WebSocket('ws://' + window.location.hostname + ':8000/echo');
+            websocket.onopen = function (evt) {
+                {% block wsOpen %}
+                wsSend({
+                    action: 'auth',
+                    data: '{{ app.user.webSocketAuthKey }}'
+                });
+                {% endblock wsOpen %}
+            };
+            websocket.onclose = function (evt) {
+                {% block wsClose %}
+
+                {% endblock wsClose %}
+            };
+            websocket.onmessage = function (evt) {
+                {% block wsMessage %}
+                var data = JSON.parse(evt.data);
+                new jBox('Notice', {
+                    content: data.text,
+                    color:  data.type,
+                    autoClose: false
+                });
+                {% endblock wsMessage %}
+            };
+            websocket.onerror = function (evt) {
+                {% block wsError %}
+
+                {% endblock wsError %}
+            };
+            function wsSend(data) {
+                websocket.send(JSON.stringify(data));
+            }
+            {% else %}
+
+            {% endif %}
+        </script>
         <div>
             <a class="white_a" href="{{ path('change_locale', {'_locale':'en'}) }}">EN</a>
             <a class="white_a" href="{{ path('change_locale', {'_locale':'ru'}) }}">RU</a>
