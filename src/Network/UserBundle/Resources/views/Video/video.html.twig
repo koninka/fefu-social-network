@@ -33,6 +33,7 @@
                 </a>
                 <a href="{{ path('edit_video', {'id': video.id} ) }}">{{ 'video.edit_video'|trans({}, 'FOSUserBundle') }}</a>
                 <button value="{{ video.id }}" class="bind_video">{{ 'video.bind_video'|trans({}, 'FOSUserBundle') }}</button>
+                <button value="{{ video.id }}" class="delete_video">{{ 'video.delete_video'|trans({}, 'FOSUserBundle') }}</button>
             </div>
         {% endfor %}
     </div>

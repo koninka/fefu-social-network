@@ -151,6 +151,37 @@ class VideoReferenceController extends Controller
         ]);
     }
 
+    public function deleteVideoReferenceAction(Request $request){
+
+        $user = $this->getUser();
+
+        if (null === $user) {
+            return $this->redirect($this->generateUrl('mainpage'));
+        }
+
+        $id = $request->request->get('video_id');
+
+        $videoReference = $this->getDoctrine()->getRepository('NetworkStoreBundle:VideoReference')->find($id);
+
+        if(null === $videoReference) {
+            return new JsonResponse([
+                'status' => 'bad',
+            ]);
+        } else if ($user->getId() !== $videoReference->getUser()->getId()) {
+            return new JsonResponse([
+                'status' => 'no_rights',
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($videoReference);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ]);
+    }
+
     public function bindVideoReferenceAction(Request $request){
 
         $user = $this->getUser();
