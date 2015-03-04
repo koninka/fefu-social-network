@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
+    - { resource: @NetworkWebSocketBundle/Resources/config/sockets.yml }
 
 sonata_admin:
     title: VDolgah
@@ -193,29 +194,6 @@ sonata_media:
     providers:
         image:
             resizer: sonata.media.resizer.square
-
-
-network_web_socket:
-    servers:
-        default: # Server name
-            listen: ws://vdolgah.local:8000 # default: ws://localhost:8000
-
-            # Applications this server will allow
-            applications:
-                - echo
-
-
-            # Origin control
-            check_origin: true
-            allow_origin: # default: just localhost (not useful!)
-                - "vdolgah.local"
-                - "vdolgah.org"
-
-            # Other defaults
-            max_clients:             30
-            max_connections_per_ip:  5
-            max_requests_per_minute: 50
-
 
 parameters:
     user_form_builder.class: Network\UserBundle\UserFormBuilder

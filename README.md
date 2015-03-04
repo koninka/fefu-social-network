@@ -107,7 +107,7 @@ To run server change directory to repository root and execute:
     
 ### Running sockets
 
-Replace in `config.yml` in `network_web_socket.server` section address name on yours.
+Replace in `NetworkWebSocketBundle\sockets.yml` in `network_web_socket.server` section address name on yours.
 
 Then run command:
 
