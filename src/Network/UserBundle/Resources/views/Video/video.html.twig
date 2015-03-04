@@ -1,0 +1,40 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/video.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/video.js') }}"></script>
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+{% endblock %}
+{% block right_content_sub_one %}
+    <div id="video_box">
+        <div id="video_header">
+            <form>
+                {% if search %}
+                    <input name="search" id="seach" value="{{ search }}" type="text">
+                {% else %}
+                    <input name="search" id="seach" placeholder="{{ 'video.search.placeholder'|trans({}, 'FOSUserBundle') }}" type="text">
+                {% endif %}
+                <button type="submit">{{ 'video.search.submit'|trans({}, 'FOSUserBundle') }}</button>
+            </form>
+            <a href="{{ path('add_video') }}" class="blue_button" id="add_video">{{ 'video.add.name'|trans({}, 'FOSUserBundle') }}</a>
+        </div>
+        {% for video in videos %}
+            <div class="popup_video">
+                <a class="popup" href="{{ video.html }}">
+                    <p>{{ video.title }}</p>
+                    <img src="{{ video.thumbnail }}">
+                </a>
+                <a href="{{ path('edit_video', {'id': video.id} ) }}">{{ 'video.edit.name'|trans({}, 'FOSUserBundle') }}</a>
+                <button value="{{ video.id }}" class="bind_video">{{ 'video.bind.name'|trans({}, 'FOSUserBundle') }}</button>
+                <button value="{{ video.id }}" class="delete_video">{{ 'video.delete.name'|trans({}, 'FOSUserBundle') }}</button>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

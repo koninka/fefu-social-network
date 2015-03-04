@@ -175,6 +175,14 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
+     * @ORM\ManyToMany(targetEntity="VideoReference", inversedBy="users")
+     * @ORM\JoinTable(name="users_video")
+     */
+    private $videoReferences;
+
+    /**
+     * @var ArrayCollection
+     *
      * @ORM\ManyToMany(targetEntity="Thread", cascade="persist", fetch="EXTRA_LAZY")
      * @ORM\JoinTable(name="users_walls",
      *      joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -701,6 +709,49 @@ class User extends BaseUser
 
         return $this;
     }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getVideoReferences()
+    {
+        return $this->videoReferences;
+    }
+
+    /**
+     * @param ArrayCollection $references
+     *
+     * @return User
+     */
+    public function setVideoReferences($references)
+    {
+        $this->videoReferences = $references;
+
+        return $this;
+    }
+
+    /**
+     * @param VideoReference $reference
+     * @return User
+     */
+    public function addVideoReferences(VideoReference $reference)
+    {
+        $this->videoReferences->add($reference);
+
+        return $this;
+    }
+
+    /**
+     * @param VideoReference $reference
+     * @return User
+     */
+    public function removeVideoReferences(VideoReference $reference)
+    {
+        $this->videoReferences->removeElement($reference);
+
+        return $this;
+    }
+
      /**   
      * Add poll
      *

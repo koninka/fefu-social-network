@@ -92,6 +92,34 @@ audios_json_edit:
   options:
     expose: true
 
+videos:
+  path: /video/
+  defaults: { _controller: NetworkWebBundle:VideoReference:index }
+
+add_video:
+  path: /video/add/
+  defaults: { _controller: NetworkWebBundle:VideoReference:addVideoReference }
+
+edit_video:
+  path: /video/edit/{id}
+  defaults: { _controller: NetworkWebBundle:VideoReference:editVideoReference }
+  requirements:
+    id: \d+
+
+delete_video:
+  path: /video/delete/
+  defaults: { _controller: NetworkWebBundle:VideoReference:deleteVideoReference }
+  methods: [POST]
+  options:
+    expose: true
+
+bind_video:
+  path: /video/bind/
+  defaults: { _controller: NetworkWebBundle:VideoReference:bindVideoReference }
+  methods: [POST]
+  options:
+    expose: true
+
 wall_write:
   path: /{type}/id{id}/write
   defaults: { _controller: NetworkWebBundle:Wall:write }
@@ -164,7 +192,7 @@ user_poll:
     id: \d+
   options:
     expose: true
-    
+
 users_poll:
   path: /users/poll
   defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }

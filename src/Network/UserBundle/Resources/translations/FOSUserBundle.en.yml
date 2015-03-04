@@ -88,6 +88,7 @@ layout:
     links: Links
     reset_password: Reset password
     audios: Music
+    videos: Video
 
 # Email change
 change_email:
@@ -115,6 +116,22 @@ album:
         submit: Add album
     show:
         photos: All photos
+
+# Video
+video:
+    add:
+        name: Add video
+        submit: Upload
+    edit:
+        submit: Save
+        name: Edit video
+    bind:
+        name: Add to my videos
+    delete:
+        name: Delete video
+    search:
+        submit: Search
+        placeholder: Enter the name
 
 # Threads
 threads:
@@ -290,3 +307,7 @@ form:
             join_requests:
                 nobody: No requests to join the community.
             empty: Group is empty.
+    video:
+        name: Title
+        description: Description
+        link: Video link
