@@ -8,7 +8,7 @@
     display: block;
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.5) 0 4px 24px 6px;
-    padding: 10px;
+    padding: 10px 10px 15px 10px;
 }
 
 #logo img{
@@ -72,6 +72,16 @@
     color: #5b5b5b;
 }
 
+/*----------------------------------Localization------------------------------------*/
+
+#localization_box{
+    margin-top: 15px;
+    text-align: center;
+}
+
+#localization_box a{
+    margin: 0 2px 0 2px;
+}
 
 /*----------------------------------Registration------------------------------------*/
 
