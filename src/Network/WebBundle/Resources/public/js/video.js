@@ -1,3 +1,5 @@
+var canSubmit = true;
+
 $(document).ready(function() {
     $('.popup_video a.popup').magnificPopup({type:'inline'});
 
@@ -7,6 +9,14 @@ $(document).ready(function() {
 
     $('.delete_video').click(function(){
         deleteVideo($(this).val(), $(this));
+    });
+
+    $('#add_video').submit(function(){
+        if (canSubmit) {
+            canSubmit = false;
+            return true;
+        }
+        return false;
     });
 });
 
