@@ -143,37 +143,8 @@ class ServerManager
 
     public function sendNotifyMessage(Message $msg)
     {
-
-
         $mem = new \Jamm\Memory\RedisObject('messages');
 
         $mem->increment(EchoApplication::MSG_CONTAINER, [$msg]);
-
-//        $bid = 5557;
-//        $mode = "w";
-//        $status = @shmop_open($bid, "a", 0, 0);
-//        if ($status) {
-//            $shmid    = shmop_open($bid, "a", 0, 0);
-//            $size     = shmop_size($shmid);
-//            $data     = shmop_read($shmid, 0, $size);
-//            $messages = unserialize($data);
-////            shmop_delete($shmid);
-//            shmop_close($shmid);
-//        } else {
-//            $messages = [];
-//            $mode = "c";
-//        }
-//
-//        $messages[$userId][] = $msg;
-//
-//        $data = serialize($messages);
-//
-//        $size = mb_strlen($data, 'UTF-8');
-//
-//        $shmid = shmop_open($bid, $mode, 0777, $size);
-//        shmop_write($shmid, $data, 0);
-//        shmop_close($shmid);
-
-
     }
 }

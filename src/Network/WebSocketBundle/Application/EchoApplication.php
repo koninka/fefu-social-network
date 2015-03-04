@@ -85,40 +85,6 @@ class EchoApplication extends Application
             $mem->del(self::MSG_CONTAINER);
             $mem->save(self::MSG_CONTAINER, $newMessages);
         }
-//
-//        $bid = 5557;
-//
-//        $status = @shmop_open($bid, "w", 0, 0);
-//
-//        if ($status) {
-//            $shmid    = shmop_open($bid, "a", 0, 0);
-//            $size     = shmop_size($shmid);
-//            $data     = shmop_read($shmid, 0, $size);
-//            $messages = unserialize($data);
-//            $this->log('Messages readed');
-//
-//
-//            foreach ($messages as $userId => $userMessages) {
-//                if (!array_key_exists($userId, $this->users)) {
-//                    continue;
-//                }
-//                foreach ($userMessages as $msg) {
-//                    $this->users[$userId][self::CLIENT_KEY]->send(json_encode($msg));
-//                }
-//
-//                unset($messages[$userId]);
-//            }
-//
-//            shmop_close($shmid);
-//
-//            $data = serialize($messages);
-//            $size = mb_strlen($data, 'UTF-8');
-//
-//            $shmid = shmop_open($bid, "w", 0777, $size);
-//            shmop_write($shmid, $data, 0);
-//            shmop_close($shmid);
-//
-//        }
     }
 
     public function onData($data, $client)
