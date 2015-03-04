@@ -64,7 +64,7 @@ class User extends BaseUser
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Poll", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Poll", mappedBy="owner", cascade={"persist"})
      */
     protected $poll;
 
