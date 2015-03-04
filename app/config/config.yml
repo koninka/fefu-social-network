@@ -39,7 +39,7 @@ twig:
     form:
         resources:
             - 'SonataFormatterBundle:Form:formatter.html.twig'
-            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+            - 'ApplicationSonataMediaBundle:Form:media_widgets.html.twig'
 
 # Assetic Configuration
 assetic:
