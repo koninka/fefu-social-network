@@ -14,6 +14,7 @@ use Network\StoreBundle\Entity\User;
 use Network\StoreBundle\Entity\PostFile;
 use Network\StoreBundle\DBAL\ThreadEnumType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\Translator;
 
 class ImService
 {
@@ -28,13 +29,20 @@ class ImService
     private $serverManager;
 
     /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
      * @param EntityManager $em
      * @param ServerManager $serverManager
+     * @param Translator $translator
      */
-    public function __construct($em, $serverManager)
+    public function __construct($em, $serverManager, $translator)
     {
         $this->em = $em;
         $this->serverManager = $serverManager;
+        $this->translator = $translator;
     }
 
     public function getThreadByIdAndUserIdOrThrow($threadId, $userId)
@@ -88,7 +96,8 @@ class ImService
         $manager->flush();
         
         $this->serverManager->sendNotifyMessage(new Message($userId,
-                'Вас удалили из конференции ' . $userThread->getThread()->getTopic(),
+                $this->translator->trans('notify.kicked_from_conference', [], 'FOSUserBundle') .
+                ' ' . $userThread->getThread()->getTopic(),
                 Message::TYPE_FAIL));
 
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
@@ -132,7 +141,8 @@ class ImService
         foreach ($thread->getUsers() as $threadUser) {
             if ($user->getId() != $threadUser->getId()) {
                 $this->serverManager->sendNotifyMessage(new Message($threadUser->getId(),
-                        'Новое сообщение от' . $user->getFirstName() . ' ' . $user->getLastName(),
+                        $this->translator->trans('notify.new_message_from', [], 'FOSUserBundle') .
+                        ' ' . $user->getFirstName() . ' ' . $user->getLastName(),
                         Message::TYPE_SUCCESS));
             }
         }
@@ -182,7 +192,8 @@ class ImService
         foreach ($recipientUsers as $recipientUser) {
             $thread->addUser($recipientUser, $userId);
             $this->serverManager->sendNotifyMessage(new Message($recipientUser->getId(),
-                    'Вас пригласили в конференцию ' . $topic,
+                    $this->translator->trans('notify.invited_to_conference', [], 'FOSUserBundle') .
+                    ' ' . $topic,
                     Message::TYPE_SUCCESS));
         }
 
