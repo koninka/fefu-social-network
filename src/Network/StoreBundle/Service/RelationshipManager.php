@@ -9,18 +9,22 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
 use Network\WebSocketBundle\Message\Message;
+use Symfony\Component\Translation\Translator;
 
 class RelationshipManager extends Controller
 {
     protected $em;
     protected $user;
     protected $serverManager;
+    protected $translator;
 
-    public function __construct(EntityManager $em, SecurityContext $securityContext, ServerManager $serverManager)
+    public function __construct(EntityManager $em, SecurityContext $securityContext,
+        ServerManager $serverManager, Translator $translator)
     {
         $this->em   = $em;
         $this->user = $securityContext->getToken()->getUser();
         $this->serverManager = $serverManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -50,6 +54,13 @@ class RelationshipManager extends Controller
         ];
     }
 
+    private function sendMessage($userId, $transMsg, $type) {
+        $this->serverManager->sendNotifyMessage(new Message($userId,
+                $this->user->getFirstName() . ' ' . $this->user->getLastName() . ' ' .
+                $this->translator->trans($transMsg, [], 'FOSUserBundle'),
+                $type));
+    }
+
     /**
      * @param $id
      * @return string
@@ -72,11 +83,10 @@ class RelationshipManager extends Controller
             $this->em->persist($relationship);
 
             $this->em->flush();
-            $this->serverManager->sendNotifyMessage(new Message($id, '123', Message::TYPE_SUCCESS));
 
-            $this->serverManager->sendNotifyMessage(new Message($id,
-                    $this->user->getFirstName() . ' ' .$this->user->getLastName() . 'Принял вашу заявку в друзья',
-                    Message::TYPE_SUCCESS));
+            $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
+
+            return 'friendship_accepted';
         }
 
         if ($relationship->getStatus() != RelationshipStatusEnumType::FS_NONE) {
@@ -96,9 +106,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->serverManager->sendNotifyMessage(new Message($id,
-                'Вам пришло приглашение в друзья от ' . $this->user->getFirstName() . ' ' .$this->user->getLastName(),
-                Message::TYPE_SUCCESS));
+        $this->sendMessage($id, 'notify.friendship_request_received', Message::TYPE_SUCCESS);
 
         return 'friendship_request_sent';
     }
@@ -125,9 +133,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->serverManager->sendNotifyMessage(new Message($id,
-                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' принял вашу заявку в друзья',
-                Message::TYPE_SUCCESS));
+        $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
     }
 
     /**
@@ -153,9 +159,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->serverManager->sendNotifyMessage(new Message($id,
-                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' отклонил вашу заявку в друзья',
-                Message::TYPE_FAIL));
+        $this->sendMessage($id, 'notify.decline_friendship_request', Message::TYPE_FAIL);
 
         return 'friendship_request_declined';
     }
@@ -180,9 +184,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->serverManager->sendNotifyMessage(new Message($id,
-                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' удалил Вас из друзей',
-                Message::TYPE_FAIL));
+        $this->sendMessage($id, 'notify.remove_from_friends', Message::TYPE_FAIL);
 
         return 'friendship_deleted';
     }
@@ -204,9 +206,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->serverManager->sendNotifyMessage(new Message($id,
-                $this->user->getFirstName() . ' ' .$this->user->getLastName() . ' отписался от вас',
-                Message::TYPE_FAIL));
+        $this->sendMessage($id, 'notify.unsubscribe', Message::TYPE_FAIL);
 
         return 'friendship_request_deleted';
     }

@@ -182,6 +182,17 @@ poll:
         answer:
             submit: Add poll
 
+#Notify
+notify:
+    remove_from_friends: removed you from friends
+    unsubscribe: unsubscribed from you
+    decline_friendship_request: declined your request
+    accept_friendship_request: accept your request
+    friendship_request_received: sent you request
+    kicked_from_conference: You were kicked from conference
+    new_message_from: New message from
+    invited_to_conference: You were invited to conference
+
 # Message
 msg:
     not_authorized: User is not authorized.

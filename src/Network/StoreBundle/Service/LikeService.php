@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\ORM\EntityManager;
 use Network\WebSocketBundle\Service\ServerManager;
+use Symfony\Component\Translation\Translator;
 
 class LikeService
 {
