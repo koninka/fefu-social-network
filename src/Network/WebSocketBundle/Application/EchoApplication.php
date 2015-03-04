@@ -19,9 +19,6 @@ class EchoApplication extends Application
     const ACTION_KEY = 'action';
     const DATA_KEY = 'data';
 
-    const MESSAGE_TEXT_FIELD = 'text';
-    const MESSAGE_TYPE_FIELD = 'type';
-
     public function getName()
     {
         return 'echo';
@@ -43,16 +40,33 @@ class EchoApplication extends Application
 
     public function onDisconnect($client)
     {
-        $id = $client->getId();
-        unset($this->clients[$id]);
+        $clientId = $client->getId();
+        if (!array_key_exists($clientId, $this->clients)) {
+            return;
+        }
+        $userId = $this->clients[$clientId][self::USER_ID_KEY];
+        unset($this->clients[$clientId]);
+        if (!array_key_exists($userId, $this->users)) {
+            return;
+        }
+        //loop connected sockets with this userId
+        for ($i = 0; $i < count($this->users[$userId]); $i++) {
+            //delete needed one
+            if (array_key_exists($i, $this->users[$userId]) && $this->users[$userId][$i][self::CLIENT_KEY]->getId() == $clientId) {
+                unset($this->users[$userId][$i]);
+                if (count($this->users[$userId]) == 0) {
+                    unset($this->users[$userId]);
+                }
+                break;
+            }
+        }
     }
 
     public function onUpdate()
     {
-
         $mem = new \Jamm\Memory\RedisObject('messages');
 
-        $messages = $mem->read(EchoApplication::MSG_CONTAINER);
+        $messages = $mem->read(self::MSG_CONTAINER);
 
         if (!empty($messages)) {
             $newMessages = [];
@@ -62,15 +76,14 @@ class EchoApplication extends Application
                     continue;
                 }
 
-                $m = [
-                    self::MESSAGE_TEXT_FIELD => $msg->text,
-                    self::MESSAGE_TYPE_FIELD => $msg->type
-                ];
-
-                $this->users[$msg->userId][self::CLIENT_KEY]->send(json_encode($m));
+                foreach ($this->users[$msg->userId] as $user) {
+                    if ($user[self::CLIENT_KEY]->getSocket()->isConnected()) {
+                        $user[self::CLIENT_KEY]->send(json_encode($msg->toArray()));
+                    }
+                }
             }
-            $mem->del('data');
-            $mem->save('data', $newMessages);
+            $mem->del(self::MSG_CONTAINER);
+            $mem->save(self::MSG_CONTAINER, $newMessages);
         }
 //
 //        $bid = 5557;
@@ -115,36 +128,38 @@ class EchoApplication extends Application
             exit;
         }
         $clientId = $client->getId();
-        if (!array_key_exists($clientId, $this->clients)) {
-            if ($data[self::ACTION_KEY] === 'auth') {
-                $users = $this->em->getRepository('NetworkStoreBundle:User')->findBy(
-                    ['webSocketAuthKey' => $data[self::DATA_KEY]]
-                );
+        if (array_key_exists($clientId, $this->clients)) {
+            //already authed
+            //handle other messages here
+            return;
+        }
+        if ($data[self::ACTION_KEY] === 'auth') {
+            $users = $this->em->getRepository('NetworkStoreBundle:User')->findBy(
+                ['webSocketAuthKey' => $data[self::DATA_KEY]]
+            );
                 $user  = null;
-                if (count($users) > 0) {
-                    $user = $users[0];
-                }
-                if ($user) {
-                    $this->clients[$clientId]    = [
-                        self::CLIENT_KEY  => $client,
-                        self::USER_ID_KEY => $user->getId()
-                    ];
-                    $this->users[$user->getId()] = [
-                        self::CLIENT_KEY  => $client,
-                        self::USER_ID_KEY => $user->getId()
-                    ];
-
-                    $this->log('User with id ' . $user->getId() . ' authed');
-
-                    $m = [
-                        self::MESSAGE_TEXT_FIELD => 'You are connected and your id is ' . $user->getId(),
-                        self::MESSAGE_TYPE_FIELD => Message::TYPE_NORMAL
-                    ];
-                    $client->send(json_encode($m));
-                }
+            if (count($users) > 0) {
+                $user = $users[0];
             }
-        } else {
+            if ($user) {
+                $this->users[$user->getId()][] = [
+                    self::CLIENT_KEY  => $client,
+                    self::USER_ID_KEY => $user->getId()
+                ];
+                $this->clients[$clientId]    = [
+                    self::CLIENT_KEY  => $client,
+                    self::USER_ID_KEY => $user->getId()
+                ];
 
+                $this->log('User with id ' . $user->getId() . ' authed');
+
+//                    $m = [
+//                        Message::ACTION_FIELD => Message::ACTION,
+//                        Message::TEXT_FIELD => 'You are connected and your id is ' . $user->getId(),
+//                        Message::TYPE_FIELD => Message::TYPE_NORMAL
+//                    ];
+//                    $client->send(json_encode($m));
+                }
         }
     }
 }

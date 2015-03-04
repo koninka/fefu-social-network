@@ -10,6 +10,12 @@ class Message implements Serializable {
     const TYPE_FAIL = 'red';
     const TYPE_NORMAL = 'black';
 
+    const ACTION = 'notify';
+
+    const TEXT_FIELD = 'text';
+    const TYPE_FIELD = 'type';
+    const ACTION_FIELD = 'action';
+
     public $userId;
     public $text;
     public $type;
@@ -38,8 +44,16 @@ class Message implements Serializable {
         $this->type = $data['type'];
     }
 
+    public function toArray() {
+        $m = [
+            self::ACTION_FIELD => self::ACTION,
+            self::TEXT_FIELD => $this->text,
+            self::TYPE_FIELD => $this->type
+        ];
+        return $m;
+    }
+
     public function __toString() {
         return 'msg.' . $this->userId;
     }
-
 }

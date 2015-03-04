@@ -11,7 +11,6 @@ use Monolog\Logger;
 use Network\WebSocketBundle\Message\Message;
 use Network\WebSocketBundle\Application\EchoApplication;
 
-
 class ServerManager
 {
     private $em;
