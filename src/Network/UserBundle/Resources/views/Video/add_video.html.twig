@@ -4,9 +4,14 @@
     {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/video.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/video.js') }}"></script>
+{% endblock %}
 {% block right_content_sub_one %}
     <div id="video_box">
-        <form action="{{ path('add_video') }}" {{ form_enctype(form) }} method="POST">
+        <form id="add_video" action="{{ path('add_video') }}" {{ form_enctype(form) }} method="POST">
             {{ form_widget(form) }}
             <div>
                 <input class="blue_button" type="submit" value="{{'video.add.submit'|trans }}" />
