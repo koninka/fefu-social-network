@@ -17,5 +17,6 @@
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
             {% endblock %}
         {% endblock %}
-    </div>
+        {% include 'NetworkWebBundle:block:localization.html.twig' with {'color': 'gray'} %}
+        </div>
 {% endblock %}
