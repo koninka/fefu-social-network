@@ -304,7 +304,7 @@ function addPoll(data) {
                 <label for="'+ answer[i][0]+'">'+ answer[i][1]+'</label>');
                 form.append(ans);
             }
-        var submit = $('<input class="blue_button" type="button" value="poll.submit"></input>');
+        var submit = $('<input class="btn btn-blue" type="button" value="poll.submit"></input>');
         form.append(submit);
         $(submit).on('click', function (e) {
             var value = $("input[name=answer]:checked").val();

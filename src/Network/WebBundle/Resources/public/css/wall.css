@@ -1,37 +1,190 @@
-.post {
-
-}
-
-.username {
-    float: left;
-}
-
-.timestamp, .controls {
-    float: right;
-    margin: 3px;
-}
-
 .msg {
     margin: 10px;
+    text-align: left;
+    font-size: 14px;
 }
 
-.comment {
-    background: #bfbfbf;
-}
 .poll_open_result:hover {
-    color: #ffe; 
+    color: #ffe;
     cursor: pointer;
 }
 
 .poll_post {
-    border: 4px double black;
-    background: #fef;
     padding: 5px;
 }
 
 .form_poll {
-    border: 4px double black;
-    background: #fef; 
-    padding: 3%;
+    padding: 10px;
+    border: 1px solid #e5e5e5;
+    margin: 10px 0 0 0;
+    text-align: left;
 }
-    
+
+.form_poll label {
+    font-size: 12px;
+    display: inline-block;
+}
+
+#poll_question {
+
+}
+
+#add-new-post-box #answer input {
+    width: 360px;
+    padding: 3px 3px 3px 6px;
+}
+
+#add-new-post-box #answer input[type="checkbox"] {
+    width: 20px;
+}
+
+input #poll_isAnonymously {
+    display: inline-block;
+}
+
+#add-new-post-box {
+    padding: 5px 10px 10px 10px;
+    margin: 0 0 20px 0;
+}
+
+#add-new-post-box input[type="text"] {
+    padding: 8px;
+    font-size: 14px;
+    width: 440px;
+    margin: 0 0 5px 0;
+}
+
+#show_my_btn {
+    border: none;
+    background-color: #fff;
+    float: right;
+    margin: 0 0 5px 0;
+    color: #3b628f;
+}
+
+#form > div {
+    height: 26px;
+}
+
+#create_poll {
+    border: none;
+    background-color: #fff;
+    float: left;
+    color: #3b628f;
+}
+
+#tell_btn {
+    font-size: 12px;
+    padding: 2px 5px;
+    float: right;
+}
+
+#posts > div {
+    margin: 0 0 20px 0;
+    position: relative;
+}
+
+.username {
+    margin: 0 0 4px 0;
+}
+
+.username, .timestamp {
+    display: block;
+    text-align: left;
+}
+
+.username a {
+    text-decoration: none;
+}
+
+.timestamp {
+    font-size: 10px;
+    color: #bbc1c6;
+}
+
+.controls {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    font-size: 12px;
+}
+
+.controls a {
+    text-decoration: none;
+}
+
+.like {
+    text-align: right;
+}
+
+.like #count {
+    display: inline-block;
+    font-size: 12px;
+    color: #3b628f;
+}
+
+.like button {
+    display: inline-block;
+    border: none;
+    color: #3b628f;
+    font-size: 12px;
+    padding: 0;
+    margin: 0 5px 0 0;
+    cursor: pointer;
+}
+
+.post .like button {
+    background-color: #fff;
+    color: #3b628f;
+}
+
+.comments {
+    position: relative;
+    margin: 30px 0 0 0;
+}
+
+.comment {
+    background-color: #fdfdfd;
+    position: relative;
+    margin: 10px 0 0 0;
+    padding: 5px;
+}
+
+.to_comment {
+    margin: 20px 0 0 0;
+}
+
+.to_comment form {
+    text-align: right;
+}
+
+.comment_text {
+    max-width: 440px;
+    width: 440px;
+}
+
+#poll_question {
+    width: 420px;
+    max-width: 420px;
+    min-height: 60px;
+    max-height: 160px;
+    font-size: 14px;
+}
+
+.comment_text, #poll_question {
+    padding: 8px;
+    border: 1px solid #e5e5e5;
+    border-radius: 2px;
+}
+
+.btn-comment {
+    font-size: 12px;
+    padding: 2px 5px;
+}
+
+.btn-delete-answer {
+    padding: 5px 8px;
+    font-size: 10px;
+    margin: -3px 0 0 10px;
+}
+

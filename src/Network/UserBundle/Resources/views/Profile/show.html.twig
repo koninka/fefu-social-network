@@ -2,9 +2,9 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkweb/css/magnific-popup.css') }}" type="text/css" rel="stylesheet"/>
     <link href="{{ asset('bundles/networkweb/css/like.css') }}" type="text/css" rel="stylesheet">
-    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet"/>
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
@@ -15,12 +15,7 @@
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
-{% block ava_content %}
-    {% if user.avatar %}
-        <p class="popup-gallery">
-            <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" /></a>
-            <div id="{{user.avatar.getId}}_like">
-                <script>mediaLike({{user.avatar.getId}}) </script>
+
 {% block right_content_sub_one %}
     <div id="avatar-box" class="white-box">
         <div>
@@ -37,41 +32,45 @@
             {% endif %}
         </div>
     </div>
+    <div id="user-ref-btn-box">
+        {% if is_granted('ROLE_USER') and not is_cur_user %}
+            <div>
+                <p>
+                    <a class="btn btn-blue"
+                       href="{{ path('user_profile_show_messages', {'partnerId':user.id} ) }}">{{ 'layout.write_message'|trans }}</a>
+                    {% if rl_status == 'relationship_none' or rl_status == 'friendship_subscribed_by_user' %}
+                        <a class="btn btn-blue"
+                           href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans }}</a>
+                    {% elseif rl_status == 'friendship_accepted' %}
+                        <a class="btn btn-default"
+                           href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
+                    {% elseif rl_status == 'friendship_subscribed_by_me' %}
+                        <a class="btn btn-default"
+                           href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans }}</a>
+                    {% endif %}
+                </p>
             </div>
-        </p>
-    {% else %}
-        {{ parent() }}
-    {% endif %}
+        {% endif %}
+    </div>
 {% endblock %}
 
 {% block right_content_sub_two %}
     {{ parent() }}
-    {% if is_granted('ROLE_USER') and not is_cur_user %}
-        <div>
-            <p>
-                <a class="blue_button" href="{{ path('user_profile_show_messages', {'partnerId':user.id} )}}">{{ 'layout.write_message'|trans }}</a>
-                {% if rl_status == 'relationship_none' or rl_status == 'friendship_subscribed_by_user' %}
-                    <a class="blue_button" href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans }}</a>
-                {% elseif rl_status == 'friendship_accepted' %}
-                    <a class="gray_button" href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
-                {% elseif rl_status == 'friendship_subscribed_by_me' %}
-                    <a class="gray_button" href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans }}</a>
-                {% endif %}
-            </p>
-        </div>
-    {% endif %}
-    <div class="fos_user_user_show">
-        <p>{{ 'profile.show.firstName'|trans }}: {{ user.firstName }}</p>
-        <p>{{ 'profile.show.lastName'|trans }}: {{ user.lastName }}</p>
-        <p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>
+    <div id="user-contact-info">
+        <div id="name-box">{{ user.firstName }} {{ user.lastName }}</div>
+        {#<p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>#}
         <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
-        <p>{{ 'profile.show.skype'|trans }}: {{ user.contactInfo.skype }}</p>
-        <p>{{ 'profile.show.additionalEmail'|trans }}: {{ user.contactInfo.additionalEmail}}</p>
-        {% for phonenumber in user.contactInfo.phone  %}
-             <p>{{ 'profile.show.phonenumber'|trans }}: {{ phonenumber }}</p>
+        {% if user.contactInfo.skype %}
+            <p>{{ 'profile.show.skype'|trans }}: {{ user.contactInfo.skype }}</p>
+        {% endif %}
+        {% if user.contactInfo.additionalEmail %}
+            <p>{{ 'profile.show.additionalEmail'|trans }}: {{ user.contactInfo.additionalEmail }}</p>
+        {% endif %}
+        {% for phonenumber in user.contactInfo.phone %}
+            <p>{{ 'profile.show.phonenumber'|trans }}: {{ phonenumber }}</p>
         {% endfor %}
-        {% for address in user.contactInfo.address  %}
-             <p>{{ 'profile.show.address'|trans }}: {{ address }}</p>
+        {% for address in user.contactInfo.address %}
+            <p>{{ 'profile.show.address'|trans }}: {{ address }}</p>
         {% endfor %}
         {% if user.vkLogin %}
             <p> {{ 'link.vkontakte'|trans }}: {{ user.vkLogin }} </p>
@@ -86,12 +85,52 @@
             <p> {{ 'link.google'|trans }}: {{ user.googleLogin }} </p>
         {% endif %}
     </div>
-    <div>
-        <p><a href="{{ path('user_profile_community', {'id':user.id} ) }}">{{ 'layout.show_community'|trans }}</a></p>
-        <p><a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a></p>
-        <p><a href="{{ path('user_show_albums', {'id':user.id} ) }}">{{ 'layout.show_albums'|trans }}</a></p>
+    <div class="horizontal-line"></div>
+    <div id="user-ref-info-box" class="white-box">
+        <div>
+            <a href="{{ path('user_profile_community', {'id':user.id} ) }}">
+                <span>
+                    {{ user_ref_info.groups }}
+                </span>
+                {{ 'layout.show_community'|trans }}
+            </a>
+        </div>
+        <div class="vertical-separator-line"></div>
+        <div>
+            <a href="{{ path('user_show_friends', {'id':user.id} ) }}">
+                <span>
+                    {{ user_ref_info.friends }}
+                </span>
+                {{ 'layout.show_friends'|trans }}
+            </a>
+        </div>
+        <div class="vertical-separator-line"></div>
+        <div>
             <a href="{{ path('user_show_albums', {'id':user.id} ) }}">
+                <span>
+                    {{ user_ref_info.photos }}
+                </span>
+                {{ 'layout.show_albums'|trans }}
+            </a>
+        </div>
+        <div class="vertical-separator-line"></div>
+        <div>
+            <a href="{{ path('audios', {'id':user.id} ) }}">
+                <span>
+                    {{ user_ref_info.audios }}
+                </span>
+                {{ 'layout.audios'|trans({}, 'FOSUserBundle') }}
+            </a>
+        </div>
+        <div class="vertical-separator-line"></div>
+        <div>
+            <a href="{{ path('videos', {'id':user.id} ) }}">
+                <span>
+                    {{ user_ref_info.videos }}
+                </span>
+                {{ 'layout.videos'|trans({}, 'FOSUserBundle') }}
+            </a>
+        </div>
     </div>
-
     {{ render(controller('NetworkWebBundle:Wall:main', {type: 'user', object: user})) }}
 {% endblock %}
