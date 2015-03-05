@@ -8,7 +8,7 @@
         function addAnswer(answer) {
             var answerList = $('#answer-fields-list');
             var newLi = $('<div id = "answer"></div>').html(answer);
-            var linkdelete = $('<button class="blue_button" type="button">X</button>');
+            var linkdelete = $('<button class="btn btn-red btn-delete-answer" type="button">X</button>');
             newLi.append(linkdelete);
             $(linkdelete).click(function(e) {
                 e.preventDefault();
@@ -67,7 +67,7 @@
                             </script>
                         {% endfor %}
                     </div>
-                    <button class="blue_button" type="button" id="add-answer">{{ 'poll.add.answer.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    <button class="btn btn-green btn-small" type="button" id="add-answer">{{ 'poll.add.answer.submit'|trans({}, 'FOSUserBundle') }}</button>
                 </div>
                 {% do form.answers.setRendered %}
             {{ form_end(form) }}
