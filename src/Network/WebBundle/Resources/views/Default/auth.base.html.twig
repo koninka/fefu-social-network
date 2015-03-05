@@ -5,16 +5,16 @@
     <link href="{{ asset('bundles/networkweb/css/login.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block body %}
-    <div class="centered" id="login_container">
+    <div class="centered" id="container">
         <div id="logo">
             <a href="/"><img src="{{ asset('bundles/networkweb/img/logo.png') }}" alt="VDOLGAH" /></a>
         </div>
         {% block authorization %}
             {% block oauth_service_buttons %}
-                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
-                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
-                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
-                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
+                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
+                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
+                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
+                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
             {% endblock %}
         {% endblock %}
         {% include 'NetworkWebBundle:block:localization.html.twig' with {'color': 'gray'} %}

@@ -5,8 +5,8 @@
         {{ form_widget(form) }}
         {{ form_widget(form.gender, { 'attr': {'class': 'calendar'} }) }}
         <div>
-            <input type="submit" class="submit_button" value="{{ 'registration.submit'|trans }}" />
+            <input type="submit" class="btn btn-blue btn-auth-block" value="{{ 'registration.submit'|trans }}" />
         </div>
     </form>
-    <a class="login_authentication_button" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+    <a class="link block gray" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
 {% endblock %}
