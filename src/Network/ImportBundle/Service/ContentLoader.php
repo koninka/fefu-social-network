@@ -1,0 +1,161 @@
+<?php
+/**
+ * Created by PhpStorm.
+ * User: user
+ * Date: 23.02.2015
+ * Time: 17:27
+ */
+
+namespace Network\ImportBundle\Service;
+
+
+use Application\Sonata\MediaBundle\Entity\Gallery;
+use Application\Sonata\MediaBundle\Entity\GalleryHasMedia;
+use Application\Sonata\MediaBundle\Entity\Media;
+use Doctrine\ORM\Tools\Pagination\Paginator;
+use Exception;
+use Network\StoreBundle\Entity\UserGallery;
+use Symfony\Component\Console\Output\ConsoleOutput;
+use Symfony\Component\Filesystem\Filesystem;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Console\Output\OutputInterface;
+
+class ContentLoader extends PageRequestor {
+    protected $container;
+
+    protected static $tables = ['InstagramItem', 'VkontakteItem'];
+    private static $loadedStatus = 1;
+    private static  $userGalleryMap = array();
+    private static $idUserMap = array();
+    const PAGE_SIZE = 50;
+    const IMPORT_DIR = '';//__DIR__ . '/../../../../web/' . 'imports' . '/';
+
+    function __construct($container)
+    {
+        $this->container = $container;
+    }
+
+    private function getItemContent($item)
+    {
+        $em = $this->container ->get('doctrine')->getManager();
+        $media = new Media();
+        if (!method_exists($item, 'getUrl')) {
+            throw new Exception('UnknownItemException');
+        }
+        $content = file_get_contents($item->getUrl());
+        $name = static::IMPORT_DIR . 'temp' . uniqid();
+        $stream = fopen($name, 'w');
+        fwrite($stream, $content);
+        $file = new File($name);
+        if (!method_exists($item, 'getType')) {
+            throw new Exception('UnknownItemException');
+        }
+        if ('image' === $item->getType()) {
+            $owner = $item->getOwnerId();
+            if (!isset(self::$userGalleryMap[$owner])) {
+                $resourceOwner = $item->getResourceOwner();
+                $query = $em->createQueryBuilder()
+                            ->select('u')
+                            ->from('NetworkStoreBundle:User', 'u')
+                            ->andWhere('u.' . $resourceOwner . 'Id = :id')
+                            ->setParameter('id', $owner)
+                            ->getQuery();
+                $results = $query->getResult();
+                if (empty($results)) {
+                    return;
+                }
+                $user = $results[0];
+                $galleries = $this->container
+                    ->get('doctrine')
+                    ->getRepository('NetworkStoreBundle:UserGallery')
+                    ->findAlbumsForUser($user->getId());
+                if (!empty($galleries)) {
+                    foreach ($galleries as $g) {
+                        if ($g->getGallery()->getName() == $item->getAlbum()) {
+                            $gallery = $g;
+                            self::$userGalleryMap[$owner] = $gallery->getGallery();
+                            break;
+                        }
+                    }
+                } else {
+                    $gallery = new Gallery();
+                    $gallery->setName($item->getAlbum())
+                        ->setContext('default')
+                        ->setDefaultFormat('default_small')
+                        ->setEnabled(true);
+                    $userAlbum = new UserGallery();
+                    $userAlbum->setOwner($user)
+                              ->setGallery($gallery);
+                    $em->persist($gallery);
+                    $em->persist($userAlbum);
+                    //$em->flush();
+                    $user->addAlbum($userAlbum);
+                    self::$idUserMap[$owner] = $user;
+                    $userManager = $this->container
+                                        ->get('fos_user.user_manager');
+                    $userManager->updateUser($user);
+                    self::$userGalleryMap[$owner] = $gallery;
+                }
+            }
+            $gallery = self::$userGalleryMap[$owner];
+            $media->setBinaryContent($file);
+            $media->setContext('default');
+            $media->setProviderName('sonata.media.provider.image');
+            $mediaManager = $this->container
+                                 ->get('sonata.media.manager.media');
+            $mediaManager->save($media);
+            $ghm = new GalleryHasMedia();
+            $ghm->setGallery($gallery)
+                ->setMedia($media);
+            $em->persist($ghm);
+            $gallery->addGalleryHasMedia($ghm);
+        }
+    }
+
+    public function loadContent()
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        foreach (self::$tables as $table) {
+            if (class_exists('Network\\StoreBundle\\Entity\\' . $table)) {
+                $query = $em->createQueryBuilder()
+                            ->select('t')
+                            ->from('NetworkStoreBundle:' . $table, 't')
+                            ->andWhere('t.status != 1');
+                $countQuery = $em->createQueryBuilder('t')
+                                 ->select('count(t.id)')
+                                 ->from('NetworkStoreBundle:' . $table, 't')
+                                 ->andWhere('t.status != 1');
+                $pages= self::countPages($countQuery, static::PAGE_SIZE);
+                for($i = 1; $i <= $pages; ++$i) {
+                    $page = self::paginate($query, static::PAGE_SIZE, $i);
+                    $items = $page->getQuery()
+                                  ->getResult();
+                    foreach ($items as $item) {
+                        //TODO install message queue server
+                        self::getItemContent($item);
+                        $item->setStatus(self::$loadedStatus);
+                    }
+                    $em->flush();
+                    $em->clear();
+                }
+                if ($pages) {
+                    self::clearMetaInf($table);
+                }
+            }
+        }
+    }
+
+    public function clearMetaInf($table)
+    {
+        $em = $this->container->get('doctrine')->getManager();
+        if (class_exists('Network\\StoreBundle\\Entity\\' . $table)) {
+            $em->createQueryBuilder()
+                ->delete()
+                ->from('NetworkStoreBundle:' . $table, 't')
+                ->andWhere('t.status = 1')
+                ->getQuery()
+                ->execute();
+        }
+    }
+
+}

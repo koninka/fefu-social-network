@@ -19,6 +19,7 @@ security:
                     github:              github_login
                     facebook:            facebook_login
                     google:              google_login
+                    instagram:           instagram_login
                 login_path:        fos_user_security_login
                 failure_path:      mainpage
                 default_target_path: registration_step_2

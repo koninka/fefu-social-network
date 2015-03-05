@@ -1,0 +1,25 @@
+{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
+{% block edit_content %}
+
+    <p> {{ 'your social networks:'|trans }}:
+        {% if user.instagramId %}
+            <p> {{ 'Instagram:'|trans }}:
+                <a href="{{ url("config_import", {service: 'instagram'}) }}"> {{ 'import photo'|trans }} </a>
+            <p>
+        {% endif %}
+        {% if user.vkontakteId %}
+            <p> {{ 'Vkontakte:'|trans }}:
+                <a href="{{ url("config_import", {service: 'vkontakte'}) }}"> {{ 'import photo'|trans }} </a>
+            <p>
+        {% endif %}
+    </p>
+
+{% endblock %}
