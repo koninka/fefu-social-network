@@ -6,16 +6,14 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js') }}"></script>
-    <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jquery.jplayer.min.js') }}"></script>
-    <script src="{{ asset('bundles/networkweb/js/lib/jplayer/jplayer.playlist.js') }}"></script>
-    <script src="{{ asset('bundles/networkweb/js/lib/jquery.uploadfile.min.js') }}"></script>
-    <script src="{{ asset('bundles/networkweb/js/audio.js') }}"></script>
 
-{#
-{% javascripts '@NetworkWebBundle/Resources/public/js/*' %}
-    <script src="{{ asset_url }}"></script>
-{% endjavascripts %}
-#}
+    {% javascripts '@NetworkWebBundle/Resources/public/js/lib/jplayer/jquery.jplayer.min.js'
+    '@NetworkWebBundle/Resources/public/js/lib/jplayer/jplayer.playlist.js'
+    '@NetworkWebBundle/Resources/public/js/lib/jquery.form.js'
+    '@NetworkWebBundle/Resources/public/js/lib/jquery.uploadfile.js'
+    '@NetworkWebBundle/Resources/public/js/audio.js' %}
+        <script src="{{ asset_url }}"></script>
+    {% endjavascripts %}
 
 {% endblock %}
 
@@ -26,7 +24,8 @@
           type="text/css"
           rel="stylesheet" />
 
-    <link href="http://hayageek.github.io/jQuery-Upload-File/uploadfile.min.css"
+    <link href="{{ asset('bundles/networkweb/css/uploadfile.css') }}"
+          type="text/css"
           rel="stylesheet">
 
 {% endblock %}
