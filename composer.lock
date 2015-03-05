@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "36a8a2248a2c40bc63ffde783987c2cd",
+    "hash": "668869ad2f77b79fd696fa463dd665d7",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -1262,6 +1262,58 @@
             "time": "2013-12-07 10:10:39"
         },
         {
+            "name": "jamm/memory",
+            "version": "dev-master",
+            "target-dir": "Jamm/Memory",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/jamm/Memory.git",
+                "reference": "cb5b04eca587b5d01823ba48df6bb75d268a9696"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/jamm/Memory/zipball/cb5b04eca587b5d01823ba48df6bb75d268a9696",
+                "reference": "cb5b04eca587b5d01823ba48df6bb75d268a9696",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "suggest": {
+                "jamm/tester": "allows to run unit-tests"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Jamm\\Memory": "Jamm/Memory/lib"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eugene OZ",
+                    "email": "normandiggs@gmail.com",
+                    "homepage": "https://github.com/jamm/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Key-value storage in memory. As a storage can be used: APC, Redis, Memcache, Shared memory. All storage objects have one interface, so you can switch them without changing the working code. Contains PHP Redis client.",
+            "keywords": [
+                "apc",
+                "caching",
+                "dog-pile",
+                "memcached",
+                "memory",
+                "race-condition",
+                "redis",
+                "shared memory"
+            ],
+            "time": "2015-02-24 18:41:58"
+        },
+        {
             "name": "jdorn/sql-formatter",
             "version": "v1.2.17",
             "source": {
@@ -1539,65 +1591,6 @@
             "time": "2013-12-05 14:36:11"
         },
         {
-            "name": "knplabs/knp-markdown-bundle",
-            "version": "1.2.0",
-            "target-dir": "Knp/Bundle/MarkdownBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/KnpLabs/KnpMarkdownBundle.git",
-                "reference": "9f4f88919db4f4b7f8e374ac0de1a93e05b05646"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/KnpLabs/KnpMarkdownBundle/zipball/9f4f88919db4f4b7f8e374ac0de1a93e05b05646",
-                "reference": "9f4f88919db4f4b7f8e374ac0de1a93e05b05646",
-                "shasum": ""
-            },
-            "require": {
-                "dflydev/markdown": "1.0.*@dev",
-                "php": ">=5.3.3",
-                "symfony/framework-bundle": "~2.0"
-            },
-            "suggest": {
-                "ext-sundown": "to use optional support for php-sundown extension instead of php implementation",
-                "symfony/twig-bundle": "to use the Twig markdown filter"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.2.x-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Knp\\Bundle\\MarkdownBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "KnpLabs Team",
-                    "homepage": "http://knplabs.com"
-                },
-                {
-                    "name": "Symfony Community",
-                    "homepage": "http://github.com/KnpLabs/KnpMarkdownBundle/contributors"
-                }
-            ],
-            "description": "Knplabs markdown bundle transforms markdown into html",
-            "homepage": "http://github.com/KnpLabs/KnpMarkdownBundle",
-            "keywords": [
-                "bundle",
-                "knp",
-                "knplabs",
-                "markdown"
-            ],
-            "time": "2013-05-20 08:29:54"
-        },
-        {
             "name": "knplabs/gaufrette",
             "version": "v0.1.8",
             "source": {
@@ -1680,6 +1673,65 @@
             "time": "2014-06-24 08:35:18"
         },
         {
+            "name": "knplabs/knp-markdown-bundle",
+            "version": "1.2.0",
+            "target-dir": "Knp/Bundle/MarkdownBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/KnpLabs/KnpMarkdownBundle.git",
+                "reference": "9f4f88919db4f4b7f8e374ac0de1a93e05b05646"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/KnpLabs/KnpMarkdownBundle/zipball/9f4f88919db4f4b7f8e374ac0de1a93e05b05646",
+                "reference": "9f4f88919db4f4b7f8e374ac0de1a93e05b05646",
+                "shasum": ""
+            },
+            "require": {
+                "dflydev/markdown": "1.0.*@dev",
+                "php": ">=5.3.3",
+                "symfony/framework-bundle": "~2.0"
+            },
+            "suggest": {
+                "ext-sundown": "to use optional support for php-sundown extension instead of php implementation",
+                "symfony/twig-bundle": "to use the Twig markdown filter"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Knp\\Bundle\\MarkdownBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "KnpLabs Team",
+                    "homepage": "http://knplabs.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "http://github.com/KnpLabs/KnpMarkdownBundle/contributors"
+                }
+            ],
+            "description": "Knplabs markdown bundle transforms markdown into html",
+            "homepage": "http://github.com/KnpLabs/KnpMarkdownBundle",
+            "keywords": [
+                "bundle",
+                "knp",
+                "knplabs",
+                "markdown"
+            ],
+            "time": "2013-05-20 08:29:54"
+        },
+        {
             "name": "knplabs/knp-menu",
             "version": "v2.0.1",
             "source": {
@@ -1727,7 +1779,7 @@
                     "email": "stof@notk.org"
                 },
                 {
-                    "name": "KnpLabs",
+                    "name": "Knplabs",
                     "homepage": "http://knplabs.com"
                 },
                 {
@@ -1972,16 +2024,16 @@
         },
         {
             "name": "monolog/monolog",
-            "version": "1.11.0",
+            "version": "1.12.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Seldaek/monolog.git",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa"
+                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
-                "reference": "ec3961874c43840e96da3a8a1ed20d8c73d7e5aa",
+                "url": "https://api.github.com/repos/Seldaek/monolog/zipball/1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
+                "reference": "1fbe8c2641f2b163addf49cc5e18f144bec6b19f",
                 "shasum": ""
             },
             "require": {
@@ -1995,7 +2047,7 @@
                 "aws/aws-sdk-php": "~2.4, >2.4.8",
                 "doctrine/couchdb": "~1.0@dev",
                 "graylog2/gelf-php": "~1.0",
-                "phpunit/phpunit": "~3.7.0",
+                "phpunit/phpunit": "~4.0",
                 "raven/raven": "~0.5",
                 "ruflin/elastica": "0.90.*",
                 "videlalvaro/php-amqplib": "~2.4"
@@ -2014,7 +2066,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.11.x-dev"
+                    "dev-master": "1.12.x-dev"
                 }
             },
             "autoload": {
@@ -2040,52 +2092,7 @@
                 "logging",
                 "psr-3"
             ],
-            "time": "2014-09-30 13:30:58"
-        },
-        {
-            "name": "phansys/getid3",
-            "version": "2.1.x-dev",
-            "target-dir": "GetId3",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/phansys/GetId3.git",
-                "reference": "75afebe3cf9cb5609d38fa640c58c32fd82fd59e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/phansys/GetId3/zipball/75afebe3cf9cb5609d38fa640c58c32fd82fd59e",
-                "reference": "75afebe3cf9cb5609d38fa640c58c32fd82fd59e",
-                "shasum": ""
-            },
-            "suggest": {
-                "ext-exif": "EXIF extension is required for graphic modules.",
-                "ext-rar": "RAR extension is required for RAR archive module."
-            },
-            "type": "library",
-            "autoload": {
-                "psr-0": {
-                    "GetId3": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "GPL"
-            ],
-            "authors": [
-                {
-                    "name": "James Heinrich",
-                    "email": "info@getid3.org",
-                    "homepage": "http://www.getid3.org"
-                }
-            ],
-            "description": "This release of GetId3 library updates to PSR-0 CS, add namespaces and makes it Symfony 2.x installable by deps or composer mechanisms.",
-            "homepage": "http://www.getid3.org",
-            "keywords": [
-                "getid3",
-                "metadata",
-                "tags"
-            ],
-            "time": "2014-10-08 19:39:42"
+            "time": "2014-12-29 21:29:35"
         },
         {
             "name": "nelmio/api-doc-bundle",
@@ -2161,6 +2168,51 @@
                 "rest"
             ],
             "time": "2014-07-30 09:11:08"
+        },
+        {
+            "name": "phansys/getid3",
+            "version": "2.1.x-dev",
+            "target-dir": "GetId3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phansys/GetId3.git",
+                "reference": "75afebe3cf9cb5609d38fa640c58c32fd82fd59e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phansys/GetId3/zipball/75afebe3cf9cb5609d38fa640c58c32fd82fd59e",
+                "reference": "75afebe3cf9cb5609d38fa640c58c32fd82fd59e",
+                "shasum": ""
+            },
+            "suggest": {
+                "ext-exif": "EXIF extension is required for graphic modules.",
+                "ext-rar": "RAR extension is required for RAR archive module."
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "GetId3": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "GPL"
+            ],
+            "authors": [
+                {
+                    "name": "James Heinrich",
+                    "email": "info@getid3.org",
+                    "homepage": "http://www.getid3.org"
+                }
+            ],
+            "description": "This release of GetId3 library updates to PSR-0 CS, add namespaces and makes it Symfony 2.x installable by deps or composer mechanisms.",
+            "homepage": "http://www.getid3.org",
+            "keywords": [
+                "getid3",
+                "metadata",
+                "tags"
+            ],
+            "time": "2014-10-08 19:39:42"
         },
         {
             "name": "phpcollection/phpcollection",
@@ -3880,6 +3932,65 @@
                 "negotiation"
             ],
             "time": "2014-10-02 07:26:00"
+        },
+        {
+            "name": "wrench/wrench",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/varspool/Wrench.git",
+                "reference": "964e69bfc8d1cfa7df95fd284265be1fdbb198e8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/varspool/Wrench/zipball/964e69bfc8d1cfa7df95fd284265be1fdbb198e8",
+                "reference": "964e69bfc8d1cfa7df95fd284265be1fdbb198e8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-sockets": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "Wrench": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "WTFPL"
+            ],
+            "authors": [
+                {
+                    "name": "Dominic Scheirlinck",
+                    "email": "dominic@varspool.com",
+                    "homepage": "http://www.somethingemporium.com/"
+                },
+                {
+                    "name": "Simon Samtleben",
+                    "email": "web@lemmingzshadow.net",
+                    "homepage": "http://lemmingzshadow.net/"
+                },
+                {
+                    "name": "Nico Kaiser",
+                    "email": "nico@kaiser.me",
+                    "homepage": "http://siriux.net/"
+                }
+            ],
+            "description": "PHP WebSocket client/server library",
+            "homepage": "http://github.com/varspool/Wrench",
+            "keywords": [
+                "WebSockets",
+                "hybi",
+                "websocket"
+            ],
+            "time": "2014-11-19 11:43:44"
         }
     ],
     "packages-dev": [
@@ -3998,6 +4109,141 @@
                 "persistence"
             ],
             "time": "2013-09-05 11:23:37"
+        },
+        {
+            "name": "jms/aop-bundle",
+            "version": "1.0.1",
+            "target-dir": "JMS/AopBundle",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/JMSAopBundle.git",
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/JMSAopBundle/zipball/93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
+                "reference": "93f41ab85ed409430bc3bab2e0b7c7677f152aa8",
+                "shasum": ""
+            },
+            "require": {
+                "jms/cg": "1.*",
+                "symfony/framework-bundle": "2.*"
+            },
+            "type": "symfony-bundle",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-0": {
+                    "JMS\\AopBundle": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Adds AOP capabilities to Symfony2",
+            "keywords": [
+                "annotations",
+                "aop"
+            ],
+            "time": "2013-07-29 09:34:26"
+        },
+        {
+            "name": "jms/cg",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/schmittjoh/cg-library.git",
+                "reference": "ce8ef43dd6bfe6ce54e5e9844ab71be2343bf2fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/schmittjoh/cg-library/zipball/ce8ef43dd6bfe6ce54e5e9844ab71be2343bf2fc",
+                "reference": "ce8ef43dd6bfe6ce54e5e9844ab71be2343bf2fc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "CG\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache"
+            ],
+            "authors": [
+                {
+                    "name": "Johannes Schmitt",
+                    "email": "schmittjoh@gmail.com",
+                    "homepage": "https://github.com/schmittjoh",
+                    "role": "Developer of wrapped JMSSerializerBundle"
+                }
+            ],
+            "description": "Toolset for generating PHP code",
+            "keywords": [
+                "code generation"
+            ],
+            "time": "2012-01-02 20:40:52"
+        },
+        {
+            "name": "nikic/php-parser",
+            "version": "v1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/nikic/PHP-Parser.git",
+                "reference": "ac05ef6f95bf8361549604b6031c115f92f39528"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/nikic/PHP-Parser/zipball/ac05ef6f95bf8361549604b6031c115f92f39528",
+                "reference": "ac05ef6f95bf8361549604b6031c115f92f39528",
+                "shasum": ""
+            },
+            "require": {
+                "ext-tokenizer": "*",
+                "php": ">=5.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "files": [
+                    "lib/bootstrap.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Nikita Popov"
+                }
+            ],
+            "description": "A PHP parser written in PHP",
+            "keywords": [
+                "parser",
+                "php"
+            ],
+            "time": "2015-01-18 11:29:59"
         }
     ],
     "aliases": [],
@@ -4011,7 +4257,9 @@
         "hwi/oauth-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 0,
         "jms/serializer-bundle": 0,
-        "phansys/getid3": 20
+        "phansys/getid3": 20,
+        "wrench/wrench": 20,
+        "jamm/memory": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,

@@ -3,6 +3,7 @@ imports:
     - { resource: security.yml }
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
+    - { resource: @NetworkWebSocketBundle/Resources/config/sockets.yml }
 
 sonata_admin:
     title: VDolgah

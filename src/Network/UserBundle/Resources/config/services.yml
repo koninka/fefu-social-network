@@ -32,6 +32,10 @@ services:
         tags:
             - { name: kernel.event_subscriber }
 
+    network_user.handler.login_success_handler.class:
+        class: Network\UserBundle\Handler\LoginSuccessHandler
+        arguments: ['@security.http_utils', '@security.context', '@doctrine.orm.entity_manager' ]
+
     network.mailer.twig_swift:
         class: Network\UserBundle\Mailer\TwigSwiftMailer
         arguments:

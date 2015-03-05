@@ -201,6 +201,17 @@ poll:
         answer:
             submit: Добавить ответ
 
+#Notify
+notify:
+    remove_from_friends: удалил вас из друзей
+    unsubscribe: отписался от вас
+    decline_friendship_request: отклонил приглашение
+    accept_friendship_request: принял приглашение
+    friendship_request_received: отправил вам приглашение
+    kicked_from_conference: Вас удалили из конференции
+    new_message_from: Новое сообщение от
+    invited_to_conference: Вы были приглашены в конференцию
+
 # Message
 msg:
     not_authorized: Пользователь не авторизован.

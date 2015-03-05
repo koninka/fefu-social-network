@@ -4,6 +4,8 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
+use Network\WebSocketBundle\Message\Message;
+use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Exception\Exception;
 use Network\StoreBundle\Entity\Thread;
@@ -12,6 +14,7 @@ use Network\StoreBundle\Entity\User;
 use Network\StoreBundle\Entity\PostFile;
 use Network\StoreBundle\DBAL\ThreadEnumType;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\Translation\Translator;
 
 class ImService
 {
@@ -21,11 +24,25 @@ class ImService
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @var ServerManager
      */
-    public function __construct($em)
+    private $serverManager;
+
+    /**
+     * @var Translator
+     */
+    private $translator;
+
+    /**
+     * @param EntityManager $em
+     * @param ServerManager $serverManager
+     * @param Translator $translator
+     */
+    public function __construct($em, $serverManager, $translator)
     {
         $this->em = $em;
+        $this->serverManager = $serverManager;
+        $this->translator = $translator;
     }
 
     public function getThreadByIdAndUserIdOrThrow($threadId, $userId)
@@ -77,6 +94,11 @@ class ImService
         }
         $manager->remove($userThread);
         $manager->flush();
+        
+        $this->serverManager->sendNotifyMessage(new Message($userId,
+                $this->translator->trans('notify.kicked_from_conference', [], 'FOSUserBundle') .
+                ' ' . $userThread->getThread()->getTopic(),
+                Message::TYPE_FAIL));
 
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
     }
@@ -115,6 +137,15 @@ class ImService
         $thread->incUnreadPosts($user);
         $this->em->persist($post);
         $this->em->flush();
+
+        foreach ($thread->getUsers() as $threadUser) {
+            if ($user->getId() != $threadUser->getId()) {
+                $this->serverManager->sendNotifyMessage(new Message($threadUser->getId(),
+                        $this->translator->trans('notify.new_message_from', [], 'FOSUserBundle') .
+                        ' ' . $user->getFirstName() . ' ' . $user->getLastName(),
+                        Message::TYPE_SUCCESS));
+            }
+        }
 
         date_default_timezone_set($oldTimeZone);
 
@@ -160,6 +191,10 @@ class ImService
         $thread->addUser($user, $userId);
         foreach ($recipientUsers as $recipientUser) {
             $thread->addUser($recipientUser, $userId);
+            $this->serverManager->sendNotifyMessage(new Message($recipientUser->getId(),
+                    $this->translator->trans('notify.invited_to_conference', [], 'FOSUserBundle') .
+                    ' ' . $topic,
+                    Message::TYPE_SUCCESS));
         }
 
         $this->persistAndFlush($thread);

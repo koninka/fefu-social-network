@@ -3,6 +3,8 @@
 namespace Network\StoreBundle\Service;
 
 use Doctrine\ORM\EntityManager;
+use Network\WebSocketBundle\Service\ServerManager;
+use Symfony\Component\Translation\Translator;
 
 class LikeService
 {
@@ -12,12 +14,20 @@ class LikeService
     private $em;
 
     /**
-     * @param EntityManager $em
+     * @var ServerManager
      */
-    public function __construct($em)
+    private $serverManager;
+
+    /**
+     * @param EntityManager $em
+     * @param ServerManager $serverManager
+     */
+    public function __construct($em, $serverManager)
     {
         $this->em = $em;
+        $this->serverManager = $serverManager;
     }
+
     
     public function like($user, $data) 
     {

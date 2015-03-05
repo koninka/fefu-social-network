@@ -171,6 +171,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setGender($data['gender'])
                  ->setEmail($email)
                  ->setEnabled(false)
+                 ->setWebSocketAuthKey(uniqid())
                  ->setContactInfo(new ContactInfo());
             $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $data['username']);
             $this->em->persist($user);
