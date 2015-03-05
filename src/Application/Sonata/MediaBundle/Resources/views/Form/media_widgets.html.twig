@@ -1,0 +1,24 @@
+{% block sonata_media_type_widget %}
+    <div class="span3 pull-left">
+        {% if value is not empty and value.providerReference %}
+            <div class="pull-left" style="margin-right: 5px">
+                {% thumbnail value, 'admin' with {'class': 'img-polaroid media-object'} %}
+            </div>
+
+            {% if sonata_admin_enabled is defined and sonata_admin_enabled %}
+                <a href="{{ url('admin_sonata_media_media_edit', {id: value.id}) }}"><strong>{{ value.name }}</strong></a>
+            {% else %}
+                <strong>{{ value.name }}</strong>
+            {% endif %}
+             <br />
+        {% else %}
+            <div class="pull-left" style="margin-right: 5px">
+                <img src="{{ asset('bundles/sonatamedia/grey.png') }}" class="img-polaroid media-object" style="width: 85px; height: 85px"/>
+            </div>
+        {% endif %}
+    </div>
+
+    <div class="span3 pull-left">
+        {{ block('form_widget') }}
+    </div>
+{% endblock sonata_media_type_widget %}
