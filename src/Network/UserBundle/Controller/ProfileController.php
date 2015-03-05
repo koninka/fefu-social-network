@@ -50,10 +50,19 @@ class ProfileController extends BaseController
             $fsStatus = $rels->getRelationshipForUser($curUser->getId(), $user->getId())->getStatus();
         }
 
+        $userRefInfo = [
+            'friends' => 182,
+            'photos'  => 723,
+            'videos'  => 145,
+            'audios'  => 301,
+            'groups'  => 45,
+        ];
+
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
             'rl_status' => $fsStatus,
-            'is_cur_user' => $isCurUser
+            'is_cur_user' => $isCurUser,
+            'user_ref_info' => $userRefInfo,
         ]);
     }
 
