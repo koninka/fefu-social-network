@@ -238,3 +238,7 @@ get_users_in_thread:
 leave_conference:
     path: /thread/leave
     defaults: { _controller: NetworkUserBundle:Thread:leaveConference }
+
+show_feed:
+    path:     feed
+    defaults: { _controller: NetworkUserBundle:Feed:showFeed }

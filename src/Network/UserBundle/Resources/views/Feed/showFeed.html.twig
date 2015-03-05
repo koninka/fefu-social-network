@@ -1,0 +1,11 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block right_content_sub_one %}
+     {% for post in feed %}
+        <div>
+            <p><a href="{{ path('user_profile', {'id':post.user} ) }}">{{ post.firstName }} {{ post.lastName }}</a></p>
+            <p>{{ post.text }}</p>
+        </div>
+     {% endfor %}
+{% endblock %}

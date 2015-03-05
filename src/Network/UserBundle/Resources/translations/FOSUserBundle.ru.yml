@@ -89,6 +89,7 @@ layout:
     reset_password: Сбросить пароль
     audios: Аудиозаписи
     videos: Видеозаписи
+    feed: Новости
 
 # Email change
 change_email:

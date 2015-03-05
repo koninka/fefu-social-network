@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 
 use Network\StoreBundle\DBAL\ThreadEnumType;
+use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\User;
 
@@ -160,5 +161,27 @@ class ThreadRepository extends EntityRepository
         $r = $query->getOneOrNullResult();
 
         return $r;
+    }
+
+    public function getFeedForUser($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
+            SELECT p.text, u.firstName, u.lastName, u.id as user FROM NetworkStoreBundle:User u
+            JOIN u.wallThreads wt
+            JOIN wt.posts p
+            WHERE u.id in(
+             SELECT rp.id FROM NetworkStoreBundle:Relationship r
+              JOIN r.partner rp
+              WHERE r.user = :user_id and (r.status = :status1 or r.status = :status2)
+            )  ORDER BY p.ts DESC";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
+                    ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+                    ->setParameter('user_id', $userId);
+
+        return $query->getResult();
     }
 }

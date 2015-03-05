@@ -89,6 +89,7 @@ layout:
     reset_password: Reset password
     audios: Music
     videos: Video
+    feed: News feed
 
 # Email change
 change_email:
