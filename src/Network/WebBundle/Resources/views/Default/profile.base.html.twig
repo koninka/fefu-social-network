@@ -66,18 +66,12 @@
         </div>
         <div id="right_content">
             {% block right_content %}
-                <div>
+                <div id="user-info-box">
                     {% block right_content_sub_one %}
-                        <div id="ava_block">
-                            {% block ava_content %}
-                                <img src="{{ asset('bundles/networkweb/img/ava.png') }}" alt="VDOLGAH" />
-                            {% endblock %}
-                        </div>
                     {% endblock %}
                 </div>
-                <div>
+                <div id="wall-box">
                     {% block right_content_sub_two %}
-
                     {% endblock %}
                 </div>
             {% endblock %}

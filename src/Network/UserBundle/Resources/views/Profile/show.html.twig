@@ -21,6 +21,22 @@
             <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}" alt="{{ user.avatar }}" /></a>
             <div id="{{user.avatar.getId}}_like">
                 <script>mediaLike({{user.avatar.getId}}) </script>
+{% block right_content_sub_one %}
+    <div id="avatar-box" class="white-box">
+        <div>
+            {% if user.avatar %}
+                <p class="popup-gallery">
+                    <a href="{% path user.avatar, 'big' %}"><img src="{% path user.avatar, 'small' %}"
+                                                                 alt="{{ user.avatar }}"/></a>
+                <div id="{{ user.avatar.getId }}_like">
+                    <script>mediaLike({{user.avatar.getId}}) </script>
+                </div>
+                </p>
+            {% else %}
+                <img src="{{ asset('bundles/networkweb/img/ava.png') }}" alt="VDOLGAH"/>
+            {% endif %}
+        </div>
+    </div>
             </div>
         </p>
     {% else %}
@@ -74,6 +90,7 @@
         <p><a href="{{ path('user_profile_community', {'id':user.id} ) }}">{{ 'layout.show_community'|trans }}</a></p>
         <p><a href="{{ path('user_show_friends', {'id':user.id} ) }}">{{ 'layout.show_friends'|trans }}</a></p>
         <p><a href="{{ path('user_show_albums', {'id':user.id} ) }}">{{ 'layout.show_albums'|trans }}</a></p>
+            <a href="{{ path('user_show_albums', {'id':user.id} ) }}">
     </div>
 
     {{ render(controller('NetworkWebBundle:Wall:main', {type: 'user', object: user})) }}
