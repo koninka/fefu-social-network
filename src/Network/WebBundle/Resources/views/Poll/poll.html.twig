@@ -12,15 +12,6 @@
 {% endblock %}
 
 {% block right_content %}
-    <style type="text/css">
-        .blue_button {
-            display: inline-block;
-        }
-        .bar-container div {
-             background-color:#cc4400;
-             height: 5%;
-        }  
-    </style>
     <script>
         answerCount = 0;
         function addAnswer(answer) {
@@ -70,10 +61,10 @@
                             </script>
                         {% endfor %}
                     </div>
-                    <button class="blue_button"  type="button" id="add-answer">{{ 'poll.add.answer.submit'|trans({}, 'FOSUserBundle') }}</button>
+                    <button class="btn btn-green btn-small"  type="button" id="add-answer">{{ 'poll.add.answer.submit'|trans({}, 'FOSUserBundle') }}</button>
                 </div>
                 <div>
-                    <input id="submit" class="blue_button" type="submit" value="{{ 'poll.submit'|trans({}, 'FOSUserBundle') }}" />
+                    <input id="submit" class="btn btn-blue btn-small" type="submit" value="{{ 'poll.submit'|trans({}, 'FOSUserBundle') }}" />
                 </div>
                 {% do form.answers.setRendered %}
             {{ form_end(form) }}

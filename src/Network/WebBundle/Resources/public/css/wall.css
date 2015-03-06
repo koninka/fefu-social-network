@@ -9,15 +9,32 @@
     cursor: pointer;
 }
 
-.poll_post {
-    padding: 5px;
-}
-
 .form_poll {
     padding: 10px;
     border: 1px solid #e5e5e5;
     margin: 10px 0 0 0;
     text-align: left;
+}
+
+#poll_post{
+    position: relative;
+}
+
+.for-pollm > div {
+    margin: 5px 0 5px 0;
+}
+
+.for-pollm > .btn {
+    margin: 10px 0 0 0;
+}
+
+#poll_post .poll_sum, #poll_post .poll_type{
+    float: right;
+    font-size: 12px;
+}
+
+.poll-form {
+    background-color: #660066;
 }
 
 .form_poll label {
@@ -188,3 +205,17 @@ input #poll_isAnonymously {
     margin: -3px 0 0 10px;
 }
 
+.bar-container {
+    /*background-color:#cc4400;*/
+    height: 30px;
+    border: #2C91F9;
+}
+
+.bar-table {
+    width: 99%;
+}
+
+.poll_open_result {
+    padding: 3px !important;
+    background-color: #2c91f9 !important;
+}
