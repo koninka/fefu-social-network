@@ -1,0 +1,31 @@
+#community-box {
+    width: 760px;
+}
+
+#community-box > .white-box {
+    margin: 0 0 20px 0;
+}
+
+#group-name {
+    font-size: 22px;
+}
+
+#group-type{
+    font-size: 12px;
+    text-align: right;
+}
+
+#group-controllers{
+    text-align: right;
+}
+
+#group-description{
+    font-size: 14px;
+    color: #262626;
+    text-align: justify;
+    margin: 20px 0 0 0;
+}
+
+.ui-widget input{
+    font-size: 12px;
+}

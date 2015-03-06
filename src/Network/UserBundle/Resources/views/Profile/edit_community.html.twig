@@ -2,6 +2,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/community.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
@@ -10,32 +11,32 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
 {% block right_content %}
-    <div>
-        <div>
-            {{ form_start(form) }}
-                {{ form_errors(form) }}
-                <div>
-                    {{ form_errors(form.name) }}
-                    {{ form_label(form.name) }}
-                    {{ form_widget(form.name) }}
-                </div>
-                <div>
-                    {{ form_errors(form.subjects) }}
-                    {{ form_label(form.subjects) }}
-                    {{ form_widget(form.subjects) }}
-                </div>
-                <div>
-                    {{ form_errors(form.type) }}
-                    {{ form_label(form.type) }}
-                    {{ form_widget(form.type) }}
-                </div>
-                <div>
-                    {{ form_errors(form.description) }}
-                    {{ form_label(form.description) }}
-                    {{ form_widget(form.description) }}
-                </div>
-                    <input class="blue_button" type="submit" value="{{ 'community.edit.submit'|trans }}" />
-            {{ form_end(form) }}
-        </div>
+    <div class="white-box" id="community-box">
+        {{ form_start(form, {'attr' :{'class' : 'centered-form'} }) }}
+            {{ form_errors(form) }}
+            <div>
+                {{ form_errors(form.name) }}
+                {{ form_label(form.name) }}
+                {{ form_widget(form.name) }}
+            </div>
+            <div>
+                {{ form_errors(form.subjects) }}
+                {{ form_label(form.subjects) }}
+                {{ form_widget(form.subjects) }}
+            </div>
+            <div>
+                {{ form_errors(form.type) }}
+                {{ form_label(form.type) }}
+                {{ form_widget(form.type) }}
+            </div>
+            <div>
+                {{ form_errors(form.description) }}
+                {{ form_label(form.description) }}
+                {{ form_widget(form.description) }}
+            </div>
+            <div class="submit-btn-box">
+                <input class="btn btn-blue" type="submit" value="{{ 'community.edit.submit'|trans }}" />
+            </div>
+        {{ form_end(form) }}
     </div>
 {% endblock %}
