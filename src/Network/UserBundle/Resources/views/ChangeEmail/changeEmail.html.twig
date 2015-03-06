@@ -1,6 +1,6 @@
-{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-{% block right_content %}
+{% block edit_content %}
     <div>
         <div>
             <form action="{{ path('fos_user_change_email') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_email">

@@ -41,15 +41,13 @@
                 {% if is_granted('ROLE_USER') %}
                     <ul>
                         <li><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_change_password') }}">{{ 'layout.change_password'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_change_email') }}">{{ 'layout.change_email'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_friends') }}">{{ 'layout.show_friends'|trans({}, 'FOSUserBundle') }}{% if friendship_requests_count is defined %}: {{ friendship_requests_count }}{% endif %}</a></li>
                         <li><a href="{{ path('user_profile_show_community') }}">{{ 'layout.show_community'|trans({}, 'FOSUserBundle') }}{% if community_requests_count is defined %}: {{ community_requests_count }}{% endif %}</a></li>
                         <li><a href="{{ path('user_profile_show_messages') }}">{{ 'layout.show_messages'|trans({}, 'FOSUserBundle') }}{% if threads_unread_count is defined %}: {{ threads_unread_count }}{% endif %}</a></li>
                         <li><a href="{{ path('audios') }}">{{ 'layout.audios'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('videos') }}">{{ 'layout.videos'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_albums') }}">{{ 'layout.show_albums'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('show_links') }}">{{ 'layout.links'|trans({}, 'FOSUserBundle') }}</a></li>
                     </ul>
                 {% else %}

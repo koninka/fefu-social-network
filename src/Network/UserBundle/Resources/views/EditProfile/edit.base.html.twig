@@ -24,6 +24,16 @@
                     {{ 'form.job.name'|trans }}
                 </a>
             </div>
+            <div>
+                <a href="{{ path('fos_user_change_password') }}">
+                    {{ 'form.change_password.name'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </div>
+            <div>
+                <a href="{{ path('fos_user_change_email') }}">
+                    {{ 'form.change_email.name'|trans({}, 'FOSUserBundle') }}
+                </a>
+            </div>
         </div>
         <div>
             {% block edit_content %}
