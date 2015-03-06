@@ -4,7 +4,6 @@ imports:
     - { resource: @NetworkStoreBundle/Resources/config/admin.yml }
     - { resource: @NetworkOAuthBundle/Resources/config/authorization.yml }
     - { resource: @NetworkImportBundle/Resources/config/import_properties.yml }
-    - { resource: @NetworkCacheBundle/Resources/config/cache_properties.yml }
 
 sonata_admin:
     title: VDolgah
