@@ -1,6 +1,6 @@
 #content {
     width: 1024px !important;
-    min-height: 600px;
+    min-height: 800px;
     /*height: 1000px;*/
     display: block;
     position: relative;
@@ -12,7 +12,7 @@
     width: 100%;
     position: fixed;
     top: 0;
-    z-index: 10;
+    z-index: 1000;
     background-image: -webkit-linear-gradient(#4c6e93, #57799e);
     background-image: linear-gradient(#4c6e93, #57799e);
 }
@@ -78,6 +78,7 @@ header div {
 
 #right_content {
     padding: 20px 0 0 210px;
+    color: #242525;
 }
 
 /*-------------main_menu----------------*/
@@ -228,5 +229,9 @@ header div {
 /*---------------------------------footer---------------------------------------*/
 
 footer {
-
+    width: 100%;
+    height: 40px;
+    text-align: center;
+    font-size: 12px;
+    color: #7f92ac;
 }
