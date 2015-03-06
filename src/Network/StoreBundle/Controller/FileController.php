@@ -14,8 +14,9 @@ use Symfony\Component\Validator\Constraints\Null;
 
 class FileController extends Controller
 {
+    const UPLOADED_MP3_NAME = 'mp3';
     const UPLOAD_DIR_NAME = 'uploads';
-
+    const UPLOAD_MP3_DIR_NAME = 'mp3s';
     /**
      * Return the absolute directory path where uploaded
      * documents should be saved.

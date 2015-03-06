@@ -85,6 +85,24 @@ class CommunityRepository extends EntityRepository
     public function getFindBy($id, $class) {
         return $this->getEntityManager()->getRepository('NetworkStoreBundle:'.$class)->find($id);
     }
+
+    private function getUserCommunitiesByIdAndRole($id, $role)
+    {
+        $predis = new \Snc\RedisBundle\Doctrine\Cache\RedisCache();
+        $predis->setRedis(new \Predis\Client());
+
+        return $this->getEntityManager()->createQueryBuilder()
+                                 ->select('uc')
+                                 ->from('NetworkStoreBundle:UserCommunity', 'uc')
+                                 ->where('uc.user = :id')
+                                 ->andWhere('uc.role = :role')
+                                 ->setParameter('id', $id)
+                                 ->setParameter('role', $role)
+                                 ->getQuery()
+                                 ->setResultCacheDriver($predis)
+                                 ->setResultCacheLifetime(1000)
+                                 ->getResult();
+    }
     
     /**
      * @param integer $id
@@ -92,10 +110,11 @@ class CommunityRepository extends EntityRepository
      * @return array
      */
     public function getUserRole($id, $role) {
-        return $this->getEntityManager()->getRepository('NetworkStoreBundle:UserCommunity')->findBy([
+        return $this->getUserCommunitiesByIdAndRole($id, $role);
+        /*return $this->getEntityManager()->getRepository('NetworkStoreBundle:UserCommunity')->findBy([
                 'user' => $id,
                 'role' => $role 
-            ]);
+            ]);*/
     }    
     
     /**
@@ -117,5 +136,19 @@ class CommunityRepository extends EntityRepository
         return $this->getEntityManager()->getRepository('NetworkStoreBundle:UserCommunity')->findBy([
                 'community' => $id,
             ]);
+    }
+
+    public function getCommunitiesForUser($userId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT t, c com from NetworkStoreBundle:UserCommunity t
+            JOIN t.community c
+            WHERE t.user = :id
+        ";
+        $query = $em->createQuery($dql)
+            ->setParameter('id', $userId);
+        $result = $query->getResult();
+        return $result;
     }
 }

@@ -17,3 +17,5 @@ parameters:
     debug_toolbar:          true
     debug_redirects:        false
     use_assetic_controller: true
+    valid_openid_providers:
+        - { name: Steam, url: http://steamcommunity.com/openid }

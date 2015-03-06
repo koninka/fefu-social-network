@@ -155,6 +155,7 @@ class OAuthUserProvider extends BaseClass
                  ->setGender('male')
                  ->setFirstName('adfnbl')
                  ->setLastName(' ')
+                 ->setWebSocketAuthKey(uniqid())
                  ->setContactInfo(new ContactInfo());
             $this->userManager->updateUser($user);
             $token = new Token($response->getAccessToken(), $user->getRoles());
