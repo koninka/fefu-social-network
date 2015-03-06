@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "a37c16bf4ebd5749cface8fd45578e94",
+    "hash": "36a8a2248a2c40bc63ffde783987c2cd",
     "packages": [
         {
             "name": "cocur/slugify",
@@ -838,67 +838,6 @@
             "time": "2014-11-08 10:51:34"
         },
         {
-            "name": "fp/openid-bundle",
-            "version": "dev-master",
-            "target-dir": "Fp/OpenIdBundle",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/formapro/FpOpenIdBundle.git",
-                "reference": "7ea397057e8d2b7a444a90094c99d83deac840bd"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/formapro/FpOpenIdBundle/zipball/7ea397057e8d2b7a444a90094c99d83deac840bd",
-                "reference": "7ea397057e8d2b7a444a90094c99d83deac840bd",
-                "shasum": ""
-            },
-            "require": {
-                "lightopenid/lightopenid": "*",
-                "php": ">=5.3.2",
-                "symfony/symfony": "~2.2"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "3.7.*@stable"
-            },
-            "suggest": {
-                "doctrine/mongodb-odm": "If you want store identities to mongodb",
-                "doctrine/orm": "If you want store identities to database"
-            },
-            "type": "symfony-bundle",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.2-dev"
-                }
-            },
-            "autoload": {
-                "psr-0": {
-                    "Fp\\OpenIdBundle": ""
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Community",
-                    "homepage": "https://github.com/formapro/FpOpenIdBundle/contributors"
-                },
-                {
-                    "name": "Kotlyar Maksim",
-                    "email": "kotlyar.maksim@gmail.com"
-                }
-            ],
-            "description": "Symfony2 OpenID security extension",
-            "homepage": "https://github.com/formapro/FpOpenIdBundle",
-            "keywords": [
-                "Authentication",
-                "OpenId",
-                "security"
-            ],
-            "time": "2014-12-11 12:00:50"
-        },
-        {
             "name": "friendsofsymfony/jsrouting-bundle",
             "version": "1.5.3",
             "target-dir": "FOS/JsRoutingBundle",
@@ -1098,7 +1037,7 @@
             "keywords": [
                 "User management"
             ],
-            "time": "2015-01-20 09:35:03"
+            "time": "2014-10-20 09:15:23"
         },
         {
             "name": "hwi/oauth-bundle",
@@ -1979,33 +1918,6 @@
                 "http client"
             ],
             "time": "2014-09-15 12:42:36"
-        },
-        {
-            "name": "lightopenid/lightopenid",
-            "version": "v0.7.0",
-            "source": {
-                "type": "git",
-                "url": "https://git.gitorious.org/lightopenid/lightopenid.git",
-                "reference": "9d42dc24e4dd34121c98a6491bc3ef7933a68a19"
-            },
-            "require": {
-                "php": ">=5.2.3"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "./"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "homepage": "http://code.google.com/p/lightopenid/",
-            "keywords": [
-                "OpenId"
-            ],
-            "time": "2013-10-27 16:25:49"
         },
         {
             "name": "michelf/php-markdown",
@@ -4099,8 +4011,7 @@
         "hwi/oauth-bundle": 20,
         "friendsofsymfony/jsrouting-bundle": 0,
         "jms/serializer-bundle": 0,
-        "phansys/getid3": 20,
-        "fp/openid-bundle": 20
+        "phansys/getid3": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
