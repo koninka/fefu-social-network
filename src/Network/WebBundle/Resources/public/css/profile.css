@@ -62,7 +62,11 @@ header div {
     margin: 10px;
 }
 
-#logout_box, #locale_box {
+#locale_box {
+    padding: 10px;
+}
+
+#logout_box {
     float: right;
     padding: 20px 10px 0 0;
 }

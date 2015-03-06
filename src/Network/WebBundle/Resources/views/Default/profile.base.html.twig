@@ -31,10 +31,6 @@
                         {% endif %}
                     </div>
                 {% endblock %}
-                <div id="locale_box">
-                    <a href="{{ path('change_locale', {'_locale':'en'}) }}">en</a>
-                    <a href="{{ path('change_locale', {'_locale':'ru'}) }}">ru</a>
-                </div>
             {% endblock %}
         </header>
     </div>
@@ -79,6 +75,10 @@
     </div>
     <footer>
         {% block footer %}
+            <div id="locale_box">
+                <a href="{{ path('change_locale', {'_locale':'en'}) }}">en</a>
+                <a href="{{ path('change_locale', {'_locale':'ru'}) }}">ru</a>
+            </div>
            <div>® vdolgah.org</div>
         {% endblock %}
     </footer>
