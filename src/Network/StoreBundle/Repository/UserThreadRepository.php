@@ -40,6 +40,8 @@ class UserThreadRepository extends EntityRepository
      */
     public function getThreadsUnreadForUserCount($userId)
     {
+        $predis = new \Snc\RedisBundle\Doctrine\Cache\RedisCache();
+        $predis->setRedis(new \Predis\Client());
         $em = $this->getEntityManager();
         $dql = "
             SELECT COUNT(ut) FROM NetworkStoreBundle:UserThread ut
@@ -48,7 +50,9 @@ class UserThreadRepository extends EntityRepository
         $query = $em->createQuery($dql)
             ->setParameter('user_id', $userId);
 
-        return $query->getSingleScalarResult();
+        return $query->setResultCacheDriver($predis)
+            ->setResultCacheLifetime(1000)
+            ->getSingleScalarResult();
     }
 
     /**

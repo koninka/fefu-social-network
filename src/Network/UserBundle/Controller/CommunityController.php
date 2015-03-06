@@ -137,7 +137,6 @@ class CommunityController extends Controller
         $communityService = $this->get('network.store.community_service');
         $user = $communityService->getFindByUserId($id);
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
-        $communities = $user->getCommunities();
         $isCurUser = $curUser === $user;
         $community = new Community();
         $form = $this->container->get('form.factory')->create(
@@ -154,7 +153,12 @@ class CommunityController extends Controller
             }
             $hasForm = true;
         }
-        
+
+        //$communities = $user->getCommunities()->toArray();
+        $communities =  $this->getDoctrine()->getEntityManager()
+            ->getRepository('NetworkStoreBundle:Community')
+            ->getCommunitiesForUser($user->getId());
+
         return $this->render('NetworkUserBundle:Profile:community.html.twig', [
             'user' => $user,
             'communities' => $communities,

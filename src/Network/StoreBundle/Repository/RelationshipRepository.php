@@ -40,14 +40,25 @@ class RelationshipRepository extends EntityRepository
      */
     private function getQueryFindRelationshipForUser($userId, $relationshipStatus)
     {
-        $qb = $this->getEntityManager()->createQueryBuilder();
+       /* $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('r')
             ->from('NetworkStoreBundle:Relationship', 'r')
             ->where('r.user = :user')
             ->andWhere('r.status = :status')
             ->setParameters(['user' => $userId, 'status' => $relationshipStatus]);
 
-        return $qb->getQuery();
+        return $qb->getQuery();*/
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT r, p com from NetworkStoreBundle:Relationship r
+            JOIN r.partner p
+            WHERE r.user = :user
+            AND r.status = :status
+        ";
+        $query = $em->createQuery($dql)
+            ->setParameters(['user' => $userId, 'status' => $relationshipStatus]);
+
+        return $query;
     }
 
     /**
@@ -128,6 +139,8 @@ class RelationshipRepository extends EntityRepository
      */
     public function findFriendshipRequestsForUser($userId)
     {
+        $predis = new \Snc\RedisBundle\Doctrine\Cache\RedisCache();
+        $predis->setRedis(new \Predis\Client());
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('r')
            ->from('NetworkStoreBundle:Relationship', 'r')
@@ -136,7 +149,10 @@ class RelationshipRepository extends EntityRepository
            ->andWhere('r.status = :status')
            ->setParameters(['user' => $userId, 'status' => RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER]);
 
-        return $qb->getQuery()->getResult();
+        return $qb->getQuery()
+            ->setResultCacheDriver($predis)
+            ->setResultCacheLifetime(1000)
+            ->getResult();
     }
 
     /**
@@ -145,6 +161,8 @@ class RelationshipRepository extends EntityRepository
      */
     public function getFriendshipRequestsForUserCount($userId)
     {
+        $predis = new \Snc\RedisBundle\Doctrine\Cache\RedisCache();
+        $predis->setRedis(new \Predis\Client());
         $qb = $this->getEntityManager()->createQueryBuilder();
         $qb->select('count(r.id)')
            ->from('NetworkStoreBundle:Relationship', 'r')
@@ -153,7 +171,8 @@ class RelationshipRepository extends EntityRepository
            ->andWhere('r.status = :status')
            ->setParameters(['user' => $userId, 'status' => RelationshipStatusEnumType::FS_SUBSCRIBED_BY_USER]);
 
-        return $qb->getQuery()->getSingleScalarResult();
+        return $qb->getQuery()->setResultCacheDriver($predis)
+            ->setResultCacheLifetime(1000)->getSingleScalarResult();
     }
 
 }
