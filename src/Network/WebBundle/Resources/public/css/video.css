@@ -1,13 +1,13 @@
 #video_box {
     width: 600px;
-    min-height: 600px;
+    overflow: hidden;
 }
 
 #video_header {
-    background-color: #eee;
+    margin: 0 0 20px 0;
 }
 
-input#seach{
+input#seach {
     width: 300px;
     height: 24px;
     font-size: 16px;
@@ -15,7 +15,7 @@ input#seach{
     padding: 0 0 0 5px;
 }
 
-.popup_video a{
+.popup_video a {
     text-decoration: none;
     font-size: 12px;
     color: #000;
@@ -26,16 +26,32 @@ input#seach{
     margin-top: 5px;
 }
 
-.popup_video{
+.popup_video {
     display: inline-block;
-    background-color: #f9f9f9;
     margin: 5px;
     padding: 5px;
     width: 250px;
     vertical-align: top;
 }
 
-iframe{
+iframe {
     margin: 0 auto;
     display: block;
+}
+
+#add_video {
+    margin: 10px 0 0 0;
+}
+
+.white-box textarea {
+    width: 255px;
+}
+
+#search-btn {
+    padding: 3px 6px;
+}
+
+.popup_video > div {
+    text-align: right;
+    margin: 3px 0 0 0;
 }

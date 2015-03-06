@@ -55,7 +55,7 @@ function deleteVideo(id, sender) {
         {
             switch (resp['status']) {
                 case 'ok':
-                    sender.parent().remove();
+                    sender.parent().parent().remove();
                     alert('video delete');
                     break;
                 case 'no_rights':

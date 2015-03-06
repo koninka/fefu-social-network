@@ -5,11 +5,11 @@
     <link href="{{ asset('bundles/networkweb/css/video.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block right_content_sub_one %}
-    <div id="video_box">
-        <form action="{{ path('edit_video', {'id': video.id}) }}" {{ form_enctype(form) }} method="POST">
+    <div class="white-box" id="video_box">
+        <form class="centered-form" action="{{ path('edit_video', {'id': video.id}) }}" {{ form_enctype(form) }} method="POST">
             {{ form_widget(form) }}
-            <div>
-                <input class="blue_button" type="submit" value="{{'video.edit.submit'|trans }}" />
+            <div class="submit-btn-box">
+                <input class="btn btn-blue" type="submit" value="{{'video.edit.submit'|trans }}" />
             </div>
         </form>
     </div>
