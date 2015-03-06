@@ -8,7 +8,7 @@
 {% endblock %}
 
 {% block edit_content %}
-        <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="form edit-profile-form fos_user_profile_edit">
+        <form action="{{ path('fos_user_profile_edit') }}" {{ form_enctype(form) }} method="POST" class="centered-form fos_user_profile_edit">
             {{ form_errors(form) }}
             {{ form_widget(form) }}
             <div class="submit-btn-box">

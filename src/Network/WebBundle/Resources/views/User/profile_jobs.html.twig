@@ -1,25 +1,14 @@
 {% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
+{% block javascripts %}
+    {{ parent() }}
+    <script src="{{ asset('bundles/networkweb/js/collectionHolder.class.js') }}"></script>
+{% endblock %}
 {% block edit_content %}
-
-    {{ form_start(form) }}
-
+    {{ form_start(form, {'attr' :{'class' : 'centered-form'} }) }}
        {{ form_rest(form) }}
-
-        {% block javascripts %}
-
-            <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
-            <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/jquery-ui.js') }}"></script>
-            <script src="{{ asset('bundles/networkweb/js/searchSuggestor.class.js') }}"></script>
-            <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
-            <script src="{{ asset('bundles/networkweb/js/collectionHolder.class.js') }}"></script>
-
-            <script type="text/javascript">
-                new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}', "{{ 'form.job.add.submit'|trans }}", "{{ 'form.job.delete.submit'|trans }}");
-            </script>
-
-        {% endblock %}
-
+        <script type="text/javascript">
+            new CollectionHolder({{ form.jobs.count }}, '#{{ form.jobs.vars.id }}', "{{ 'form.job.add.submit'|trans }}", "{{ 'form.job.delete.submit'|trans }}");
+        </script>
     {{ form_end(form) }}
-
 {% endblock %}

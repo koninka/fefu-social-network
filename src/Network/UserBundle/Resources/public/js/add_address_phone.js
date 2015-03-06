@@ -11,8 +11,8 @@ function addAddress(country, city, street, house, Div, editBtnName, deleteBtnNam
     var addressList = $('#address-fields-list');
     var address = country + ', г.' + city + ', ул.' + street + ', ' + house;
     var newLi = $('<div></div>').html(address);
-    var linkEdit = $('<button id="editAddressButton" class="blue_button" type="button">'+edit_+'</button>');
-    var linkdelete = $('<button id="deleteAddressButton" class="blue_button" type="button">'+delete_+'</button>');
+    var linkEdit = $('<button id="editAddressButton" class="btn btn-blue btn-small" type="button">'+edit_+'</button>');
+    var linkdelete = $('<button id="deleteAddressButton" class="btn btn-red btn-small" type="button">'+delete_+'</button>');
     newLi.append(linkEdit);
     newLi.append(linkdelete);
     $(linkEdit).click(function(e) {
@@ -44,7 +44,7 @@ function addButton(newDiv, save) {
     var error = $('<div>Complete all fields</div>');
     error.css("display", "none");
     newDiv.append(error);
-    var linkSave = $('<button class="blue_button" type="button">'+save_+'</button>');
+    var linkSave = $('<button class="btn btn-green btn-small" type="button">'+save_+'</button>');
     newDiv.append(linkSave);
     $(linkSave).click(function(e) {
         var bool;
@@ -67,7 +67,7 @@ function addButton(newDiv, save) {
             newDiv.css("display", "none");
         }
     });
-    var linkCancel = $('<button class="blue_button" type="button">'+cancel_+'</button>');
+    var linkCancel = $('<button class="btn btn-red btn-small" type="button">'+cancel_+'</button>');
     newDiv.append(linkCancel);
     $(linkCancel).click(function(e) {
         e.preventDefault();
@@ -93,7 +93,7 @@ function addPhone(phone, delete_) {
     var phoneList = $('#phone-fields-list');
     var newLi = $('<div id="phone"></div>').html(phone);
     var div = $('div', newLi);
-    var linkdelete = $('<button class="blue_button" type="button">'+delete_+'</button>');
+    var linkdelete = $('<button class="btn btn-red btn-small btn-phone-delete" type="button">'+delete_+'</button>');
     linkdelete.appendTo(div[1]);
     $(linkdelete).click(function(e) {
         e.preventDefault();
