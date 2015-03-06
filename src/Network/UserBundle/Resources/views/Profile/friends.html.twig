@@ -2,16 +2,14 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
-    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
     {{ parent() }}
-    <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
 {% endblock %}
 {% block right_content %}
-    <div>
+    <div class="white-box">
         <div>
             {% if is_cur_user %}
                 <a href="{{ path('user_profile_friendship_requests') }}">{{ 'layout.friendship_requests'|trans }}{% if friendship_requests_count is defined %}: {{ friendship_requests_count }}{% endif %}</a>
@@ -26,7 +24,7 @@
                     <p>
                         <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
                         {% if is_cur_user %}
-                            <a href="{{ path('user_delete_friendship', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
+                            <a class="btn btn-red btn-small" href="{{ path('user_delete_friendship', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
                         {% endif %}
                     </p>
                 {% endfor %}
@@ -49,12 +47,11 @@
                     <p>
                         <a href="{{ path('user_profile', {'id':relationship.partner.id} ) }}">{{ relationship.partner.firstName }} {{ relationship.partner.lastName }}</a>
                         {% if is_cur_user %}
-                            <a href="{{ path('user_delete_friendship_subscribtion', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_subscription'|trans }}</a>
+                            <a class="btn btn-red btn-small" href="{{ path('user_delete_friendship_subscribtion', {'id':relationship.partner.id} ) }}">{{ 'profile.delete_subscription'|trans }}</a>
                         {% endif %}
                     </p>
                 {% endfor %}
             </div>
         {% endif %}
-
     </div>
 {% endblock %}
