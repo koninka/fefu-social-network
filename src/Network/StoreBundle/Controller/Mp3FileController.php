@@ -13,9 +13,6 @@ use Symfony\Component\HttpFoundation\Response;
 
 class Mp3FileController extends FileController
 {
-    const UPLOADED_MP3_NAME = 'mp3';
-    const UPLOAD_MP3_DIR_NAME = 'mp3s';
-
     private function analyzeMp3($path)
     {
         $id3Analyzer = new GetId3();

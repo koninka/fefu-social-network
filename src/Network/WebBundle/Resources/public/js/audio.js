@@ -18,19 +18,15 @@ var options = {
   audioFullScreen: true
 };
 
-var playlist = [
-  {% for mp3 in mp3s %}
-    {
-      title: "{{ mp3.getSong.getTitle }}",
-      artist: "{{ mp3.getSong.getArtist }}",
-      mp3: Routing.generate('file_mp3_get', {file_id: {{ mp3.getId }}}),
-      id: {{ mp3.getId }},
-      poster: ""
-    },
-  {% endfor %}
-];
+var myPlaylist = new jPlayerPlaylist(cssSelector, [], options);
 
-var myPlaylist = new jPlayerPlaylist(cssSelector, playlist, options);
+Promise.resolve($.post("/playlist")).then(function(playlist) {
+    myPlaylist.addToUserPlaylist(playlist);
+    console.log(playlist);
+}).catch(function(e) {
+    //jQuery doesn't throw real errors so use catch-all
+    console.log(e.statusText);
+});
 
 $('#jquery_jplayer_1').jPlayer({
   swfPath: '/js/lib/jplayer/',
@@ -69,9 +65,9 @@ $('#jquery_jplayer_1').jPlayer({
 });
 
 $("#mp3_upload").uploadFile({
-  url: "{{ path('file_mp3_upload') }}",
+  url: Routing.generate('file_mp3_upload'),
   multiple: true,
-  filename: "{{ filename }}",
+  filename: "mp3", // replaced {{ stuff }}
   onSuccess: function(file, data, xhr) {
     var status = data['status'];
 

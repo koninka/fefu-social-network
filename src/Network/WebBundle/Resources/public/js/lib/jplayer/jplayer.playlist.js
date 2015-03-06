@@ -519,7 +519,13 @@
       return listItem;
     },
     addToUserPlaylist: function (media) {
-      this.userPlaylist.push(media);
+      if (media.constructor === Array) {
+        for (var i = media.length - 1; i >= 0; i--) {
+          this.userPlaylist.push(media[i]);
+        };
+      } else {
+        this.userPlaylist.push(media);
+      }
       this._clearPlaylist();
       this._fillPlaylist();
     },

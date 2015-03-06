@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Network\StoreBundle\Controller\Mp3FileController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
 class Mp3PlayerController extends Controller
 {
@@ -16,10 +17,33 @@ class Mp3PlayerController extends Controller
             return $this->redirect($this->generateUrl('mainpage'));
         }
 
-        return $this->render('NetworkWebBundle:Mp3Player:main.html.twig', [
-            'mp3s' => $user->getMp3s(),
-            'filename' => Mp3FileController::UPLOADED_MP3_NAME,
-        ]);
+        return $this->render('NetworkWebBundle:Mp3Player:main.html.twig');
+    }
+
+    public function getUserPlaylistAction()
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return new JsonResponse();
+        }
+
+        $userMp3s = $user->getMp3s();
+        $jsonEncodable = [];
+        foreach ($userMp3s as $t) {
+            $id = $t->getId();
+
+            $jsonEncodable[] = [
+                'title' => $t->getSong()->getTitle(),
+                'artist' => $t->getSong()->getArtist(),
+                'mp3' => $this->get('router')->generate('file_mp3_get',
+                    ['file_id' => $id]),
+                'id' => $id,
+                'poster' => '',
+            ];
+        }
+        $logger = $this->get('logger');
+        $logger->info("LOOK:", $jsonEncodable);
+        return new JsonResponse($jsonEncodable);
     }
 
     public function searchAction($by, $what)
