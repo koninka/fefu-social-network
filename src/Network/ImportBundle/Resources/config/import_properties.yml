@@ -28,7 +28,7 @@ network_import:
 
         vk_audio:
             owner: vkontakte
-            url: https://api.vk.com/method/audio.get?owner_id=Id&access_token=AccessToken&offset=Offset&count=2
+            url: https://api.vk.com/method/audio.get?owner_id=Id&access_token=AccessToken&offset=Offset&count=10
             method: GET
             paths:
                 - 'Id'
