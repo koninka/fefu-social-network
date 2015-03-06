@@ -56,7 +56,7 @@ class User extends BaseUser
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * 
+     *
      * @ORM\OneToMany(targetEntity="UserCommunity", mappedBy="user", cascade={"persist"})
      */
     protected $communities;
@@ -168,7 +168,10 @@ class User extends BaseUser
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="MP3Record", inversedBy="users")
-     * @ORM\JoinTable(name="users_mp3s")
+     * @ORM\JoinTable(name="users_mp3s",
+     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="mp3record_id", referencedColumnName="id")}
+     * )
      */
     private $mp3s;
 
@@ -639,7 +642,7 @@ class User extends BaseUser
 
         return $this;
     }
-    
+
     /*
      * Remove communities
      *
@@ -653,7 +656,7 @@ class User extends BaseUser
     /**
      * Get communities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCommunities()
     {
@@ -686,6 +689,7 @@ class User extends BaseUser
      */
     public function addMp3(MP3Record $mp3)
     {
+        $mp3->addUser($this);
         $this->mp3s->add($mp3);
 
         return $this;
@@ -701,7 +705,7 @@ class User extends BaseUser
 
         return $this;
     }
-     /**   
+     /**
      * Add poll
      *
      * @param \Network\StoreBundle\Entity\Poll $poll
@@ -868,7 +872,7 @@ class User extends BaseUser
     {
         return $this->albums;
     }
-        
+
     /**
      * Get poll
      *

@@ -138,6 +138,8 @@ class MP3Record
     public function addUser(User $user)
     {
         $this->users->add($user);
+
+        return $this;
     }
 
     public function removeUser(User $user)
