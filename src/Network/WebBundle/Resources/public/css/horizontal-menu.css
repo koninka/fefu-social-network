@@ -11,12 +11,13 @@
 }
 
 .horizontal-menu ul {
-    background: #f2f5f6;
     padding: 0 20px;
+    font-size: 12px;
     list-style: none;
     position: relative;
     display: inline-table;
     z-index: 100;
+    text-align: right;
 }
 
 .horizontal-menu ul:after {
@@ -30,7 +31,7 @@
     cursor: pointer;
 }
 .horizontal-menu ul li:hover {
-    background: #e6e9ea;
+
 }
 
 .horizontal-menu ul li a {
