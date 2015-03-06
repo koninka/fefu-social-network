@@ -1,10 +1,10 @@
-.form {
-    min-width: 300px;
-    max-width: 500px;
+.centered-form {
+    width: 100%;
 }
 
-.form label {
-    width: 40%;
+.centered-form label {
+    width: 30%;
+    max-width: 30%;
     display: inline-block;
     vertical-align: top;
     margin: 0 5px 0 0;
@@ -13,8 +13,8 @@
     line-height: 25px;
 }
 
-.form input:not([type="submit"]){
-    width: 50%;
+.centered-form input:not([type="submit"]) {
+    width: 40%;
     display: inline-block;
     vertical-align: top;
     padding: 4px 8px;
@@ -24,15 +24,11 @@ label {
     outline: 0;
 }
 
-.submit-btn-box{
-    margin: 10px 20px 0 0;
+.submit-btn-box {
+    margin: 10px 0 0 0;
     text-align: right;
 }
 
-.edit-profile-form {
-    width: 500px;
-}
-
-.contact-form{
+.contact-form {
     width: 400px;
 }
