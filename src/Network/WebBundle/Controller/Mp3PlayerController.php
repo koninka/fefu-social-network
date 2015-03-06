@@ -1,6 +1,7 @@
 <?php
 namespace Network\WebBundle\Controller;
 
+use Network\StoreBundle\Controller\FileController;
 use Network\StoreBundle\Entity\MP3Record;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Network\StoreBundle\Controller\Mp3FileController;
@@ -15,10 +16,12 @@ class Mp3PlayerController extends Controller
         if (null === $user) {
             return $this->redirect($this->generateUrl('mainpage'));
         }
+        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:MP3Record');
+        $mp3s = $repo->getRecordsForUser($user->getId());
 
         return $this->render('NetworkWebBundle:Mp3Player:main.html.twig', [
-            'mp3s' => $user->getMp3s(),
-            'filename' => Mp3FileController::UPLOADED_MP3_NAME,
+            'mp3s' => $mp3s,
+            'filename' => FileController::UPLOADED_MP3_NAME,
         ]);
     }
 
