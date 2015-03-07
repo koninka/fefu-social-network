@@ -8,6 +8,7 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 
 use Network\StoreBundle\DBAL\ThreadEnumType;
+use Network\StoreBundle\DBAL\RoleCommunityEnumType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\User;
@@ -163,19 +164,52 @@ class ThreadRepository extends EntityRepository
         return $r;
     }
 
+    /**
+     * @param $userId
+     * @return array
+     */
     public function getFeedForUser($userId)
     {
         $em = $this->getEntityManager();
 
-        $dql = "
-            SELECT p.text, u.firstName, u.lastName, u.id as user FROM NetworkStoreBundle:User u
+        $dql1 = "
+            SELECT wt.id as threadId, p.text, p.ts, u.firstName, u.lastName, u.id as user FROM NetworkStoreBundle:User u
             JOIN u.wallThreads wt
             JOIN wt.posts p
             WHERE u.id in(
              SELECT rp.id FROM NetworkStoreBundle:Relationship r
               JOIN r.partner rp
               WHERE r.user = :user_id and (r.status = :status1 or r.status = :status2)
-            )  ORDER BY p.ts DESC";
+            )";
+
+        $dql2 = "
+            SELECT wt.id as threadId, p.text, p.ts, c.id as comm_id, c.name as comm_name FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads wt
+            JOIN wt.posts p
+            WHERE c.id in(
+              SELECT com.id FROM NetworkStoreBundle:UserCommunity us
+              JOIN us.community com
+              JOIN us.user u
+              WHERE u.id = :user_id and (us.role = :role1 or us.role = :role2)
+            )
+        ";
+
+        $q1 = $em->createQuery($dql1)
+            ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
+            ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+            ->setParameter('user_id', $userId);
+
+        $q2 = $em->createQuery($dql2)
+            ->setParameter('role1', RoleCommunityEnumType::RC_OWNER )
+            ->setParameter('role2', RoleCommunityEnumType::RC_PARTICIPANT)
+            ->setParameter('user_id', $userId);
+
+        $result = array_merge($q1->getResult(), $q2->getResult());
+        usort($result,  function($a, $b){ return $a['ts'] < $b['ts']; });
+
+        return $result;
+    }
+
 
         $query = $em->createQuery($dql)
                     ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
