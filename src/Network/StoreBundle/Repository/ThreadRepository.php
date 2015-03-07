@@ -210,11 +210,73 @@ class ThreadRepository extends EntityRepository
         return $result;
     }
 
+    /**
+     * @param $threadId
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getCommunityByWallThreadId($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT c FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads w
+            WHERE w.id = :thread_id";
 
         $query = $em->createQuery($dql)
-                    ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
-                    ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
-                    ->setParameter('user_id', $userId);
+                    ->setParameter('thread_id', $threadId);
+
+        $r = $query->getOneOrNullResult();
+
+        return $r;
+
+    }
+
+    /**
+     * @param $threadId
+     * @return bool
+     */
+    public function isThreadFromWall($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT u FROM NetworkStoreBundle:User u
+            JOIN u.wallThreads uw
+            WHERE uw.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+            ->setParameter('threadId', $threadId);
+        if(count($query->getResult()))
+            return true;
+
+        $dql = "
+            SELECT c FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads wt
+            WHERE wt.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+            ->setParameter('threadId', $threadId);
+
+        return count($query->getResult()) != 0;
+    }
+
+    /**
+     * @param $threadId
+     * @return array
+     */
+    public function getThreadData($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT p.text, p.ts FROM NetworkStoreBundle:Thread th
+            JOIN th.posts p
+            WHERE th.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('threadId', $threadId);
 
         return $query->getResult();
     }

@@ -42,4 +42,34 @@ class FeedController extends Controller
         ]);
     }
 
+    public function showThreadPageAction($id)
+    {
+        $threadRep = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+        if(!$threadRep->isThreadFromWall($id)) return $this->redirect($this->generateUrl('mainpage'));
+
+        $user = $threadRep->getUserByWallThreadId($id);
+        $fromUser = $user != null;
+        $community = null;
+        if(!$fromUser){
+            $community = $threadRep->getCommunityByWallThreadId($id);
+        }
+
+        $params = [
+            'thread' => $threadRep->getThreadData($id),
+            'fromUser' => $fromUser,
+            'threadId' => $id,
+            ];
+
+        if($fromUser){
+            $params['userId'] = $user->getId();
+            $params['firstName'] = $user->getFirstName();
+            $params['lastName'] = $user->getLastName();
+        } else {
+            $params['commId'] = $community->getId();
+            $params['commName'] = $community->getName();
+        }
+
+        return $this->render('NetworkUserBundle:Feed:showThread.html.twig', $params);
+    }
+
 }

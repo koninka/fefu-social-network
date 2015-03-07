@@ -1,0 +1,23 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block right_content_sub_one %}
+    {% for post in thread %}
+        <div>
+            {% if fromUser %}
+                <p><a href="{{ path('user_profile', {'id':userId} ) }}">{{ firstName }} {{ lastName }}</a></p>
+            {% else %}
+                <p><a href="{{ path('user_show_community', {'id':commId} ) }}">{{ commName }}</a></p>
+            {% endif %}
+            <br>
+            {% for post in thread %}
+                {{ post.text }}
+                <br><br>
+                <p style="font-size: x-small">
+                    <a href="{{ path('show_thread', { 'id': threadId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
+                </p>
+            {% endfor %}
+
+        </div>
+    {% endfor %}
+{% endblock %}

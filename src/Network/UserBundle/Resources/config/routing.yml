@@ -242,3 +242,9 @@ leave_conference:
 show_feed:
     path:     feed
     defaults: { _controller: NetworkUserBundle:Feed:showFeed }
+
+show_thread:
+    path: /thread{id}
+    defaults: { _controller: NetworkUserBundle:Feed:showThreadPage }
+    requirements:
+       id: \d+

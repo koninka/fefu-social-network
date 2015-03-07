@@ -11,9 +11,15 @@
             {% endif %}
             {% if post.text | length > 300 %}
                 {{ post.text | slice(0, 300) }}
+                <a href="{{ path('show_thread', { 'id': post.threadId }) }}"> ... </a>
             {% else %}
                 <p>{{ post.text }}
             {% endif %}
+            <br><br>
+            <p style="font-size: x-small">
+                <a href="{{ path('show_thread', { 'id': post.threadId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
+            </p>
+
         </div>
      {% endfor %}
 {% endblock %}
