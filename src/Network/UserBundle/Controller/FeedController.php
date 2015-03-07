@@ -19,25 +19,9 @@ class FeedController extends Controller
         $user = $this->getUser();
         if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
 
-        return $this->showUserFeedAction($user->getId());
-    }
-
-    public function showUserFeedAction($id)
-    {
-        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
-
         $feed = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
 
-        $isCurUser = false;
-        if ($this->get('security.context')->isGranted('ROLE_USER')) {
-            $curUser = $this->getUser();
-            $isCurUser = ($curUser->getId() === $user->getId());
-        }
-
         return $this->render('NetworkUserBundle:Feed:showFeed.html.twig', [
-            'user_id' => $user->getId(),
-            'is_cur_user' => $isCurUser,
             'feed' => $feed->getFeedForUser($user->getId()),
         ]);
     }
@@ -70,6 +54,30 @@ class FeedController extends Controller
         }
 
         return $this->render('NetworkUserBundle:Feed:showThread.html.twig', $params);
+    }
+
+    public function showUserFeedFromFriendsAction()
+    {
+        $user = $this->getUser();
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        $feed = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+
+        return $this->render('NetworkUserBundle:Feed:showFeed.html.twig', [
+            'feed' => $feed->getFriendsFeed($user->getId()),
+        ]);
+    }
+
+    public function showUserFeedFromCommunitiesAction()
+    {
+        $user = $this->getUser();
+        if (empty($user)) return $this->redirect($this->generateUrl('mainpage'));
+
+        $feed = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread');
+
+        return $this->render('NetworkUserBundle:Feed:showFeed.html.twig', [
+            'feed' => $feed->getCommunitiesFeed($user->getId()),
+        ]);
     }
 
 }

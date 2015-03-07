@@ -240,8 +240,16 @@ leave_conference:
     defaults: { _controller: NetworkUserBundle:Thread:leaveConference }
 
 show_feed:
-    path:     feed
+    path: /feed
     defaults: { _controller: NetworkUserBundle:Feed:showFeed }
+
+show_friends_feed:
+    path: /friends_feed
+    defaults: { _controller: NetworkUserBundle:Feed:showUserFeedFromFriends }
+
+show_communities_feed:
+    path: /communities_feed
+    defaults: { _controller: NetworkUserBundle:Feed:showUserFeedFromCommunities }
 
 show_thread:
     path: /thread{id}

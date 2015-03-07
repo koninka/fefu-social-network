@@ -159,9 +159,7 @@ class ThreadRepository extends EntityRepository
         $query = $em->createQuery($dql)
                     ->setParameter('thread_id', $threadId);
 
-        $r = $query->getOneOrNullResult();
-
-        return $r;
+        return $query->getOneOrNullResult();
     }
 
     /**
@@ -170,19 +168,48 @@ class ThreadRepository extends EntityRepository
      */
     public function getFeedForUser($userId)
     {
+        $result = array_merge($this->getFriendsFeed($userId), $this->getCommunitiesFeed($userId));
+        usort($result,  function($a, $b){ return $a['ts'] < $b['ts']; });
+
+        return $result;
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getFriendsFeed($userId)
+    {
         $em = $this->getEntityManager();
 
-        $dql1 = "
-            SELECT wt.id as threadId, p.text, p.ts, u.firstName, u.lastName, u.id as user FROM NetworkStoreBundle:User u
+        $dql = "
+            SELECT wt.id as threadId, p.text, p.ts, u.firstName, u.lastName, u.id FROM NetworkStoreBundle:User u
             JOIN u.wallThreads wt
             JOIN wt.posts p
             WHERE u.id in(
              SELECT rp.id FROM NetworkStoreBundle:Relationship r
-              JOIN r.partner rp
-              WHERE r.user = :user_id and (r.status = :status1 or r.status = :status2)
-            )";
+             JOIN r.partner rp
+             WHERE r.user = :user_id and (r.status = :status1 or r.status = :status2)
+            ) ORDER BY p.ts DESC
+            ";
 
-        $dql2 = "
+        $query = $em->createQuery($dql)
+                    ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
+                    ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+                    ->setParameter('user_id', $userId);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getCommunitiesFeed($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
             SELECT wt.id as threadId, p.text, p.ts, c.id as comm_id, c.name as comm_name FROM NetworkStoreBundle:Community c
             JOIN c.wallThreads wt
             JOIN wt.posts p
@@ -191,23 +218,15 @@ class ThreadRepository extends EntityRepository
               JOIN us.community com
               JOIN us.user u
               WHERE u.id = :user_id and (us.role = :role1 or us.role = :role2)
-            )
+            ) ORDER BY p.ts DESC
         ";
 
-        $q1 = $em->createQuery($dql1)
-            ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
-            ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
-            ->setParameter('user_id', $userId);
-
-        $q2 = $em->createQuery($dql2)
-            ->setParameter('role1', RoleCommunityEnumType::RC_OWNER )
+        $query = $em->createQuery($dql)
+            ->setParameter('role1', RoleCommunityEnumType::RC_OWNER)
             ->setParameter('role2', RoleCommunityEnumType::RC_PARTICIPANT)
             ->setParameter('user_id', $userId);
 
-        $result = array_merge($q1->getResult(), $q2->getResult());
-        usort($result,  function($a, $b){ return $a['ts'] < $b['ts']; });
-
-        return $result;
+        return $query->getResult();
     }
 
     /**
@@ -226,10 +245,7 @@ class ThreadRepository extends EntityRepository
         $query = $em->createQuery($dql)
                     ->setParameter('thread_id', $threadId);
 
-        $r = $query->getOneOrNullResult();
-
-        return $r;
-
+        return $query->getOneOrNullResult();
     }
 
     /**

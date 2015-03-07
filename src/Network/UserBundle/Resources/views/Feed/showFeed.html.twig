@@ -2,10 +2,18 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block right_content_sub_one %}
+    <div class="white-box">
+        <ul>
+            <li><a href="{{ path('show_feed') }}">All</a></li>
+            <li><a href="{{ path('show_friends_feed') }}">Friends</a></li>
+            <li><a href="{{ path('show_communities_feed') }}">Communities</a></li>
+        </ul>
+    </div>
+
      {% for post in feed %}
         <div>
-            {% if post.user is defined %}
-                <p><a href="{{ path('user_profile', {'id': post.user} ) }}">{{ post.firstName }} {{ post.lastName }}</a></p>
+            {% if post.id is defined %}
+                <p><a href="{{ path('user_profile', {'id': post.id} ) }}">{{ post.firstName }} {{ post.lastName }}</a></p>
             {% else %}
                 <p><a href="{{ path('user_show_community', {'id':post.comm_id} ) }}">{{ post.comm_name }}</a></p>
             {% endif %}
