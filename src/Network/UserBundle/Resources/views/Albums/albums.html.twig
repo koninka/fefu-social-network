@@ -1,24 +1,22 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-{% block right_content_sub_one %}
-    <div>
+{% block right_content %}
+    <div class="white-box" id="album-box">
+        {% if is_cur_user %}
+            <div id="album-controller-box">
+                <a class="btn btn-green btn-small" href="{{ path('user_add_album' ) }}">{{ 'profile.add.album'|trans }}</a>
+            </div>
+        {% endif %}
         <p>{{ 'profile.show.albums'|trans }}: {{ albums|length }}</p>
         {% if albums %}
                 {% for album in albums %}
-                    <p>
+                    <div class="album-name-box">
                         <a href="{{ path('user_show_album', {'id':user_id, 'albumId':album.gallery.id} ) }}">{{ album.gallery.name }}</a>
                         {% if is_cur_user %}
-                            <a href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit.name'|trans }}</a>
+                            <a class="btn btn-blue btn-small" href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit.name'|trans }}</a>
                         {% endif %}
-                    </p>
+                    </div>
                 {% endfor %}
         {% endif %}
     </div>
-{% endblock %}
-{% block right_content_sub_two %}
-    {% if is_cur_user %}
-        <div>
-            <p><a href="{{ path('user_add_album' ) }}">{{ 'profile.add.album'|trans }}</a></p>
-        </div>
-    {% endif %}
 {% endblock %}

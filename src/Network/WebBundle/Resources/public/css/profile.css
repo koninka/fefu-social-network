@@ -230,6 +230,37 @@ header div {
 
 }
 
+/*--------------album-------------*/
+
+#album-form-box {
+    width: 100%;
+}
+
+#album-controller-box {
+    text-align: right;
+}
+
+#album-controller-box .btn{
+    margin: 5px;
+}
+
+#album-box {
+    width: 100%;
+}
+
+.photo-box {
+    display: inline-block;
+    padding: 20px;
+}
+
+.album-name-box {
+    padding: 5px;
+}
+
+.album-name-box .btn{
+    margin: 5px;
+}
+
 /*---------------------------------footer---------------------------------------*/
 
 footer {

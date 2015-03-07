@@ -1,17 +1,13 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
-{% block right_content_sub_one %}
-    <div>
-        <form action="{{ path('user_edit_album', {'albumId':album.id} ) }}" {{ form_enctype(form) }} method="POST">
+{% block right_content %}
+    <div class="white-box" id="album-form-box">
+        <form class="centered-form" action="{{ path('user_edit_album', {'albumId':album.id} ) }}" {{ form_enctype(form) }} method="POST">
             {{ form_widget(form) }}
-            <div>
-                <input class="blue_button" type="submit" value="{{ 'album.edit.submit'|trans }}" />
+            <div class="submit-btn-box">
+                <input class="btn btn-blue" type="submit" value="{{ 'album.edit.submit'|trans }}" />
+                <a class="btn btn-red" href="{{ path('user_delete_album', {'albumId':album.id} ) }}">{{ 'album.delete.name'|trans }}</a>
             </div>
         </form>
-    </div>
-{% endblock %}
-{% block right_content_sub_two %}
-    <div>
-        <p><a href="{{ path('user_delete_album', {'albumId':album.id} ) }}">{{ 'album.delete.name'|trans }}</a></p>
     </div>
 {% endblock %}
