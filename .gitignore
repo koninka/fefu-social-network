@@ -14,3 +14,4 @@
 fefu-social.iml
 .idea
 dump.rdb
+web/opcache-gui/

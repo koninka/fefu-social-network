@@ -1,0 +1,9 @@
+<?php
+
+namespace Network\OpenIdBundle\Tests\Controller;
+
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+
+class SecurityControllerTest extends WebTestCase
+{
+}

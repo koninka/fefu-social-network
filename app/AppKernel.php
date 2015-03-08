@@ -38,6 +38,11 @@ class AppKernel extends Kernel
             new Sonata\EasyExtendsBundle\SonataEasyExtendsBundle(),
             new Application\Sonata\MediaBundle\ApplicationSonataMediaBundle(),
             new Network\WebSocketBundle\NetworkWebSocketBundle(),
+            new Network\ImportBundle\NetworkImportBundle(),
+            new Network\OpenIdBundle\NetworkOpenIdBundle(),
+            new Fp\OpenIdBundle\FpOpenIdBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
+            new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -15,6 +15,10 @@
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
                 <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "instagram"}) }}">Instagram</a>
+                {% for provider in valid_openid_providers %}
+                    <a class="button authentication" href="{{ path("fp_openid_security_check", {'openid_identifier': provider.url}) }}">{{ provider.name }}</a>
+                {% endfor %}
             {% endblock %}
         {% endblock %}
     </div>

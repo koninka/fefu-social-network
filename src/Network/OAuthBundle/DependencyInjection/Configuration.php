@@ -18,7 +18,7 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('network_oauth');
+        $rootNode = $treeBuilder->root('network_o_auth')->end();
 
         // Here you should define the parameters that are allowed to
         // configure your bundle. See the documentation linked above for
