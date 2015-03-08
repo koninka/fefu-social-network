@@ -882,4 +882,48 @@ class User extends BaseUser
     {
         return $this->poll;
     }
+
+    /**
+     * Add jobs
+     *
+     * @param \Network\StoreBundle\Entity\Job $jobs
+     * @return User
+     */
+    public function addJob(\Network\StoreBundle\Entity\Job $jobs)
+    {
+        $this->jobs[] = $jobs;
+
+        return $this;
+    }
+
+    /**
+     * Remove jobs
+     *
+     * @param \Network\StoreBundle\Entity\Job $jobs
+     */
+    public function removeJob(\Network\StoreBundle\Entity\Job $jobs)
+    {
+        $this->jobs->removeElement($jobs);
+    }
+
+    /**
+     * Remove userThreads
+     *
+     * @param \Network\StoreBundle\Entity\UserThread $userThreads
+     */
+    public function removeUserThread(\Network\StoreBundle\Entity\UserThread $userThreads)
+    {
+        $this->userThreads->removeElement($userThreads);
+    }
+
+    /**
+     * Get userThreads
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserThreads()
+    {
+        return $this->userThreads;
+    }
+
 }
