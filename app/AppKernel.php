@@ -43,6 +43,7 @@ class AppKernel extends Kernel
             new Fp\OpenIdBundle\FpOpenIdBundle(),
             new Network\OpenIdBundle\NetworkOpenIdBundle(),
             new Snc\RedisBundle\SncRedisBundle(),
+            new Network\CacheBundle\NetworkCacheBundle()
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {
