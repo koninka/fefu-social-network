@@ -4,7 +4,7 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Network\WebSocketBundle\Message\Message;
+use Network\WebSocketBundle\Message\NotificationMessage;
 use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Exception\Exception;
@@ -95,10 +95,10 @@ class ImService
         $manager->remove($userThread);
         $manager->flush();
         
-        $this->serverManager->sendNotifyMessage(new Message($userId,
+        $this->serverManager->sendNotifyMessage(new NotificationMessage($userId,
                 $this->translator->trans('notify.kicked_from_conference', [], 'FOSUserBundle') .
                 ' ' . $userThread->getThread()->getTopic(),
-                Message::TYPE_FAIL));
+            NotificationMessage::TYPE_FAIL));
 
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
     }
@@ -140,10 +140,10 @@ class ImService
 
         foreach ($thread->getUsers() as $threadUser) {
             if ($user->getId() != $threadUser->getId()) {
-                $this->serverManager->sendNotifyMessage(new Message($threadUser->getId(),
+                $this->serverManager->sendNotifyMessage(new NotificationMessage($threadUser->getId(),
                         $this->translator->trans('notify.new_message_from', [], 'FOSUserBundle') .
                         ' ' . $user->getFirstName() . ' ' . $user->getLastName(),
-                        Message::TYPE_SUCCESS));
+                    NotificationMessage::TYPE_SUCCESS));
             }
         }
 
@@ -191,10 +191,10 @@ class ImService
         $thread->addUser($user, $userId);
         foreach ($recipientUsers as $recipientUser) {
             $thread->addUser($recipientUser, $userId);
-            $this->serverManager->sendNotifyMessage(new Message($recipientUser->getId(),
+            $this->serverManager->sendNotifyMessage(new NotificationMessage($recipientUser->getId(),
                     $this->translator->trans('notify.invited_to_conference', [], 'FOSUserBundle') .
                     ' ' . $topic,
-                    Message::TYPE_SUCCESS));
+                    NotificationMessage::TYPE_SUCCESS));
         }
 
         $this->persistAndFlush($thread);

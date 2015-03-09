@@ -84,7 +84,7 @@ class RelationshipManager extends Controller
 
             $this->em->flush();
 
-            $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
+            $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
 
             return 'friendship_accepted';
         }
@@ -106,7 +106,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.friendship_request_received', Message::TYPE_SUCCESS);
+        $this->sendMessage($id, 'notify.friendship_request_received', NotificationMessage::TYPE_SUCCESS);
 
         return 'friendship_request_sent';
     }
@@ -133,7 +133,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
+        $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
     }
 
     /**
