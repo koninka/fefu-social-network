@@ -116,9 +116,32 @@ class ThreadController extends Controller
             }
         }
 
-        $imService->createPost($user, $thread, $text, $files);
+        $post = $imService->createPost($user, $thread, $text, $files);
 
         $res['threadId'] = $thread->getId();
+
+        $postFiles = [];
+
+        foreach ($post->getFiles()->toArray() as $file) {
+            $postFiles[] = [
+                'id'   => $file->getId(),
+                'name' => $file->getName(),
+                'hash' => $file->getHash()
+            ];
+        }
+
+        $formatter =  $this->container->get('sonata.formatter.pool');
+
+        $postResult = [
+            'id'        => $post->getId(),
+            'ts'        => $post->getTs(),
+            'text'      => $formatter->transform('markdown', $text),
+            'author'    => $post->getUser()->getFirstName() .' '. $post->getUser()->getLastName(),
+            'postFiles' => $postFiles,
+            'userId'    => $post->getUser()->getId()
+        ];
+
+        $res['post'] = $postResult;
 
         return new JsonResponse($res);
     }
