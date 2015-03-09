@@ -12,9 +12,13 @@
         <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
         {% block javascripts %}
             <script src="{{ asset('bundles/networkweb/js/jBox.min.js') }}"></script>
+            <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+            <script src="{{ asset('bundles/networkweb/js/main.js') }}"></script>
         {% endblock %}
         <script>
             {% if app.user %}
+            var userRequests = null;
+
             websocket = new WebSocket('ws://' + window.location.hostname + ':8000/echo');
             websocket.onopen = function (evt) {
                 {% block wsOpen %}
@@ -32,11 +36,35 @@
             websocket.onmessage = function (evt) {
                 {% block wsMessage %}
                 var data = JSON.parse(evt.data);
-                new jBox('Notice', {
-                    content: data.text,
-                    color:  data.type,
-                    autoClose: false
-                });
+
+                if (data.action == 'notify') {
+                    new jBox('Notice', {
+                        content: data.text,
+                        color:  data.type,
+                        autoClose: 2000
+                    });
+                } else if (data.action == 'deliver') {
+
+                    if (addMessageRequest(data.thread_id)) {
+                        redrawMessageRequest();
+                    }
+
+                    var content = ' <span class="new-message-author">'
+                            +  data.post.author
+                            + ':</span>'
+                            + '<div class="new-message-text">'
+                            + data.post.text + '</div>'
+                    new jBox('Notice', {
+                        content: content,
+                        color:  'green',
+                        autoClose: 2000,
+                        maxWidth: 300,
+                        attributes: {
+                            x: 'right',
+                            y: 'bottom'
+                        }
+                    });
+                }
                 {% endblock wsMessage %}
             };
             websocket.onerror = function (evt) {

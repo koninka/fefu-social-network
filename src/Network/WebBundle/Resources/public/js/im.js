@@ -212,6 +212,9 @@ function updateThreadList() {
 function updateThreadView(threadId, topic, scroll) {
     // Currently reloads all posts from thread
     setTab(threadId, topic);
+    if (removeMessageRequest(threadId)) {
+        redrawMessageRequest();
+    }
     selectTab(threadId);
     closeActions();
     $('#thread-tabs').show();

@@ -11,6 +11,7 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+
 {% endblock %}
 {% block body %}
     <div id="header_box">
@@ -43,7 +44,13 @@
                         <li><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_friends') }}">{{ 'layout.show_friends'|trans({}, 'FOSUserBundle') }}{% if friendship_requests_count is defined %}: {{ friendship_requests_count }}{% endif %}</a></li>
                         <li><a href="{{ path('user_profile_show_community') }}">{{ 'layout.show_community'|trans({}, 'FOSUserBundle') }}{% if community_requests_count is defined %}: {{ community_requests_count }}{% endif %}</a></li>
-                        <li><a href="{{ path('user_profile_show_messages') }}">{{ 'layout.show_messages'|trans({}, 'FOSUserBundle') }}{% if threads_unread_count is defined %}: {{ threads_unread_count }}{% endif %}</a></li>
+                        <li id="message_li">
+                            <a href="{{ path('user_profile_show_messages') }}">
+                                {{ 'layout.show_messages'|trans({}, 'FOSUserBundle') }}
+                                <span id="msg-unread-count" style="display: none" class="notif-count">
+                                </span>
+                            </a>
+                        </li>
                         <li><a href="{{ path('audios') }}">{{ 'layout.audios'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('videos') }}">{{ 'layout.videos'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_albums') }}">{{ 'layout.show_albums'|trans({}, 'FOSUserBundle') }}</a></li>

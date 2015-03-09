@@ -94,6 +94,7 @@ header div {
 #main_menu li {
     cursor: pointer;
     border-radius: 3px;
+    position: relative;
 }
 
 #main_menu li a {
@@ -259,6 +260,26 @@ header div {
 
 .album-name-box .btn{
     margin: 5px;
+}
+
+/*messages*/
+.new-message-author{
+    font-size: 14px;
+}
+
+.new-message-text{
+    padding: 3px 3px 3px 10px;
+    font-size: 14px;
+}
+
+.notif-count{
+    padding: 3px 5px 3px 5px;
+    background-color: rgba(83, 141, 197, 0.20);
+    float: right;
+    border-radius: 3px;
+    position: absolute;
+    right: 15px;
+    top: 12px;
 }
 
 /*---------------------------------footer---------------------------------------*/
