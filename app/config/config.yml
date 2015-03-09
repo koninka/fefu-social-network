@@ -42,6 +42,10 @@ twig:
         resources:
             - 'SonataFormatterBundle:Form:formatter.html.twig'
             - 'ApplicationSonataMediaBundle:Form:media_widgets.html.twig'
+            - 'SonataMediaBundle:Form:media_widgets.html.twig'
+    globals:
+        valid_openid_providers:
+            - { name: Steam, url: http://steamcommunity.com/openid }
 
 # Assetic Configuration
 assetic:
