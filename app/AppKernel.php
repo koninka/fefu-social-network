@@ -42,6 +42,7 @@ class AppKernel extends Kernel
             new OldSound\RabbitMqBundle\OldSoundRabbitMqBundle(),
             new Fp\OpenIdBundle\FpOpenIdBundle(),
             new Network\OpenIdBundle\NetworkOpenIdBundle(),
+            new Snc\RedisBundle\SncRedisBundle(),
         );
 
         if (in_array($this->getEnvironment(), array('dev', 'test'))) {

@@ -81,6 +81,8 @@ doctrine:
     orm:
         auto_generate_proxy_classes: "%kernel.debug%"
         auto_mapping: true
+        metadata_cache_driver: redis
+        query_cache_driver: redis
 
 # Swiftmailer Configuration
 swiftmailer:
@@ -254,5 +256,24 @@ old_sound_rabbit_mq:
 fp_open_id:
     db_driver: orm
     identity_class: Network\StoreBundle\Entity\OpenIdIdentity
+
+snc_redis:
+    clients:
+        cache:
+            type: predis
+            alias: cache
+            dsn: redis://localhost
+            logging: true
+    doctrine:
+            metadata_cache:
+                client: cache
+                entity_manager: default
+                document_manager: default
+            result_cache:
+                client: cache
+                entity_manager: [default, read]
+            query_cache:
+                client: cache
+                entity_manager: default
 
 
