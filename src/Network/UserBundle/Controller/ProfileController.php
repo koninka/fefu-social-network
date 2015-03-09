@@ -13,6 +13,7 @@ namespace Network\UserBundle\Controller;
 
 use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
+use Network\CacheBundle\Utils\CacheTrait;
 use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -21,6 +22,7 @@ use Symfony\Component\HttpFoundation\Request;
 class ProfileController extends BaseController
 {
     use ProfileTrait;
+    use CacheTrait;
 
     public function showAction()
     {
@@ -146,11 +148,13 @@ class ProfileController extends BaseController
             $isCurUser = ($curUser->getId() === $user->getId());
         }
 
-        return $this->render('NetworkUserBundle:Albums:albums.html.twig', [
+        $result = $this->render('NetworkUserBundle:Albums:albums.html.twig', [
             'user_id' => $user->getId(),
             'is_cur_user' => $isCurUser,
             'albums' => $albums->findAlbumsForUser($user->getId()),
         ]);
+
+        return $this->setCache($result);
     }
 
 }
