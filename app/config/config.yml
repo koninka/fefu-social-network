@@ -246,3 +246,9 @@ old_sound_rabbit_mq:
             exchange_options: {name: 'fetch-content', type: direct}
             queue_options:    {name: 'fetch-content'}
             callback:         network_import.fetch_content_consumer_service
+
+fp_open_id:
+    db_driver: orm
+    identity_class: Network\StoreBundle\Entity\OpenIdIdentity
+
+
