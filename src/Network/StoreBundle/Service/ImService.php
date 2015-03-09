@@ -4,7 +4,6 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Network\WebSocketBundle\Message\ImMessage;
 use Network\WebSocketBundle\Message\NotificationMessage;
 use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -125,16 +124,9 @@ class ImService
             ->setUser($user)
             ->setThread($thread);
 
-        $postFiles = [];
-
         if(isset($filesId) && count($filesId['postFile']) > 0) {
             foreach ($filesId['postFile'] as $fileId) {
                 $file = $this->em->getRepository('NetworkStoreBundle:PostFile')->find($fileId);
-                $postFiles[] = [
-                    'id'   => $file->getId(),
-                    'name' => $file->getName(),
-                    'hash' => $file->getHash()
-                ];
                 $file->setPost($post);
                 $post->addFile($file);
                 $this->em->persist($file);
@@ -144,22 +136,6 @@ class ImService
         $thread->incUnreadPosts($user);
         $this->em->persist($post);
         $this->em->flush();
-
-        $postResult = [
-            'id'        => $post->getId(),
-            'ts'        => $post->getTs(),
-            'text'      => $text,
-            'author'    => $post->getUser()->getFirstName() .' '. $post->getUser()->getLastName(),
-            'postFiles' => $postFiles,
-            'userId'    => $post->getUser()->getId()
-        ];
-
-        foreach ($thread->getUsers() as $threadUser) {
-            if ($user->getId() != $threadUser->getId()) {
-                $msg = new ImMessage($thread->getId(), $threadUser->getId(), $postResult);
-                $this->serverManager->sendMessage($msg);
-            }
-        }
 
         date_default_timezone_set($oldTimeZone);
 
@@ -269,4 +245,30 @@ class ImService
         return new JsonResponse(['count' => $count]);
     }
 
+    public function sendMessage($msg) {
+        $this->serverManager->sendMessage($msg);
+    }
+
+    function normalizePost(Post $post) {
+        $postFiles = [];
+
+        foreach ($post->getFiles()->toArray() as $file) {
+            $postFiles[] = [
+                'id'   => $file->getId(),
+                'name' => $file->getName(),
+                'hash' => $file->getHash()
+            ];
+        }
+
+        $postResult = [
+            'id'        => $post->getId(),
+            'ts'        => $post->getTs(),
+            'text'      => $post->getText(),
+            'author'    => $post->getUser()->getFirstName() . ' ' . $post->getUser()->getLastName(),
+            'postFiles' => $postFiles,
+            'userId'    => $post->getUser()->getId()
+        ];
+
+        return $postResult;
+    }
 }

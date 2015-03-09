@@ -20,6 +20,8 @@ use Network\StoreBundle\DBAL\RoleCommunityEnumType;
 use Network\StoreBundle\DBAL\TypeCommunityEnumType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
+use Network\WebSocketBundle\Service\ServerManager;
+use Network\WebSocketBundle\Message\ImMessage;
 
 /**
  * Class ThreadController
@@ -68,6 +70,7 @@ class ThreadController extends Controller
     public function postAction(Request $request)
     {
         $imService = $this->get('network.store.im_service');
+        $formatter = $this->container->get('sonata.formatter.pool');
         $user = $this->getUserAndCheckAccess();
         $text = $request->request->get('text', '');
         $files = $request->request->get('files');
@@ -118,30 +121,18 @@ class ThreadController extends Controller
 
         $post = $imService->createPost($user, $thread, $text, $files);
 
+        $normalizedPost = $imService->normalizePost($post);
+        $normalizedPost['text'] = $formatter->transform('markdown', $text);
+
+        $res['post'] = $normalizedPost;
         $res['threadId'] = $thread->getId();
 
-        $postFiles = [];
-
-        foreach ($post->getFiles()->toArray() as $file) {
-            $postFiles[] = [
-                'id'   => $file->getId(),
-                'name' => $file->getName(),
-                'hash' => $file->getHash()
-            ];
+        foreach ($thread->getUsers() as $threadUser) {
+            if ($user->getId() != $threadUser->getId()) {
+                $msg = new ImMessage($thread->getId(), $threadUser->getId(), $normalizedPost);
+                $imService->sendMessage($msg);
+            }
         }
-
-        $formatter =  $this->container->get('sonata.formatter.pool');
-
-        $postResult = [
-            'id'        => $post->getId(),
-            'ts'        => $post->getTs(),
-            'text'      => $formatter->transform('markdown', $text),
-            'author'    => $post->getUser()->getFirstName() .' '. $post->getUser()->getLastName(),
-            'postFiles' => $postFiles,
-            'userId'    => $post->getUser()->getId()
-        ];
-
-        $res['post'] = $postResult;
 
         return new JsonResponse($res);
     }
@@ -173,6 +164,9 @@ class ThreadController extends Controller
         $user = $this->getUserAndCheckAccess();
         $threadId = $request->request->get('id');
 
+        $imService = $this->get('network.store.im_service');
+        $formatter =  $this->container->get('sonata.formatter.pool');
+
         if ($threadId == null) {
             return $this->errorJsonResponse('Invalid thread id');
         }
@@ -186,28 +180,12 @@ class ThreadController extends Controller
 
         $unreadPosts = $threadRepo->getUnreadPostsByUser($threadId, $user->getId());
 
-        $formatter =  $this->container->get('sonata.formatter.pool');
         $postResult = [];
 
         foreach ($posts as $post) {
-            $postFiles = [];
-
-            foreach ($post->getFiles()->toArray() as $file) {
-                $postFiles[] = [
-                    'id'   => $file->getId(),
-                    'name' => $file->getName(),
-                    'hash' => $file->getHash()
-                ];
-            }
-
-            $postResult[] = [
-                'id'        => $post->getId(),
-                'ts'        => $post->getTs(),
-                'text'      => $formatter->transform('markdown', $post->getText()),
-                'author'    => $post->getUser()->getFirstName() .' '. $post->getUser()->getLastName(),
-                'postFiles' => $postFiles,
-                'userId'    => $post->getUser()->getId()
-            ];
+            $normalizedPost = $imService->normalizePost($post);
+            $normalizedPost['text'] = $formatter->transform('markdown', $normalizedPost['text']);
+            $postResult[] = $normalizedPost;
         }
 
         return new JsonResponse([
