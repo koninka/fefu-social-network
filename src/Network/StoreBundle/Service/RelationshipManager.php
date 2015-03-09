@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Relationship;
+use Network\WebSocketBundle\Message\NotificationMessage;
 use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,7 @@ class RelationshipManager extends Controller
     }
 
     private function sendMessage($userId, $transMsg, $type) {
-        $this->serverManager->sendNotifyMessage(new Message($userId,
+        $this->serverManager->sendMessage(new NotificationMessage($userId,
                 $this->user->getFirstName() . ' ' . $this->user->getLastName() . ' ' .
                 $this->translator->trans($transMsg, [], 'FOSUserBundle'),
                 $type));
