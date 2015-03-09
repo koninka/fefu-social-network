@@ -256,3 +256,15 @@ show_thread:
     defaults: { _controller: NetworkUserBundle:Feed:showThreadPage }
     requirements:
        id: \d+
+
+add_to_blacklist:
+    path: /ban{id}
+    defaults: { _controller: NetworkUserBundle:Feed:addThreadToBlacklist }
+    requirements:
+      id: \d+
+
+return_thread:
+    path: /return{id}
+    defaults: { _controller: NetworkUserBundle:Feed:removeThreadFromBlacklist }
+    requirements:
+      id: \d+

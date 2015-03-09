@@ -187,16 +187,22 @@ class ThreadRepository extends EntityRepository
             JOIN u.wallThreads wt
             JOIN wt.posts p
             WHERE u.id in(
-             SELECT rp.id FROM NetworkStoreBundle:Relationship r
-             JOIN r.partner rp
-             WHERE r.user = :user_id and (r.status = :status1 or r.status = :status2)
+              SELECT rp.id FROM NetworkStoreBundle:Relationship r
+              JOIN r.partner rp
+              WHERE r.user = :userId and (r.status = :status1 or r.status = :status2)
+            )
+            and wt.id not in(
+              SELECT th.id FROM NetworkStoreBundle:Blacklist b
+              JOIN b.threads th
+              JOIN b.user uid
+              WHERE uid = :userId
             ) ORDER BY p.ts DESC
             ";
 
         $query = $em->createQuery($dql)
                     ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
                     ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
-                    ->setParameter('user_id', $userId);
+                    ->setParameter('userId', $userId);
 
         return $query->getResult();
     }
@@ -214,17 +220,23 @@ class ThreadRepository extends EntityRepository
             JOIN c.wallThreads wt
             JOIN wt.posts p
             WHERE c.id in(
-              SELECT com.id FROM NetworkStoreBundle:UserCommunity us
-              JOIN us.community com
-              JOIN us.user u
-              WHERE u.id = :user_id and (us.role = :role1 or us.role = :role2)
+              SELECT com.id FROM NetworkStoreBundle:UserCommunity uc
+              JOIN uc.community com
+              JOIN uc.user u
+              WHERE u.id = :userId and (uc.role = :role1 or uc.role = :role2)
+            )
+            and wt.id not in(
+              SELECT th.id FROM NetworkStoreBundle:Blacklist b
+              JOIN b.threads th
+              JOIN b.user uid
+              WHERE uid = :userId
             ) ORDER BY p.ts DESC
         ";
 
         $query = $em->createQuery($dql)
-            ->setParameter('role1', RoleCommunityEnumType::RC_OWNER)
-            ->setParameter('role2', RoleCommunityEnumType::RC_PARTICIPANT)
-            ->setParameter('user_id', $userId);
+                    ->setParameter('userId', $userId)
+                    ->setParameter('role1', RoleCommunityEnumType::RC_OWNER)
+                    ->setParameter('role2', RoleCommunityEnumType::RC_PARTICIPANT);
 
         return $query->getResult();
     }

@@ -27,6 +27,9 @@
             <p style="font-size: x-small">
                 <a href="{{ path('show_thread', { 'id': post.threadId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
             </p>
+            <p align="right" style="font-size: x-small" >
+               <a href="{{ path('add_to_blacklist', { 'id': post.threadId }) }}"> {{ 'msg.delete_from_feed' | trans }}</a>
+            </p>
 
         </div>
      {% endfor %}

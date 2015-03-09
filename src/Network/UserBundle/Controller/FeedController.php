@@ -80,4 +80,33 @@ class FeedController extends Controller
         ]);
     }
 
+    public function addThreadToBlacklistAction($id)
+    {
+        $user = $this->getUser();
+        $thread = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread')->find($id);
+        if (empty($user) || empty($thread))
+            return $this->redirect($this->generateUrl('mainpage'));
+
+        $user->getBlacklist()->addThread($thread);
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return $this->render('NetworkUserBundle:Feed:threadDeleted.html.twig', [
+            'threadId' => $id,
+        ]);
+    }
+
+    public function removeThreadFromBlacklistAction($id)
+    {
+        $user = $this->getUser();
+        $thread = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread')->find($id);
+        if (empty($user) || empty($thread))
+            return $this->redirect($this->generateUrl('mainpage'));
+
+        $user->getBlacklist()->removeThread($thread);
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return $this->showFeedAction();
+    }
 }

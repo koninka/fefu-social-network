@@ -1,0 +1,14 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+
+{% block right_content_sub_one %}
+<div>
+    <p>
+        {{ 'msg.thread_deleted' | trans }}</p>
+        <br><br><p>
+        <a href="{{ path('return_thread', {'id':threadId} ) }}">{{ 'msg.return_current_thread' | trans }}</a>
+
+    </p>
+
+</div>
+{% endblock %}

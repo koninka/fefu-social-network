@@ -172,6 +172,14 @@ class User extends BaseUser
     private $contactInfo;
 
     /**
+     * @var integer
+     *
+     * @ORM\OneToOne(targetEntity="Blacklist", inversedBy = "user", cascade = {"persist"})
+     * @ORM\JoinColumn(name="blacklist_id", referencedColumnName="id")
+     */
+    private $blacklist;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\ManyToMany(targetEntity="MP3Record", inversedBy="users")
@@ -494,6 +502,30 @@ class User extends BaseUser
     public function getContactInfo()
     {
         return $this->contactInfo;
+    }
+
+    /**
+     * Set blacklist
+     *
+     * @param Blacklist integer
+     * @return \Network\StoreBundle\Entity\User
+     *
+     */
+    public function setBlacklist(\Network\StoreBundle\Entity\Blacklist $blacklist = null)
+    {
+        $this->blacklist = $blacklist;
+
+        return $this;
+    }
+
+    /**
+     * Get blacklist
+     *
+     * @return int
+     */
+    public function getBlacklist()
+    {
+        return $this->blacklist;
     }
 
     /**
