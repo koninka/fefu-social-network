@@ -965,4 +965,33 @@ class User extends BaseUser
     {
         return $this->playlists;
     }
+
+    /**
+     * Add groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     * @return User
+     */
+    public function addGroup(\FOS\UserBundle\Model\GroupInterface $group)
+    {
+        if (!$this->getGroups()->contains($group)) {
+            $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     */
+    public function removeGroup(\FOS\UserBundle\Model\GroupInterface $groups)
+    {
+        if ($this->getGroups()->contains($group)) {
+            $this->getGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
 }
