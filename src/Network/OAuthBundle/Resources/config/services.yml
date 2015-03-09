@@ -1,5 +1,6 @@
 parameters:
     user_class_name: Network\StoreBundle\Entity\User
+    user_provider.class: Network\Security\Core\User\FOSUBUserProvider
 
 services:
     network_oauth.oauth_user_provider:
@@ -8,3 +9,5 @@ services:
             - @doctrine
             - %user_class_name%
             - @service_container
+            - @fos_user.user_manager
+            - {instagram: instagramId}
