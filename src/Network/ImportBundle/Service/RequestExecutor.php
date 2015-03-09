@@ -18,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 class RequestExecutor extends ContainerAware
 {
     protected $container;
-    const contentNotChanged = 304;
+    const CONTENT_NOT_CHANGED = 304;
 
     function __construct($container)
     {
@@ -59,7 +59,7 @@ class RequestExecutor extends ContainerAware
         if (null !== $etag) {
             $ret['etag'] = $etag;
         }
-        if ($http_code == static::contentNotChanged) {
+        if ($http_code == static::CONTENT_NOT_CHANGED) {
             $body = array();
         }
         $ret['response'] = $body;

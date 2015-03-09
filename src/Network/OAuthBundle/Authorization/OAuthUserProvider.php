@@ -293,6 +293,4 @@ class OAuthUserProvider extends BaseClass
     {
         return $class === $this->class || is_subclass_of($class, $this->class);
     }
-
-
 }
