@@ -14,7 +14,7 @@ CollectionHolder.prototype.initSearchSuggestors = function (container) {
 };
 
 CollectionHolder.prototype.init = function(add_, delete_) {
-    var addBtn = $('<button>'+add_+'</button>');
+    var addBtn = $('<button class="btn btn-green btn-small">'+add_+'</button>');
     var th = this;
 
     addBtn.on('click', function(e) {
@@ -39,7 +39,7 @@ CollectionHolder.prototype.init = function(add_, delete_) {
 };
 
 CollectionHolder.prototype.createDeleteBtn = function(delete_) {
-    var btn = $('<button>'+delete_+'</button>');
+    var btn = $('<button class="btn btn-red btn-small">'+delete_+'</button>');
 
     btn.on('click', function(e) {
         e.preventDefault();

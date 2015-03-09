@@ -10,11 +10,11 @@
     <script src="{{ asset('bundles/networkweb/js/video.js') }}"></script>
 {% endblock %}
 {% block right_content_sub_one %}
-    <div id="video_box">
-        <form id="add_video" action="{{ path('add_video') }}" {{ form_enctype(form) }} method="POST">
+    <div class="white-box" id="video_box">
+        <form class="centered-form" id="add_video" action="{{ path('add_video') }}" {{ form_enctype(form) }} method="POST">
             {{ form_widget(form) }}
-            <div>
-                <input class="blue_button" type="submit" value="{{'video.add.submit'|trans }}" />
+            <div class="submit-btn-box">
+                <input class="btn btn-blue" type="submit" value="{{'video.add.submit'|trans }}" />
             </div>
         </form>
     </div>

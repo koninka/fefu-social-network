@@ -1,4 +1,4 @@
-{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+{% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
@@ -13,31 +13,18 @@
 {% endblock %}
 
 {% block edit_content %}
-    <style type="text/css">
-        .blue_button {
-            display: inline-block;
-        }
-    </style>
-
-    {{ form_start(form) }}
-
+    {{ form_start(form, {'attr' :{'class' : 'centered-form'} }) }}
         {{ form_errors(form) }}
-
         <div>
             {{ form_errors(form.skype) }}
-            {{ form_label(form.skype, 'form.contact.skype'|trans) }}
-            {{ form_widget(form.skype) }}
+            {{ form_label(form.skype, 'form.contact.skype'|trans) }}{{ form_widget(form.skype) }}
         </div>
-
         <div>
             {{ form_errors(form.additionalEmail) }}
-            {{ form_label(form.additionalEmail, 'form.contact.additionalEmail'|trans) }}
-            {{ form_widget(form.additionalEmail) }}
+            {{ form_label(form.additionalEmail, 'form.contact.additionalEmail'|trans) }}{{ form_widget(form.additionalEmail) }}
         </div>
-
         <div>
             {{ form_errors(form.phone) }}
-
             <div id="phone-fields-list" data-prototype="{{ form_widget(form.phone.vars.prototype)|trans }}">
                 {% for phoneField in form.phone %}
                         {{ form_errors(phoneField) }}
@@ -46,28 +33,24 @@
                         </script>
                 {% endfor %}
             </div>
-            <button deleteBtnName="{{ 'form.contact.phone.delete.submit'|trans }}" class="blue_button" type="button" id="add-another-phone">{{ 'form.contact.phone.add.submit'|trans }}</button>
+            <button deleteBtnName="{{ 'form.contact.phone.delete.submit'|trans }}" class="btn btn-green btn-small" type="button" id="add-another-phone">{{ 'form.contact.phone.add.submit'|trans }}</button>
         </div>
-
-        <div>
+        <div class="centered-form">
             {{ form_label(form.address, 'form.contact.address.name'|trans) }}
             {{ form_errors(form.address) }}
-
-            <div id="address-fields-list" data-prototype="<div>{{ form_label(form.address.vars.prototype.country)|e }}<div>{{ form_widget(form.address.vars.prototype.country)|e }}</div></div>
-                 <div>{{ form_label(form.address.vars.prototype.city)|e }}<div>{{ form_widget(form.address.vars.prototype.city)|e }}</div></div>
-                 <div>{{ form_label(form.address.vars.prototype.street)|e }}<div>{{ form_widget(form.address.vars.prototype.street)|e }}</div></div>
-                 <div>{{ form_label(form.address.vars.prototype.house)|e }}<div>{{ form_widget(form.address.vars.prototype.house)|e }}</div></div>">
-
+            <div id="address-fields-list" data-prototype="<div>{{ form_label(form.address.vars.prototype.country)|e }}{{ form_widget(form.address.vars.prototype.country)|e }}</div>
+                 <div>{{ form_label(form.address.vars.prototype.city)|e }}{{ form_widget(form.address.vars.prototype.city)|e }}</div>
+                 <div>{{ form_label(form.address.vars.prototype.street)|e }}{{ form_widget(form.address.vars.prototype.street)|e }}</div>
+                 <div>{{ form_label(form.address.vars.prototype.house)|e }}{{ form_widget(form.address.vars.prototype.house)|e }}</div>">
                 {% for address in form.address %}
-                    <div>
+                    <div class="input-adress-form">
                         {{ form_errors(address) }}
                         <script type="text/javascript">
                             var str = '';
                         </script>
                         {% for i in address %}
                             <script type="text/javascript">
-                                str += '<div>{{ form_label(i) }} \n\
-                                    <div> {{ form_widget(i) }}</div></div>';
+                                str += '<div>{{ form_label(i) }}{{ form_widget(i) }}</div>';
                             </script>
                         {% endfor %}
                         <script type="text/javascript">
@@ -80,11 +63,10 @@
                     </div>
                 {% endfor %}
             </div>
-            <button saveBtnName="{{ 'form.contact.address.save.submit'|trans }}" cancelBtnName="{{ 'form.contact.address.cancel.submit'|trans }}" class="blue_button" type="button" id="add-another-address">{{ 'form.contact.address.add.submit'|trans }}</button>
+            <button saveBtnName="{{ 'form.contact.address.save.submit'|trans }}" cancelBtnName="{{ 'form.contact.address.cancel.submit'|trans }}" class="btn btn-green btn-small" type="button" id="add-another-address">{{ 'form.contact.address.add.submit'|trans }}</button>
         </div>
-
-        <div>
-            <input class="blue_button" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
+        <div class="submit-btn-box">
+            <input class="btn btn-blue" type="submit" value="{{ 'profile.edit.submit'|trans }}" />
         </div>
 
         {% do form.address.setRendered %}

@@ -1,25 +1,29 @@
-.tabs {
-    margin: 0;
-    padding: 0;
-    list-style: none;
-    overflow: hidden;
-    line-height: 30px;
-    height: 30px;
+#right_content {
+    width: 600px;
 }
-.tabs li {
-    float: left;
-    border-right: 1px solid gray;
-    border-top: 1px solid gray;
-    background: #eee;
-    padding: 0 10px;
-    height: 30px;
+
+#edit-box {
+    width: 100%;
 }
-.tabs a {
+
+#tabs-box {
+    margin: 0 0 20px 0;
+}
+
+#tabs-box div {
+    display: inline-block;
+}
+
+#tabs-box a {
     text-decoration: none;
+    display: block;
+    padding: 0 10px 0 10px;
 }
-.pages {
-    clear: both;
+
+.btn-phone-delete {
+    margin: 4px 0 0 5px;
 }
-.tabs li:hover {
-    background: #ddd;
+
+#address > div {
+    width: 100%;
 }

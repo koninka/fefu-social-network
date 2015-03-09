@@ -285,6 +285,10 @@ form:
             submit: Add
         delete:
             submit: Delete
+    change_password:
+        name: Password
+    change_email:
+        name: Email
     employer: Employer
     country: Country
     city: City

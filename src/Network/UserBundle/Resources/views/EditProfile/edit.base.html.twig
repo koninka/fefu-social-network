@@ -1,0 +1,43 @@
+{% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block stylesheets %}
+    {{ parent() }}
+    <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+{% block javascripts %}
+    {{ parent() }}
+{% endblock %}
+{% block right_content %}
+    <div id="tabs-box" class="white-box">
+        <div>
+            <a href="{{ path('fos_user_profile_edit') }}">
+                {{ 'form.profile.name'|trans }}
+            </a>
+        </div>
+        <div>
+            <a href="{{ path('user_edit_contact') }}">
+                {{ 'form.contact.name'|trans }}
+            </a>
+        </div>
+        <div>
+            <a href="{{ path('user_jobs_profile') }}">
+                {{ 'form.job.name'|trans }}
+            </a>
+        </div>
+        <div>
+            <a href="{{ path('fos_user_change_password') }}">
+                {{ 'form.change_password.name'|trans({}, 'FOSUserBundle') }}
+            </a>
+        </div>
+        <div>
+            <a href="{{ path('fos_user_change_email') }}">
+                {{ 'form.change_email.name'|trans({}, 'FOSUserBundle') }}
+            </a>
+        </div>
+    </div>
+    <div id="edit-box" class="white-box">
+        {% block edit_content %}
+
+        {% endblock %}
+    </div>
+{% endblock %}

@@ -4,11 +4,11 @@
     {{ 'resetting.request.username'|trans }}
 {% endblock %}
 {% block authorization %}
-    <form action="{{ path('fos_user_resetting_send_email') }}" method="POST" class="fos_user_resetting_request login_form">
+    <form class="auth-form" action="{{ path('fos_user_resetting_send_email') }}" method="POST">
         {% if invalid_username is defined %}
             <p class="red_label">{{ 'resetting.request.invalid_username'|trans({'%username%': invalid_username}) }}</p>
         {% endif %}
         <input type="text" id="username" name="username" placeholder="{{ 'resetting.request.username'|trans }}" required="required" />
-        <input class="submit_button" type="submit" value="{{ 'resetting.request.submit'|trans }}" />
+        <input class="btn btn-blue btn-auth-block" type="submit" value="{{ 'resetting.request.submit'|trans }}" />
     </form>
 {% endblock authorization %}

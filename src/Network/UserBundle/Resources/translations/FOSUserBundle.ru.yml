@@ -286,6 +286,10 @@ form:
             submit: Добавить
         delete:
             submit: Удалить
+    change_password:
+        name: Пароль
+    change_email:
+        name: Email
     employer: Работодатель
     country: Страна
     city: Город
