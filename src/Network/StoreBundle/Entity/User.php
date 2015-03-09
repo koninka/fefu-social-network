@@ -884,6 +884,13 @@ class User extends BaseUser
     }
 
     /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Playlist", mappedBy="user", cascade={"persist"})
+     **/
+    private $playlists;
+
+    /**
      * Add jobs
      *
      * @param \Network\StoreBundle\Entity\Job $jobs
@@ -926,4 +933,36 @@ class User extends BaseUser
         return $this->userThreads;
     }
 
+    /**
+     * Add playlists
+     *
+     * @param \Network\StoreBundle\Entity\Playlist $playlists
+     * @return User
+     */
+    public function addPlaylist(\Network\StoreBundle\Entity\Playlist $playlists)
+    {
+        $this->playlists[] = $playlists;
+
+        return $this;
+    }
+
+    /**
+     * Remove playlists
+     *
+     * @param \Network\StoreBundle\Entity\Playlist $playlists
+     */
+    public function removePlaylist(\Network\StoreBundle\Entity\Playlist $playlists)
+    {
+        $this->playlists->removeElement($playlists);
+    }
+
+    /**
+     * Get playlists
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPlaylists()
+    {
+        return $this->playlists;
+    }
 }
