@@ -375,7 +375,9 @@ class FacebookItem
 
     public function setFrom($from)
     {
-        isset($from['id']) ? $this->ownerId = $from['id'] : 1;
+        if (isset($from['id'])) {
+            $this->ownerId = $from['id'];
+        }
 
         return $this;
     }

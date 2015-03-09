@@ -15,9 +15,6 @@ class PageRequestor {
     protected  function countPages($qb, $limit)
     {
         $res = 0;
-      /*  $qb = $em->createQueryBuilder('t')
-            ->select('count(t.id)')->from('NetworkStoreBundle:'.$table, 't')
-            ->andWhere('t.status != 1');*/
         $count = $qb->getQuery()
                     ->getSingleScalarResult();
         if (!$count) {

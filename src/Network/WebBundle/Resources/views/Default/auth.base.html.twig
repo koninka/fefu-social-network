@@ -11,10 +11,11 @@
         </div>
         {% block authorization %}
             {% block oauth_service_buttons %}
-                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
-                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
-                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
-                <a class="btn btn-default auth" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}">Vkontakte</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}">Facebook</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}">GitHub</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}">Google+</a>
+                <a class="button authentication" href="{{ url("hwi_oauth_service_redirect", {service: "instagram"}) }}">Instagram</a>
             {% endblock %}
         {% endblock %}
         {% include 'NetworkWebBundle:block:localization.html.twig' with {'color': 'gray'} %}
