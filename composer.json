@@ -31,7 +31,9 @@
         "sonata-project/media-bundle": "~2.3",
         "wrench/wrench": "dev-master",
         "monolog/monolog": "~1.12",
-        "jamm/memory": "dev-master"
+        "jamm/memory": "dev-master",
+        "snc/redis-bundle": "1.1.x-dev",
+        "predis/predis": "0.8.x-dev"
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

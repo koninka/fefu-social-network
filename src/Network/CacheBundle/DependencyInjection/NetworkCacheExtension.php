@@ -23,7 +23,7 @@ class NetworkCacheExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $container->setParameter('cache_dependencies', $config['cache_dependencies']);
 
-        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('services.yml');
     }
 }

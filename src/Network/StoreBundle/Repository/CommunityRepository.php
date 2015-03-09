@@ -111,10 +111,6 @@ class CommunityRepository extends EntityRepository
      */
     public function getUserRole($id, $role) {
         return $this->getUserCommunitiesByIdAndRole($id, $role);
-        /*return $this->getEntityManager()->getRepository('NetworkStoreBundle:UserCommunity')->findBy([
-                'user' => $id,
-                'role' => $role 
-            ]);*/
     }    
     
     /**
