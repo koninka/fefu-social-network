@@ -22,4 +22,18 @@ class MP3RecordRepository extends EntityRepository
                     ->getQuery()
                     ->getResult();
     }
+
+    public function getRecordsForUser($userId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT m, s from NetworkStoreBundle:MP3Record m
+            LEFT JOIN m.users mu
+            WITH mu.id = :user
+            JOIN m.song s
+        ";
+        $query = $em->createQuery($dql)
+            ->setParameters(['user' => $userId]);
+        return $query->getResult();
+    }
 }
