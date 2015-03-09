@@ -20,7 +20,7 @@ class CacheManager
     private $cache;
     private $urlGenerator;
     private $generateUrlType = UrlGeneratorInterface::ABSOLUTE_PATH;
-    const HOST = 'http://127.0.0.1';
+    const HOST = 'http://vdolgah.org';
 
     public function __construct(\AppKernel $kernel, UrlGeneratorInterface $urlGenerator)
     {
