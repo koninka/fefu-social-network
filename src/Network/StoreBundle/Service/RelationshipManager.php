@@ -4,6 +4,7 @@ namespace Network\StoreBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Relationship;
+use Network\WebSocketBundle\Message\NotificationMessage;
 use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
@@ -55,7 +56,7 @@ class RelationshipManager extends Controller
     }
 
     private function sendMessage($userId, $transMsg, $type) {
-        $this->serverManager->sendNotifyMessage(new Message($userId,
+        $this->serverManager->sendMessage(new NotificationMessage($userId,
                 $this->user->getFirstName() . ' ' . $this->user->getLastName() . ' ' .
                 $this->translator->trans($transMsg, [], 'FOSUserBundle'),
                 $type));
@@ -84,7 +85,7 @@ class RelationshipManager extends Controller
 
             $this->em->flush();
 
-            $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
+            $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
 
             return 'friendship_accepted';
         }
@@ -106,7 +107,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.friendship_request_received', Message::TYPE_SUCCESS);
+        $this->sendMessage($id, 'notify.friendship_request_received', NotificationMessage::TYPE_SUCCESS);
 
         return 'friendship_request_sent';
     }
@@ -133,7 +134,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.accept_friendship_request', Message::TYPE_SUCCESS);
+        $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
     }
 
     /**

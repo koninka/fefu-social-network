@@ -6,54 +6,44 @@ use Serializable;
 
 class Message implements Serializable {
 
-    const TYPE_SUCCESS = 'green';
-    const TYPE_FAIL = 'red';
-    const TYPE_NORMAL = 'black';
-
-    const ACTION = 'notify';
-
-    const TEXT_FIELD = 'text';
-    const TYPE_FIELD = 'type';
     const ACTION_FIELD = 'action';
+    const DATA_FIELD = 'data';
 
-    public $userId;
-    public $text;
-    public $type;
+    const ACTION = 'send';
 
-    public function __construct($userId, $text, $type) {
+    public  $data;
+    public  $userId;
+
+    public function __construct($userId, $data) {
+        $this->data = $data;
         $this->userId = $userId;
-        $this->text = $text;
-        $this->type = $type;
     }
 
     public function serialize() {
         return serialize(
             [
                 'user_id' => $this->userId,
-                'text' => $this->text,
-                'type' => $this->type
+                'data'    => $this->data,
             ]
         );
     }
 
-    public function unserialize($data) {
-        $data = unserialize($data);
+    public function unserialize($d) {
+        $d = unserialize($d);
 
-        $this->userId = $data['user_id'];
-        $this->text = $data['text'];
-        $this->type = $data['type'];
+        $this->$data = $d['data'];
+        $this->$data = $d['user_id'];
     }
 
     public function toArray() {
         $m = [
-            self::ACTION_FIELD => self::ACTION,
-            self::TEXT_FIELD => $this->text,
-            self::TYPE_FIELD => $this->type
+            static::ACTION_FIELD => static::ACTION,
+            static::DATA_FIELD => $this->data,
         ];
         return $m;
     }
 
     public function __toString() {
-        return 'msg.' . $this->userId;
+        return 'msg';
     }
 }

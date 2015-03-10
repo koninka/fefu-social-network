@@ -4,7 +4,7 @@ namespace Network\StoreBundle\Service;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManager;
-use Network\WebSocketBundle\Message\Message;
+use Network\WebSocketBundle\Message\NotificationMessage;
 use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\Security\Acl\Exception\Exception;
@@ -94,11 +94,11 @@ class ImService
         }
         $manager->remove($userThread);
         $manager->flush();
-        
-        $this->serverManager->sendNotifyMessage(new Message($userId,
+
+        $this->serverManager->sendMessage(new NotificationMessage($userId,
                 $this->translator->trans('notify.kicked_from_conference', [], 'FOSUserBundle') .
                 ' ' . $userThread->getThread()->getTopic(),
-                Message::TYPE_FAIL));
+            NotificationMessage::TYPE_FAIL));
 
         return new JsonResponse(['conferenceId' => $conferenceId, 'userId' => $challengerId]);
     }
@@ -113,39 +113,29 @@ class ImService
         return $thread;
     }
 
-    public function createPost(User $user, Thread $thread, $text, $files_id = NULL)
+    public function createPost(User $user, Thread $thread, $text, $filesId = NULL)
     {
         $oldTimeZone = date_default_timezone_get();
         date_default_timezone_set("UTC");
-
-        $file = NULL;
 
         $post = new Post();
         $post->setText($text)
             ->setTs(new \DateTime('now'))
             ->setUser($user)
             ->setThread($thread);
-        if($files_id && count($files_id > 0)) {
-            foreach ($files_id['postFile'] as $f_id) {
-                $file = $this->em->getRepository('NetworkStoreBundle:PostFile')->find($f_id);
-//                if ($file) {
-                    $file->setPost($post);
-                    $this->em->persist($file);
-//                }
+
+        if(isset($filesId) && count($filesId['postFile']) > 0) {
+            foreach ($filesId['postFile'] as $fileId) {
+                $file = $this->em->getRepository('NetworkStoreBundle:PostFile')->find($fileId);
+                $file->setPost($post);
+                $post->addFile($file);
+                $this->em->persist($file);
             }
         }
+
         $thread->incUnreadPosts($user);
         $this->em->persist($post);
         $this->em->flush();
-
-        foreach ($thread->getUsers() as $threadUser) {
-            if ($user->getId() != $threadUser->getId()) {
-                $this->serverManager->sendNotifyMessage(new Message($threadUser->getId(),
-                        $this->translator->trans('notify.new_message_from', [], 'FOSUserBundle') .
-                        ' ' . $user->getFirstName() . ' ' . $user->getLastName(),
-                        Message::TYPE_SUCCESS));
-            }
-        }
 
         date_default_timezone_set($oldTimeZone);
 
@@ -191,10 +181,10 @@ class ImService
         $thread->addUser($user, $userId);
         foreach ($recipientUsers as $recipientUser) {
             $thread->addUser($recipientUser, $userId);
-            $this->serverManager->sendNotifyMessage(new Message($recipientUser->getId(),
+            $this->serverManager->sendMessage(new NotificationMessage($recipientUser->getId(),
                     $this->translator->trans('notify.invited_to_conference', [], 'FOSUserBundle') .
                     ' ' . $topic,
-                    Message::TYPE_SUCCESS));
+                    NotificationMessage::TYPE_SUCCESS));
         }
 
         $this->persistAndFlush($thread);
@@ -255,4 +245,30 @@ class ImService
         return new JsonResponse(['count' => $count]);
     }
 
+    public function sendMessage($msg) {
+        $this->serverManager->sendMessage($msg);
+    }
+
+    function normalizePost(Post $post) {
+        $postFiles = [];
+
+        foreach ($post->getFiles()->toArray() as $file) {
+            $postFiles[] = [
+                'id'   => $file->getId(),
+                'name' => $file->getName(),
+                'hash' => $file->getHash()
+            ];
+        }
+
+        $postResult = [
+            'id'        => $post->getId(),
+            'ts'        => $post->getTs(),
+            'text'      => $post->getText(),
+            'author'    => $post->getUser()->getFirstName() . ' ' . $post->getUser()->getLastName(),
+            'postFiles' => $postFiles,
+            'userId'    => $post->getUser()->getId()
+        ];
+
+        return $postResult;
+    }
 }

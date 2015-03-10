@@ -9,6 +9,7 @@ use Wrench\Connection;
 use \Closure;
 use Monolog\Logger;
 use Network\WebSocketBundle\Message\Message;
+use Network\WebSocketBundle\Message\ImMessage;
 use Network\WebSocketBundle\Application\EchoApplication;
 
 class ServerManager
@@ -141,7 +142,7 @@ class ServerManager
         }
     }
 
-    public function sendNotifyMessage(Message $msg)
+    public function sendMessage(Message $msg)
     {
         $mem = new \Jamm\Memory\RedisObject('messages');
 

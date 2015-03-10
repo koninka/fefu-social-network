@@ -15,6 +15,7 @@ use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
 use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -160,6 +161,23 @@ class ProfileController extends BaseController
             'is_cur_user' => $isCurUser,
             'albums' => $albums->findAlbumsForUser($user->getId()),
         ]);
+    }
+
+    public function getProfileRequestsAction() {
+
+        $threads = $this->getDoctrine()->getRepository('NetworkStoreBundle:UserThread');
+        $threadsUnread = $threads->getThreadsUnreadIdForUser($this->getUser()->getId());
+
+        $threadsId = [];
+        foreach($threadsUnread as $thread) {
+            $threadsId[] = intval($thread['thread_id']);
+        }
+
+        $result = [
+            'threadsId' => $threadsId
+        ];
+
+        return new JsonResponse($result);
     }
 
 }
