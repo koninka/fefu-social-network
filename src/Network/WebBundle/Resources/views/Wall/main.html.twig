@@ -48,7 +48,7 @@
                     </div>
 
                     <div class="timestamp">
-                        {{ post.getTs|date('h:m:s d.m.Y') }}
+                        <a href="{{ path('show_thread', { 'id': thread.getId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
                     </div>
 
                     <div class="controls">

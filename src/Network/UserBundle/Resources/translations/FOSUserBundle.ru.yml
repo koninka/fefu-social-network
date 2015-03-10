@@ -89,6 +89,7 @@ layout:
     reset_password: Сбросить пароль
     audios: Аудиозаписи
     videos: Видеозаписи
+    feed: Новости
 
 # Email change
 change_email:
@@ -242,6 +243,12 @@ msg:
     add_photo_to_nonexistent_album: Вы пытаетесь добавить фото в несуществующий альбом.
     photo_not_found: Фото не найдено.
     user_album_photo_deleted: Фото удалено из альбома.
+    thread_deleted: Пост удален из новостной ленты.
+    return_current_thread: Вернуть пост в ленту
+    delete_from_feed: Не показывать
+    feed_title_all: Все
+    feed_title_friends: Друзья
+    feed_title_communities: Группы
 
 form:
     new_email: Новая почта

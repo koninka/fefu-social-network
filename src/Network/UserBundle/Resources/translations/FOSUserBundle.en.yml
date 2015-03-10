@@ -89,6 +89,7 @@ layout:
     reset_password: Reset password
     audios: Music
     videos: Video
+    feed: News feed
 
 # Email change
 change_email:
@@ -241,6 +242,12 @@ msg:
     add_photo_to_nonexistent_album: User can not add photo to non-existent album.
     photo_not_found: Photo is not found.
     user_album_photo_deleted: Photo is deleted from album.
+    thread_deleted: This thread was deleted from your news feed.
+    return_current_thread: Touch to revoke it
+    delete_from_feed: Do not show
+    feed_title_all: All
+    feed_title_friends: Friends
+    feed_title_communities: Communities
 
 form:
     new_email: New email

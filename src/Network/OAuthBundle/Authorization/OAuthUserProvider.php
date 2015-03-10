@@ -9,6 +9,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
 use Network\StoreBundle\Entity\ContactInfo;
+use Network\StoreBundle\Entity\Blacklist;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
@@ -172,6 +173,7 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setEmail($email)
                  ->setEnabled(false)
                  ->setWebSocketAuthKey(uniqid())
+                 ->setBlacklist(new Blacklist())
                  ->setContactInfo(new ContactInfo());
             $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $data['username']);
             $this->em->persist($user);
