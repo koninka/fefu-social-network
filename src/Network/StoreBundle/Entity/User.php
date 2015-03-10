@@ -167,13 +167,9 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="MP3Record", inversedBy="users")
-     * @ORM\JoinTable(name="users_mp3s",
-     *     joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="mp3record_id", referencedColumnName="id")}
-     * )
-     */
-    private $mp3s;
+     * @ORM\OneToMany(targetEntity="AudioTrack", mappedBy="user", cascade={"persist"})
+     **/
+    private $uploadedTracks;
 
     /**
      * @var ArrayCollection
@@ -446,8 +442,9 @@ class User extends BaseUser
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->threads = new ArrayCollection();
-        $this->mp3s = new ArrayCollection();
         $this->wallThreads = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
+        $this->uploadedTracks = new ArrayCollection();
     }
 
     /**
@@ -663,48 +660,6 @@ class User extends BaseUser
         return $this->communities;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getMp3s()
-    {
-        return $this->mp3s;
-    }
-
-    /**
-     * @param ArrayCollection $mp3s
-     *
-     * @return User
-     */
-    public function setMp3s($mp3s)
-    {
-        $this->mp3s = $mp3s;
-
-        return $this;
-    }
-
-     /**
-     * @param MP3Record $mp3
-     * @return User
-     */
-    public function addMp3(MP3Record $mp3)
-    {
-        $mp3->addUser($this);
-        $this->mp3s->add($mp3);
-
-        return $this;
-    }
-
-    /**
-     * @param MP3Record $mp3
-     * @return User
-     */
-    public function removeMp3(MP3Record $mp3)
-    {
-        $this->mp3s->removeElement($mp3);
-
-        return $this;
-    }
      /**
      * Add poll
      *
@@ -717,6 +672,7 @@ class User extends BaseUser
 
         return $this;
     }
+
     /**
      * Remove poll
      *
@@ -727,15 +683,6 @@ class User extends BaseUser
         $this->poll->removeElement($poll);
 
         return $this;
-    }
-
-    /**
-     * @param MP3Record $mp3
-     * @return bool
-     */
-    public function hasMp3InPlaylist(MP3Record $mp3)
-    {
-        return $this->mp3s->contains($mp3);
     }
 
     /**
@@ -939,9 +886,10 @@ class User extends BaseUser
      * @param \Network\StoreBundle\Entity\Playlist $playlists
      * @return User
      */
-    public function addPlaylist(\Network\StoreBundle\Entity\Playlist $playlists)
+    public function addPlaylist(\Network\StoreBundle\Entity\Playlist $playlist)
     {
-        $this->playlists[] = $playlists;
+        $playlist->setUser($this);
+        $this->playlists[] = $playlist;
 
         return $this;
     }
@@ -951,9 +899,10 @@ class User extends BaseUser
      *
      * @param \Network\StoreBundle\Entity\Playlist $playlists
      */
-    public function removePlaylist(\Network\StoreBundle\Entity\Playlist $playlists)
+    public function removePlaylist(\Network\StoreBundle\Entity\Playlist $playlist)
     {
-        $this->playlists->removeElement($playlists);
+        $playlist->setUser(null);
+        $this->playlists->removeElement($playlist);
     }
 
     /**
@@ -993,5 +942,40 @@ class User extends BaseUser
         }
 
         return $this;
+    }
+
+    /**
+     * Add uploadedTracks
+     *
+     * @param \Network\StoreBundle\Entity\AudioTrack $uploadedTrack
+     * @return User
+     */
+    public function addUploadedTrack(\Network\StoreBundle\Entity\AudioTrack $uploadedTrack)
+    {
+        $uploadedTrack->setUser($this);
+        $this->uploadedTracks[] = $uploadedTrack;
+
+        return $this;
+    }
+
+    /**
+     * Remove uploadedTracks
+     *
+     * @param \Network\StoreBundle\Entity\AudioTrack $uploadedTrack
+     */
+    public function removeUploadedTrack(\Network\StoreBundle\Entity\AudioTrack $uploadedTrack)
+    {
+        $uploadedTrack->setUser(null);
+        $this->uploadedTracks->removeElement($uploadedTracks);
+    }
+
+    /**
+     * Get uploadedTracks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUploadedTracks()
+    {
+        return $this->uploadedTracks;
     }
 }
