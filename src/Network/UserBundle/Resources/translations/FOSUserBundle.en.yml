@@ -245,6 +245,9 @@ msg:
     thread_deleted: This thread was deleted from your news feed.
     return_current_thread: Touch to revoke it
     delete_from_feed: Do not show
+    feed_title_all: All
+    feed_title_friends: Friends
+    feed_title_communities: Communities
 
 form:
     new_email: New email

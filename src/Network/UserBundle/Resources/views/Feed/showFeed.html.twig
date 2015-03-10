@@ -1,36 +1,57 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% block right_content_sub_one %}
-    <div class="white-box">
-        <ul>
-            <li><a href="{{ path('show_feed') }}">All</a></li>
-            <li><a href="{{ path('show_friends_feed') }}">Friends</a></li>
-            <li><a href="{{ path('show_communities_feed') }}">Communities</a></li>
-        </ul>
-    </div>
+{% block stylesheets %}
+    <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
 
-     {% for post in feed %}
+{% block right_content %}
+    <div id="wall">
+    <div id="tabs-box" class="white-box">
+
         <div>
+            <a href="{{ path('show_feed') }}">{{ 'msg.feed_title_all'|trans }}</a>
+        </div>
+        <div>
+        <a href="{{ path('show_friends_feed') }}">{{ 'msg.feed_title_friends'|trans }}</a>
+        </div>
+        <div>
+        <a href="{{ path('show_communities_feed') }}">{{ 'msg.feed_title_communities'|trans }}</a>
+        </div>
+
+    </div>
+    <br>
+     {% for post in feed %}
+        <div class="white-box post" id="thread_{{ post.threadId }}" style="width: 650px">
+            <div class="username">
             {% if post.id is defined %}
                 <p><a href="{{ path('user_profile', {'id': post.id} ) }}">{{ post.firstName }} {{ post.lastName }}</a></p>
             {% else %}
                 <p><a href="{{ path('user_show_community', {'id':post.comm_id} ) }}">{{ post.comm_name }}</a></p>
             {% endif %}
+            </div>
+            <div class="msg">
             {% if post.text | length > 300 %}
                 {{ post.text | slice(0, 300) }}
                 <a href="{{ path('show_thread', { 'id': post.threadId }) }}"> ... </a>
             {% else %}
-                <p>{{ post.text }}
+                <p>{{ post.text }}</p>
             {% endif %}
+            </div>
             <br><br>
+            <div class="timestamp">
             <p style="font-size: x-small">
                 <a href="{{ path('show_thread', { 'id': post.threadId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
             </p>
+            </div>
             <p align="right" style="font-size: x-small" >
                <a href="{{ path('add_to_blacklist', { 'id': post.threadId }) }}"> {{ 'msg.delete_from_feed' | trans }}</a>
             </p>
 
         </div>
      {% endfor %}
+    </div>
 {% endblock %}

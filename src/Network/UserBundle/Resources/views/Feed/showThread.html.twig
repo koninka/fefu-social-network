@@ -1,23 +1,30 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
 
-{% block right_content_sub_one %}
+{% block stylesheets %}
+    <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+{% endblock %}
+
+{% block right_content %}
     {% for post in thread %}
-        <div>
+        <div class="white-box post" id="thread_{{ threadId }}" style="width: 650px">
+            <div class="username">
             {% if fromUser %}
                 <p><a href="{{ path('user_profile', {'id':userId} ) }}">{{ firstName }} {{ lastName }}</a></p>
             {% else %}
                 <p><a href="{{ path('user_show_community', {'id':commId} ) }}">{{ commName }}</a></p>
             {% endif %}
-            <br>
+            </div>
             {% for post in thread %}
+                <div class="msg">
                 {{ post.text }}
-                <br><br>
+                </div>
                 <p style="font-size: x-small">
                     <a href="{{ path('show_thread', { 'id': threadId }) }}">{{ post.ts | date('H:i:s Y-m-d') }}</a>
                 </p>
             {% endfor %}
-
         </div>
     {% endfor %}
 {% endblock %}
