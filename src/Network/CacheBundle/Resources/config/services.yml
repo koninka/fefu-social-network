@@ -1,0 +1,7 @@
+services:
+    network_cache.manager:
+        class: Network\CacheBundle\Service\CacheManager
+        arguments:
+            - @kernel
+            - @router
+

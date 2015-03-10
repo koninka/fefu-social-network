@@ -1,0 +1,16 @@
+{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
+{% block edit_content %}
+
+    <p> {{ 'Soon your data will be imported'|trans }}:
+
+    </p>
+
+{% endblock %}
