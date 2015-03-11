@@ -5,14 +5,18 @@ namespace Network\OAuthBundle\Authorization;
 use Doctrine\Common\Persistence\ManagerRegistry;
 use HWI\Bundle\OAuthBundle\OAuth\Response\UserResponseInterface;
 use HWI\Bundle\OAuthBundle\Security\Core\User\OAuthAwareUserProviderInterface;
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use Symfony\Component\Security\Core\Exception\UsernameNotFoundException;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Security\Core\User\UserProviderInterface;
 use Network\OAuthBundle\Classes\OAuthToken;
+use HWI\Bundle\OAuthBundle\Security\Core\Authentication\Token\OAuthToken as Token;
 use Network\StoreBundle\Entity\ContactInfo;
 use Network\StoreBundle\Entity\Blacklist;
 use Symfony\Component\DependencyInjection\ContainerInterface;
+use HWI\Bundle\OAuthBundle\Security\Core\User\FOSUBUserProvider as BaseClass;
 
-class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProviderInterface
+class OAuthUserProvider extends BaseClass
 {
 
     /**
@@ -34,14 +38,19 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
 
     protected $container;
 
+    protected $userManager;
 
-    public function __construct(ManagerRegistry $registry, $className, ContainerInterface $container)
+
+    public function __construct(ManagerRegistry $registry, $className, ContainerInterface $container, $userNanager, array $properties)
     {
         $this->container = $container;
         $this->em = $registry->getManager();
         $this->repository = $this->em->getRepository($className);
         $this->className = $className;
         $this->oAuthToken = new OAuthToken();
+        $this->userManager = $userNanager;
+        $this->properties  = array_merge($this->properties, $properties);
+        $this->accessor    = PropertyAccess::createPropertyAccessor();
     }
 
 
@@ -51,7 +60,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $realname = explode(' ', $response->getRealname());
         $firstName = $realname[1];
         $lastName = $realname[0];
-        $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
+        $email = '';
+        if ( isset($this->oAuthToken->getOAuthToken($response)->getRawToken()['email']) ) {
+            $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
+        }
 
         return [
             'loginField' => 'vkLogin',
@@ -90,8 +102,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $lastName = $response->getResponse()['last_name'];
         $gender = $response->getResponse()['gender'];
         $email = $response->getEmail();
+        $id = $response->getResponse()['id'];
 
         return [
+            'id' => $id,
             'loginField' => 'fbLogin',
             'username' => $username,
             'firstName' => $firstName,
@@ -120,6 +134,48 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         ];
     }
 
+    private function loginUserInstagram($response)
+    {
+        $data = $response->getResponse()['data'];
+        $username = $data['username'];
+        $id = $data['id'];
+        $user = $this->userManager->findUserBy(array($this->getProperty($response) => $id));
+        if (null === $user) {
+            $service = $response->getResourceOwner();
+            $setter = 'set' . ucfirst($service->getName());
+            $setter_id = $setter . 'Id';
+            $setter_token = $setter . 'AccessToken';
+            $user = $this->userManager->createUser();
+            $user->$setter_id($id);
+            $user->$setter_token($response->getAccessToken());
+            $user->setUsername($username)
+                 ->setEmail($username . '@' . '.com')
+                 ->setPassword(md5(rand()))
+                 ->setEnabled(false)
+                 ->setSalt(md5(rand()))
+                 ->setGender('male')
+                 ->setFirstName('adfnbl')
+                 ->setLastName(' ')
+                 ->setWebSocketAuthKey(uniqid())
+                 ->setContactInfo(new ContactInfo());
+            $this->userManager->updateUser($user);
+            $token = new Token($response->getAccessToken(), $user->getRoles());
+            $token->setResourceOwnerName($service->getName());
+            $token->setUser($user);
+            $token->setAuthenticated(false);
+
+            return $user;
+        }
+        $user = parent::loadUserByOAuthUserResponse($response);
+        $serviceName = $response->getResourceOwner()->getName();
+        $setter = 'set' . ucfirst($serviceName) . 'AccessToken';
+        //update access token
+        $user->$setter($response->getAccessToken());
+        $this->userManager->updateUser($user);
+
+        return $user;
+    }
+
 
     public function loadUserByOAuthUserResponse(UserResponseInterface $response)
     {
@@ -136,6 +192,9 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             case 'google' :
                 $data = $this->loginUserGoogle($response);
                 break;
+            case 'instagram':
+                return $this->loginUserInstagram($response);
+                break;
             default :
                 return null;
         }
@@ -147,10 +206,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
             );
 
             if (!empty($userByLogin)) {
-                $this->updateUserResourceLogin($userByLogin, $response->getResourceOwner()->getName(), null);
+                $this->updateUserResourceLogin($userByLogin, $response->getResourceOwner()->getName(), null, $response);
             }
 
-            $this->updateUserResourceLogin($curToken->getUser(), $response->getResourceOwner()->getName(), $data['username']);
+            $this->updateUserResourceLogin($curToken->getUser(), $response->getResourceOwner()->getName(), $data['username'], $response);
 
             return $curToken->getUser();
         }
@@ -175,7 +234,12 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
                  ->setWebSocketAuthKey(uniqid())
                  ->setBlacklist(new Blacklist())
                  ->setContactInfo(new ContactInfo());
-            $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $data['username']);
+            $id = $data['username'];
+            if (isset($data['id']) && $response->getResourceOwner()->getName() == 'facebook') {
+                $user->setFacebookId($data['id']);
+                $id = $data['id'];
+            }
+            $this->updateUserResourceLogin($user, $response->getResourceOwner()->getName(), $id, $response);
             $this->em->persist($user);
             $this->em->flush();
         }
@@ -184,8 +248,13 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
     }
 
 
-    public function updateUserResourceLogin(UserInterface $user, $field, $login)
+    public function updateUserResourceLogin(UserInterface $user, $field, $login, $response)
     {
+        $setter = 'set' . ucfirst($field);
+        $setter_id = $setter . 'Id';
+        $setter_token = $setter . 'AccessToken';
+        $user->$setter_id($login);
+        $user->$setter_token($response->getAccessToken());
         switch ($field) {
             case 'vkontakte' :
                 $user->setVkLogin($login);

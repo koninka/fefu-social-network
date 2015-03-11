@@ -1,3 +1,7 @@
+network_import:
+    resource: "@NetworkImportBundle/Resources/config/routing.yml"
+    prefix:   /
+
 network_web_socket:
     resource: "@NetworkWebSocketBundle/Resources/config/routing.yml"
     prefix:   /
@@ -49,3 +53,10 @@ gallery:
 media:
     resource: '@SonataMediaBundle/Resources/config/routing/media.xml'
     prefix: /media
+
+fp_openid_security:
+    resource: "@FpOpenIdBundle/Resources/config/routing/security.xml"
+
+finish_login_openid:
+     pattern: /finish_login_openid
+     defaults: { _controller: NetworkOpenIdBundle:Security:finishOpenIdLogin }

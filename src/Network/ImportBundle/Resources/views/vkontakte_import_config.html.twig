@@ -1,0 +1,23 @@
+{% extends "NetworkWebBundle:Default:edit.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% form_theme form 'form_div_layout.html.twig' %}
+{% block javascripts %}
+    {{ parent() }}
+
+    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
+{% block edit_content %}
+
+    <p> {{ 'Choose album for vk photos:'|trans }}:
+    {% if user.vkontakteId %}
+        <form action="{{ form_action }}" method="post" {{ form_enctype(form) }}>
+            {{ form_widget(form) }}
+
+            <input type="submit" />
+        </form>
+    {% endif %}
+    </p>
+
+{% endblock %}

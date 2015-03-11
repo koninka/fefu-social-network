@@ -1,0 +1,12 @@
+{% extends "NetworkWebBundle:Default:auth.base.html.twig" %}
+{% trans_default_domain 'FOSUserBundle' %}
+{% block authorization %}
+    <form action="{{ path('finish_login_openid') }}" {{ form_enctype(form) }} method="POST" class="fos_user_registration_register register_form">
+        {{ form_widget(form) }}
+        {{ form_widget(form.gender, { 'attr': {'class': 'calendar'} }) }}
+        <div>
+            <input type="submit" class="submit_button" value="{{ 'registration.submit'|trans }}" />
+        </div>
+    </form>
+    <a class="login_authentication_button" href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a>
+{% endblock %}

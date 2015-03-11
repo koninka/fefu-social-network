@@ -1,0 +1,11 @@
+services:
+#    network_open_id.example:
+#        class: Network\OpenIdBundle\Example
+#        arg-uments: [@service_id, "plain_value", %parameter%]
+    network_open_id.openid_user_manager:
+        class:     Network\OpenIdBundle\Service\OpenIdUserManager
+        arguments: [@fp_openid.identity_manager, @doctrine.orm.entity_manager]
+
+    network_open_id.relyng_party:
+        class: Network\OpenIdBundle\Bridge\RestrictedOpenIdRelyingParty
+        arguments: ['@service_container']

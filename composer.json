@@ -31,7 +31,9 @@
         "sonata-project/media-bundle": "~2.3",
         "wrench/wrench": "dev-master",
         "monolog/monolog": "~1.12",
-        "jamm/memory": "dev-master"
+        "jamm/memory": "dev-master",
+        "oldsound/rabbitmq-bundle": "1.*",
+        "fp/openid-bundle": "dev-master",
     },
     "require-dev": {
         "sensio/generator-bundle": "~2.3",

@@ -5,7 +5,9 @@ security:
         in_memory:
             memory: ~
         _hwi_provider:
-             id: network_oauth.oauth_user_provider
+            id: network_oauth.oauth_user_provider
+        openid_user_manager:
+            id: network_open_id.openid_user_manager
 
     encoders:
        Network\StoreBundle\Entity\User: sha512
@@ -13,17 +15,28 @@ security:
     firewalls:
         main:
             pattern: ^/
+
             oauth:
                 resource_owners:
                     vkontakte:           vkontakte_login
                     github:              github_login
                     facebook:            facebook_login
                     google:              google_login
+                    instagram:           instagram_login
                 login_path:        fos_user_security_login
                 failure_path:      mainpage
                 default_target_path: registration_step_2
                 oauth_user_provider:
                     service: network_oauth.oauth_user_provider
+
+            fp_openid:
+                relying_party:           network_open_id.relyng_party
+                failure_path:            /finish_login_openid
+                provider:                openid_user_manager
+                required_attributes:
+                     -   contact/email
+                     -   namePerson/first
+                     -   namePerson/last
             form_login:
                 provider:      fos_userbundle
                 login_path:    fos_user_security_login
@@ -31,6 +44,7 @@ security:
                 default_target_path: fos_user_profile_show
                 success_handler:   network_user.handler.login_success_handler.class
                 csrf_provider: form.csrf_provider
+                post_only:      false
 #                remember_me:   true
 #            remember_me:
 #                key:      %secret%
@@ -58,3 +72,5 @@ security:
         - { path: ^/friendship, role: ROLE_USER }
         - { path: ^/admin/, role: ROLE_ADMIN }
         - { path: ^/connect, roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/login_openid$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/finish_login_openid$, role: IS_AUTHENTICATED_ANONYMOUSLY }
