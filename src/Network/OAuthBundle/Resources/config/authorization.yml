@@ -2,11 +2,16 @@
 hwi_oauth:
     firewall_name: main
     resource_owners:
+        instagram:
+            type:             instagram
+            client_id:        "e596cba99308405099dfaeec76b55f07"
+            client_secret:    "d224ae1e837e4678b5340db86090180a"
+
         vkontakte:
             type:             vkontakte
             client_id:        "4602253"
             client_secret:    "68ZtvU4VMVohGyGk1tjN"
-            scope:            "email"
+            scope:            "offline,email,photos,audio"
 
         github:
             type:             github
@@ -18,10 +23,12 @@ hwi_oauth:
             type:             facebook
             client_id:        "278935655649323"
             client_secret:    "9005fb2aee66302e460da34160624002"
-            scope:            "email"
+            scope:            "email,user_photos"
 
         google:
             type:             google
             client_id:        '423379035176-l6a5kt5uuj6fb8a4h4ohft5spit48pd1.apps.googleusercontent.com'
             client_secret:    'ifwL00BQeNh0BTimEwVHyISF'
             scope:            'https://www.googleapis.com/auth/userinfo.email'
+
+

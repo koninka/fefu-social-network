@@ -56,7 +56,10 @@ or
    https://github.com/rgl/redis/downloads
    
    In `php.ini` enable sockets: `extension=php_sockets.dll`
-   
+
+### Install RabbiMQ
+    sudo apt-get install rabbitmq-server
+
 ### Checking your System Configuration
 
 Before starting coding, make sure that your local system is properly
@@ -118,6 +121,15 @@ Then run command:
    `redis_server`
    
    or run `redis_server.exe` on Windows
+
+### Running RabbitMq
+    service rabbitmq-server start
+
+### Running QueueListeners
+    app/console rabbitmq:consumer fetch_content
+
+### Running data_import
+    app/console sync
 
 [1]:  http://getcomposer.org/
 [2]:  http://symfony.com/doc/current/reference/requirements.html

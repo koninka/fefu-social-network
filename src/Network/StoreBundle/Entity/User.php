@@ -157,6 +157,252 @@ class User extends BaseUser
     private $fbLogin;
 
     /**
+     * @var integer
+     *
+     * @ORM\Column(name="instagram_id", type="integer", nullable=true)
+     */
+    private $instagramId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="instagram_access_token", type="string", nullable=true)
+     */
+    private $instagramAccessToken;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vkontakte_id", type="integer", nullable=true)
+     */
+    private $vkontakteId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="vkontakte_access_token", type="string", nullable=true)
+     */
+    private $vkontakteAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getVkontakteAccessToken()
+    {
+        return $this->vkontakteAccessToken;
+    }
+
+    /**
+     * @param int $vkontakteAccessToken
+     */
+    public function setVkontakteAccessToken($vkontakteAccessToken)
+    {
+        $this->vkontakteAccessToken = $vkontakteAccessToken;
+    }
+
+    /**
+     * @return int
+     */
+    public function getVkontakteId()
+    {
+        return $this->vkontakteId;
+    }
+
+    /**
+     * @param int $vkontakteId
+     */
+    public function setVkontakteId($vkontakteId)
+    {
+        $this->vkontakteId = $vkontakteId;
+
+        return $this;
+    }
+
+
+    /**
+     * @return int
+     */
+    public function getInstagramAccessToken()
+    {
+        return $this->instagramAccessToken;
+    }
+
+    /**
+     * @param int $instagramAcessToken
+     */
+    public function setInstagramAccessToken($instagramAcessToken)
+    {
+        $this->instagramAccessToken = $instagramAcessToken;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getInstagramId()
+    {
+        return $this->instagramId;
+    }
+
+    /**
+     * @param int $instagramId
+     */
+    public function setInstagramId($instagramId)
+    {
+        $this->instagramId = $instagramId;
+
+        return $this;
+    }
+
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="google_id", type="integer", nullable=true)
+     */
+    private $googleId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="google_access_token", type="string", nullable=true)
+     */
+    private $googleAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getGoogleAccessToken()
+    {
+        return $this->googleAccessToken;
+    }
+
+    /**
+     * @param int $googleAccessToken
+     */
+    public function setGoogleAccessToken($googleAccessToken)
+    {
+        $this->googleAccessToken = $googleAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGoogleId()
+    {
+        return $this->googleId;
+    }
+
+    /**
+     * @param int $googleId
+     */
+    public function setGoogleId($googleId)
+    {
+        $this->googleId = $googleId;
+
+        return $this;
+    }
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="github_id", type="integer", nullable=true)
+     */
+    private $githubId;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="github_access_token", type="string", nullable=true)
+     */
+    private $githubAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getGithubId()
+    {
+        return $this->githubId;
+    }
+
+    /**
+     * @param int $githubId
+     */
+    public function setGithubId($githubId)
+    {
+        $this->githubId = $githubId;
+
+        return $this;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGithubAccessToken()
+    {
+        return $this->githubAccessToken;
+    }
+
+    /**
+     * @param int $githubAccessToken
+     */
+    public function setGithubAccessToken($githubAccessToken)
+    {
+        $this->githubAccessToken = $githubAccessToken;
+
+        return $this;
+    }
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="facebook_id", type="integer", nullable=true)
+     */
+    private $facebookId;
+
+    /**
+     * @return int
+     */
+    public function getFacebookId()
+    {
+        return $this->facebookId;
+    }
+
+    /**
+     * @param int $facebookId
+     */
+    public function setFacebookId($facebookId)
+    {
+        $this->facebookId = $facebookId;
+    }
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="facebook_access_token", type="string", nullable=true)
+     */
+    private $facebookAccessToken;
+
+    /**
+     * @return int
+     */
+    public function getFacebookAccessToken()
+    {
+        return $this->facebookAccessToken;
+    }
+
+    /**
+     * @param int $facebookAccessToken
+     */
+    public function setFacebookAccessToken($facebookAccessToken)
+    {
+        $this->facebookAccessToken = $facebookAccessToken;
+    }
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="Job", mappedBy="user", cascade="persist")

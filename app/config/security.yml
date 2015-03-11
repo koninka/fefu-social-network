@@ -13,17 +13,20 @@ security:
     firewalls:
         main:
             pattern: ^/
+
             oauth:
                 resource_owners:
                     vkontakte:           vkontakte_login
                     github:              github_login
                     facebook:            facebook_login
                     google:              google_login
+                    instagram:           instagram_login
                 login_path:        fos_user_security_login
                 failure_path:      mainpage
                 default_target_path: registration_step_2
                 oauth_user_provider:
                     service: network_oauth.oauth_user_provider
+
             form_login:
                 provider:      fos_userbundle
                 login_path:    fos_user_security_login
@@ -31,6 +34,7 @@ security:
                 default_target_path: fos_user_profile_show
                 success_handler:   network_user.handler.login_success_handler.class
                 csrf_provider: form.csrf_provider
+                post_only:      false
 #                remember_me:   true
 #            remember_me:
 #                key:      %secret%
