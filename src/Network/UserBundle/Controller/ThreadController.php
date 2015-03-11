@@ -134,6 +134,10 @@ class ThreadController extends Controller
             }
         }
 
+        if ($user->getId() == $post->getUser()->getId()) {
+            $res['post']['editable'] = true;
+        }
+
         return new JsonResponse($res);
     }
 
@@ -185,6 +189,11 @@ class ThreadController extends Controller
         foreach ($posts as $post) {
             $normalizedPost = $imService->normalizePost($post);
             $normalizedPost['text'] = $formatter->transform('markdown', $normalizedPost['text']);
+
+            if ($user->getId() == $post->getUser()->getId()) {
+                $normalizedPost['editable'] = true;
+            }
+
             $postResult[] = $normalizedPost;
         }
 

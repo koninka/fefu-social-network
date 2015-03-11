@@ -553,8 +553,14 @@ function createPostDiv(post, tsString, with_header, unread){
         postDiv.addClass('unread-post');
     var postBody = postDiv.find('#post-body');
     postBody.html(post.text);
+    var editBtn = '';
+    if(post.editable) {
+
+        editBtn = '<button style="top: ' + with_header * 25 + 'px" value="' + post.id + '" class="edit-msg-btn"></button>';
+    }
     postBody.show();
     postDiv.show();
+    postDiv.append(editBtn);
     return postDiv;
 }
 

@@ -5,6 +5,7 @@
 #post {
     width: 100%;
     display: none;
+    position: relative;
 }
 
 #post-header {
@@ -25,8 +26,9 @@
 }
 
 #post-body {
-    white-space: pre;
+    min-height: 30px;
     overflow-wrap: break-word;
+    position: relative;
 }
 
 .extended-select {
@@ -88,4 +90,25 @@
 
 #post-files-wrap {
     margin: 0 0 3px 3px;
+}
+
+.edit-msg-btn {
+    position: absolute;
+    border: none;
+    right: 20px;
+    display: block;
+    top: 0;
+    height: 18px;
+    width: 18px;
+    background-color: #fff;
+    background-image: url("/bundles/networkweb/img/edit.png");
+}
+
+#edit-text{
+    width: 310px;
+    margin: 20px 10px 10px 0;
+    max-width: 310px;
+    max-height: 100px;
+    min-height: 100px;
+    min-width: 300px;
 }
