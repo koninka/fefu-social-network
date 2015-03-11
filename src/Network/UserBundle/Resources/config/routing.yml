@@ -88,7 +88,7 @@ user_profile_community:
     defaults: { _controller: NetworkUserBundle:Community:community }
     requirements:
        id: \d+
-    
+
 user_show_community:
     path: /club{id}
     defaults: { _controller: NetworkUserBundle:Community:showCommunity }
@@ -151,13 +151,13 @@ user_cancel_request_community:
     requirements:
        id: \d+
        communityId: \d+
-       
+
 user_delete_community:
     path: /community/delete/{id}
     defaults: { _controller: NetworkUserBundle:Community:deleteCommunity}
     requirements:
        id: \d+
-       
+
 user_search_community:
     path: /search_community/
     defaults: { _controller: NetworkUserBundle:Community:searchCommunity}

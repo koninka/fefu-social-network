@@ -1,32 +1,49 @@
 <?php
+
 namespace Network\StoreBundle\Controller;
 
-use Network\StoreBundle\Entity\MP3File;
+use Network\StoreBundle\Entity\AudioTrack;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Network\StoreBundle\Entity\User;
-use Network\StoreBundle\Entity\MP3Record;
 use \GetId3\GetId3Core as GetId3;
 use Symfony\Component\HttpFoundation\Response;
 
-class Mp3FileController extends FileController
+class AudioTrackController extends Controller
 {
-    private function analyzeMp3($path)
+    const UPLOAD_DIR_NAME = 'uploads';
+    protected function getUploadRootDir()
+    {
+        return __DIR__
+                . '/../../../../web/'
+                . static::UPLOAD_DIR_NAME
+                . '/'
+            ;
+    }
+    /**
+     * Return the absolute directory path where uploaded
+     * user's documents should be saved.
+     *
+     * @param User $user
+     * @return string
+     */
+    protected function getUploadRootDirForUser(User $user)
+    {
+        return $this->getUploadRootDir() . $user->getEmail() . '/';
+    }
+
+    private function analyzeAudioFile($path)
     {
         $id3Analyzer = new GetId3();
 
-        $mp3data = $id3Analyzer->analyze($path);
+        $id3data = $id3Analyzer->analyze($path);
 
-        $metadata = [
-            'artist' => 'unknown',
-            'title' => 'unknown',
-            'genre' => 'unknown',
-        ];
+        $metadata = [];
 
-        if (array_key_exists('tags', $mp3data)) {
-            $mp3tags =$mp3data['tags'];
+        if (array_key_exists('tags', $id3data)) {
+            $tags =$id3data['tags'];
 
             $flat = function (array $arr) {
                 $newArr = [];
@@ -38,45 +55,38 @@ class Mp3FileController extends FileController
                 return $newArr;
             };
 
-            $metadata = array_key_exists('id3v2', $mp3tags)
-                ? $flat($mp3tags['id3v2'])
+            $metadata = array_key_exists('id3v2', $tags)
+                ? $flat($tags['id3v2'])
                 : (
-                array_key_exists('id3v1', $mp3tags)
-                    ? $flat($mp3tags['id3v1'])
+                array_key_exists('id3v1', $tags)
+                    ? $flat($tags['id3v1'])
                     : []
                 );
 
-            $setDefaultValue = function (array &$arr, $key) {
-                if (!array_key_exists($key, $arr)) {
-                    $arr[$key] = 'unknown';
-                }
-            };
-
-            $setDefaultValue($metadata, 'artist');
-            $setDefaultValue($metadata, 'title');
-            $setDefaultValue($metadata, 'genre');
         }
 
         return $metadata;
     }
 
-    public function mp3Action($file_id)
+    public function downloadAction($id)
     {
-        $record = $this->getDoctrine()
-            ->getRepository('NetworkStoreBundle:MP3Record')
-            ->find($file_id);
+        $audioTrack = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:AudioTrack')
+            ->find($id);
 
-        $response = new BinaryFileResponse($record->getFile()->getPath());
-
+        $response = new BinaryFileResponse($this->getUploadRootDirForUser($audioTrack->getUser())
+            . $audioTrack->getFileHash());
+        // TODO: store mime type in AudioRecord and use it here?
         $response->headers->set('Content-Type', 'audio/mpeg');
 
         return $response;
     }
 
-    public function uploadMp3Action(Request $request)
+    public function uploadAction(Request $request)
     {
         $user = $this->getUser();
         $em = $this->getDoctrine()->getManager();
+
         if (null === $user) {
             return new JsonResponse([
                 'status' => 'badUser',
@@ -87,67 +97,59 @@ class Mp3FileController extends FileController
 
         if (null === $uploadedFile) {
             return new JsonResponse([
-                'status' => 'somethingWrong'
+                'status' => 'fileNotPresent'
             ]);
         }
 
-        if ('mp3' !== pathinfo($uploadedFile->getClientOriginalName())['extension']) {
+        $mimeType = $uploadedFile->getMimeType();
+        if (!preg_match("/^audio/", $mimeType) &&
+            $mimeType !== 'application/ogg') {
             return new JsonResponse([
-                'status' => 'badFileExtension'
+                'status' => 'invalidMimeType',
+                'mime' => $mimeType,
             ]);
         }
 
+        $filename = pathinfo($uploadedFile->getClientOriginalName())['filename'];
+        if (preg_match('/(?P<artist>.*?)[-–—](?P<title>.*)/u', $filename, $matches)) {
+            $artist = trim($matches['artist']);
+            $title = trim($matches['title']);
+        } else {
+            $artist = '';
+            $title = trim($filename);
+        }
+
+        $hash = hash('sha256', file_get_contents($uploadedFile->getRealPath()));
         $file = $uploadedFile->move(
             $this->getUploadRootDirForUser($user),
-            $uploadedFile->getClientOriginalName()
-            . ((string)time())
-            . ((string)rand())
-            . '.mp3'
+            $hash
         );
 
-        $metadata = $this->analyzeMp3($file->getPathName());
-        $song = $em->getRepository('NetworkStoreBundle:Song')
-            ->getSongByMetadata($metadata);
+        $metadata = $this->analyzeAudioFile($file->getPathName());
+        $artist = array_key_exists('artist', $metadata) ? $metadata['artist'] : $artist;
+        $title = array_key_exists('title', $metadata) ? $metadata['title'] : $title;
 
-        $mp3file = new MP3File();
-        $mp3file->setPath($file->getPathName());
+        $audioTrack = new AudioTrack();
+        $user->addUploadedTrack($audioTrack);
+        $audioTrack->setTitle($title)
+            ->setArtist($artist)
+            ->setUploadDate(new \DateTime())
+            ->setfileHash($hash);
 
-        $em->persist($mp3file);
-
-        $mp3 = new MP3Record();
-
-        $mp3file->addRecord($mp3);
-
-        $mp3->setFile($mp3file)
-            ->setUploaded(new \DateTime())
-            ->setSong($song)
-            ->addUser($user);
-
-        $user->addMp3($mp3);
-
-        $em->persist($mp3);
+        $em->persist($audioTrack);
         $em->flush();
-
-        $responseMetadata = [
-            'title' => $metadata['title'],
-            'artist' => $metadata['artist'],
-            'file_id' => $mp3->getId(),
-        ];
-
-        if (
-            null != $mp3->getSong()->getAlbum()
-            && null !== $mp3->getSong()->getAlbum()->getPoster()
-        ) {
-            $responseMetadata['album_id'] = $mp3->getSong()->getAlbum()->getId();
-        }
 
         return new JsonResponse([
             'status' => 'ok',
-            'metadata' => $responseMetadata,
+            'mime' => $mimeType,
+            'hash' => $hash,
+            'title' => $title,
+            'artist' => $artist,
+            'id' => $audioTrack->getId(),
         ]);
     }
 
-    public function deleteMp3Action(Request $request)
+    public function deleteAction(Request $request)
     {
         $user = $this->getUser();
         if (null === $user) {
@@ -198,18 +200,7 @@ class Mp3FileController extends FileController
 
         return new JsonResponse([
             'status' => 'ok',
-            'id' => $id,
+            'id' => $id
         ]);
-    }
-
-    public function posterAction($id)
-    {
-        $album = $this->getDoctrine()->getRepository('NetworkStoreBundle:Album')->find($id);
-
-        $response =  new Response($album->getPoster());
-
-        $response->headers->set('Content-Type', 'image/jpg');
-
-        return $response;
     }
 }
