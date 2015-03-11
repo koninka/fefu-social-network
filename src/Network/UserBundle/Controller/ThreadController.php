@@ -371,6 +371,65 @@ class ThreadController extends Controller
 
         return new JsonResponse(['users' => $users, 'userId' => $user->getId(), 'canBeKicked' => $canBeKicked]);
     }
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getMessageAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+
+        $messageId = $request->query->get('id');
+        $markdownTransform = $request->query->get('markdown');
+
+        $imService = $this->get('network.store.im_service');
+        $msg = $imService->getMessageById($messageId);
+
+        if (null === $msg) {
+            return new JsonResponse(['response' => 'error']);
+        }
+
+        $normalizedMessage = $imService->normalizePost($msg);
+
+        if($markdownTransform) {
+            $formatter = $this->container->get('sonata.formatter.pool');
+            $normalizedMessage['text'] = $formatter->transform('markdown', $normalizedMessage['text']);
+        }
+
+        return new JsonResponse($normalizedMessage);
+    }
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateMessageAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+
+        $messageId = $request->request->get('id');
+        $messageText = $request->request->get('text');
+
+        $imService = $this->get('network.store.im_service');
+        $msg = $imService->getMessageById($messageId);
+
+        if (null === $msg || $user->getId() != $msg->getUser()->getId()) {
+            return new JsonResponse(['response' => 'error']);
+        }
+
+        $msg->setText($messageText);
+        
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($msg);
+        $manager->flush();
+
+        $normalizedMessage = $imService->normalizePost($msg);
+        $formatter = $this->container->get('sonata.formatter.pool');
+        $normalizedMessage['text'] = $formatter->transform('markdown', $normalizedMessage['text']);
+
+        return new JsonResponse($normalizedMessage);
+    }
 
     static protected function errorJsonResponse($msg)
     {
