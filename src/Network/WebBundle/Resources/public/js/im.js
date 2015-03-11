@@ -86,7 +86,30 @@ $(document).ready(function() {
             pd.statusbar.hide().remove();
         }
     });
+
+    $("body").on('click', "button.edit-msg-btn", function () {
+        editMessage($(this).val());
+    });
 });
+
+function editMessage(id) {
+    $.get(
+        "api/get_message",
+        {
+            id: id,
+            markdown: 0
+        },
+        function (data) {
+            $('#post-text').val(data.text);
+        });
+
+    $('#send').val('save').text('Save').attr( "data", id);
+    $('.ajax-file-upload').hide();
+}
+
+function updateMessage(msg, id) {
+    $('.edit-msg-btn[value="' + id + '"]').prev().prev().html(msg.text);
+}
 
 function xhr(action, message) {
     message = message || {};
@@ -489,29 +512,29 @@ function InitIM(partnerId, partnerName) {
                 recipientIds.push(recipient[i].id);
             }
         }
-        xhr('post', {
-            recipientId: recipientIds,
-            threadId: currentThreadId,
-            text: $('#post-text').val(),
-            topic: $('#conference-topic').val(),
-            files: files
-        }).then(function (data) {
-            $('#post-text').val('');
-            $('#send').removeAttr('disabled');
-            if (recipientIds.length > 1)
-                conferences[data.threadId] = true;
-
-            $('.ajax-file-upload-statusbar').each(function ()
-            {
-                $(this).hide().remove();
+        $('.ajax-file-upload').show();
+        if ($(this).val() == 'send') {
+            xhr('post', {
+                recipientId: recipientIds,
+                threadId: currentThreadId,
+                text: $('#post-text').val(),
+                topic: $('#conference-topic').val(),
+                files: files
+            }).then(function (data) {
+                if (recipientIds.length > 1)
+                    conferences[data.threadId] = true;
+                clearEditor();
+                addMessage(data.threadId, data.post);
             });
-            addedPostFile = [];
-            addedImg = [];
-            addedMp3 = [];
-            addedVideo = [];
-
-            addMessage(data.threadId, data.post);
-        });
+        } else if ($(this).val() == 'save') {
+            xhr('api/update_message/', {
+                id: $('#send').attr('data'),
+                text: $('#post-text').val()
+            }).then(function (data) {
+                updateMessage(data, $('#send').attr('data'));
+                clearEditor();
+            });
+        }
         e.preventDefault();
     });
 
@@ -563,7 +586,6 @@ function createPostDiv(post, tsString, with_header, unread){
     postDiv.append(editBtn);
     return postDiv;
 }
-
 
 function addMessage(threadId, post) {
     var postsBlock = $('#posts');
@@ -644,4 +666,17 @@ function getLastAuthorAndTsWithThreadId(threadId) {
         }
     });
     return res;
+}
+
+function clearEditor() {
+    $('.ajax-file-upload-statusbar').each(function () {
+        $(this).hide().remove();
+    });
+    $.each(addedPostFile, function (i, val) {
+        deleteFile(val);
+    });
+    addedPostFile = [];
+    $('#send').removeAttr('data').val('send').text('Send');
+    $('#post-text').val('');
+    $('#send').removeAttr('disabled');
 }
