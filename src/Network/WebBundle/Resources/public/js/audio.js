@@ -14,28 +14,36 @@ var options = {
   useStateClassSkin: true,
   autoBlur: false,
   smoothPlayBar: true,
-  keyEnabled: true,
-  audioFullScreen: true
+  keyEnabled: false,
+  audioFullScreen: false
 };
 
 var myPlaylist = new jPlayerPlaylist(cssSelector, [], options);
+var playlists = undefined;
 
-Promise.resolve($.post("/playlist")).then(function(playlist) {
-    myPlaylist.addToUserPlaylist(playlist);
-    console.log(playlist);
+Promise.resolve($.post("/playlist/all")).then(function(response) {
+    if (response.status === 'ok') {
+      playlists = response.playlists;
+      myPlaylist.addToUserPlaylist(playlists[0]);
+      console.log(response);
+    } else {
+      console.log('error, status not ok: ' + response.status);
+    }
+
 }).catch(function(e) {
+    console.log(e);
     //jQuery doesn't throw real errors so use catch-all
     console.log(e.statusText);
 });
 
 $('#jquery_jplayer_1').jPlayer({
   swfPath: '/js/lib/jplayer/',
-  solution: 'html, flash',
-  supplied: 'mp3',
+  solution: 'html',
+  supplied: 'mp3, ogg',
   preload: 'metadata',
   volume: 0.8,
   muted: false,
-  backgroundColor: '#000000',
+  backgroundColor: '#FF0000',
   cssSelectorAncestor: '#jp_container_1',
   cssSelector: {
   videoPlay: '.jp-video-play',
@@ -64,41 +72,41 @@ $('#jquery_jplayer_1').jPlayer({
   warningAlerts: false
 });
 
-$("#mp3_upload").uploadFile({
-  url: Routing.generate('file_mp3_upload'),
+$("#audio_file_upload").uploadFile({
+  url: '/upload/audio',
   multiple: true,
-  filename: "mp3", // replaced {{ stuff }}
+  filename: 'mp3',
   onSuccess: function(file, data, xhr) {
     var status = data['status'];
+    console.log(data);
 
     switch (status) {
       case 'ok':
-        var metadata = data['metadata'];
         var newMedia = {
-          title: metadata['title'],
-          artist: metadata['artist'],
-          mp3: Routing.generate('file_mp3_get', { file_id: metadata['file_id'] }),
-          id: metadata['file_id']
+          title: data.title,
+          artist: data.artist,
+          mp3: Routing.generate('audio_track_download', { id: data.id }),
+          id: data.id
         };
 
-        if (metadata['album_id'] !== undefined) {
-          newMedia['poster'] = Routing.generate('file_mp3_poster', {
-            album_id: metadata['album_id']
-          });
-        }
+        var url = '/playlist/' + playlists[1].id + '/push/' + data.id;
+        console.log(url);
+        Promise.resolve($.post(url)).then(function(response) {
+            if (response.status === 'ok') {
+              myPlaylist.addToUserPlaylist(newMedia);
+              console.log(response);
+            } else {
+              console.log('error, status not ok: ' + response.status);
+            }
 
-        myPlaylist.addToUserPlaylist(newMedia);
-        break;
+        }).catch(function(e) {
+            console.log(e.statusText);
+        });
 
-      case 'badFile':
-        alert(
-          'Mp3 file \'' + file +
-          '\' is bad (doesn\'t content ID3-tags). ' +
-          'Try to upload other files.'
-        );
         break;
 
       default:
+        console.log("won't upload, status: " + status);
         break;
     }
   }

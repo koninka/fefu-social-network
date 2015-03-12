@@ -156,10 +156,12 @@
       $(this.cssSelector.details).hide();
     }
 
-    // Remove the empty <li> from the page HTML. Allows page to be valid HTML, while not interfereing with display animations
+    // Remove the empty <li> from the page HTML.
+    // Allows page to be valid HTML, while not interfereing with display animations
     $(this.cssSelector.playlist + " ul").empty();
 
-    // Create .on() handlers for the playlist items along with the free media and remove controls.
+    // Create .on() handlers for the playlist items along with the free media
+    // and remove controls.
     this._createItemHandlers();
 
     // Instance jPlayer

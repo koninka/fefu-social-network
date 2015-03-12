@@ -1,49 +1,64 @@
 <?php
+
 namespace Network\WebBundle\Controller;
 
-use Network\StoreBundle\Entity\MP3Record;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Network\StoreBundle\Controller\Mp3FileController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Request;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\Route;
 
-class Mp3PlayerController extends Controller
+use Network\StoreBundle\Entity\Playlist;
+use Network\StoreBundle\Entity\AudioTrack;
+use Network\StoreBundle\Entity\PlaylistItem;
+
+class AudioPlayerController extends Controller
 {
-    public function mainAction()
-    {
-        $user = $this->getUser();
-        if (null === $user) {
-            return $this->redirect($this->generateUrl('mainpage'));
-        }
-
-        return $this->render('NetworkWebBundle:Mp3Player:main.html.twig');
-    }
-
-    public function getUserPlaylistAction()
+    public function viewPlayerAction()
     {
         $user = $this->getUser();
         if ($user === null) {
-            return new JsonResponse();
+            return $this->redirect($this->generateUrl('mainpage'));
         }
 
-        $userMp3s = $user->getMp3s();
-        $jsonEncodable = [];
-        foreach ($userMp3s as $t) {
-            $id = $t->getId();
+        return $this->render('NetworkWebBundle:AudioPlayer:audio_player.html.twig');
+    }
 
-            $jsonEncodable[] = [
-                'title' => $t->getSong()->getTitle(),
-                'artist' => $t->getSong()->getArtist(),
-                'mp3' => $this->get('router')->generate('file_mp3_get',
-                    ['file_id' => $id]),
-                'id' => $id,
-                'poster' => '',
-            ];
+    public function getAllMyPlaylistsAction()
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
         }
-        $logger = $this->get('logger');
-        $logger->info("LOOK:", $jsonEncodable);
-        return new JsonResponse($jsonEncodable);
+
+        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Playlist');
+        $playlists = $user->getPlaylists();
+        if ($playlists->isEmpty()) {
+            // default playlist for each user is created here
+            $newPlaylist = new Playlist();
+            $newPlaylist->setName("music");
+            $user->addPlaylist($newPlaylist);
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            $playlists = $user->getPlaylists();
+        }
+
+        $response = '{"status": "ok", "playlists": ';
+        $serializer = $this->container->get('jms_serializer');
+        $response = $response . $serializer->serialize($playlists, 'json');
+        $response = $response . '}';
+
+    $logger = $this->get('logger');
+    $logger->info($response);
+
+        return new Response(
+            $response,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
     }
 
     public function searchAction($by, $what)
@@ -55,7 +70,7 @@ class Mp3PlayerController extends Controller
             ]);
         }
 
-        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:MP3Record');
+        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:AudioTrack');
 
         $mp3s = $repo->searchRecords($by, $what);
 
@@ -94,7 +109,7 @@ class Mp3PlayerController extends Controller
         }
 
         $mp3 = $this->getDoctrine()
-                     ->getRepository('NetworkStoreBundle:MP3Record')
+                     ->getRepository('NetworkStoreBundle:AudioTrack')
                      ->find($id);
 
         $content = [
@@ -142,7 +157,7 @@ class Mp3PlayerController extends Controller
         }
 
         $mp3 = $this->getDoctrine()
-                    ->getRepository('NetworkStoreBundle:MP3Record')
+                    ->getRepository('NetworkStoreBundle:AudioTrack')
                     ->find($data['id']);
 
         if (!$user->hasMp3InPlaylist($mp3)) {
@@ -161,7 +176,7 @@ class Mp3PlayerController extends Controller
         if ($mp3->getUsers()->count() > 1) {
             $user->removeMp3($mp3);
 
-            $newMp3 = new MP3Record();
+            $newMp3 = new AudioTrack();
 
             $newMp3->addUser($user);
             $user->addMp3($newMp3);
@@ -192,6 +207,30 @@ class Mp3PlayerController extends Controller
         return new JsonResponse([
             'status' => 'ok',
             'metadata' => $responseMetadata,
+        ]);
+    }
+
+    public function pushTrackToPlaylistAction($playlist_id, $track_id)
+    {
+        $playlist = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:Playlist')
+            ->find($playlist_id);
+
+        $track = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:AudioTrack')
+            ->find($track_id);
+
+        $item = new PlaylistItem();
+        $playlist->addItem($item);
+        $track->addPlaylistItem($item);
+        $item->setRank($playlist->getItems()->count());
+
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($item);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 'ok',
         ]);
     }
 }
