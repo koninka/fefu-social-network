@@ -193,6 +193,8 @@ wall:
     edit: Edit
     comment:
         submit: Comment
+    repost: Repost
+    owner: Owner
 
 # Poll
 poll:

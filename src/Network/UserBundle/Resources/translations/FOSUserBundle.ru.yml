@@ -194,6 +194,8 @@ wall:
     edit: Редактировать
     comment:
         submit: Комментировать
+    repost: Себе на стену
+    owner: Автор
 
 # Poll
 poll:

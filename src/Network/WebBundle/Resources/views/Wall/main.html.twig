@@ -38,13 +38,31 @@
         </div>
         <div id="posts">
             {% for thread in wall | reverse | slice(0, patchSize) %}
-                {% set post = thread.getPosts[0] %}
+                {% set post = thread.getMainPost %}
 
                 <div class="white-box post{% if post.getUser.getId == app.user.getId %} my{% endif %}" id="thread_{{ thread.getId }}">
                     <div class="username">
                         <a href="{{ path('user_profile', {id: post.getUser.getId}) }}">
                             {{ [post.getUser.getFirstName, post.getUser.getLastName]|join(' ') }}
                         </a>
+                        {% if thread.getOwner|length != 0 %}
+                            <br>
+                            {% set owner = thread.getOwner|split(';', 2) %}
+                            {% set link = owner[0] %}
+                            {% if link|slice(0, 4) == 'user' %}
+                                <a href="{{ path('mainpage')~'id'~(link|slice(4)) }}">
+                                    <p style="font-size: small">
+                                        {% if owner[1]is defined %}
+                                            {{ owner[1] }}
+                                        {% else %}
+                                            {{ 'wall.owner'|trans }}
+                                        {% endif %}
+                                    </p>
+                                </a>
+                            {% else %}
+                                <a href="{{ path('mainpage')~'club'~(link|slice(4)) }}"> </a>
+                            {% endif %}
+                        {% endif %}
                     </div>
 
                     <div class="timestamp">
@@ -62,6 +80,10 @@
                                 or (type == 'club' and object.getOwner.getId == app.user.getId)
                         %}
                             <a href="{{ post.getId }}" class="delete_control">{{ 'wall.delete'|trans }}</a>
+
+                        {% endif %}
+                        {% if post.getUser.getId != app.user.getId or type == 'club' %}
+                            <a href="{{ thread.getId }}" class="repost_control">{{ 'wall.repost'|trans }}</a>
                         {% endif %}
                     </div>
 

@@ -28,6 +28,10 @@ function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
 
     tsContainer.text(ts);
 
+    controlsContainer.append($(
+        '<a href="' + thread_id + '" class="repost_control">' + editBtnName + '</a>'
+    ));
+
     if (user_id === userId) {
         controlsContainer.append($(
             '<a href="' + post_id + '" class="edit_control">' + editBtnName + '</a>'
@@ -151,6 +155,11 @@ function handleWriteResponse(data, textStatus, jqXHR)
             addComment(user_id, thread_id, post_id, username, msg, tsString);
         }
     }
+}
+
+function handleRepostResponse(data, textStatus, jqXHR)
+{
+
 }
 
 function postLike (post_id) {
@@ -412,6 +421,25 @@ $(document).on('ready', function () {
             ),
             null,
             handleDeleteResponse
+        )
+    });
+
+    wallContainer.on('click', 'a.repost_control', function(e) {
+        e.preventDefault();
+
+        var threadId = +$(this).attr('href');
+
+        $.post(
+            Routing.generate(
+                'wall_repost',
+                {
+                    id: objectId,
+                    type: objectType,
+                    thread_id: threadId
+                }
+            ),
+            null,
+            handleRepostResponse
         )
     });
 

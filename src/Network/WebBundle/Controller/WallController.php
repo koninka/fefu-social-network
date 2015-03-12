@@ -8,6 +8,8 @@
 
 namespace Network\WebBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Network\StoreBundle\DBAL\ThreadEnumType;
 use Network\StoreBundle\Entity\Post;
 use Network\StoreBundle\Entity\Thread;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -253,5 +255,57 @@ class WallController extends Controller
         }
 
         return new JsonResponse($responseBody);
+    }
+
+    public function repostAction($type, $id, $thread_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        if (null === $user) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $thread = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread')->find($thread_id);
+        if(empty($thread)){
+            return new JsonResponse([
+               'status' => 'badThread',
+            ]);
+        }
+
+        $reThread = new Thread();
+
+        if($thread->getOwner() === ''){
+            if($type === 'user'){
+                $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+                $reThread->setOwner('id'.$id.';'.$newUser->getFirstName().' '.$newUser->getLastName(). $newUser->getId());
+            } else {
+                $comm = $this->getDoctrine()->getRepository('NetworkStoreBundle:Community')->find($id);
+                $reThread->setOwner('club'.$id.';'.$comm->getName());
+            }
+        } else {
+            $reThread->setOwner($thread->getOwner());
+        }
+
+        $reThread->setOwner($thread->getOwner() != '' ? $thread->getOwner() : $type.$id);
+        $post = new Post();
+        $post->setThread($reThread)
+             ->setTs($thread->getPosts()->first()->getTs())
+             ->setText($thread->getPosts()->first()->getText())
+             ->setUser($user);
+        $reThread->addPost($post);
+        $user->addWallThread($reThread);
+
+        $em->persist($post);
+        $em->persist($reThread);
+        $em->flush();
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ]);
     }
 }
