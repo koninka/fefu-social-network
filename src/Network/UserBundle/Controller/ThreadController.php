@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Network\WebSocketBundle\Service\ServerManager;
 use Network\WebSocketBundle\Message\ImMessage;
+use Network\WebSocketBundle\Message\UpdateMessage;
 
 /**
  * Class ThreadController
@@ -410,6 +411,7 @@ class ThreadController extends Controller
 
         $messageId = $request->request->get('id');
         $messageText = $request->request->get('text');
+        $threadId = $request->request->get('threadId');
 
         $imService = $this->get('network.store.im_service');
         $msg = $imService->getMessageById($messageId);
@@ -427,6 +429,17 @@ class ThreadController extends Controller
         $normalizedMessage = $imService->normalizePost($msg);
         $formatter = $this->container->get('sonata.formatter.pool');
         $normalizedMessage['text'] = $formatter->transform('markdown', $normalizedMessage['text']);
+
+        if ($threadId === null) {
+            return new JsonResponse(['response' => 'error']);
+        }
+        $thread = $imService->getThreadByIdAndUserIdOrThrow($threadId, $user->getId());
+        foreach ($thread->getUsers() as $threadUser) {
+            if ($user->getId() != $threadUser->getId()) {
+                $msg = new updateMessage($thread->getId(), $threadUser->getId(), $normalizedMessage);
+                $imService->sendMessage($msg);
+            }
+        }
 
         return new JsonResponse($normalizedMessage);
     }

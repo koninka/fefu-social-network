@@ -529,7 +529,8 @@ function InitIM(partnerId, partnerName) {
         } else if ($(this).val() == 'save') {
             xhr('api/update_message/', {
                 id: $('#send').attr('data'),
-                text: $('#post-text').val()
+                text: $('#post-text').val(),
+                threadId: currentThreadId
             }).then(function (data) {
                 updateMessage(data, $('#send').attr('data'));
                 clearEditor();
@@ -558,6 +559,7 @@ function InitIM(partnerId, partnerName) {
 
 function createPostDiv(post, tsString, with_header, unread){
     var postDiv = $('#post').clone();
+    postDiv.attr('value', post.id);
     if (with_header) {
         var postHeader = postDiv.find('#post-header');
         var pAuthor = postHeader.find('#author');
@@ -633,6 +635,8 @@ function imOnMessage(evt) {
                 tabSpan.text(parseInt(tabSpan.text()) + 1);
             }
         }
+    } else if (action == "update") {
+        $('#post[value="' + data.post.id + '"]').children('#post-body').html(data.post.text);
     }
 }
 
