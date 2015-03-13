@@ -5,6 +5,7 @@ var currentThreadId;
 var lastThreadId;
 
 var openedThreads = [];
+var lastOpenedThreadsPostDate = [];
 
 var conferences = [];
 
@@ -34,6 +35,13 @@ function deleteFile(fileId) {
         }
     );
 }
+
+$(document).keypress(function(e) {
+    if(e.which == 13) {
+        $('#send').click();
+        $('#post-text').val('');
+    }
+});
 
 $(document).ready(function() {
     uploader = $("#add_file").uploadFile({
@@ -99,6 +107,12 @@ function xhr(action, message) {
 
 function removeTab(threadId) {
     openedThreads[threadId].remove();
+
+    lastOpenedThreadsPostDate = lastOpenedThreadsPostDate
+        .filter(function (el) {
+            return el.threadId !== threadId;
+        });
+
     delete openedThreads[threadId];
     if (threadId == currentThreadId) {
         var existOpenedThread = false;
@@ -125,8 +139,13 @@ function setTab(threadId, threadName) {
         $('<li/>').append($('<a/>', {
             text: threadName
         })).append($('<span/>', {
-            class: 'ui-icon ui-icon-close',
-            role: 'presentation',
+                class: 'ui-icon ui-icon-close',
+                role: 'presentation',
+                click: function(){
+                    removeTab(threadId);
+                }
+            })).append($('<span/>', {
+            class: 'unread-post-counter',
             click: function(){
                 removeTab(threadId);
             }
@@ -139,6 +158,7 @@ function setTab(threadId, threadName) {
 function selectTab(threadId) {
     $('#tabs-list li').removeClass('selected-thread');
     openedThreads[threadId].addClass('selected-thread');
+    openedThreads[threadId].find('.unread-post-counter').text('');
 }
 
 function closeActions() {
@@ -176,7 +196,7 @@ function updateThreadList() {
                 .click({id: thread.id, name: threadName},function (e) {
                     var threadId = e.data.id;
                     var threadName = e.data.name;
-                    updateThreadView(threadId, threadName, false);
+                    updateThreadView(threadId, threadName, true);
                     e.preventDefault();
                 });
         }
@@ -192,6 +212,9 @@ function updateThreadList() {
 function updateThreadView(threadId, topic, scroll) {
     // Currently reloads all posts from thread
     setTab(threadId, topic);
+    if (removeMessageRequest(threadId)) {
+        redrawMessageRequest();
+    }
     selectTab(threadId);
     closeActions();
     $('#thread-tabs').show();
@@ -200,35 +223,8 @@ function updateThreadView(threadId, topic, scroll) {
     $('#posts').show();
     $('#conference-topic-div').hide();
     lastThreadId = currentThreadId = threadId;
-    var lastAuthor = "";
+    var lastAuthor = 0;
     var lastDate = null;
-    var diff_less_than = function (date1, date2, min){
-        return date1 - date2 < min * 60 * 1000;
-    };
-    var new_post = function(post, tsString, with_header, unread){
-        var postDiv = $('#post').clone();
-        if (with_header) {
-            var postHeader = postDiv.find('#post-header');
-            var pAuthor = postHeader.find('#author');
-
-            pAuthor.attr('href', '/id' + post.userId);
-            pAuthor.html(post.author);
-            postHeader.find('#ts').html(tsString);
-            postHeader.show();
-        }
-        var pFiles = postDiv.find('#post-files-wrap');
-        for (var i in post.postFiles) {
-            pFiles.append('<a style="font-size: 12px;" target="_blank" href="/download/' +
-                post.postFiles[i].id + '?h='+post.postFiles[i].hash+'">' + post.postFiles[i].name + '</a></br>');
-        }
-        if (unread)
-            postDiv.addClass('unread-post');
-        var postBody = postDiv.find('#post-body');
-        postBody.html(post.text);
-        postBody.show();
-        postDiv.show();
-        return postDiv;
-    };
     xhr('thread', {id: threadId})
     .then(function (data) {
         var selfId = data.selfId;
@@ -259,17 +255,16 @@ function updateThreadView(threadId, topic, scroll) {
                 tsString = ts.toLocaleDateString();
             }
             var with_header = lastAuthor !== post.userId || !diff_less_than(ts, lastDate, 1);
-            postsBlock.append(new_post(post, tsString, with_header, unread));
+            postsBlock.append(createPostDiv(post, tsString, with_header, unread));
             lastAuthor = post.userId;
             lastDate = ts;
         }
+        if ( ($.grep(lastOpenedThreadsPostDate, function(e) { return e.threadId == threadId; })).length === 0) {
+            lastOpenedThreadsPostDate.push({ 'threadId': threadId, 'ts': ts, 'author' : lastAuthor});
+        }
         postsBlock.width(postsWidth);
         if (scroll) {
-            var scrollTo_int = postsBlock.prop('scrollHeight') + 'px';
-            postsBlock.slimScroll({
-                scrollTo: scrollTo_int,
-                start: 'bottom'
-            });
+            scrollToBottom();
         }
         postsBlock.trigger('slimscrolling');
     });
@@ -475,6 +470,10 @@ function InitIM(partnerId, partnerName) {
     });
 
     $('#send').click(function (e) {
+        if (!$.trim($("#post-text").val())) {
+            return;
+        }
+        $('#send').attr('disabled','disabled');
         var files = {
             postFile: addedPostFile,
             imgFile: addedImg,
@@ -498,6 +497,7 @@ function InitIM(partnerId, partnerName) {
             files: files
         }).then(function (data) {
             $('#post-text').val('');
+            $('#send').removeAttr('disabled');
             if (recipientIds.length > 1)
                 conferences[data.threadId] = true;
 
@@ -509,7 +509,8 @@ function InitIM(partnerId, partnerName) {
             addedImg = [];
             addedMp3 = [];
             addedVideo = [];
-            updateThreadView(data.threadId, data.topic, true);
+
+            addMessage(data.threadId, data.post);
         });
         e.preventDefault();
     });
@@ -530,5 +531,111 @@ function InitIM(partnerId, partnerName) {
         $('#compose-post').click();
         $('#recipient').select2('data', {id: partnerId, text: partnerName});
     }
+}
 
+function createPostDiv(post, tsString, with_header, unread){
+    var postDiv = $('#post').clone();
+    if (with_header) {
+        var postHeader = postDiv.find('#post-header');
+        var pAuthor = postHeader.find('#author');
+
+        pAuthor.attr('href', '/id' + post.userId);
+        pAuthor.html(post.author);
+        postHeader.find('#ts').html(tsString);
+        postHeader.show();
+    }
+    var pFiles = postDiv.find('#post-files-wrap');
+    for (var i in post.postFiles) {
+        pFiles.append('<a style="font-size: 11px;" target="_blank" href="/download/' +
+            post.postFiles[i].id + '?h='+post.postFiles[i].hash+'">' + post.postFiles[i].name + '</a></br>');
+    }
+    if (unread)
+        postDiv.addClass('unread-post');
+    var postBody = postDiv.find('#post-body');
+    postBody.html(post.text);
+    postBody.show();
+    postDiv.show();
+    return postDiv;
+}
+
+
+function addMessage(threadId, post) {
+    var postsBlock = $('#posts');
+    var unread = post.unread;
+    var wtf = moment(post.ts.date);
+    var ts = new Date(wtf.format('YYYY/MM/DD HH:mm:ss') + ' UTC');
+    var tsString;
+    var now = new Date;
+    if (diff_less_than(now, ts, 60 * 24)) {
+        tsString = ts.toLocaleTimeString();
+    } else {
+        tsString = ts.toLocaleDateString();
+    }
+    var ta = getLastAuthorAndTsWithThreadId(threadId);
+    var with_header = ta.author !== post.userId || !diff_less_than(ts,  ta.ts, 1);
+    postsBlock.append(createPostDiv(post, tsString, with_header, unread));
+    updateLastThreadPostData(threadId, ts, post.userId);
+    scrollToBottom();
+}
+
+function imOnMessage(evt) {
+    var data = JSON.parse(evt.data);
+    var action = data.action;
+
+    if (action == "notify") {
+        new jBox('Notice', {
+            content: data.text,
+            color:  data.type,
+            autoClose: false
+        });
+    } else if (action == "deliver") {
+        var post = data.post;
+        if (currentThreadId == data.thread_id) {
+            post.unread = true;
+            addMessage(data.thread_id, post);
+            xhr('api/read_posts', {threadId: data.thread_id, count:1})
+                .then(function (data) {
+                    console.log('User with id %d read post %d from thread %d', post.userId, post.id, data.thread_id);
+                });
+        } else if (getLastAuthorAndTsWithThreadId(data.thread_id) !== false){
+            var tabSpan =  openedThreads[data.thread_id].find('.unread-post-counter');
+            if (tabSpan.text() == '') {
+                tabSpan.text(1)
+            } else {
+                tabSpan.text(parseInt(tabSpan.text()) + 1);
+            }
+        }
+    }
+}
+
+function scrollToBottom() {
+    var postsBlock = $('#posts');
+    var scrollTo_int = postsBlock.prop('scrollHeight') + 'px';
+    postsBlock.slimScroll({
+        scrollTo: scrollTo_int,
+        start: 'bottom'
+    });
+}
+
+function updateLastThreadPostData(threadId, newTs, author) {
+    $.each(lastOpenedThreadsPostDate, function( index, value ) {
+        if (value.threadId === threadId) {
+            value.ts = newTs;
+            value.author = author;
+        }
+    });
+}
+
+function diff_less_than(date1, date2, min){
+    return date1 - date2 < min * 60 * 1000;
+}
+
+function getLastAuthorAndTsWithThreadId(threadId) {
+    var res = false;
+    $.each(lastOpenedThreadsPostDate, function( index, value ) {
+        if (value.threadId === threadId) {
+            res = value;
+        }
+    });
+    return res;
 }

@@ -13,10 +13,6 @@ user_profile_json:
   options:
     expose: true
 
-kladr_test_page:
-  path:     /test/kladr
-  defaults: { _controller: NetworkWebBundle:Kladr:test }
-
 audio_track_upload:
   path: /upload/audio
   defaults: { _controller: NetworkStoreBundle:AudioTrack:upload }
@@ -122,6 +118,34 @@ file_download:
   defaults: { _controller: NetworkStoreBundle:File:download }
   requirements:
     file_id: \d+
+
+videos:
+  path: /video/
+  defaults: { _controller: NetworkWebBundle:VideoReference:index }
+
+add_video:
+  path: /video/add/
+  defaults: { _controller: NetworkWebBundle:VideoReference:addVideoReference }
+
+edit_video:
+  path: /video/edit/{id}
+  defaults: { _controller: NetworkWebBundle:VideoReference:editVideoReference }
+  requirements:
+    id: \d+
+
+delete_video:
+  path: /video/delete/
+  defaults: { _controller: NetworkWebBundle:VideoReference:deleteVideoReference }
+  methods: [POST]
+  options:
+    expose: true
+
+bind_video:
+  path: /video/bind/
+  defaults: { _controller: NetworkWebBundle:VideoReference:bindVideoReference }
+  methods: [POST]
+  options:
+    expose: true
 
 wall_write:
   path: /{type}/id{id}/write

@@ -2,6 +2,7 @@
 {% trans_default_domain 'FOSUserBundle' %}
 {% block stylesheets %}
     {{ parent() }}
+    <link href="{{ asset('bundles/networkweb/css/community.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 {% block javascripts %}
@@ -11,16 +12,11 @@
     <script src="{{ asset('bundles/networkuser/js/community.js') }}"></script>
 {% endblock %}
 {% block right_content %}
-    <style type="text/css">
-        .ui-widget input{
-            font-size: 14px;
-        }
-    </style>
-    <div>
+    <div class="white-box" id="community-box">
         {% if is_cur_user %}
             <div>
-                <button class="blue_button" id="create_community"> {{'community.create_community'|trans }}</button>
-                <a href="{{ path('user_search_community')}}">{{ 'community.search'|trans  }}</a>
+                <button class="btn btn-green btn-small" id="create_community"> {{'community.create_community'|trans }}</button>
+                <a class="btn btn-default btn-small" href="{{ path('user_search_community')}}">{{ 'community.search'|trans  }}</a>
             </div>
         {% endif %}
         {% if communities %}

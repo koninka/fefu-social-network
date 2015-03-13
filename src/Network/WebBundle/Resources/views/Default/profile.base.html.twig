@@ -11,6 +11,7 @@
     <script src="{{ asset('bundles/fosjsrouting/js/router.js') }}"></script>
     <script src="{{ path('fos_js_routing_js', {"callback": "fos.Router.setData"}) }}"></script>
     <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
+
 {% endblock %}
 {% block body %}
     <div id="header_box">
@@ -31,10 +32,6 @@
                         {% endif %}
                     </div>
                 {% endblock %}
-                <div id="locale_box">
-                    <a href="{{ path('change_locale', {'_locale':'en'}) }}">en</a>
-                    <a href="{{ path('change_locale', {'_locale':'ru'}) }}">ru</a>
-                </div>
             {% endblock %}
         </header>
     </div>
@@ -45,14 +42,20 @@
                 {% if is_granted('ROLE_USER') %}
                     <ul>
                         <li><a href="{{ path('fos_user_profile_show') }}">{{ 'layout.profile'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_change_password') }}">{{ 'layout.change_password'|trans({}, 'FOSUserBundle') }}</a></li>
-                        <li><a href="{{ path('fos_user_change_email') }}">{{ 'layout.change_email'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_friends') }}">{{ 'layout.show_friends'|trans({}, 'FOSUserBundle') }}{% if friendship_requests_count is defined %}: {{ friendship_requests_count }}{% endif %}</a></li>
+                        <li><a href="{{ path('show_feed') }}">{{ 'layout.feed'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_community') }}">{{ 'layout.show_community'|trans({}, 'FOSUserBundle') }}{% if community_requests_count is defined %}: {{ community_requests_count }}{% endif %}</a></li>
-                        <li><a href="{{ path('user_profile_show_messages') }}">{{ 'layout.show_messages'|trans({}, 'FOSUserBundle') }}{% if threads_unread_count is defined %}: {{ threads_unread_count }}{% endif %}</a></li>
+                        <li id="message_li">
+                            <a href="{{ path('user_profile_show_messages') }}">
+                                {{ 'layout.show_messages'|trans({}, 'FOSUserBundle') }}
+                                <span id="msg-unread-count" style="display: none" class="notif-count">
+                                </span>
+                            </a>
+                        </li>
                         <li><a href="{{ path('audio_player') }}">{{ 'layout.audios'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li><a href="{{ path('videos') }}">{{ 'layout.videos'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_albums') }}">{{ 'layout.show_albums'|trans({}, 'FOSUserBundle') }}</a></li>
+                        <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('show_links') }}">{{ 'layout.links'|trans({}, 'FOSUserBundle') }}</a></li>
                     </ul>
                 {% else %}
@@ -65,18 +68,12 @@
         </div>
         <div id="right_content">
             {% block right_content %}
-                <div>
+                <div id="user-info-box">
                     {% block right_content_sub_one %}
-                        <div id="ava_block">
-                            {% block ava_content %}
-                                <img src="{{ asset('bundles/networkweb/img/ava.png') }}" alt="VDOLGAH" />
-                            {% endblock %}
-                        </div>
                     {% endblock %}
                 </div>
-                <div>
+                <div id="wall-box">
                     {% block right_content_sub_two %}
-
                     {% endblock %}
                 </div>
             {% endblock %}
@@ -84,7 +81,11 @@
     </div>
     <footer>
         {% block footer %}
-            123
+            <div id="locale_box">
+                <a href="{{ path('change_locale', {'_locale':'en'}) }}">en</a>
+                <a href="{{ path('change_locale', {'_locale':'ru'}) }}">ru</a>
+            </div>
+           <div>® vdolgah.org</div>
         {% endblock %}
     </footer>
 {% endblock %}

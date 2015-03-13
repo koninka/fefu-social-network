@@ -15,6 +15,7 @@ use FOS\UserBundle\Controller\ProfileController as BaseController;
 use FOS\UserBundle\Model\UserInterface;
 use Network\UserBundle\Form\Type\ContactInfoType;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -50,10 +51,19 @@ class ProfileController extends BaseController
             $fsStatus = $rels->getRelationshipForUser($curUser->getId(), $user->getId())->getStatus();
         }
 
+        $userRefInfo = [
+            'friends' => 182,
+            'photos'  => 723,
+            'videos'  => 145,
+            'audios'  => 301,
+            'groups'  => 45,
+        ];
+
         return $this->render('NetworkUserBundle:Profile:show.html.twig', [
             'user' => $user,
             'rl_status' => $fsStatus,
-            'is_cur_user' => $isCurUser
+            'is_cur_user' => $isCurUser,
+            'user_ref_info' => $userRefInfo,
         ]);
     }
 
@@ -151,6 +161,23 @@ class ProfileController extends BaseController
             'is_cur_user' => $isCurUser,
             'albums' => $albums->findAlbumsForUser($user->getId()),
         ]);
+    }
+
+    public function getProfileRequestsAction() {
+
+        $threads = $this->getDoctrine()->getRepository('NetworkStoreBundle:UserThread');
+        $threadsUnread = $threads->getThreadsUnreadIdForUser($this->getUser()->getId());
+
+        $threadsId = [];
+        foreach($threadsUnread as $thread) {
+            $threadsId[] = intval($thread['thread_id']);
+        }
+
+        $result = [
+            'threadsId' => $threadsId
+        ];
+
+        return new JsonResponse($result);
     }
 
 }

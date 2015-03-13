@@ -88,6 +88,8 @@ layout:
     links: Links
     reset_password: Reset password
     audios: Music
+    videos: Video
+    feed: News feed
 
 # Email change
 change_email:
@@ -115,6 +117,22 @@ album:
         submit: Add album
     show:
         photos: All photos
+
+# Video
+video:
+    add:
+        name: Add video
+        submit: Upload
+    edit:
+        submit: Save
+        name: Edit video
+    bind:
+        name: Add to my videos
+    delete:
+        name: Delete video
+    search:
+        submit: Search
+        placeholder: Enter the name
 
 # Threads
 threads:
@@ -183,6 +201,17 @@ poll:
         answer:
             submit: Add poll
 
+#Notify
+notify:
+    remove_from_friends: removed you from friends
+    unsubscribe: unsubscribed from you
+    decline_friendship_request: declined your request
+    accept_friendship_request: accept your request
+    friendship_request_received: sent you request
+    kicked_from_conference: You were kicked from conference
+    new_message_from: New message from
+    invited_to_conference: You were invited to conference
+
 # Message
 msg:
     not_authorized: User is not authorized.
@@ -213,6 +242,12 @@ msg:
     add_photo_to_nonexistent_album: User can not add photo to non-existent album.
     photo_not_found: Photo is not found.
     user_album_photo_deleted: Photo is deleted from album.
+    thread_deleted: This thread was deleted from your news feed.
+    return_current_thread: Touch to revoke it
+    delete_from_feed: Do not show
+    feed_title_all: All
+    feed_title_friends: Friends
+    feed_title_communities: Communities
 
 form:
     new_email: New email
@@ -257,6 +292,10 @@ form:
             submit: Add
         delete:
             submit: Delete
+    change_password:
+        name: Password
+    change_email:
+        name: Email
     employer: Employer
     country: Country
     city: City
@@ -290,3 +329,7 @@ form:
             join_requests:
                 nobody: No requests to join the community.
             empty: Group is empty.
+    video:
+        name: Title
+        description: Description
+        link: Video link

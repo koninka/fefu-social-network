@@ -40,7 +40,23 @@ Then, use the `install` command to install all the necessary dependencies:
 or
 
     php composer.phar install
+    
+### Install Redis
 
+#### OS X
+
+   `brew install redis`
+   
+#### Ubuntu:
+
+   `apt-get install redis`
+   
+#### Windows:
+
+   https://github.com/rgl/redis/downloads
+   
+   In `php.ini` enable sockets: `extension=php_sockets.dll`
+   
 ### Checking your System Configuration
 
 Before starting coding, make sure that your local system is properly
@@ -88,6 +104,20 @@ Enjoy!
 To run server change directory to repository root and execute:
 
     php app/console server:start 0.0.0.0:6543
+    
+### Running sockets
+
+Replace in `NetworkWebSocketBundle\sockets.yml` in `network_web_socket.server` section address name on yours.
+
+Then run command:
+
+   `php app/console websocket:listen default`
+   
+### Running redis
+   
+   `redis_server`
+   
+   or run `redis_server.exe` on Windows
 
 [1]:  http://getcomposer.org/
 [2]:  http://symfony.com/doc/current/reference/requirements.html

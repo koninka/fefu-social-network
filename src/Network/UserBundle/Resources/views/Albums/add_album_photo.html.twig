@@ -1,14 +1,12 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
 {% block right_content %}
-    <div>
-        <div>
-            <form action="{{ path('user_add_album_photo', {'albumId':album_id}) }}" {{ form_enctype(form) }} method="POST">
-                {{ form_widget(form) }}
-                <div>
-                    <input class="blue_button" type="submit" value="{{ 'album.add.photo.submit'|trans }}" />
-                </div>
-            </form>
-        </div>
+    <div class="white-box" id="album-form-box">
+        <form class="centered-form" action="{{ path('user_add_album_photo', {'albumId':album_id}) }}" {{ form_enctype(form) }} method="POST">
+            {{ form_widget(form) }}
+            <div class="submit-btn-box">
+                <input class="btn btn-blue" type="submit" value="{{ 'album.add.photo.submit'|trans }}" />
+            </div>
+        </form>
     </div>
 {% endblock %}

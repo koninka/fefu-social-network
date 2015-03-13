@@ -1,4 +1,4 @@
-#login_container{
+#container{
     width: 300px;
     min-height: 300px;
     margin-top: 100px;
@@ -8,7 +8,7 @@
     display: block;
     position: relative;
     box-shadow: rgba(0, 0, 0, 0.5) 0 4px 24px 6px;
-    padding: 10px;
+    padding: 10px 10px 15px 10px;
 }
 
 #logo img{
@@ -17,170 +17,113 @@
     margin: 40px 0 40px 62px;
 }
 
-.button.authentication{
-    width: 120px;
-    font-size: 14px;
-    line-height: 30px;
-    height: 30px;
-    margin: 8px 0 0 19px;
+.auth{
+    width: 113px;
+    height: 25px;
+    line-height: 25px;
+    margin: 5px;
+}
+
+/*----------------------------------Background------------------------------------*/
+
+body::before {
+    z-index: -100;
+    background-image: url("../img/bg.jpg");
+}
+
+body::after{
+    z-index: -98;
+    background-color: rgba(0,0,0,0.05);
+}
+
+body::before, body:after {
+    content: ' ';
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-position: center top;
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+}
+
+/*----------------------------------Localization------------------------------------*/
+
+#localization-box{
+    margin-top: 15px;
     text-align: center;
-    display: inline-block;
-    border-radius: 5px;
-    color: #5b5b5b;
-    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
-    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
-    text-decoration: none;
 }
 
-.button.authentication:active, #login_button:active{
-    background-image: linear-gradient(rgb(245, 245, 245), rgb(255, 255, 255));
+#localization-box a{
+    margin: 0 2px 0 2px;
 }
 
-#registration_button, #login_button, .submit_button{
-    width: 260px;
-    margin: 20px 0 0 20px;
-    display: block;
-    line-height: 33px;
-    height: 35px;
-    text-align: center;
-    font-size: 16px;
-    text-decoration: none;
-    padding: 0;
-}
+/*----------------------------------Registration and auth form------------------------------------*/
 
-.submit_button{
-    background-image: linear-gradient(rgb(56, 169, 251), rgb(44, 145, 249));
-    border: 1px solid rgb(3, 125, 214);
-    border-radius: 5px;
-    font-weight: bold;
-    color: #fff;
-}
-
-.submit_button:active{
-    background-image: linear-gradient(rgb(44, 145, 249), rgb(44, 145, 249))
-}
-
-.submit_button:hover{
-    background-image: linear-gradient(rgb(56, 169, 251), rgb(57, 173, 252));
-}
-
-#login_button{
-    background-image: linear-gradient(rgb(255, 255, 255), rgb(245, 245, 245));
-    border-radius: 5px;
-    box-shadow: rgba(0, 0, 0, 0.0588235) 0 1px 1px 0, rgba(0, 0, 0, 0.14902) 0 0 0 1px inset;
-    font-weight: bold;
-    color: #5b5b5b;
-}
-
-
-/*----------------------------------Registration------------------------------------*/
-
-.register_form label{
-    width: 100px;
-    min-height: 20px;
-    line-height: 20px;
-    text-align: right;
-    border: 1px solid #000;
-    margin-left: 20px;
+.auth-form label{
     display: none;
 }
 
-.register_form{
-    margin: 20px 0 0 15px;
+.auth-form{
+    margin: 10px 0 10px 0;
 }
 
-.register_form input{
-    width: 240px;
-    padding: 8px 14px;
-    margin-top: -3px;
-    /*border: 1px solid rgb(149, 149, 149);*/
+.auth-form input:not([type="submit"]){
+    width: 265px;
+    padding: 8px 10px;
+    border: 1px solid #dddddd;
     font-size: 16px;
+    margin: 4px 0 2px 5px;
 }
 
-.register_form select{
+.auth-form select{
     width: 200px;
     height: 30px;
     text-align: center;
-    margin: 10px 0 10px 35px;
+    margin: 8px 0 8px 50px;
     font-size: 18px;
 }
 
-.authentication_button{
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    font-size: 14px;
-}
-
-.authentication_button a{
-    color: rgb(149, 149, 149);
-    text-decoration: none;
-}
-
-.register_form .submit_button {
-    margin: 10px 0 10px 5px;
-    padding: 0;
-    width: 260px;
-
-}
-.register_form ul{
-    margin: 10px;
-    list-style: none;
+.auth-form ul, .login-error{
+    margin: 4px;
     color: #ff585a;
+    font-size: 13px;
 }
 
-/*----------------------------------Login------------------------------------*/
-
-.login_form{
-    margin: 20px 0 0 15px;
+.auth-form ul li{
+    margin: 3px;
 }
 
-.login_form p{
+.auth-form input[type="submit"]{
+    width: 287px;
+}
+
+.auth-form input[type="checkbox"]{
+    width: 20px;
+    padding: 0;
+    margin: 0;
+}
+
+.auth-form-with-label label{
+    display: inline-block !important;
+}
+
+/*----------------------------------button------------------------------------*/
+
+.btn-auth-block{
     display: block;
-    height: 30px;
-    text-align: center;
+    font-weight: bold;
+    margin: 10px 6px 10px 6px;
 }
 
-.login_form input{
-    width: 240px;
-    padding: 8px 14px;
-    margin-top: -3px;
-    /*border: 1px solid rgb(149, 149, 149);*/
-    font-size: 16px;
+/*other*/
+
+#remember_me_label{
+    margin: 8px 0 8px 80px;
+    font-size: 14px;
 }
 
 #remember_me{
-    display: inline-block;
-    width: 30px;
-    margin: -2px 0 0 0;
-}
-
-#remember_me_label{
-    display: inline-block;
-    margin: 10px 0 10px 30px;
-}
-
-.login_authentication_button{
-    display: block;
-    height: 25px;
-    font-size: 14px;
-    line-height: 25px;
-    color: rgb(149, 149, 149);
-    text-decoration: none;
-    text-align: center;
-}
-
-.login_form .submit_button{
-    line-height: 10px;
-    width: 260px;
-    margin: 15px 0 15px 5px;
-
-}
-
-.login_error{
-    width: 260px;
-    margin: 15px 0 0 15px;
-    color: #ff585a;
-    font-size: 14px;
-    text-align: center;
+    margin: 8px 0 8px 0;
 }

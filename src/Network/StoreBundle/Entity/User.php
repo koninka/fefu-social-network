@@ -64,9 +64,16 @@ class User extends BaseUser
     /**
      * @var \Doctrine\Common\Collections\Collection
      *
-     * @ORM\OneToMany(targetEntity="Poll", mappedBy="user", cascade={"persist"})
+     * @ORM\OneToMany(targetEntity="Poll", mappedBy="owner", cascade={"persist"})
      */
     protected $poll;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="websocket_auth_key", type="string", length=255, nullable=true)
+     */
+    protected $webSocketAuthKey;
 
     /**
      * @var string
@@ -165,11 +172,27 @@ class User extends BaseUser
     private $contactInfo;
 
     /**
+     * @var integer
+     *
+     * @ORM\OneToOne(targetEntity="Blacklist", inversedBy = "user", cascade = {"persist"})
+     * @ORM\JoinColumn(name="blacklist_id", referencedColumnName="id")
+     */
+    private $blacklist;
+
+    /**
      * @var ArrayCollection
      *
      * @ORM\OneToMany(targetEntity="AudioTrack", mappedBy="user", cascade={"persist"})
      **/
     private $uploadedTracks;
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\ManyToMany(targetEntity="VideoReference", inversedBy="users")
+     * @ORM\JoinTable(name="users_video")
+     */
+    private $videoReferences;
 
     /**
      * @var ArrayCollection
@@ -482,6 +505,30 @@ class User extends BaseUser
     }
 
     /**
+     * Set blacklist
+     *
+     * @param Blacklist integer
+     * @return \Network\StoreBundle\Entity\User
+     *
+     */
+    public function setBlacklist(\Network\StoreBundle\Entity\Blacklist $blacklist = null)
+    {
+        $this->blacklist = $blacklist;
+
+        return $this;
+    }
+
+    /**
+     * Get blacklist
+     *
+     * @return int
+     */
+    public function getBlacklist()
+    {
+        return $this->blacklist;
+    }
+
+    /**
      * Add relationships
      *
      * @param \Network\StoreBundle\Entity\Relationship $partner
@@ -661,6 +708,50 @@ class User extends BaseUser
     }
 
      /**
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getVideoReferences()
+    {
+        return $this->videoReferences;
+    }
+
+    /**
+     * @param ArrayCollection $references
+     *
+     * @return User
+     */
+    public function setVideoReferences($references)
+    {
+        $this->videoReferences = $references;
+
+        return $this;
+    }
+
+    /**
+     * @param VideoReference $reference
+     * @return User
+     */
+    public function addVideoReferences(VideoReference $reference)
+    {
+        $this->videoReferences->add($reference);
+
+        return $this;
+    }
+
+    /**
+     * @param VideoReference $reference
+     * @return User
+     */
+    public function removeVideoReferences(VideoReference $reference)
+    {
+        $this->videoReferences->removeElement($reference);
+
+        return $this;
+    }
+
+     /**   
      * Add poll
      *
      * @param \Network\StoreBundle\Entity\Poll $poll
@@ -828,6 +919,25 @@ class User extends BaseUser
     public function getPoll()
     {
         return $this->poll;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebSocketAuthKey()
+    {
+        return $this->webSocketAuthKey;
+    }
+
+    /**
+     * @param string $webSocketAuthKey
+     * @return User
+     */
+    public function setWebSocketAuthKey($webSocketAuthKey)
+    {
+        $this->webSocketAuthKey = $webSocketAuthKey;
+
+        return $this;
     }
 
     /**

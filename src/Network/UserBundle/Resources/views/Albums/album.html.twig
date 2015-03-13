@@ -14,8 +14,14 @@
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
-{% block right_content_sub_one %}
-    <div>
+{% block right_content %}
+    <div class="white-box" id="album-box">
+    {% if is_cur_user and is_user_album %}
+        <div id="album-controller-box">
+            <a class="btn btn-blue btn-small" href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit.name'|trans }}</a>
+            <a class="btn btn-green btn-small" href="{{ path('user_add_album_photo', {'albumId':album.id} ) }}">{{ 'album.add.photo.name'|trans }}</a>
+        </div>
+    {% endif %}
         <div id="like_post" class="like" style="display:none">
             <div>
                 <div id="count" class="count"> </div> <button id="like" >{{ 'like'|trans }}</button>
@@ -26,24 +32,16 @@
         <p>{{ 'profile.show.photos'|trans }}: {{ photos|length }}</p>
         {% if photos %}
             {% for photo in photos %}
-                <p class="popup-gallery">
+                <div class="popup-gallery photo-box">
                     <a href="{% path photo.media, 'big' %}" title="{{ photo.media.description }}">{% media photo.media, 'small' %}</a>
                     <div id="{{photo.media.getId}}_like">
                         <script>mediaLike({{photo.media.getId}}) </script>
                     </div>
-                </p>
-                {% if is_cur_user and is_user_album %}
-                    <a href="{{ path('user_delete_album_photo', {'albumId':album.id, 'photoId':photo.media.id}) }}">{{ 'album.delete.photo'|trans }}</a>
-                {% endif %}
+                    {% if is_cur_user and is_user_album %}
+                        <a class="btn btn-red btn-small" href="{{ path('user_delete_album_photo', {'albumId':album.id, 'photoId':photo.media.id}) }}">{{ 'album.delete.photo'|trans }}</a>
+                    {% endif %}
+                </div>
             {% endfor %}
         {% endif %}
     </div>
-{% endblock %}
-{% block right_content_sub_two %}
-    {% if is_cur_user and is_user_album %}
-        <div>
-            <p><a href="{{ path('user_edit_album', {'albumId':album.id} ) }}">{{ 'album.edit.name'|trans }}</a></p>
-            <p><a href="{{ path('user_add_album_photo', {'albumId':album.id} ) }}">{{ 'album.add.photo.name'|trans }}</a></p>
-        </div>
-    {% endif %}
 {% endblock %}

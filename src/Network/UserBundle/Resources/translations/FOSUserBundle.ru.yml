@@ -88,6 +88,8 @@ layout:
     links: Ссылки
     reset_password: Сбросить пароль
     audios: Аудиозаписи
+    videos: Видеозаписи
+    feed: Новости
 
 # Email change
 change_email:
@@ -115,6 +117,23 @@ album:
         submit: Добавить альбом
     show:
         photos: Все фото
+
+# Video
+video:
+  add:
+    name: Добавить видео
+    submit: Загрузить
+  edit:
+    submit: Сохранить
+    name: Редактировать видео
+  bind:
+    name: Добавить к себе
+  delete:
+    name: Удалить видео
+  search:
+    submit: Найти
+    placeholder: Введите название
+
 
 # Threads
 threads:
@@ -183,6 +202,17 @@ poll:
         answer:
             submit: Добавить ответ
 
+#Notify
+notify:
+    remove_from_friends: удалил вас из друзей
+    unsubscribe: отписался от вас
+    decline_friendship_request: отклонил приглашение
+    accept_friendship_request: принял приглашение
+    friendship_request_received: отправил вам приглашение
+    kicked_from_conference: Вас удалили из конференции
+    new_message_from: Новое сообщение от
+    invited_to_conference: Вы были приглашены в конференцию
+
 # Message
 msg:
     not_authorized: Пользователь не авторизован.
@@ -213,6 +243,12 @@ msg:
     add_photo_to_nonexistent_album: Вы пытаетесь добавить фото в несуществующий альбом.
     photo_not_found: Фото не найдено.
     user_album_photo_deleted: Фото удалено из альбома.
+    thread_deleted: Пост удален из новостной ленты.
+    return_current_thread: Вернуть пост в ленту
+    delete_from_feed: Не показывать
+    feed_title_all: Все
+    feed_title_friends: Друзья
+    feed_title_communities: Группы
 
 form:
     new_email: Новая почта
@@ -257,6 +293,10 @@ form:
             submit: Добавить
         delete:
             submit: Удалить
+    change_password:
+        name: Пароль
+    change_email:
+        name: Email
     employer: Работодатель
     country: Страна
     city: Город
@@ -290,3 +330,7 @@ form:
             join_requests:
                 nobody: Запросы о вступлении в группу отсутствуют.
             empty: В группе нет ни одного участника.
+    video:
+        name: Название
+        description: Описание
+        link: Ссылка на видео

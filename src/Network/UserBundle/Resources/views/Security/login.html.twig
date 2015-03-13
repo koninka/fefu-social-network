@@ -3,16 +3,16 @@
 {% block authorization %}
     {{ parent() }}
     {% if error %}
-        <div class="login_error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <div class="login-error">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
     {% endif %}
-    <form action="{{ path("fos_user_security_check") }}" class="login_form" method="post">
+    <form action="{{ path("fos_user_security_check") }}" class="auth-form auth-form-with-label" method="post">
         <input type="hidden" name="_csrf_token" value="{{ csrf_token }}" />
         <input type="text" id="username" name="_username" value="{{ last_username }}" placeholder="{{ 'security.login.username'|trans }}" required="required" />
         <input type="password" id="password" name="_password" placeholder="{{ 'security.login.password'|trans }}" required="required" />
         <label id="remember_me_label" for="remember_me">{{ 'security.login.remember_me'|trans }}</label>
         <input type="checkbox" id="remember_me" name="_remember_me" value="on" />
-        <input  class="submit_button" type="submit" id="_submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
+        <input class="btn btn-blue btn-auth-block" type="submit" name="_submit" value="{{ 'security.login.submit'|trans }}" />
     </form>
-    <a class="login_authentication_button" href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
-    <a class="login_authentication_button" href="{{ path('fos_user_resetting_request') }}">{{ 'layout.reset_password'|trans({}, 'FOSUserBundle') }}</a>
+    <a class="link gray btn-block" href="{{ path('fos_user_registration_register') }}">{{ 'layout.register'|trans({}, 'FOSUserBundle') }}</a>
+    <a class="link gray btn-block" href="{{ path('fos_user_resetting_request') }}">{{ 'layout.reset_password'|trans({}, 'FOSUserBundle') }}</a>
 {% endblock %}

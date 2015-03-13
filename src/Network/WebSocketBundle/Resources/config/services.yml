@@ -1,0 +1,11 @@
+parameters:
+    network_web_socket.server_manager.class: Network\WebSocketBundle\Service\ServerManager
+
+services:
+    network_web_socket.server_manager:
+        class: %network_web_socket.server_manager.class%
+        arguments: [@doctrine.orm.entity_manager]
+    websocket_example:
+        class: Network\WebSocketBundle\Application\EchoApplication
+        tags:
+            - { name: network_web_socket.application, key: echo }

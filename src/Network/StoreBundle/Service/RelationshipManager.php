@@ -4,19 +4,28 @@ namespace Network\StoreBundle\Service;
 use Doctrine\ORM\EntityManager;
 use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Relationship;
+use Network\WebSocketBundle\Message\NotificationMessage;
+use Network\WebSocketBundle\Service\ServerManager;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Security\Core\SecurityContext;
+use Network\WebSocketBundle\Message\Message;
+use Symfony\Component\Translation\Translator;
 
 class RelationshipManager extends Controller
 {
     protected $em;
     protected $user;
+    protected $serverManager;
+    protected $translator;
 
-    public function __construct(EntityManager $em, SecurityContext $securityContext)
+    public function __construct(EntityManager $em, SecurityContext $securityContext,
+        ServerManager $serverManager, Translator $translator)
     {
         $this->em   = $em;
         $this->user = $securityContext->getToken()->getUser();
+        $this->serverManager = $serverManager;
+        $this->translator = $translator;
     }
 
     /**
@@ -46,6 +55,13 @@ class RelationshipManager extends Controller
         ];
     }
 
+    private function sendMessage($userId, $transMsg, $type) {
+        $this->serverManager->sendMessage(new NotificationMessage($userId,
+                $this->user->getFirstName() . ' ' . $this->user->getLastName() . ' ' .
+                $this->translator->trans($transMsg, [], 'FOSUserBundle'),
+                $type));
+    }
+
     /**
      * @param $id
      * @return string
@@ -69,6 +85,8 @@ class RelationshipManager extends Controller
 
             $this->em->flush();
 
+            $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
+
             return 'friendship_accepted';
         }
 
@@ -88,6 +106,8 @@ class RelationshipManager extends Controller
         $this->em->persist($newFriendRelationship);
 
         $this->em->flush();
+
+        $this->sendMessage($id, 'notify.friendship_request_received', NotificationMessage::TYPE_SUCCESS);
 
         return 'friendship_request_sent';
     }
@@ -114,7 +134,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        return 'friendship_accepted';
+        $this->sendMessage($id, 'notify.accept_friendship_request', NotificationMessage::TYPE_SUCCESS);
     }
 
     /**
@@ -140,6 +160,8 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
+        $this->sendMessage($id, 'notify.decline_friendship_request', Message::TYPE_FAIL);
+
         return 'friendship_request_declined';
     }
 
@@ -163,6 +185,8 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
+        $this->sendMessage($id, 'notify.remove_from_friends', Message::TYPE_FAIL);
+
         return 'friendship_deleted';
     }
 
@@ -182,6 +206,8 @@ class RelationshipManager extends Controller
         $this->em->remove($relationship);
 
         $this->em->flush();
+
+        $this->sendMessage($id, 'notify.unsubscribe', Message::TYPE_FAIL);
 
         return 'friendship_request_deleted';
     }

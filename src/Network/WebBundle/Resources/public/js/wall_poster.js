@@ -9,7 +9,7 @@ var editBtnName = '';
 
 function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
 {
-    var postContainer = $('<div class="post" id="thread_' + thread_id + '"></div>');
+    var postContainer = $('<div class="white-box post" id="thread_' + thread_id + '"></div>');
     if (user_id == userId) {
         $(postContainer).addClass('my');
     }
@@ -20,7 +20,7 @@ function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
     var controlsContainer = $('<div class="controls"></div>');
     var commentsContainer = $('<div class="comments"></div>');
     var commentContainer = $('<div class="to_comment"><form><textarea class="comment_text"></textarea>' +
-        '<button class="comment_btn" id="comment_' + thread_id + '">' + commentBtnName + '</button></form></div>');
+        '<button class="btn btn-blue btn-small comment_btn" id="comment_' + thread_id + '">' + commentBtnName + '</button></form></div>');
 
     usernameContainer.append($(
         '<a href="' + Routing.generate('user_profile', {id: user_id}) + '">' + username + '</a>'
@@ -280,31 +280,26 @@ function addPoll(data) {
     var threadContainer = $('#thread_' + thread_id);
     var msgContainer = threadContainer.find('.msg');
     var pollDiv = $('#poll_post').clone();
-    msgContainer.find('#poll_post').hide(); 
+    msgContainer.find('#poll_post').hide();
     pollDiv.html('');
-        if (isOwner) {
-            if (sum == 0) {
-                pollDiv.append($('<div></div>').append($('<a>poll.edit</a>').attr('href', '/poll' + id + '/edit')));
-            }
-            pollDiv.append($('<div></div>').append($('<a>poll.delete</a>').attr('href', '/poll' + id + '/delete')));
-        }
         pollDiv.append(data['question']);
         pollDiv.append('<br>');
         if (isAnonymously) {
-            pollDiv.append('poll.anonymously');
+            pollDiv.append('<div class="poll_type">poll.anonymously</div>');
         } else {
-            pollDiv.append('poll.open');
+            pollDiv.append('<div class="poll_type">poll.open</div>');
         }
-        pollDiv.append('<div>poll.sum: ' + sum + '</div>');
-        pollDiv.append('<hr>');
+        pollDiv.append('<br>');
+        pollDiv.append('<div class="poll_sum">poll.sum: ' + sum + '</div>');
+        pollDiv.append('<br><hr>');
     if (!isAnswer) {
-        var form = $('<form class="form" method="post"></form>');
+        var form = $('<form class="for-pollm" method="post"></form>');
         for (var i = 0; i < answer.length; i++ ) {
             var ans = $('<div></div>').append('<input type="radio" name="answer"  value="' + answer[i][0] + '"/>\n\
                 <label for="'+ answer[i][0]+'">'+ answer[i][1]+'</label>');
                 form.append(ans);
             }
-        var submit = $('<input class="blue_button" type="button" value="poll.submit"></input>');
+        var submit = $('<input class="btn btn-blue btn-small" type="button" value="poll.submit"></input><br>');
         form.append(submit);
         $(submit).on('click', function (e) {
             var value = $("input[name=answer]:checked").val();
@@ -323,12 +318,12 @@ function addPoll(data) {
             pollDiv.append(form);
     } else {
         msgContainer.find('.form').hide();
-        var table = $('<table></table>');
+        var table = $('<table class="bar-table"></table>');
         for (var i = 0; i < answer.length; i++ ) {
             var tr = $('<tr></tr>').html(answer[i][1]);
                 table.append(tr);
-                var per = $("<tr class='bar-container' style='background-color:#cc4400; height: 5%;width:150px;'></tr>");
-                var user =$("<div class='poll_open_result' name ='" + answer[i][0] + "' style='width:" + percent[answer[i][0]] + "%;background-color:#0066cc;'></div>")
+                var per = $("<tr class='bar-container'></tr>");
+                var user =$("<div class='white-box poll_open_result' name ='" + answer[i][0] + "' style='width:" + percent[answer[i][0]] + ";'></div>")
                         .append("<strong >" + percent[answer[i][0]] + "%</strong>");
                 per.append(user);
                 if (!isAnonymously ) { 

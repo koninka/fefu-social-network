@@ -8,6 +8,8 @@ use Doctrine\ORM\EntityRepository;
 use Doctrine\DBAL\Types\Type;
 
 use Network\StoreBundle\DBAL\ThreadEnumType;
+use Network\StoreBundle\DBAL\RoleCommunityEnumType;
+use Network\StoreBundle\DBAL\RelationshipStatusEnumType;
 use Network\StoreBundle\Entity\Thread;
 use Network\StoreBundle\Entity\User;
 
@@ -157,8 +159,153 @@ class ThreadRepository extends EntityRepository
         $query = $em->createQuery($dql)
                     ->setParameter('thread_id', $threadId);
 
-        $r = $query->getOneOrNullResult();
+        return $query->getOneOrNullResult();
+    }
 
-        return $r;
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getFeedForUser($userId)
+    {
+        $result = array_merge($this->getFriendsFeed($userId), $this->getCommunitiesFeed($userId));
+        usort($result,  function($a, $b){ return $a['ts'] < $b['ts']; });
+
+        return $result;
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getFriendsFeed($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
+            SELECT wt.id as threadId, p.text, p.ts, u.firstName, u.lastName, u.id FROM NetworkStoreBundle:User u
+            JOIN u.wallThreads wt
+            JOIN wt.posts p
+            WHERE u.id in(
+              SELECT rp.id FROM NetworkStoreBundle:Relationship r
+              JOIN r.partner rp
+              WHERE r.user = :userId and (r.status = :status1 or r.status = :status2)
+            )
+            and wt.id not in(
+              SELECT th.id FROM NetworkStoreBundle:Blacklist b
+              JOIN b.threads th
+              JOIN b.user uid
+              WHERE uid = :userId
+            ) ORDER BY p.ts DESC
+            ";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('status1', RelationshipStatusEnumType::FS_ACCEPTED)
+                    ->setParameter('status2', RelationshipStatusEnumType::FS_SUBSCRIBED_BY_ME)
+                    ->setParameter('userId', $userId);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getCommunitiesFeed($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
+            SELECT wt.id as threadId, p.text, p.ts, c.id as comm_id, c.name as comm_name FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads wt
+            JOIN wt.posts p
+            WHERE c.id in(
+              SELECT com.id FROM NetworkStoreBundle:UserCommunity uc
+              JOIN uc.community com
+              JOIN uc.user u
+              WHERE u.id = :userId and (uc.role = :role1 or uc.role = :role2)
+            )
+            and wt.id not in(
+              SELECT th.id FROM NetworkStoreBundle:Blacklist b
+              JOIN b.threads th
+              JOIN b.user uid
+              WHERE uid = :userId
+            ) ORDER BY p.ts DESC
+        ";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('userId', $userId)
+                    ->setParameter('role1', RoleCommunityEnumType::RC_OWNER)
+                    ->setParameter('role2', RoleCommunityEnumType::RC_PARTICIPANT);
+
+        return $query->getResult();
+    }
+
+    /**
+     * @param $threadId
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getCommunityByWallThreadId($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT c FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads w
+            WHERE w.id = :thread_id";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('thread_id', $threadId);
+
+        return $query->getOneOrNullResult();
+    }
+
+    /**
+     * @param $threadId
+     * @return bool
+     */
+    public function isThreadFromWall($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT u FROM NetworkStoreBundle:User u
+            JOIN u.wallThreads uw
+            WHERE uw.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+            ->setParameter('threadId', $threadId);
+        if(count($query->getResult()))
+            return true;
+
+        $dql = "
+            SELECT c FROM NetworkStoreBundle:Community c
+            JOIN c.wallThreads wt
+            WHERE wt.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+            ->setParameter('threadId', $threadId);
+
+        return count($query->getResult()) != 0;
+    }
+
+    /**
+     * @param $threadId
+     * @return array
+     */
+    public function getThreadData($threadId)
+    {
+        $em = $this->getEntityManager();
+        $dql = "
+            SELECT p.text, p.ts FROM NetworkStoreBundle:Thread th
+            JOIN th.posts p
+            WHERE th.id = :threadId
+        ";
+
+        $query = $em->createQuery($dql)
+                    ->setParameter('threadId', $threadId);
+
+        return $query->getResult();
     }
 }

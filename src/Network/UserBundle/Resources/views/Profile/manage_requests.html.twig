@@ -11,9 +11,9 @@
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
 {% endblock %}
 {% block right_content %}
-    <div>
+    <div class="white-box">
         <div>
-            <a href="{{ path('user_profile_show_friends') }}">{{ 'profile.show.friends'|trans }}</a>
+            <a class="btn btn-default btn-small" href="{{ path('user_profile_show_friends') }}">{{ 'profile.show.friends'|trans }}</a>
         </div>
         {% if friendship_requests %}
             <div>
@@ -22,8 +22,8 @@
             {% for request in friendship_requests %}
                 <div>
                     {{ request.partner.firstName }} {{ request.partner.lastName }}
-                    <a class="blue_button" href="{{ path('user_accept_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.accept'|trans }}</a>
-                    <a class="gray_button" href="{{ path('user_decline_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.decline'|trans }}</a>
+                    <a class="btn btn-green btn-small" href="{{ path('user_accept_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.accept'|trans }}</a>
+                    <a class="btn btn-red btn-small" href="{{ path('user_decline_friendship_request', {'id': request.partner.id} ) }}">{{ 'profile.requests.decline'|trans }}</a>
                 </div>
             {% endfor %}
         {% else %}
