@@ -49,7 +49,7 @@ or
    
 #### Ubuntu:
 
-   `apt-get install redis`
+   `sudo apt-get install redis-server`
    
 #### Windows:
 
@@ -107,7 +107,7 @@ To run server change directory to repository root and execute:
     
 ### Running sockets
 
-Replace in `NetworkWebSocketBundle\sockets.yml` in `network_web_socket.server` section address name on yours.
+Replace in `./src/Network/WebSocketBundle/Resources/config/sockets.yml` in `network_web_socket.server` section address name on yours.
 
 Then run command:
 
