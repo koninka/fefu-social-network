@@ -272,3 +272,11 @@ return_thread:
     defaults: { _controller: NetworkUserBundle:Feed:removeThreadFromBlacklist }
     requirements:
       id: \d+
+
+user_get_message:
+    path: /api/get_message
+    defaults: { _controller: NetworkUserBundle:Thread:getMessage }
+
+user_update_message:
+    path: /api/update_message/
+    defaults: { _controller: NetworkUserBundle:Thread:updateMessage }
