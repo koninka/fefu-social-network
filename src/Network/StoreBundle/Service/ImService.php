@@ -249,7 +249,8 @@ class ImService
         $this->serverManager->sendMessage($msg);
     }
 
-    function normalizePost(Post $post) {
+    function normalizePost(Post $post)
+    {
         $postFiles = [];
 
         foreach ($post->getFiles()->toArray() as $file) {
@@ -270,5 +271,14 @@ class ImService
         ];
 
         return $postResult;
+    }
+
+    public function getMessageById($id)
+    {
+        $msg = $this->em
+            ->getRepository('NetworkStoreBundle:Post')
+            ->find($id);
+
+        return $msg;
     }
 }

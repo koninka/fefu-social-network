@@ -22,6 +22,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 use Network\WebSocketBundle\Service\ServerManager;
 use Network\WebSocketBundle\Message\ImMessage;
+use Network\WebSocketBundle\Message\UpdateMessage;
 
 /**
  * Class ThreadController
@@ -134,6 +135,10 @@ class ThreadController extends Controller
             }
         }
 
+        if ($user->getId() == $post->getUser()->getId()) {
+            $res['post']['editable'] = true;
+        }
+
         return new JsonResponse($res);
     }
 
@@ -185,6 +190,11 @@ class ThreadController extends Controller
         foreach ($posts as $post) {
             $normalizedPost = $imService->normalizePost($post);
             $normalizedPost['text'] = $formatter->transform('markdown', $normalizedPost['text']);
+
+            if ($user->getId() == $post->getUser()->getId()) {
+                $normalizedPost['editable'] = true;
+            }
+
             $postResult[] = $normalizedPost;
         }
 
@@ -361,6 +371,77 @@ class ThreadController extends Controller
         }
 
         return new JsonResponse(['users' => $users, 'userId' => $user->getId(), 'canBeKicked' => $canBeKicked]);
+    }
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function getMessageAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+
+        $messageId = $request->query->get('id');
+        $markdownTransform = $request->query->get('markdown');
+
+        $imService = $this->get('network.store.im_service');
+        $msg = $imService->getMessageById($messageId);
+
+        if (null === $msg) {
+            return new JsonResponse(['response' => 'error']);
+        }
+
+        $normalizedMessage = $imService->normalizePost($msg);
+
+        if($markdownTransform) {
+            $formatter = $this->container->get('sonata.formatter.pool');
+            $normalizedMessage['text'] = $formatter->transform('markdown', $normalizedMessage['text']);
+        }
+
+        return new JsonResponse($normalizedMessage);
+    }
+    /**
+     * @param Request $request
+     *
+     * @return JsonResponse
+     */
+    public function updateMessageAction(Request $request)
+    {
+        $user = $this->getUserAndCheckAccess();
+
+        $messageId = $request->request->get('id');
+        $messageText = $request->request->get('text');
+        $threadId = $request->request->get('threadId');
+
+        $imService = $this->get('network.store.im_service');
+        $msg = $imService->getMessageById($messageId);
+
+        if (null === $msg || $user->getId() != $msg->getUser()->getId()) {
+            return new JsonResponse(['response' => 'error']);
+        }
+
+        $msg->setText($messageText);
+        
+        $manager = $this->getDoctrine()->getManager();
+        $manager->persist($msg);
+        $manager->flush();
+
+        $normalizedMessage = $imService->normalizePost($msg);
+        $formatter = $this->container->get('sonata.formatter.pool');
+        $normalizedMessage['text'] = $formatter->transform('markdown', $normalizedMessage['text']);
+
+        if ($threadId === null) {
+            return new JsonResponse(['response' => 'error']);
+        }
+        $thread = $imService->getThreadByIdAndUserIdOrThrow($threadId, $user->getId());
+        foreach ($thread->getUsers() as $threadUser) {
+            if ($user->getId() != $threadUser->getId()) {
+                $msg = new updateMessage($thread->getId(), $threadUser->getId(), $normalizedMessage);
+                $imService->sendMessage($msg);
+            }
+        }
+
+        return new JsonResponse($normalizedMessage);
     }
 
     static protected function errorJsonResponse($msg)
