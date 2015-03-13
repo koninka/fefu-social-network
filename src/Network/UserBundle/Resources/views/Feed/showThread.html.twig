@@ -2,9 +2,11 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
+    <link href="{{ asset('bundles/networkuser/css/main.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
 
 {% block right_content %}
