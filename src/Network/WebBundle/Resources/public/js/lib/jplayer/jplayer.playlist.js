@@ -302,9 +302,8 @@
     },
     _sendEditRequest: function (id) {
       $.post(
-        Routing.generate('audios_json_edit'),
+        '/audio/edit/' + id,
         JSON.stringify({
-          id: id,
           title: this.editDialog.find(this.cssSelector.editDialog.titleInput).val(),
           artist: this.editDialog.find(this.cssSelector.editDialog.artistInput).val()
         }),

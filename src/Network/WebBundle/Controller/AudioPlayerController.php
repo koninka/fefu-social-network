@@ -131,114 +131,51 @@ class AudioPlayerController extends Controller
         );
     }
 
-    public function addAction($id)
+    public function editAction($audio_id, Request $request)
     {
         $user = $this->getUser();
-        if (null === $user) {
+        if (empty($user)) {
             return new JsonResponse([
                 'status' => 'badUser',
             ]);
         }
 
-        $mp3 = $this->getDoctrine()
-                     ->getRepository('NetworkStoreBundle:AudioTrack')
-                     ->find($id);
+        $audioTrack = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:AudioTrack')
+            ->find($audio_id);
 
-        $content = [
-            'status' => 'alreadyHas',
-        ];
-
-        if (!$user->hasMp3InPlaylist($mp3)) {
-            $user->addMp3($mp3);
-            $mp3->addUser($user);
-
-            $song = $mp3->getSong();
-
-            $content['status'] = 'ok';
-            $content['artist'] = $song->getArtist();
-            $content['title'] = $song->getTitle();
-            $content['id'] = $mp3->getId();
-
-            if ($song->hasPoster()) {
-                $content['poster'] = $song->getAlbum()->getPoster();
-            }
-
-            $this->getDoctrine()->getManager()->flush();
-        }
-
-        return new JsonResponse($content);
-    }
-
-    public function editAction(Request $request)
-    {
-        $user = $this->getUser();
-        if (null === $user) {
+        if (empty($audioTrack)) {
             return new JsonResponse([
-                'status' => 'badUser',
+                'status' => 'badAudioId',
             ]);
         }
 
         $data = json_decode($request->getContent(), true);
 
         if (
-            count(array_intersect(['id', 'title', 'artist'], array_keys($data))) < 3
+            count(array_intersect(['title', 'artist'], array_keys($data))) === 0
         ) {
             return new JsonResponse([
                 'status' => 'badRequest'
             ]);
         }
 
-        $mp3 = $this->getDoctrine()
-                    ->getRepository('NetworkStoreBundle:AudioTrack')
-                    ->find($data['id']);
-
-        if (!$user->hasMp3InPlaylist($mp3)) {
-            return new JsonResponse([
-                'status' => 'badUser',
-            ]);
+        // TODO: check if this user can edit this track
+        $title = $data['title'];
+        $artist = $data['artist'];
+        if (!empty($title)) {
+            $audioTrack->setTitle($title);
+        }
+        if (!empty($artist)) {
+            $audioTrack->setArtist($artist);
         }
 
-        // TODO: add it to editable fields
-        $data['genre'] = $mp3->getSong()->getGenre();
-
-        $song = $this->getDoctrine()
-                     ->getRepository('NetworkStoreBundle:Song')
-                     ->getSongByMetadata($data);
-
-        if ($mp3->getUsers()->count() > 1) {
-            $user->removeMp3($mp3);
-
-            $newMp3 = new AudioTrack();
-
-            $newMp3->addUser($user);
-            $user->addMp3($newMp3);
-
-            $newMp3->setFile($mp3->getFile());
-            $newMp3->setUploaded($mp3->getUploaded());
-
-            $this->getDoctrine()->getManager()->persist($newMp3);
-
-            $mp3 = $newMp3;
-        }
-
-        $mp3->setSong($song);
-
-        $this->getDoctrine()->getManager()->flush();
-
-        $responseMetadata = [
-            'id' => $mp3->getId(),
-            'title' => $song->getTitle(),
-            'artist' => $song->getArtist(),
-            'old_id' => $data['id'],
-        ];
-
-        if ($song->hasPoster()) {
-            $request['poster'] = $song->getAlbum()->getId();
-        }
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($audioTrack);
+        $em->flush();
 
         return new JsonResponse([
             'status' => 'ok',
-            'metadata' => $responseMetadata,
         ]);
     }
 
