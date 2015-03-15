@@ -284,20 +284,17 @@
       }
     },
     _handleAddResponse: function (data, textStatus, jqXHR) {
-      if (data['status'] === 'ok') {
+      if (data.status === 'ok') {
         var media = {
-          id: data['id'],
-          mp3: Routing.generate('file_mp3_get', { file_id: data['id'] }),
-          artist: data['artist'],
-          title: data['title']
+          id: data.id,
+          mp3: '/download/audio/' + data.id,
+          artist: data.artist,
+          title: data.title
         };
 
-        if (data['poster']) {
-          media['poster'] = Routing.generate('file_mp3_poster', { album_id: data['poster'] })
-        }
-
         this.userPlaylist.push(media);
-        alert('Audio ' + media['artist'] + ' - ' + media['title'] + ' was successfully added to Your playlist.');
+        alert('Audio ' + media.artist + ' - ' + media.title
+          + ' was successfully added to your playlist.');
       }
     },
     _sendEditRequest: function (id) {
@@ -393,8 +390,8 @@
 
           var index = $(this).parent().parent().index();
 
-          $.post(
-            Routing.generate('audios_json_add', { id: self.foundPlaylist[index]['id'] }),
+          // TODO: 1 <-> currentPlaylistId
+          $.post('/playlist/1/push/' + self.foundPlaylist[index].id,
             null,
             self._handleAddResponse.bind(self)
           )

@@ -95,8 +95,8 @@ $("#audio_file_upload").uploadFile({
           mp3: Routing.generate('audio_track_download', { id: data.id }),
           id: data.id
         };
-
-        var url = '/playlist/' + playlists[1].id + '/push/' + data.id;
+        // playlists[0].id
+        var url = '/playlist/' + 1 + '/push/' + data.id;
         console.log(url);
         Promise.resolve($.post(url)).then(function(response) {
             if (response.status === 'ok') {
