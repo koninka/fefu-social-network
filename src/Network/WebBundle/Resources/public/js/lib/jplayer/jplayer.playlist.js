@@ -240,11 +240,10 @@
       this.notOriginalDisplayed = true;
     },
     _sendSearchRequest: function (what, by) {
-      $.post(
-        Routing.generate('audios_json_search', {
-          what: what,
-          by: by
-        }),
+      if (what.length === 0) {
+        return;
+      }
+      $.post('/search/audio/' + by + '/' + what,
         null,
         this._handleSearchRequest.bind(this)
       );
@@ -263,12 +262,12 @@
       }
     },
     _handleSearchRequest: function (data, textStatus, jqXHR) {
-      if (data['status'] === 'ok') {
-        var medias = data['results'];
+      if (data.status === 'ok') {
+        var medias = data.tracks;
         this._clearFoundPlaylist();
 
         $(this.cssSelector.foundTracksTitle).text(
-          medias.length + ' audios was found in database'
+          'The search returned ' + medias.length + ' audio tracks'
         );
 
         var ul = $(this.cssSelector.foundTracksContainer);
@@ -276,8 +275,8 @@
         ul.empty();
 
         for (var i = 0; i < medias.length; ++i) {
+          medias[i].mp3 = '/download/audio/' + medias[i].id;
           ul.append(this._createFoundListItem(medias[i]));
-          medias[i]['mp3'] = Routing.generate('file_mp3_get', { file_id: medias[i]['id'] })
           this.foundPlaylist.push(medias[i]);
         }
 

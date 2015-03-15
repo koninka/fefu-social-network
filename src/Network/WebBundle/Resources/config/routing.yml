@@ -78,10 +78,9 @@ audio_track_delete:
     audio_id: \d+
     playlist_id: \d+
 
-audios_json_search:
-  path: /audious/json/find.by.{by}.with.{what}
+audio_search:
+  path: /search/audio/{by}/{what}
   defaults: { _controller: NetworkWebBundle:AudioPlayer:search }
-#  methods: [POST]
   requirements:
     options: artist|title
   options:
