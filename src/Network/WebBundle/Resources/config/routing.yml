@@ -70,11 +70,13 @@ audio_get_all_user_playlists:
     expose: true
 
 audio_track_delete:
-  path: /delete/audio/
-  defaults: { _controller: NetworkStoreBundle:Mp3File:deleteMp3 }
-  methods: [POST]
+  path: /delete/audio/{audio_id}/playlist/{playlist_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:deleteAudioFromPlaylist }
   options:
     expose: true
+  requirements:
+    audio_id: \d+
+    playlist_id: \d+
 
 audios_json_search:
   path: /audious/json/find.by.{by}.with.{what}

@@ -24,6 +24,7 @@ class AudioPlayerController extends Controller
         return $this->render('NetworkWebBundle:AudioPlayer:audio_player.html.twig');
     }
 
+
     public function getAllMyPlaylistsAction()
     {
         $user = $this->getUser();
@@ -227,6 +228,44 @@ class AudioPlayerController extends Controller
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($item);
+        $em->flush();
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ]);
+    }
+
+    public function deleteAudioFromPlaylistAction($audio_id, $playlist_id)
+    {
+        $user = $this->getUser();
+        if (empty($user)) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $playlist = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:Playlist')
+            ->find($playlist_id);
+
+        if (empty($playlist) || $playlist->getUser()->getId() !== $user->getId()) {
+            return new JsonResponse([
+                'status' => 'badPlaylist',
+            ]);
+        }
+
+        $playlistItem = $this->getDoctrine()
+            ->getRepository('NetworkStoreBundle:PlaylistItem')
+            ->findByPlaylistAndTrack($playlist_id, $audio_id);
+
+        if (empty($playlistItem)) {
+            return new JsonResponse([
+                'status' => 'trackNotInList',
+            ]);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $em->remove($playlistItem);
         $em->flush();
 
         return new JsonResponse([

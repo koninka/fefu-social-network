@@ -563,11 +563,8 @@
             var index = $(this).parent().parent().index();
             var id = +self.playlist[index]['mp3'].match(/[0-9]+$/)[0];
 
-            $.post(
-              Routing.generate('file_mp3_delete'),
-              JSON.stringify({
-                id: id
-              }),
+            // TODO: /delete/audio/id/playlist/id <- current playlist id
+            $.post('/delete/audio/' + id + '/playlist/1',
               self._handleDeleteResponse.bind(self)
             );
         });
