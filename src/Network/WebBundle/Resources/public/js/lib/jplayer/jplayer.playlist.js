@@ -649,7 +649,8 @@
       if(playNow) {
         this.play(this.playlist.length - 1);
       } else {
-        if(this.original.length === 1) {
+        if(this.original.length === 1 &&
+          $('#jquery_jplayer_1').data().jPlayer.status.paused) {
           this.select(0);
         }
       }
