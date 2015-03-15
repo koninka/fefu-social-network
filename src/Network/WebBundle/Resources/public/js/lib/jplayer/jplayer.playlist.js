@@ -167,7 +167,7 @@
     // Instance jPlayer
     $(this.cssSelector.jPlayer).jPlayer(this.options);
 
-    $(this.searchWhatInput).on('keyup', this._handleSearchInputEvent.bind(this));
+    $(this.searchWhatInput).change(this._handleSearchInputEvent.bind(this));
   };
 
   jPlayerPlaylist.prototype = {
