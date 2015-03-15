@@ -117,31 +117,18 @@ class AudioPlayerController extends Controller
 
         $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:AudioTrack');
 
-        $mp3s = $repo->searchRecords($by, $what);
+        $tracks = $repo->searchRecords($by, $what);
 
-        $responseContent = [
-            'status' => 'ok',
-            'results' => [],
-        ];
+        $response = '{"status": "ok", "tracks": ';
+        $serializer = $this->container->get('jms_serializer');
+        $response = $response . $serializer->serialize($tracks, 'json');
+        $response = $response . '}';
 
-        foreach ($mp3s as $mp3) {
-            if (!$user->hasMp3InPlaylist($mp3)) {
-                $media = [];
-                $song = $mp3->getSong();
-
-                $media['id'] = $mp3->getId();
-                $media['artist'] = $song->getArtist();
-                $media['title'] = $song->getTitle();
-
-                if ($song->hasPoster()) {
-                    $media['poster'] = $song->getAlbum()->getId();
-                }
-
-                $responseContent['results'][] = $media;
-            }
-        }
-
-        return new JsonResponse($responseContent);
+        return new Response(
+            $response,
+            Response::HTTP_OK,
+            ['content-type' => 'application/json']
+        );
     }
 
     public function addAction($id)
