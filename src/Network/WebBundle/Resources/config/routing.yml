@@ -49,9 +49,8 @@ audio_add_playlist:
     expose: true
 
 audio_remove_playlist:
-  path: /playlist/remove/{id}
-  defaults: { _controller: NetworkWebBundle:AudioPlayer:getUserPlaylist }
-  methods: [POST]
+  path: /playlist/remove/{playlist_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:removePlaylist }
   options:
     expose: true
 

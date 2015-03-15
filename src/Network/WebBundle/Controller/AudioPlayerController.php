@@ -24,6 +24,50 @@ class AudioPlayerController extends Controller
         return $this->render('NetworkWebBundle:AudioPlayer:audio_player.html.twig');
     }
 
+    public function removePlaylistAction($playlist_id)
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Playlist');
+        $playlist = $repo->find($playlist_id);
+        if (empty($playlist) || $playlist->getUser()->getId() !== $user->getId()) {
+            return new JsonResponse(['status' => 'badPlaylistId']);
+        }
+
+        $em = $this->getDoctrine()->getManager();
+        $user->removePlaylist($playlist);
+        $em->remove($playlist);
+        $em->persist($user);
+        $em->flush();
+        return new JsonResponse(['status' => 'ok']);
+    }
+
+    public function addPlaylistAction($name)
+    {
+        $user = $this->getUser();
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $playlists = $user->getPlaylists();
+
+        $newPlaylist = new Playlist();
+        $newPlaylist->setName($name);
+        $user->addPlaylist($newPlaylist);
+        $em = $this->getDoctrine()->getManager();
+        $em->persist($user);
+        $em->flush();
+        $playlists = $user->getPlaylists();
+
+        return new JsonResponse(['status' => 'ok']);
+    }
 
     public function getAllMyPlaylistsAction()
     {
