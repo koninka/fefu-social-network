@@ -18,6 +18,8 @@
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
+    <script type="text/jsx" src="{{ asset('bundles/networkweb/js/audio_menu.js') }}"></script>
+
 {% endblock %}
 
 {% block stylesheets %}
@@ -117,15 +119,15 @@
         </div>
     </div>
 
-    <div id="playlists" style="float: right;">
+{#     <div id="playlists" style="float: right;">
         <div>
             <span><button>playlist name</button></span>
             <span><button>REMOVE</button></span>
         </div>
         <div><button>ADD</button></div>
-    </div>
+    </div> #}
 
-    <br>
+    <div id="audio_menu"></div>
 
-    <div><div id="audio_file_upload"></div></div>
+    <div id="audio_file_upload"></div>
 {% endblock %}
