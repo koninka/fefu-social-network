@@ -1,7 +1,6 @@
 <?php
 namespace Network\StoreBundle\Controller;
 
-use Network\StoreBundle\Entity\MP3File;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;

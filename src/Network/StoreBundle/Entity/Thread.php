@@ -212,4 +212,24 @@ class Thread
             }
         }
     }
+
+    /**
+     * Remove userThreads
+     *
+     * @param \Network\StoreBundle\Entity\userThread $userThreads
+     */
+    public function removeUserThread(\Network\StoreBundle\Entity\userThread $userThreads)
+    {
+        $this->userThreads->removeElement($userThreads);
+    }
+
+    /**
+     * Get userThreads
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getUserThreads()
+    {
+        return $this->userThreads;
+    }
 }
