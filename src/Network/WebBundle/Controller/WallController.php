@@ -8,6 +8,8 @@
 
 namespace Network\WebBundle\Controller;
 
+use Doctrine\Common\Collections\ArrayCollection;
+use Network\StoreBundle\DBAL\ThreadEnumType;
 use Network\StoreBundle\Entity\Post;
 use Network\StoreBundle\Entity\Thread;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
@@ -41,6 +43,62 @@ class WallController extends Controller
 
         return $wall;
     }
+
+    private function repostExist($thread)
+    {
+        $ownerIdent = $thread->getOwner();
+        $arr = explode(';', $ownerIdent);
+        $wall = $this->getUser()->getWallThreads();
+        foreach($wall as $th){
+            if($th->getOwner() == ''){
+                continue;
+            }
+            $myArr = explode(';', $th->getOwner());
+            if($myArr[2] == $thread->getId()){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function createNewThread($thread, $type, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $newThread = new Thread();
+        if($thread->getOwner() == ''){
+            if($type == 'user') {
+                $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+                $str = 'id' . $id . ';' .
+                    $newUser->getFirstName() . ' ' .
+                    $newUser->getLastName().';'.$thread->getId();
+                $newThread->setOwner($str);
+            } else {
+                $community = $this->getDoctrine()->getRepository('NetworkStoreBundle:Community')->find($id);
+                $str = 'club'.$id.';'.
+                    $community->getName().';'.$thread->getId();
+                $newThread->setOwner($str);
+            }
+        } else {
+            $newThread->setOwner($thread->getOwner());
+        }
+
+        $post = new Post();
+        $post->setThread($newThread)
+             ->setTs(new \DateTime())
+             ->setUser($user)
+             ->setText($thread->getMainPost()->getText())
+             ->setType('text');
+        $newThread->addPost($post);
+
+        $em->persist($post);
+        $em->persist($newThread);
+        $em->flush();
+
+        return $newThread;
+    }
+
 
     public function mainAction($object)
     {
@@ -253,5 +311,38 @@ class WallController extends Controller
         }
 
         return new JsonResponse($responseBody);
+    }
+
+    public function repostAction($type, $id, $thread_id)
+    {
+        $em = $this->getDoctrine()->getManager();
+
+        $user = $this->getUser();
+        if (null === $user) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
+        $thread = $this->getDoctrine()->getRepository('NetworkStoreBundle:Thread')->find($thread_id);
+        if(empty($thread)){
+            return new JsonResponse([
+               'status' => 'badThread',
+            ]);
+        }
+
+        if($this->repostExist($thread)){
+            return new JsonResponse([
+                'status' => 'repostExist',
+            ]);
+        }
+
+        $user->addWallThread($this->createNewThread($thread, $type, $id));
+        $userManager = $this->get('fos_user.user_manager');
+        $userManager->updateUser($user);
+
+        return new JsonResponse([
+            'status' => 'ok',
+        ]);
     }
 }

@@ -136,6 +136,16 @@ wall_delete:
   options:
     expose: true
 
+wall_repost:
+  path: /{type}/id{id}/repost/{thread_id}
+  defaults: { _controller: NetworkWebBundle:Wall:repost }
+  requirements:
+      type: user|club
+      id: \d+
+      thread_id: \d+
+  options:
+    expose: true
+
 wall_load_posts:
   path: /{type}/id{id}/load/{start}
   defaults: { _controller: NetworkWebBundle:Wall:loadPosts }

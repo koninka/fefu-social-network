@@ -298,7 +298,7 @@ class ThreadRepository extends EntityRepository
     {
         $em = $this->getEntityManager();
         $dql = "
-            SELECT p.text, p.ts FROM NetworkStoreBundle:Thread th
+            SELECT th.owner, p.text, p.ts FROM NetworkStoreBundle:Thread th
             JOIN th.posts p
             WHERE th.id = :threadId
         ";

@@ -38,6 +38,14 @@ class Thread
      * @Assert\NotBlank()
      */
     private $type = ThreadEnumType::T_DIALOG;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="owner_name", type="string")
+     */
+    private $owner = '';
+
     /**
      * Get id
      *
@@ -142,6 +150,11 @@ class Thread
         return $this->posts;
     }
 
+    public function setPosts($posts)
+    {
+        $this->posts = $posts;
+    }
+
     /**
      * Create UserThread Entity that used as link
      *
@@ -211,5 +224,38 @@ class Thread
                 $ut->incUnreadPosts();
             }
         }
+    }
+
+    /**
+     * Get owner name
+     *
+     * @return string
+     */
+    public function getOwner()
+    {
+        return $this->owner;
+    }
+
+    /**
+     * Set owner name
+     *
+     * @param $owner
+     * @return Thread
+     */
+    public function setOwner($owner)
+    {
+        $this->owner = $owner;
+
+        return $this;
+    }
+
+    /**
+     * Get main post
+     *
+     * @return Post
+     */
+    public function getMainPost()
+    {
+        return $this->posts->first();
     }
 }

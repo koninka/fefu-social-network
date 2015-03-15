@@ -16,6 +16,15 @@
             {% else %}
                 <p><a href="{{ path('user_show_community', {'id':commId} ) }}">{{ commName }}</a></p>
             {% endif %}
+            {% if post.owner|length > 0 %}
+                 {% set arr = post.owner|split(';') %}
+                 <p class="additionalName">
+                        <a href="{{ path('mainpage') ~ arr[0] }} "> {{ arr[1] }}</a>
+                    <p class="additionalName" align="right">
+                        <a href="{{ path('show_thread', {'id': arr[2]}) }}">{{ 'wall.original'|trans }}</a>
+                    </p>
+                 </p>
+                {% endif %}
             </div>
             {% for post in thread %}
                 <div class="msg">
