@@ -24,6 +24,13 @@ var playlists = undefined;
 Promise.resolve($.post("/playlist/all")).then(function(response) {
     if (response.status === 'ok') {
       playlists = response.playlists;
+      for (var i = playlists.length - 1; i >= 0; i--) {
+        playlists[i] = playlists[i].items;
+        for (var j = playlists[i].length - 1; j >= 0; j--) {
+          playlists[i][j] = playlists[i][j].audio_track;
+          playlists[i][j].mp3 = '/download/audio/' + playlists[i][j].id;
+        };
+      };
       myPlaylist.addToUserPlaylist(playlists[0]);
       console.log(response);
     } else {
