@@ -9,10 +9,12 @@ var options = {
   swfPath: "/js/lib/jplayer/",
   supplied: "mp3",
   playlistOptions: {
-    enableRemoveControls: true
+    enableRemoveControls: true,
+    shuffleOnLoop: false
   },
   useStateClassSkin: true,
   autoBlur: false,
+  autoPlay: false,
   smoothPlayBar: true,
   keyEnabled: false,
   audioFullScreen: false
