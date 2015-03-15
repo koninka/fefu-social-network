@@ -157,8 +157,18 @@ function handleWriteResponse(data, textStatus, jqXHR)
     }
 }
 
+
 function handleRepostResponse(data, textStatus, jqXHR)
 {
+    var msg = data['status'] == 'ok' ?
+        $('#status').data('success'):
+        $('#status').data('fail');
+
+    new jBox('Notice', {
+        content: msg
+    });
+}
+
 
 }
 

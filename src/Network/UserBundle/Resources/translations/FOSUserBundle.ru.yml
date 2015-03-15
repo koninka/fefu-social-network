@@ -196,6 +196,14 @@ wall:
         submit: Комментировать
     repost: Себе на стену
     owner: Автор
+    original: Оригинал
+    sendMessage: Отправка сообщения
+    change: Выберите аудиторию
+    sent: Отправлено
+    notSent: Повторная отправка недоступна
+    sendPrivate: В сообщении
+    toWall: На стену
+    sharePost: Sharing options
 
 # Poll
 poll:

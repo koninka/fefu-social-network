@@ -44,6 +44,62 @@ class WallController extends Controller
         return $wall;
     }
 
+    private function repostExist($thread)
+    {
+        $ownerIdent = $thread->getOwner();
+        $arr = explode(';', $ownerIdent);
+        $wall = $this->getUser()->getWallThreads();
+        foreach($wall as $th){
+            if($th->getOwner() == ''){
+                continue;
+            }
+            $myArr = explode(';', $th->getOwner());
+            if($myArr[2] == $thread->getId()){
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private function createNewThread($thread, $type, $id)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $this->getUser();
+        $newThread = new Thread();
+        if($thread->getOwner() == ''){
+            if($type == 'user') {
+                $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
+                $str = 'id' . $id . ';' .
+                    $newUser->getFirstName() . ' ' .
+                    $newUser->getLastName().';'.$thread->getId();
+                $newThread->setOwner($str);
+            } else {
+                $community = $this->getDoctrine()->getRepository('NetworkStoreBundle:Community')->find($id);
+                $str = 'club'.$id.';'.
+                    $community->getName().';'.$thread->getId();
+                $newThread->setOwner($str);
+            }
+        } else {
+            $newThread->setOwner($thread->getOwner());
+        }
+
+        $post = new Post();
+        $post->setThread($newThread)
+             ->setTs(new \DateTime())
+             ->setUser($user)
+             ->setText($thread->getMainPost()->getText())
+             ->setType('text');
+        $newThread->addPost($post);
+
+        $em->persist($post);
+        $em->persist($newThread);
+        $em->flush();
+
+        return $newThread;
+    }
+
+
     public function mainAction($object)
     {
         $user = $this->getUser();
@@ -275,32 +331,13 @@ class WallController extends Controller
             ]);
         }
 
-        $reThread = new Thread();
-
-        if($thread->getOwner() === ''){
-            if($type === 'user'){
-                $newUser = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($id);
-                $reThread->setOwner('id'.$id.';'.$newUser->getFirstName().' '.$newUser->getLastName(). $newUser->getId());
-            } else {
-                $comm = $this->getDoctrine()->getRepository('NetworkStoreBundle:Community')->find($id);
-                $reThread->setOwner('club'.$id.';'.$comm->getName());
-            }
-        } else {
-            $reThread->setOwner($thread->getOwner());
+        if($this->repostExist($thread)){
+            return new JsonResponse([
+                'status' => 'repostExist',
+            ]);
         }
 
-        $reThread->setOwner($thread->getOwner() != '' ? $thread->getOwner() : $type.$id);
-        $post = new Post();
-        $post->setThread($reThread)
-             ->setTs($thread->getPosts()->first()->getTs())
-             ->setText($thread->getPosts()->first()->getText())
-             ->setUser($user);
-        $reThread->addPost($post);
-        $user->addWallThread($reThread);
-
-        $em->persist($post);
-        $em->persist($reThread);
-        $em->flush();
+        $user->addWallThread($this->createNewThread($thread, $type, $id));
         $userManager = $this->get('fos_user.user_manager');
         $userManager->updateUser($user);
 

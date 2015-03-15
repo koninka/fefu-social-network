@@ -195,6 +195,14 @@ wall:
         submit: Comment
     repost: Repost
     owner: Owner
+    original: Original
+    sendMessage: Sharing options
+    change: Where to share?
+    sent: Reposted
+    notSent: Unable to send
+    sendPrivate: Send message
+    toWall: On my wall
+    sharePost: Параметры отправки
 
 # Poll
 poll:

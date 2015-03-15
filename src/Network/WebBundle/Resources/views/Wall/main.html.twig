@@ -18,6 +18,12 @@
 
 <div id="wall">
     <div>
+        <div class="jsMsg" id="status"
+             data-success="{{ 'wall.sent'|trans }}"
+             data-fail="{{ 'wall.notSent'|trans }}"
+             data-send-private="{{ 'wall.sendPrivate'|trans }}"
+                >
+        </div>
         <div class="white-box" id="add-new-post-box">
             <form id='form' method="post">
                 <button id="show_my_btn">{{ 'wall.only_my'|trans }}</button>
@@ -45,23 +51,14 @@
                         <a href="{{ path('user_profile', {id: post.getUser.getId}) }}">
                             {{ [post.getUser.getFirstName, post.getUser.getLastName]|join(' ') }}
                         </a>
-                        {% if thread.getOwner|length != 0 %}
-                            <br>
-                            {% set owner = thread.getOwner|split(';', 2) %}
-                            {% set link = owner[0] %}
-                            {% if link|slice(0, 4) == 'user' %}
-                                <a href="{{ path('mainpage')~'id'~(link|slice(4)) }}">
-                                    <p style="font-size: small">
-                                        {% if owner[1]is defined %}
-                                            {{ owner[1] }}
-                                        {% else %}
-                                            {{ 'wall.owner'|trans }}
-                                        {% endif %}
-                                    </p>
-                                </a>
-                            {% else %}
-                                <a href="{{ path('mainpage')~'club'~(link|slice(4)) }}"> </a>
-                            {% endif %}
+                        {% if thread.getOwner|length > 0 %}
+                            {% set arr = thread.getOwner|split(';') %}
+                            <p class="additionalName">
+                                <a href="{{ path('mainpage') ~ arr[0] }} "> {{ arr[1] }}</a>
+                                <p class="timestamp" align="right">
+                                    <a href="{{ path('show_thread', {'id': arr[2]}) }}">{{ 'wall.original'|trans }}</a>
+                                </p>
+                            </p>
                         {% endif %}
                     </div>
 
@@ -80,7 +77,7 @@
                                 or (type == 'club' and object.getOwner.getId == app.user.getId)
                         %}
                             <a href="{{ post.getId }}" class="delete_control">{{ 'wall.delete'|trans }}</a>
-
+                            <br>
                         {% endif %}
                         {% if post.getUser.getId != app.user.getId or type == 'club' %}
                             <a href="{{ thread.getId }}" class="repost_control">{{ 'wall.repost'|trans }}</a>
