@@ -18,6 +18,11 @@
 
 <div id="wall">
     <div>
+        <div class="jsMsg" id="status"
+            data-edition_success="{{ 'wall.edit_success'|trans }}"
+            data-edition_fail="{{ 'wall.edit_fail'|trans }}"
+        >
+        </div>
         <div class="white-box" id="add-new-post-box">
             <form id='form' method="post">
                 <button id="show_my_btn">{{ 'wall.only_my'|trans }}</button>
@@ -66,7 +71,14 @@
                     </div>
 
                     <div class="msg">
-                        <div>{{ post.getText }}</div>
+                        {% if post.getUser.getId == app.user.getId %}
+                            <div contenteditable="true" id="{{ post.getId }}">
+                                {{ post.getText }}
+                            </div>
+                        {% else %}
+                            <div> {{ post.getText }} </div>
+                        {% endif %}
+
                         {% if post.getType == 'poll'%}
                             <script> getPoll(JSON.stringify({
                                         postId: {{post.getId}}}))</script>
@@ -101,10 +113,15 @@
                                             <a href="{{ comment.getId }}" class="delete_control">{{ 'wall.delete'|trans }}</a>
                                         {% endif %}
                                     </div>
-
-                                    <div class="msg">
-                                        {{ comment.getText }}
-                                    </div>
+                                    {% if post.getUser.getId == app.user.getId %}
+                                        <div class="msg" contenteditable="true" id="{{ comment.getId }}">
+                                            {{ comment.getText }}
+                                        </div>
+                                    {% else %}
+                                        <div class="msg">
+                                            {{ comment.getText }}
+                                        </div>
+                                    {% endif %}
                                     <div id="{{comment.getId}}_like">
                                         <script>postLike({{comment.getId}}) </script>
                                     </div>

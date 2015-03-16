@@ -194,6 +194,8 @@ wall:
     edit: Редактировать
     comment:
         submit: Комментировать
+    edit_success: Отредактировано
+    edit_fail: Не удалось изменить пост
 
 # Poll
 poll:

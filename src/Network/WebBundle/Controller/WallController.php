@@ -254,4 +254,22 @@ class WallController extends Controller
 
         return new JsonResponse($responseBody);
     }
+
+    public function editPostAction(Request $request)
+    {
+        $data = json_decode($request->getContent(), true);
+        if(empty($data) || !array_key_exists('id', $data) || !array_key_exists('text', $data))
+            return new JsonResponse([
+                'status' => 'badRequest',
+            ]);
+
+        $post = $this->getDoctrine()->getRepository('NetworkStoreBundle:Post')->find($data['id']);
+        $post->setText($data['text']);
+
+        $this->getDoctrine()->getManager()->flush();
+
+        return new JsonResponse([
+            'status' => 'ok'
+        ]);
+    }
 }

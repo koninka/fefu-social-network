@@ -193,6 +193,8 @@ wall:
     edit: Edit
     comment:
         submit: Comment
+    edit_success: Changes have been made
+    edit_fail: Edition fail
 
 # Poll
 poll:
