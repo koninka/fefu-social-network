@@ -219,3 +219,7 @@ input #poll_isAnonymously {
     padding: 3px !important;
     background-color: #2c91f9 !important;
 }
+
+.jsMsg {
+    display: none;
+ }

@@ -194,3 +194,9 @@ users_poll:
   defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }
   options:
     expose: true
+
+edit_post:
+  path: /edit/post
+  defaults: { _controller: NetworkWebBundle:Wall:editPost }
+  options:
+    expose: true

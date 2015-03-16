@@ -5,7 +5,32 @@ var onlyMyDisplayed = false;
 var commentBtnName = '';
 var deleteBtnName = '';
 var editBtnName = '';
+var contentold = {};
 
+function savedata(elementidsave, contentsave){
+    $.post(
+        Routing.generate(
+           'edit_post'
+        ),
+        JSON.stringify({
+            text: contentsave,
+            id: elementidsave
+        }),
+        handleEditResponse
+    );
+}
+
+function handleEditResponse(data, textStatus, jqXHR){
+    if(data['status'] == 'ok') {
+        new jBox('Notice', {
+            content: $('#status').data('edition_success')
+        });
+    } else {
+        new jBox('Notice', {
+            content: $('#status').data('edition_fail')
+        });
+    }
+}
 
 function createPost(user_id, thread_id, post_id, username, msg, ts, is_poll)
 {
@@ -388,9 +413,38 @@ function clickForm(data)
     }
 }
 
+
 $(document).on('ready', function () {
     $('#poll_form').hide();
     postsCount = $('.post').length;
+
+    $('[contenteditable="true"]')
+        .mousedown(function(e) {
+            e.stopPropagation();
+            elementid = this.id;
+            contentold[elementid] = $(this).html();
+            $(this).bind('keydown', function (e) {
+                if (e.keyCode == 27) {
+                    e.preventDefault();
+                    $(this).html(contentold[elementid]);
+                }
+            });
+        })
+
+        .blur(function(event) {
+            var elementidsave = this.id;
+            var  contentsave = $(this).html();
+            event.stopImmediatePropagation();
+            if (elementid === elementidsave)
+                {$("#save").hide(); }
+            if (contentsave!=contentold[elementidsave])
+            {
+                savedata(elementidsave,contentsave);
+            }
+        })
+
+
+
 
     var wallContainer = $('#posts');
 
