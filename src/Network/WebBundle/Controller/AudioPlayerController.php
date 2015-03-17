@@ -66,7 +66,10 @@ class AudioPlayerController extends Controller
         $em->flush();
         $playlists = $user->getPlaylists();
 
-        return new JsonResponse(['status' => 'ok']);
+        return new JsonResponse([
+            'status' => 'ok',
+            'id' => $newPlaylist->getId(),
+        ]);
     }
 
     public function getAllMyPlaylistsAction()

@@ -139,6 +139,7 @@ class AudioTrackController extends Controller
         $em->persist($audioTrack);
         $em->flush();
 
+        // TODO: use serializer
         return new JsonResponse([
             'status' => 'ok',
             'mime' => $mimeType,
