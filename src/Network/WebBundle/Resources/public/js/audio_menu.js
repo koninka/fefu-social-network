@@ -1,75 +1,36 @@
-var data = [
-  {
-    name: 'music',
-    count: 193
-  },
-  {
-    name: 'cute',
-    count: 20
-  }
-]
+'use strict';
 
 var MenuBox = React.createClass({
-  handleAddNewPlaylist: function() {
-    Promise.resolve($.post('/playlist/add/pes')).then(function(response) {
-      if (response.status === 'ok') {
-        this.loadPlaylistsFromServer();
-      }
-    }.bind(this)).catch(function(e) {
-      console.log(e);
-    }.bind(this));
-  },
-  loadPlaylistsFromServer: function() {
-    Promise.resolve($.post('/playlist/all')).then(function(response) {
-      if (response.status === 'ok') {
-        this.setState({data: response.playlists});
-      }
-    }.bind(this)).catch(function(e) {
-      console.log(e);
-    }.bind(this));
-  },
-  handleRemovePlaylist: function (playlist_id) {
-    Promise.resolve($.post('/playlist/remove/' + playlist_id)).then(function(response) {
-      if (response.status === 'ok') {
-        this.loadPlaylistsFromServer();
-      }
-    }.bind(this)).catch(function(e) {
-      console.log(e);
-    }.bind(this));
-  },
-  getInitialState: function() {
-    return {data: []};
-  },
-  componentDidMount: function() {
-    this.loadPlaylistsFromServer();
-    setInterval(this.loadPlaylistsFromServer, 32000);
-  },
   render: function() {
     return (
-      <div className="menuBox" style={{float: 'right'}}>
-        <h1>Playlists</h1>
-        <PlaylistList data={this.state.data} onRemovePlaylist={this.handleRemovePlaylist}/>
-        <CreatePlaylist onAddPlaylist={this.handleAddNewPlaylist}/>
+      <div className="menu-box">
+        <ul>
+          <li>Music<a href="#modal-upload" className="btn btn-upload btn-right">
+            <b>&#8683;</b></a></li>
+          <li><h2>Playlists</h2></li>
+          <PlaylistList data={this.props.playlists}
+                        currentPlaylistId={this.props.currentPlaylistId}/>
+          <li><CreatePlaylist/></li>
+        </ul>
       </div>
     );
   }
 });
 
 var CreatePlaylist = React.createClass({
-  getInitialState: function() {
-    return {name: false};
-  },
-  handleClick: function (e) {
-    e.preventDefault();
-    this.props.onAddPlaylist();
-  },
   render: function() {
-    var text = this.state.liked ? 'like' : 'haven\'t liked';
     return (
-      <p onClick={this.handleClick}>
-        Add
-      </p>
+      <li>
+        <input type="text" className="new-playlist-name"/>
+        <a className="create-playlist btn btn-right"
+           onClick={this._addPlaylistClick}>&#10010;</a>
+      </li>
     );
+  },
+  _addPlaylistClick: function (e) {
+    e.preventDefault();
+    Actions.addPlaylist($('.new-playlist-name').val());
+    $('.new-playlist-name').val('');
   }
 });
 
@@ -77,38 +38,50 @@ var PlaylistList = React.createClass({
   render: function() {
     var playlistNodes = this.props.data.map(function (playlist) {
       return (
-        <PlaylistItem name={playlist.name} playlistId={playlist.id} onRemovePlaylist={this.props.onRemovePlaylist}>
-          {playlist.count}
-        </PlaylistItem>
+        <PlaylistListItem name={playlist.name}
+          playlistId={playlist.id}
+          key={playlist.id}
+          currentPlaylistId={this.props.currentPlaylistId}>
+          {playlist.items.length}
+        </PlaylistListItem>
       );
     }.bind(this));
     return (
-      <div className="playlistList">
-        {playlistNodes}
+      <div className="playlist-list">
+        <ul>
+          {playlistNodes}
+        </ul>
       </div>
     );
   }
 });
 
-var PlaylistItem = React.createClass({
-  handleClick: function (e) {
-    e.preventDefault();
-    console.log(this.props);
-    this.props.onRemovePlaylist(this.props.playlistId);
-  },
+var PlaylistListItem = React.createClass({
   render: function() {
+    var classNameString = "playlist-name ";
+    if (this.props.playlistId === this.props.currentPlaylistId) {
+      classNameString += "playlist-current ";
+    }
     return (
-      <div className="playlistItem">
-        <p className="playlistName">
-          {this.props.name}
-          <span onClick={this.handleClick}> [X]</span>
-        </p>
-      </div>
+      <li className="playlist-list-item">
+        <a className={classNameString}
+           onClick={this._itemClilck}>
+           {this.props.name} ({this.props.children})
+        </a>
+        <a className="btn btn-right"
+           onClick={this._removePlaylistClick}>&#10006;
+        </a>
+      </li>
     );
+  },
+  _removePlaylistClick: function (e) {
+    e.preventDefault();
+    Actions.removePlaylist(this.props.playlistId);
+  },
+  _itemClilck: function (e) {
+    e.preventDefault();
+    if (this.props.playlistId !== this.props.currentPlaylistId) {
+      Actions.setCurrentPlaylist(this.props.playlistId);
+    }
   }
 });
-
-React.render(
-  <MenuBox />,
-  document.getElementById('audio_menu')
-);

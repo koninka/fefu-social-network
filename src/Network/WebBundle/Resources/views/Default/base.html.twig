@@ -19,7 +19,8 @@
             {% if app.user %}
             var userRequests = null;
 
-            websocket = new WebSocket('ws://' + window.location.hostname + ':8000/echo');
+            // TODO: fetch port number from websocket config.yml as it may differ
+            websocket = new WebSocket('ws://' + window.location.hostname + ':6544/echo');
             websocket.onopen = function (evt) {
                 {% block wsOpen %}
                 wsSend({
