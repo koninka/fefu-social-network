@@ -208,7 +208,11 @@ class AudioPlayerController extends Controller
         $item = new PlaylistItem();
         $playlist->addItem($item);
         $track->addPlaylistItem($item);
-        $item->setRank($playlist->getItems()->count());
+        $maxRank = 0;
+        foreach ($playlist->getItems() as $t) {
+            $maxRank = max($t->getRank(), $maxRank);
+        }
+        $item->setRank($maxRank + 1);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($item);
@@ -216,6 +220,7 @@ class AudioPlayerController extends Controller
 
         return new JsonResponse([
             'status' => 'ok',
+            'rank' => $item->getRank(),
         ]);
     }
 
