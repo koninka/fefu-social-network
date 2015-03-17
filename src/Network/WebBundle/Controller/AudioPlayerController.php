@@ -247,14 +247,14 @@ class AudioPlayerController extends Controller
             ->getRepository('NetworkStoreBundle:PlaylistItem')
             ->findByPlaylistAndTrack($playlist_id, $audio_id);
 
-        if (empty($playlistItem)) {
+        if (empty($playlistItem) || count($playlistItem) === 0) {
             return new JsonResponse([
                 'status' => 'trackNotInList',
             ]);
         }
 
         $em = $this->getDoctrine()->getManager();
-        $em->remove($playlistItem);
+        $em->remove($playlistItem[0]);
         $em->flush();
 
         return new JsonResponse([
