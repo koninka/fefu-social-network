@@ -99,7 +99,8 @@ header div {
 
 #main_menu li a {
     display: block;
-    padding: 15px;
+    padding: 10px;
+    font-size: 18px;
 }
 
 #main_menu li:hover {
