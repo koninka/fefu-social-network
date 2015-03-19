@@ -196,12 +196,19 @@ class AudioPlayerController extends Controller
 
     public function pushTrackToPlaylistAction($playlist_id, $track_id)
     {
+        $user = $this->getUser();
+        if ($user === null) {
+            return new JsonResponse([
+                'status' => 'badUser',
+            ]);
+        }
+
         // TODO: decide if we should clone on push
         $playlist = $this->getDoctrine()
             ->getRepository('NetworkStoreBundle:Playlist')
             ->find($playlist_id);
 
-        if (empty($playlist)) {
+        if (empty($playlist) || $playlist->getUser()->getId() != $user->getId()) {
             return new JsonResponse([
                 'status' => 'badPlaylist',
             ]);
