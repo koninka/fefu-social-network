@@ -12,6 +12,11 @@
     <script src="{{ asset('bundles/networkweb/js/video.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
+
+{% block title %}
+    {{ 'layout.videos'|trans }}
+{% endblock %}
+
 {% block right_content_sub_one %}
     <div id="video_box">
         <div class="white-box" id="video_header">

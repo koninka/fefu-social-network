@@ -1,5 +1,10 @@
 {% extends "NetworkWebBundle:Default:profile.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
+
+{% block title %}
+    {{ 'title.add_photo'|trans }}
+{% endblock %}
+
 {% block right_content %}
     <div class="white-box" id="album-form-box">
         <form class="centered-form" action="{{ path('user_add_album_photo', {'albumId':album_id}) }}" {{ form_enctype(form) }} method="POST">

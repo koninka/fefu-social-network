@@ -12,6 +12,10 @@
     <script src="{{ asset('bundles/networkuser/js/add_address_phone.js') }}"></script> 
 {% endblock %}
 
+{% block title %}
+    {{ 'form.contact.name'|trans }}
+{% endblock %}
+
 {% block edit_content %}
     {{ form_start(form, {'attr' :{'class' : 'centered-form'} }) }}
         {{ form_errors(form) }}

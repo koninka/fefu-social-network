@@ -11,6 +11,9 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkuser/js/community.js') }}"></script>
 {% endblock %}
+{% block title %}
+    {{ 'layout.show_community'|trans }}
+{% endblock %}
 {% block right_content %}
     <div class="white-box" id="community-box">
         {% if is_cur_user %}

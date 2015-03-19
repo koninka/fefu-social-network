@@ -1,5 +1,8 @@
 {% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
+{% block title %}
+    {{ 'layout.change_email'|trans }}
+{% endblock %}
 {% block edit_content %}
     <form action="{{ path('fos_user_change_email') }}" {{ form_enctype(form) }} method="POST" class="fos_user_change_email centered-form">
         {{ form_widget(form) }}

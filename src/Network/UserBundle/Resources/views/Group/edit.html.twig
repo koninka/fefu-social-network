@@ -1,5 +1,8 @@
 {% extends "FOSUserBundle::layout.html.twig" %}
 {% trans_default_domain 'FOSUserBundle' %}
+{% block title %}
+    {{ 'community.edit_community'|trans }}
+{% endblock %}
 <form action="{{ path('fos_user_group_edit', {'groupName': group_name} ) }}" {{ form_enctype(form) }} method="POST" class="fos_user_group_edit">
     {{ form_widget(form) }}
     <div>

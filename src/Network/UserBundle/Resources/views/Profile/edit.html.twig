@@ -1,10 +1,14 @@
 {% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block javascripts %}
     {{ parent() }}
 
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
+{% endblock %}
+
+{% block title %}
+    {{ 'layout.profile_edit'|trans }}
 {% endblock %}
 
 {% block edit_content %}

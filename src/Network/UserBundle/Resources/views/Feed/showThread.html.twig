@@ -7,6 +7,10 @@
     <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet">
 {% endblock %}
 
+{% block title %}
+    {{ 'title.thread'|trans }}
+{% endblock %}
+
 {% block right_content %}
     {% for post in thread %}
         <div class="white-box post" id="thread_{{ threadId }}" style="width: 650px">
