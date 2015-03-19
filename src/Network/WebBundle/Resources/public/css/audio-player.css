@@ -1,6 +1,65 @@
-.track-current {
-  background: #357ebd;
+div#right_content {
+  padding-top: 0px;
+}
+#audio_wrap {
+  width: 100%;
+}
+#audio_wrap ul li .btn {
+  max-height: 20px;
+  padding: 0px 4px 0px 4px;
+  margin-right: 2px;
+}
+#audio_wrap ul {
+  list-style-type: none;
+}
+.audio-table {
+  width: 100%;
+}
+.playlist {
+  float: left;
+  width: 100%;
+  margin-right: 20px;
+}
+.menu-box {
+  background: #dde;
+  height: 100%;
+}
+#audio_wrap * li {
+  cursor: pointer;
+  border-radius: 3px;
+  position: relative;
+}
+.playlist-item, .playlist-list-item {
+  padding: 5px 5px 5px 5px;
+}
+.playlist-item:hover {
+  background-color: #ddddff
+}
+.playlist-list .btn-right:hover {
+  background: #428bca;
   color: #fff;
+  padding: 0px 50px 0px 0px;
+}
+.playlist-list {
+    padding: 0px;
+}
+.playlist-list a, .playlist .btn {
+    color: #8199c0;
+    text-decoration: none;
+}
+.artist-name {
+  font-weight: bold;
+  padding-left: 5px;
+}
+.title-name {
+
+}
+.invisible {
+  display: none !important;
+}
+.track-current, .track-current * {
+  background: #357ebd !important;
+  color: #fff !important;
 }
 .new-playlist-name {
   width: 60%;
@@ -9,74 +68,26 @@
   background: #357ebd;
   color: #fff;
 }
-#audio_wrap ul li .btn {
-  max-height: 20px;
-  padding: 0px 4px 0px 4px;
-  margin-right: 2px;
-}
 .btn-right {
   float: right;
 }
-#audio_wrap {
-  width: 100%;
-}
-#audio_wrap ul {
-  list-style-type: none;
-}
-#audio_wrap ul li {
-  padding: 5px 0px 5px 0px;
-}
-.playlist {
-  float: left;
-  width: 80%;
-  height: 100%;
-  margin-right: 20px;
-}
-.menu-box {
-  float: right;
-  width: calc(20% - 20px);
-  height: 100%;
-}
-
-.playlist-item, .playlist-list li {
-    cursor: pointer;
-    border-radius: 3px;
-    position: relative;
-}
-
-.playlist-item {
-  margin-bottom: 5px;
-}
-
-.playlist-list li a:hover {
-  background: #428bca;
+.btn-item-pause,
+.btn-item-play {
   color: #fff;
-  padding: 0px 50px 0px 0px;
+  background: #357ebd;
 }
-
-.playlist-list {
-    padding: 0px;
-}
-
-.playlist-list a, .playlist .btn {
-    color: #8199c0;
-    text-decoration: none;
-}
-
 /* Modal Window Stuff */
-body {
+/*body {
   color: #333333;
   font-family: 'Helvetica', arial;
   height: 80em;
-}
+}*/
 .wrap {
   padding: 40px;
   text-align: center;
 }
 hr {
   clear: both;
-  margin-top: 40px;
-  margin-bottom: 40px;
   border: 0;
   border-top: 1px solid #aaaaaa;
 }
@@ -168,7 +179,6 @@ p {
   border-top: #eeeeee solid 1px;
   text-align: right;
 }
-
 #close {
   display: none;
 }
