@@ -2,7 +2,9 @@
 {% trans_default_domain 'FOSUserBundle' %}
 
 {% block stylesheets %}
+    {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/wall.css') }}" type="text/css" rel="stylesheet">
+    <link href="{{ asset('bundles/networkweb/css/main.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/networkweb/css/profile.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
     <link href="{{ asset('bundles/networkuser/css/profile_edit.css') }}" type="text/css" rel="stylesheet" />
@@ -24,6 +26,7 @@
 
     </div>
     <br>
+    <div id="posts">
      {% for post in feed %}
         <div class="white-box post" id="thread_{{ post.threadId }}" style="width: 650px">
             <div class="username">
@@ -53,5 +56,6 @@
 
         </div>
      {% endfor %}
+    </div>
     </div>
 {% endblock %}

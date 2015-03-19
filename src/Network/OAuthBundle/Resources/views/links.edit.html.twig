@@ -14,7 +14,7 @@
                     {{ user.vkLogin }}
                     <a href="{{ url("remove_link", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.remove.vkontakte'|trans }} </a>
                 {% else %}
-                    <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.vkontakte'|trans }} </a>
                 {% endif %}
             </p>
             <p> {{ 'link.github'|trans }}:
