@@ -56,7 +56,7 @@ class User extends BaseUser
 
     /**
      * @var \Doctrine\Common\Collections\Collection
-     * 
+     *
      * @ORM\OneToMany(targetEntity="UserCommunity", mappedBy="user", cascade={"persist"})
      */
     protected $communities;
@@ -182,10 +182,9 @@ class User extends BaseUser
     /**
      * @var ArrayCollection
      *
-     * @ORM\ManyToMany(targetEntity="MP3Record", inversedBy="users")
-     * @ORM\JoinTable(name="users_mp3s")
-     */
-    private $mp3s;
+     * @ORM\OneToMany(targetEntity="AudioTrack", mappedBy="user", cascade={"persist"})
+     **/
+    private $uploadedTracks;
 
     /**
      * @var ArrayCollection
@@ -466,8 +465,9 @@ class User extends BaseUser
         $this->groups = new ArrayCollection();
         $this->posts = new ArrayCollection();
         $this->threads = new ArrayCollection();
-        $this->mp3s = new ArrayCollection();
         $this->wallThreads = new ArrayCollection();
+        $this->playlists = new ArrayCollection();
+        $this->uploadedTracks = new ArrayCollection();
     }
 
     /**
@@ -686,7 +686,7 @@ class User extends BaseUser
 
         return $this;
     }
-    
+
     /*
      * Remove communities
      *
@@ -700,54 +700,14 @@ class User extends BaseUser
     /**
      * Get communities
      *
-     * @return \Doctrine\Common\Collections\Collection 
+     * @return \Doctrine\Common\Collections\Collection
      */
     public function getCommunities()
     {
         return $this->communities;
     }
 
-    /**
-     * @return ArrayCollection
-     */
-    public function getMp3s()
-    {
-        return $this->mp3s;
-    }
-
-    /**
-     * @param ArrayCollection $mp3s
-     *
-     * @return User
-     */
-    public function setMp3s($mp3s)
-    {
-        $this->mp3s = $mp3s;
-
-        return $this;
-    }
-
      /**
-     * @param MP3Record $mp3
-     * @return User
-     */
-    public function addMp3(MP3Record $mp3)
-    {
-        $this->mp3s->add($mp3);
-
-        return $this;
-    }
-
-    /**
-     * @param MP3Record $mp3
-     * @return User
-     */
-    public function removeMp3(MP3Record $mp3)
-    {
-        $this->mp3s->removeElement($mp3);
-
-        return $this;
-    }
 
     /**
      * @return ArrayCollection
@@ -803,6 +763,7 @@ class User extends BaseUser
 
         return $this;
     }
+
     /**
      * Remove poll
      *
@@ -813,15 +774,6 @@ class User extends BaseUser
         $this->poll->removeElement($poll);
 
         return $this;
-    }
-
-    /**
-     * @param MP3Record $mp3
-     * @return bool
-     */
-    public function hasMp3InPlaylist(MP3Record $mp3)
-    {
-        return $this->mp3s->contains($mp3);
     }
 
     /**
@@ -958,7 +910,7 @@ class User extends BaseUser
     {
         return $this->albums;
     }
-        
+
     /**
      * Get poll
      *
@@ -986,5 +938,154 @@ class User extends BaseUser
         $this->webSocketAuthKey = $webSocketAuthKey;
 
         return $this;
+    }
+
+    /**
+     * @var ArrayCollection
+     *
+     * @ORM\OneToMany(targetEntity="Playlist", mappedBy="user", cascade={"persist"})
+     **/
+    private $playlists;
+
+    /**
+     * Add jobs
+     *
+     * @param \Network\StoreBundle\Entity\Job $jobs
+     * @return User
+     */
+    public function addJob(\Network\StoreBundle\Entity\Job $jobs)
+    {
+        $this->jobs[] = $jobs;
+
+        return $this;
+    }
+
+    /**
+     * Remove jobs
+     *
+     * @param \Network\StoreBundle\Entity\Job $jobs
+     */
+    public function removeJob(\Network\StoreBundle\Entity\Job $jobs)
+    {
+        $this->jobs->removeElement($jobs);
+    }
+
+    /**
+     * Remove userThreads
+     *
+     * @param \Network\StoreBundle\Entity\UserThread $userThreads
+     */
+    public function removeUserThread(\Network\StoreBundle\Entity\UserThread $userThreads)
+    {
+        $this->userThreads->removeElement($userThreads);
+    }
+
+    /**
+     * Get userThreads
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUserThreads()
+    {
+        return $this->userThreads;
+    }
+
+    /**
+     * Add playlists
+     *
+     * @param \Network\StoreBundle\Entity\Playlist $playlists
+     * @return User
+     */
+    public function addPlaylist(\Network\StoreBundle\Entity\Playlist $playlist)
+    {
+        $playlist->setUser($this);
+        $this->playlists[] = $playlist;
+
+        return $this;
+    }
+
+    /**
+     * Remove playlists
+     *
+     * @param \Network\StoreBundle\Entity\Playlist $playlists
+     */
+    public function removePlaylist(\Network\StoreBundle\Entity\Playlist $playlist)
+    {
+        $playlist->setUser(null);
+        $this->playlists->removeElement($playlist);
+    }
+
+    /**
+     * Get playlists
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPlaylists()
+    {
+        return $this->playlists;
+    }
+
+    /**
+     * Add groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     * @return User
+     */
+    public function addGroup(\FOS\UserBundle\Model\GroupInterface $group)
+    {
+        if (!$this->getGroups()->contains($group)) {
+            $this->getGroups()->add($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Remove groups
+     *
+     * @param \Network\StoreBundle\Entity\Group $groups
+     */
+    public function removeGroup(\FOS\UserBundle\Model\GroupInterface $groups)
+    {
+        if ($this->getGroups()->contains($group)) {
+            $this->getGroups()->removeElement($group);
+        }
+
+        return $this;
+    }
+
+    /**
+     * Add uploadedTracks
+     *
+     * @param \Network\StoreBundle\Entity\AudioTrack $uploadedTrack
+     * @return User
+     */
+    public function addUploadedTrack(\Network\StoreBundle\Entity\AudioTrack $uploadedTrack)
+    {
+        $uploadedTrack->setUser($this);
+        $this->uploadedTracks[] = $uploadedTrack;
+
+        return $this;
+    }
+
+    /**
+     * Remove uploadedTracks
+     *
+     * @param \Network\StoreBundle\Entity\AudioTrack $uploadedTrack
+     */
+    public function removeUploadedTrack(\Network\StoreBundle\Entity\AudioTrack $uploadedTrack)
+    {
+        $uploadedTrack->setUser(null);
+        $this->uploadedTracks->removeElement($uploadedTracks);
+    }
+
+    /**
+     * Get uploadedTracks
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getUploadedTracks()
+    {
+        return $this->uploadedTracks;
     }
 }

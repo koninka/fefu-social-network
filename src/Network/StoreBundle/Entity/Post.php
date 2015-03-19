@@ -276,4 +276,37 @@ class Post
         return $this->postFiles;
     }
 
+
+    /**
+     * Add postFiles
+     *
+     * @param \Network\StoreBundle\Entity\PostFile $postFiles
+     * @return Post
+     */
+    public function addPostFile(\Network\StoreBundle\Entity\PostFile $postFiles)
+    {
+        $this->postFiles[] = $postFiles;
+
+        return $this;
+    }
+
+    /**
+     * Remove postFiles
+     *
+     * @param \Network\StoreBundle\Entity\PostFile $postFiles
+     */
+    public function removePostFile(\Network\StoreBundle\Entity\PostFile $postFiles)
+    {
+        $this->postFiles->removeElement($postFiles);
+    }
+
+    /**
+     * Get postFiles
+     *
+     * @return \Doctrine\Common\Collections\Collection 
+     */
+    public function getPostFiles()
+    {
+        return $this->postFiles;
+    }
 }

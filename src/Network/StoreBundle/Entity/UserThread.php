@@ -133,4 +133,43 @@ class UserThread
             $this->unreadPosts = 0;
         }
     }
+
+    /**
+     * Set inviter
+     *
+     * @param integer $inviter
+     * @return UserThread
+     */
+    public function setInviter($inviter)
+    {
+        $this->inviter = $inviter;
+
+        return $this;
+    }
+
+    /**
+     * Set user
+     *
+     * @param \Network\StoreBundle\Entity\User $user
+     * @return UserThread
+     */
+    public function setUser(\Network\StoreBundle\Entity\User $user)
+    {
+        $this->user = $user;
+
+        return $this;
+    }
+
+    /**
+     * Set thread
+     *
+     * @param \Network\StoreBundle\Entity\Thread $thread
+     * @return UserThread
+     */
+    public function setThread(\Network\StoreBundle\Entity\Thread $thread)
+    {
+        $this->thread = $thread;
+
+        return $this;
+    }
 }

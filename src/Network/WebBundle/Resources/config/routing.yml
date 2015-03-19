@@ -13,6 +13,84 @@ user_profile_json:
   options:
     expose: true
 
+audio_track_upload:
+  path: /upload/audio
+  defaults: { _controller: NetworkStoreBundle:AudioTrack:upload }
+  methods: [POST]
+  options:
+    expose: true
+
+audio_track_download:
+  path: /download/audio/{id}
+  defaults: { _controller: NetworkStoreBundle:AudioTrack:download }
+  requirements:
+    id: \d+
+  options:
+    expose: true
+
+audio_player:
+  path: /listen/{user_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:viewPlayer, user_id: null }
+  requirements:
+    user_id: \d+
+
+audio_add_track_to_playlist:
+  path: /playlist/{playlist_id}/push/{track_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:pushTrackToPlaylist}
+  requirements:
+    track_id: \d+
+    playlist_id: \d+
+  options:
+    expose: true
+
+audio_add_playlist:
+  path: /playlist/add/{name}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:addPlaylist }
+  methods: [POST]
+  options:
+    expose: true
+
+audio_remove_playlist:
+  path: /playlist/remove/{playlist_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:removePlaylist }
+  options:
+    expose: true
+
+audio_get_all_playlists:
+  path: /playlist/all/{user_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:getAllPlaylists, user_id: null }
+  methods: [POST]
+  options:
+    expose: true
+  requirements:
+    user_id: \d+
+
+audio_track_delete:
+  path: /delete/audio/{audio_id}/playlist/{playlist_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:deleteAudioFromPlaylist }
+  options:
+    expose: true
+  requirements:
+    audio_id: \d+
+    playlist_id: \d+
+
+audio_search:
+  path: /search/audio/{by}/{what}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:search }
+  requirements:
+    options: artist|title
+  options:
+    expose: true
+
+audio_edit:
+  path: /audio/edit/{audio_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:edit }
+  methods: [POST]
+  options:
+    expose: true
+  requirements:
+    audio_id: \d+
+
 file_upload:
   path: /profile/upload/file
   defaults: { _controller: NetworkStoreBundle:File:upload }
@@ -30,63 +108,6 @@ file_download:
   defaults: { _controller: NetworkStoreBundle:File:download }
   requirements:
     file_id: \d+
-
-file_mp3_upload:
-  path: /profile/upload/mp3
-  defaults: { _controller: NetworkStoreBundle:Mp3File:uploadMp3 }
-  methods: [POST]
-
-file_mp3_delete:
-  path: /profile/json/mp3.delete
-  defaults: { _controller: NetworkStoreBundle:Mp3File:deleteMp3 }
-  methods: [POST]
-  options:
-    expose: true
-
-file_mp3_get:
-  path: /mp3/get/{file_id}
-  defaults: { _controller: NetworkStoreBundle:Mp3File:mp3 }
-  requirements:
-    file_id: \d+
-  options:
-    expose: true
-
-file_mp3_poster:
-  path: /mp3/poster/{album_id}
-  defaults: { _controller: NetworkStoreBundle:Mp3File:poster }
-  requirements:
-    album_id: \d+
-  options:
-    expose: true
-
-audios:
-  path: /audios/
-  defaults: { _controller: NetworkWebBundle:Mp3Player:main }
-
-audios_json_search:
-  path: /audious/json/find.by.{by}.with.{what}
-  defaults: { _controller: NetworkWebBundle:Mp3Player:search }
-#  methods: [POST]
-  requirements:
-    options: artist|title
-  options:
-    expose: true
-
-audios_json_add:
-  path: /audious/json/add/{id}
-  defaults: { _controller: NetworkWebBundle:Mp3Player:add }
-  methods: [POST]
-  requirements:
-    id: \d+
-  options:
-    expose: true
-
-audios_json_edit:
-  path: /audious/json/edit/
-  defaults: { _controller: NetworkWebBundle:Mp3Player:edit }
-  methods: [POST]
-  options:
-    expose: true
 
 videos:
   path: /video/

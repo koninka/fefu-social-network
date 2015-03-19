@@ -11,7 +11,6 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Doctrine\Common\Collections\ArrayCollection;
-use Network\WebBundle\Controller\Mp3FileController;
 
 class UserController extends Controller
 {
