@@ -38,10 +38,12 @@ var PlaylistList = React.createClass({
   render: function() {
     var playlistNodes = this.props.data.map(function (playlist) {
       return (
-        <PlaylistListItem name={playlist.name}
-          playlistId={playlist.id}
-          key={playlist.id}
-          currentPlaylistId={this.props.currentPlaylistId}>
+        <PlaylistListItem
+        className="playlist-list-item"
+        name={playlist.name}
+        playlistId={playlist.id}
+        key={playlist.id}
+        currentPlaylistId={this.props.currentPlaylistId}>
           {playlist.items.length}
         </PlaylistListItem>
       );

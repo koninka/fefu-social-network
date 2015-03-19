@@ -5,7 +5,9 @@ function getStateFromStores() {
     playlists: AudioStore.getPlaylists(),
     currentPlaylistId: AudioStore.getCurrentPlaylistId(),
     currentTrackId: AudioStore.getCurrentTrackId(),
-    searchResults: AudioStore.getSearchResults()
+    searchResults: AudioStore.getSearchResults(),
+    playState: AudioStore.getPlayState(),
+    thisUserId: AudioStore.getThisUserId()
   };
 }
 
@@ -21,7 +23,8 @@ var AudioWrap = React.createClass({
   },
   render: function() {
     var playlist = {
-      items: []
+      items: [],
+      userId: null
     };
     for (var i = this.state.playlists.length - 1; i >= 0; i--) {
       if (this.state.playlists[i].id === this.state.currentPlaylistId) {
@@ -30,15 +33,31 @@ var AudioWrap = React.createClass({
     };
     var searchResults = this.state.searchResults;
     searchResults.id = 0;
+    searchResults.userId = null;
     // TODO: move above id matching elsewhere
     return (
-      <div className="audioWrap">
-        <SearchBox playlist={searchResults}
-                   currentTrackId={this.state.currentTrackId}/>
-        <Playlist playlist={playlist}
-                  currentTrackId={this.state.currentTrackId}/>
-        <MenuBox playlists={this.state.playlists}
-                 currentPlaylistId={this.state.currentPlaylistId}/>
+      <div className="audio-wrap">
+        <table className="audio-table" cellSpacing="0" cellPading="0"><tbody><tr>
+          <td>
+            <SearchBox/>
+            <Playlist
+            thisUserId={this.state.thisUserId}
+            playlist={playlist}
+            currentTrackId={this.state.currentTrackId}
+            playState={this.state.playState}/>
+            <hr/>
+            <Playlist
+            thisUserId={this.state.thisUserId}
+            playlist={searchResults}
+            currentTrackId={this.state.currentTrackId}
+            playState={this.state.playState}/>
+          </td>
+          <td>
+            <MenuBox
+            playlists={this.state.playlists}
+            currentPlaylistId={this.state.currentPlaylistId}/>
+          </td>
+        </tr></tbody></table>
       </div>
     );
   },

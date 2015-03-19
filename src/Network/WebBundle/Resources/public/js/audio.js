@@ -13,14 +13,16 @@ ActionTypes = {
   PLAY: 'PLAY',
   PAUSE: 'PAUSE',
   HANDLE_PLAY_END: 'HANDLE_PLAY_END',
-  SEARCH: 'SEARCH'
+  SEARCH: 'SEARCH',
+  EDIT: 'EDIT'
 };
 
 Actions = {
-  receiveAllPlaylists: function (rawPlaylists) {
+  receiveAllPlaylists: function (myPlaylists, wantedPlaylists) {
     AudioDispatcher.dispatch({
       type: ActionTypes.RECEIVE_RAW_PLAYLISTS,
-      rawPlaylists: rawPlaylists
+      myPlaylists: myPlaylists,
+      wantedPlaylists: wantedPlaylists
     });
   },
   removePlaylistItem: function (playlistId, itemId) {
@@ -39,13 +41,18 @@ Actions = {
     });
   },
   pushPlaylistItem: function (item) {
-    Promise.resolve($.post('/playlist/' + _currentPlaylistId + '/push/' + item.id))
+    var destPlaylistId = _currentMyPlaylistId;
+    if (_wantedUserId == _thisUserId) {
+      destPlaylistId = _currentPlaylistId;
+    }
+    Promise.resolve($.post('/playlist/' + destPlaylistId + '/push/' + item.id))
     .then(function(response) {
         if (response.status === 'ok') {
           item.rank = response.rank;
           AudioDispatcher.dispatch({
             type: ActionTypes.PUSH_PLAYLIST_ITEM,
-            item: item
+            item: item,
+            destPlaylistId: destPlaylistId
           });
         } else {
           console.log('error: ' + response);
@@ -88,7 +95,10 @@ Actions = {
     });
   },
   play: function (item) {
-    $('#jquery_jplayer_1').jPlayer("setMedia", item);
+    // TODO: access currentTrackId any other way
+    if (item.id !== _currentTrackId) {
+      $('#jquery_jplayer_1').jPlayer("setMedia", item);
+    }
     $('#jquery_jplayer_1').jPlayer("play");
     AudioDispatcher.dispatch({
       type: ActionTypes.PLAY,
@@ -130,45 +140,75 @@ Actions = {
     }).catch(function(e) {
       console.log(e);
     });
+  },
+  edit: function (item) {
+    Promis.resolve($.post('/audio/edit/' + id),
+      JSON.stringify({
+        title: this.editDialog.find(this.cssSelector.editDialog.titleInput).val(),
+        artist: this.editDialog.find(this.cssSelector.editDialog.artistInput).val()
+      }))
+    .then(function (response) {
+      if (response.status === 'ok') {
+
+      }
+    }).catch(function(e) {
+      console.log(e);
+    });
   }
 };
 
-var _currentPlaylistId = parseInt(localStorage.getItem('currentPlaylistId', true)) || null;;
+var _currentPlaylistId = null;
+var _currentMyPlaylistId = null;
 var _currentTrackId = null;
 var _playlists = [];
+var _myPlaylists = [];
 var _searchResults = [{items:[]}];
+// 'playing', 'paused'
+var _playState = null;
+var _thisUserId = null;
+var _wantedUserId = null;
+
+var postProcessPlaylists = function (rawPlaylists, ofUserId) {
+  for (var i = rawPlaylists.length - 1; i >= 0; i--) {
+    rawPlaylists[i].userId = ofUserId;
+    var items = rawPlaylists[i].items;
+    for (var j = items.length - 1; j >= 0; j--) {
+      var item = items[j];
+      var t = $.extend({}, item.audio_track);
+      t.rank = item.rank;
+      t.mp3 = '/download/audio/' + t.id;
+      items[j] = t;
+    }
+  }
+
+  for (var i = rawPlaylists.length - 1; i >= 0; i--) {
+    var ordered = rawPlaylists[i].items;
+    ordered.sort(function(a, b) {
+      if (a.rank > b.rank) {
+        return -1;
+      } else if (a.rank < b.rank) {
+        return 1;
+      }
+      return 0;
+    });
+  };
+
+  return rawPlaylists;
+}
 
 AudioStore = $.extend({}, EventEmitter.prototype, {
-  init: function(rawPlaylists) {
-    for (var i = rawPlaylists.length - 1; i >= 0; i--) {
-      var items = rawPlaylists[i].items;
-      for (var j = items.length - 1; j >= 0; j--) {
-        var item = items[j];
-        var t = $.extend({}, item.audio_track);
-        t.rank = item.rank;
-        t.mp3 = '/download/audio/' + t.id;
-        items[j] = t;
-      }
-    }
+  getThisUserId: function () {
+    return _thisUserId;
+  },
+  init: function(myPlaylists, wantedPlaylists) {
+    _playlists = postProcessPlaylists(wantedPlaylists, _wantedUserId);
+    _myPlaylists = postProcessPlaylists(myPlaylists, _thisUserId);
 
-    for (var i = rawPlaylists.length - 1; i >= 0; i--) {
-      var ordered = rawPlaylists[i].items;
-      ordered.sort(function(a, b) {
-        if (a.rank > b.rank) {
-          return -1;
-        } else if (a.rank < b.rank) {
-          return 1;
-        }
-        return 0;
-      });
-    };
-
-    _playlists = rawPlaylists;
     if (_currentPlaylistId === null) {
       _currentPlaylistId = _playlists.length > 0 ? _playlists[0].id : null;
-      if (_currentPlaylistId !== null) {
-        localStorage.setItem('currentPlaylistId', _currentPlaylistId);
-      }
+    }
+    if (_currentMyPlaylistId === null) {
+      _currentMyPlaylistId = _myPlaylists.length > 0 ? _myPlaylists[0].id : null;
     }
   },
   removePlaylistItem: function (playlistId, itemId) {
@@ -184,8 +224,8 @@ AudioStore = $.extend({}, EventEmitter.prototype, {
       p.splice(index, 1);
     }
   },
-  pushPlaylistItem: function (item) {
-    this.getPlaylist(_currentPlaylistId).items.unshift(item);
+  pushPlaylistItem: function (item, destPlaylistId) {
+    this.getPlaylist(destPlaylistId).items.unshift(item);
   },
   removePlaylist: function (playlistId) {
     var index = null;
@@ -217,12 +257,16 @@ AudioStore = $.extend({}, EventEmitter.prototype, {
   },
   play: function (item) {
     _currentTrackId = item.id;
+    _playState = 'playing';
   },
   pause: function (item) {
-
+    _playState = 'paused';
   },
   emitChange: function() {
     this.emit('change');
+  },
+  getPlayState: function() {
+    return _playState;
   },
   getCurrentPlaylistId: function() {
     return _currentPlaylistId;
@@ -237,6 +281,11 @@ AudioStore = $.extend({}, EventEmitter.prototype, {
     for (var i = _playlists.length - 1; i >= 0; i--) {
       if (_playlists[i].id === id) {
         return _playlists[i];
+      }
+    };
+    for (var i = _myPlaylists.length - 1; i >= 0; i--) {
+      if (_myPlaylists[i].id === id) {
+        return _myPlaylists[i];
       }
     };
     return [];
@@ -275,16 +324,16 @@ AudioStore = $.extend({}, EventEmitter.prototype, {
   handleSearchResult: function(what, by, tracks) {
     _searchResults = {items:[]};
     for (var i = tracks.length - 1; i >= 0; i--) {
-      tracks[i].mp3 = '/download/audio/' + tracks[i].id;
       _searchResults.items.push(tracks[i]);
     };
+    _searchResults = postProcessPlaylists(_searchResults, null);
   }
 });
 
 AudioStore.dispatchToken = AudioDispatcher.register(function(action) {
   switch(action.type) {
     case ActionTypes.RECEIVE_RAW_PLAYLISTS:
-      AudioStore.init(action.rawPlaylists);
+      AudioStore.init(action.myPlaylists, action.wantedPlaylists);
       AudioStore.emitChange();
       break;
     case ActionTypes.REMOVE_PLAYLIST_ITEM:
@@ -292,7 +341,7 @@ AudioStore.dispatchToken = AudioDispatcher.register(function(action) {
       AudioStore.emitChange();
       break;
     case ActionTypes.PUSH_PLAYLIST_ITEM:
-      AudioStore.pushPlaylistItem(action.item);
+      AudioStore.pushPlaylistItem(action.item, action.destPlaylistId);
       AudioStore.emitChange();
       break;
     case ActionTypes.REMOVE_PLAYLIST:
@@ -409,12 +458,17 @@ $(document).ready(function(){
     }
   });
 
+  var wantedPlaylists = null;
   // get all playlists
-  Promise.resolve($.post('/playlist/all'))
+  Promise.resolve($.post('/playlist/all/' + _wantedUserId))
   .then(function(response) {
     if (response.status === 'ok') {
-      // postprocessing
-      Actions.receiveAllPlaylists(response.playlists);
+      wantedPlaylists = response.playlists;
+    }
+    return Promise.resolve($.post('/playlist/all/' + _thisUserId))
+  }).then(function (response) {
+    if (response.status === 'ok') {
+      Actions.receiveAllPlaylists(response.playlists, wantedPlaylists);
     }
   }).catch(function(e) {
     console.log(e);

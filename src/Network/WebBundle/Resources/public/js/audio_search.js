@@ -32,14 +32,8 @@ var SearchHeader = React.createClass({
 
 var SearchBox = React.createClass({
   render: function () {
-    console.log(this.props);
     return (
-      <div>
-        <SearchHeader/>
-        <Playlist playlist={this.props.playlist}
-                  currentTrackId={this.props.currentTrackId}/>
-        <hr/>
-      </div>
+      <SearchHeader/>
     );
   }
 });
