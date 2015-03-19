@@ -13,7 +13,7 @@
     <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/run_gallery.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
-    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+
 {% endblock %}
 
 {% block right_content_sub_one %}
@@ -58,32 +58,61 @@
     {{ parent() }}
     <div id="user-contact-info">
         <div id="name-box">{{ user.firstName }} {{ user.lastName }}</div>
-        {#<p>{{ 'profile.show.gender'|trans }}: {{ user.gender }}</p>#}
-        <p>{{ 'profile.show.email'|trans }}: {{ user.email }}</p>
-        {% if user.contactInfo.skype %}
-            <p>{{ 'profile.show.skype'|trans }}: {{ user.contactInfo.skype }}</p>
-        {% endif %}
-        {% if user.contactInfo.additionalEmail %}
-            <p>{{ 'profile.show.additionalEmail'|trans }}: {{ user.contactInfo.additionalEmail }}</p>
-        {% endif %}
-        {% for phonenumber in user.contactInfo.phone %}
-            <p>{{ 'profile.show.phonenumber'|trans }}: {{ phonenumber }}</p>
-        {% endfor %}
-        {% for address in user.contactInfo.address %}
-            <p>{{ 'profile.show.address'|trans }}: {{ address }}</p>
-        {% endfor %}
-        {% if user.vkLogin %}
-            <p> {{ 'link.vkontakte'|trans }}: {{ user.vkLogin }} </p>
-        {% endif %}
-        {% if user.githubLogin %}
-            <p> {{ 'link.github'|trans }}: {{ user.githubLogin }} </p>
-        {% endif %}
-        {% if user.fbLogin %}
-            <p> {{ 'link.facebook'|trans }}: {{ user.fbLogin }} </p>
-        {% endif %}
-        {% if user.googleLogin %}
-            <p> {{ 'link.google'|trans }}: {{ user.googleLogin }} </p>
-        {% endif %}
+        <div class="horizontal-line"></div>
+        <table id="profile-info"">
+            <tr>
+                <td class="info-title">{{ 'profile.show.email'|trans }}:</td>
+                <td>{{ user.email }}</td>
+            </tr>
+            {% if user.contactInfo.additionalEmail %}
+                <tr>
+                     <td class="info-title">{{ 'profile.show.additionalEmail'|trans }}:</td>
+                     <td>{{ user.contactInfo.additionalEmail }}</td>
+                </tr>
+            {% endif %}
+            {% if user.contactInfo.skype %}
+                <tr>
+                     <td class="info-title">{{ 'profile.show.skype'|trans }}:</td>
+                     <td><a href="skype:{{ user.contactInfo.skype }}?chat">{{ user.contactInfo.skype }}</a></td>
+                </tr>
+            {% endif %}
+            {% for phonenumber in user.contactInfo.phone %}
+                <tr>
+                     <td class="info-title">{{ 'profile.show.phonenumber'|trans }}:</td>
+                     <td>{{ phonenumber }}</td>
+                </tr>
+            {% endfor %}
+            {% for address in user.contactInfo.address %}
+                <tr>
+                     <td class="info-title">{{ 'profile.show.address'|trans }}:</td>
+                     <td>{{ address }}</td>
+                </tr>
+            {% endfor %}
+            {% if user.vkLogin %}
+                <tr>
+                     <td class="info-title">{{ 'link.vkontakte'|trans }}:</td>
+                     <td><a href="http://vk.com/id{{ link.vkLogin }}">{{ 'link.all'|trans }}</a></td>
+                </tr>
+            {% endif %}
+            {% if user.githubLogin %}
+                <tr>
+                     <td class="info-title">{{ 'link.github'|trans }}:</td>
+                     <td><a href="http://github.com/{{ user.githubLogin }}">{{ user.githubLogin }}</a></td>
+                </tr>
+            {% endif %}
+            {% if user.fbLogin %}
+                <tr>
+                     <td class="info-title">{{ 'link.facebook'|trans }}:</td>
+                     <td><a href="http://www.facebook.com/profile.php?id={{ user.fbLogin }}">{{ 'link.all'|trans }}</a></td>
+                </tr>
+            {% endif %}
+            {% if user.googleLogin %}
+                <tr>
+                     <td class="info-title">{{ 'link.google'|trans }}:</td>
+                     <td><a href="https://plus.google.com/{{ user.googleLogin }}">{{ 'link.all' }} </a></td>
+                </tr>
+            {% endif %}
+        </table>
     </div>
     <div class="horizontal-line"></div>
     <div id="user-ref-info-box" class="white-box">
