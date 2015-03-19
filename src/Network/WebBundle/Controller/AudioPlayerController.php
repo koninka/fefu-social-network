@@ -14,14 +14,21 @@ use Network\StoreBundle\Entity\PlaylistItem;
 
 class AudioPlayerController extends Controller
 {
-    public function viewPlayerAction()
+    public function viewPlayerAction($user_id)
     {
         $user = $this->getUser();
         if ($user === null) {
             return $this->redirect($this->generateUrl('mainpage'));
         }
+        if (empty($user_id)) {
+            $user_id = $user->getId();
+        }
 
-        return $this->render('NetworkWebBundle:AudioPlayer:audio_player.html.twig');
+        return $this->render('NetworkWebBundle:AudioPlayer:audio_player.html.twig',
+            [
+                'wantedUserId' => $user_id,
+                'thisUserId' => $user->getId(),
+            ]);
     }
 
     public function removePlaylistAction($playlist_id)
@@ -72,7 +79,7 @@ class AudioPlayerController extends Controller
         ]);
     }
 
-    public function getAllMyPlaylistsAction()
+    public function getAllPlaylistsAction($user_id)
     {
         $user = $this->getUser();
         if ($user === null) {
@@ -80,6 +87,11 @@ class AudioPlayerController extends Controller
                 'status' => 'badUser',
             ]);
         }
+        if (empty($user_id)) {
+            $user_id = $user->getId();
+        }
+
+        $user = $this->getDoctrine()->getRepository('NetworkStoreBundle:User')->find($user_id);
 
         $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:Playlist');
         $playlists = $user->getPlaylists();

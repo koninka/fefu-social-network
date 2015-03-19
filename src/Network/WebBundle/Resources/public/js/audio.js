@@ -329,6 +329,9 @@ AudioStore.dispatchToken = AudioDispatcher.register(function(action) {
 
 $(document).ready(function(){
 
+  _thisUserId = parseInt($('#this_user_id').attr('data'));
+  _wantedUserId = parseInt($('#wanted_user_id').attr('data'));
+
   var cssSelector = {
     jPlayer: "#jquery_jplayer_1",
     cssSelectorAncestor: "#jp_container_1"

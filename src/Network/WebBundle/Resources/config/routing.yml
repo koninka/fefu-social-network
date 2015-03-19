@@ -29,8 +29,10 @@ audio_track_download:
     expose: true
 
 audio_player:
-  path: /listen
-  defaults: { _controller: NetworkWebBundle:AudioPlayer:viewPlayer }
+  path: /listen/{user_id}
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:viewPlayer, user_id: null }
+  requirements:
+    user_id: \d+
 
 audio_add_track_to_playlist:
   path: /playlist/{playlist_id}/push/{track_id}
@@ -54,19 +56,14 @@ audio_remove_playlist:
   options:
     expose: true
 
-audio_get_all_my_playlists:
-  path: /playlist/all
-  defaults: { _controller: NetworkWebBundle:AudioPlayer:getAllMyPlaylists }
-  methods: [POST]
-  options:
-    expose: true
-
-audio_get_all_user_playlists:
+audio_get_all_playlists:
   path: /playlist/all/{user_id}
-  defaults: { _controller: NetworkWebBundle:AudioPlayer:getUserPlaylist }
+  defaults: { _controller: NetworkWebBundle:AudioPlayer:getAllPlaylists, user_id: null }
   methods: [POST]
   options:
     expose: true
+  requirements:
+    user_id: \d+
 
 audio_track_delete:
   path: /delete/audio/{audio_id}/playlist/{playlist_id}

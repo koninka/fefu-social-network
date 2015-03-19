@@ -19,8 +19,6 @@
         <script src="{{ asset_url }}"></script>
     {% endjavascripts %}
 
-    {# '@NetworkWebBundle/Resources/public/js/lib/jplayer/jplayer.playlist.js' #}
-
     <script type="text/jsx" src="{{ asset('bundles/networkweb/js/audio_menu.js') }}"></script>
     <script type="text/jsx" src="{{ asset('bundles/networkweb/js/audio_search.js') }}"></script>
     <script type="text/jsx" src="{{ asset('bundles/networkweb/js/audio_playlist.js') }}"></script>
@@ -47,7 +45,16 @@
 {% endblock %}
 
 {% block header %}
-    <div id="jp_container_1" class="jp-audio" role="application" aria-label="media player" style="clear: both;">
+
+    {{ parent() }}
+{% endblock %}
+
+{% block right_content %}
+    <div id="this_user_id" data="{{ thisUserId }}" style="display: none;"></div>
+    <div id="wanted_user_id" data="{{ wantedUserId }}" style="display: none;"></div>
+    <div id="close"></div>
+
+    <div id="jp_container_1" class="jp-audio" role="application">
         <div class="jp-type-playlist">
             <div id="jquery_jplayer_1" class="jp-jplayer"></div>
             <div class="jp-gui">
@@ -62,8 +69,7 @@
                     <div class="jp-controls-holder">
                         <div class="jp-controls">
                             <button class="jp-play" role="button" tabindex="0">play</button>
-                            <button class="jp-previous" role="button" tabindex="0">previous</button>
-                            <button class="jp-next" role="button" tabindex="0">next</button>
+                            <button class="jp-pause" role="button" tabindex="0">pause</button>
                         </div>
                         <div class="jp-volume-controls">
                             <button class="jp-mute" role="button" tabindex="0">mute</button>
@@ -72,14 +78,7 @@
                                 <div class="jp-volume-bar-value"></div>
                             </div>
                         </div>
-                        <div class="jp-toggles">
-                            <button class="jp-repeat" role="button" tabindex="0">repeat</button>
-                            <button class="jp-shuffle" role="button" tabindex="0">shuffle</button>
-                        </div>
                     </div>
-{#                     <div class="jp-details">
-                        <div class="jp-title" aria-label="title">&nbsp;</div>
-                    </div> #}
                 </div>
             </div>
 
@@ -90,10 +89,6 @@
         </div>
     </div>
 
-    {{ parent() }}
-{% endblock %}
-
-{% block right_content %}
 
     <div id="audio_wrap"></div>
 
