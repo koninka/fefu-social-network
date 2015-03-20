@@ -1,0 +1,17 @@
+network_cache:
+    cache_dependencies:
+        user_delete_album:
+            dependent:
+                - user_show_album
+                - user_show_albums
+        user_add_album:
+            dependent:
+                - user_show_albums
+
+        user_add_album_photo:
+            dependent:
+                - user_show_album
+
+        user_delete_album_photo:
+            dependent:
+                - user_show_album

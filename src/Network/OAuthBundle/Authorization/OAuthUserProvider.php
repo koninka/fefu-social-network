@@ -51,7 +51,10 @@ class OAuthUserProvider implements UserProviderInterface, OAuthAwareUserProvider
         $realname = explode(' ', $response->getRealname());
         $firstName = $realname[1];
         $lastName = $realname[0];
-        $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
+        $email = '';
+        if ( isset($this->oAuthToken->getOAuthToken($response)->getRawToken()['email']) ) {
+            $email = $this->oAuthToken->getOAuthToken($response)->getRawToken()['email'];
+        }
 
         return [
             'loginField' => 'vkLogin',

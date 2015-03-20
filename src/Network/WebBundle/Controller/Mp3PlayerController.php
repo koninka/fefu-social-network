@@ -15,9 +15,11 @@ class Mp3PlayerController extends Controller
         if (null === $user) {
             return $this->redirect($this->generateUrl('mainpage'));
         }
+        $repo = $this->getDoctrine()->getRepository('NetworkStoreBundle:MP3Record');
+        $mp3s = $repo->getRecordsForUser($user->getId());
 
         return $this->render('NetworkWebBundle:Mp3Player:main.html.twig', [
-            'mp3s' => $user->getMp3s(),
+            'mp3s' => $mp3s,
             'filename' => Mp3FileController::UPLOADED_MP3_NAME,
         ]);
     }
