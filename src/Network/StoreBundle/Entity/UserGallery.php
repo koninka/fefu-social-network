@@ -89,4 +89,9 @@ class UserGallery
     {
         return $this->gallery;
     }
+
+    public function __toString()
+    {
+        return null;
+    }
 }

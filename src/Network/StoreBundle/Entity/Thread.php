@@ -212,4 +212,9 @@ class Thread
             }
         }
     }
+
+    public function __toString()
+    {
+        return null;
+    }
 }

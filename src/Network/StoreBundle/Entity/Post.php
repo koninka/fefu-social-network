@@ -276,4 +276,8 @@ class Post
         return $this->postFiles;
     }
 
+    public function __toString()
+    {
+        return null;
+    }
 }
