@@ -212,6 +212,9 @@ notify:
     kicked_from_conference: Вас удалили из конференции
     new_message_from: Новое сообщение от
     invited_to_conference: Вы были приглашены в конференцию
+    not_a_friend: Этот пользователь не состоит у вас в друзьях
+    subscription_deleted: Вы отписались от пользователя
+    fail: Не удалось отправить запрос
 
 # Message
 msg:

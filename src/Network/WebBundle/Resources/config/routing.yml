@@ -194,3 +194,21 @@ users_poll:
   defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }
   options:
     expose: true
+
+send_friendship_request:
+  path: /add_to_friends/{id}
+  defaults: { _controller: NetworkWebBundle:User:sendFriendshipRequest }
+  options:
+    expose: true
+
+delete_friendship_request:
+  path: /remove_from_friends/{id}
+  defaults: { _controller: NetworkWebBundle:User:deleteFriendshipRequest }
+  options:
+    expose: true
+
+unsubscribe_friendship_request:
+  path: /unsubscribe/{id}
+  defaults: { _controller: NetworkWebBundle:User:deleteFriendshipSubscription }
+  options:
+    expose: true

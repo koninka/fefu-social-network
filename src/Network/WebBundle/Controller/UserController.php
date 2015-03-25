@@ -96,4 +96,26 @@ class UserController extends Controller
 
         return new JsonResponse($response);
     }
+
+    public function sendFriendshipRequestAction($id)
+    {
+        return new JsonResponse([
+            'status' => $this->get('network_store.relationship_manager')->sendFriendshipRequest($id)
+        ]);
+    }
+
+    public function deleteFriendshipRequestAction($id)
+    {
+        return new JsonResponse([
+            'status' =>  $this->get('network_store.relationship_manager')->deleteFriendship($id),
+        ]);
+    }
+
+    public function deleteFriendshipSubscriptionAction($id)
+    {
+        return new JsonResponse([
+            'status' => $this->get('network_store.relationship_manager')->deleteFriendshipSubscription($id),
+        ]);
+    }
+
 }

@@ -12,8 +12,20 @@
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
     <script src="{{ asset('bundles/networkweb/js/run_gallery.js') }}"></script>
+    <script src="{{ asset('bundles/networkweb/js/friends_requests.js') }}"></script>
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
-    <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
+    <script type="text/javascript" src="{{ asset('bundles/networkweb/js/friends_requests.js') }}"></script>
+    <script src="/js/fos_js_routes.js"></script>
+    <script type="text/javascript">
+        var user = {{ user.getId }};
+        var relStatus = '{{ rl_status }}';
+        var msgSent = '{{ 'msg.friendship_request_sent'|trans }}';
+        var msgAccepted = '{{ 'msg.friendship_accepted'|trans }}';
+        var msgFail = '{{ 'notify.fail'|trans }}';
+        var msgUnsubscribed = '{{ 'notify.subscription_deleted'|trans }}';
+        var msgFriendshipDeleted = '{{ 'msg.friendship_deleted'|trans }}';
+        var msgNotAFriend = '{{ 'notify.not_a_friend'|trans }}';
+    </script>
 {% endblock %}
 
 {% block right_content_sub_one %}
@@ -38,16 +50,12 @@
                 <p>
                     <a class="btn btn-blue"
                        href="{{ path('user_profile_show_messages', {'partnerId':user.id} ) }}">{{ 'layout.write_message'|trans }}</a>
-                    {% if rl_status == 'relationship_none' or rl_status == 'friendship_subscribed_by_user' %}
-                        <a class="btn btn-blue"
+                    <a class="btn btn-blue" id="send_request" style="display: none"
                            href="{{ path('user_send_friendship_request', {'id':user.id} ) }}">{{ 'profile.show.send_friendship_request'|trans }}</a>
-                    {% elseif rl_status == 'friendship_accepted' %}
-                        <a class="btn btn-default"
+                   <a class="btn btn-default" id="delete_request" style="display: none"
                            href="{{ path('user_delete_friendship', {'id':user.id} ) }}">{{ 'profile.delete_friendship'|trans }}</a>
-                    {% elseif rl_status == 'friendship_subscribed_by_me' %}
-                        <a class="btn btn-default"
+                    <a class="btn btn-default" id="unsubscribe" style="display: none"
                            href="{{ path('user_delete_friendship_subscribtion', {'id':user.id} ) }}">{{ 'profile.show.unsubscribe'|trans }}</a>
-                    {% endif %}
                 </p>
             </div>
         {% endif %}
