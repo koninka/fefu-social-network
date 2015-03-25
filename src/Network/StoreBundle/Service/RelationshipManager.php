@@ -160,7 +160,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.decline_friendship_request', Message::TYPE_FAIL);
+        $this->sendMessage($id, 'notify.decline_friendship_request', NotificationMessage::TYPE_FAIL);
 
         return 'friendship_request_declined';
     }
@@ -185,7 +185,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.remove_from_friends', Message::TYPE_FAIL);
+        $this->sendMessage($id, 'notify.remove_from_friends', NotificationMessage::TYPE_FAIL);
 
         return 'friendship_deleted';
     }
@@ -207,7 +207,7 @@ class RelationshipManager extends Controller
 
         $this->em->flush();
 
-        $this->sendMessage($id, 'notify.unsubscribe', Message::TYPE_FAIL);
+        $this->sendMessage($id, 'notify.unsubscribe', NotificationMessage::TYPE_FAIL);
 
         return 'friendship_request_deleted';
     }

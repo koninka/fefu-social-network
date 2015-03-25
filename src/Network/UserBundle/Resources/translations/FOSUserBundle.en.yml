@@ -211,13 +211,16 @@ notify:
     kicked_from_conference: You were kicked from conference
     new_message_from: New message from
     invited_to_conference: You were invited to conference
+    subscription_deleted: Subscription deleted
+    not_a_friend: This user not a friend
+    fail: You can't do it
 
 # Message
 msg:
     not_authorized: User is not authorized.
-    friendship_accepted: Friendship is accepted.
-    friendship_deleted: Friendship is deleted.
-    friendship_request_sent: Friendship request is sent.
+    friendship_accepted: Friendship was accepted.
+    friendship_deleted: Friendship was deleted.
+    friendship_request_sent: Friendship request was sent.
     friendship_request_deleted: Friendship request is deleted.
     friendship_request_declined: Friendship request is declined.
     community_not_found: Community is not found.
