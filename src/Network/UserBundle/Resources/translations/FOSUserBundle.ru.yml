@@ -101,6 +101,7 @@ link:
     github: Github
     facebook: Facebook
     google: Google
+    all: Открыть профиль
 
 # Album
 album:
@@ -334,3 +335,11 @@ form:
         name: Название
         description: Описание
         link: Ссылка на видео
+
+title:
+    thread: Стена поста
+    ban_thread: Не показывать пост
+    add_album: Добавить альбом
+    add_photo: Добавить изображение
+    albums: Альбомы
+    add_community: Создать новую группу

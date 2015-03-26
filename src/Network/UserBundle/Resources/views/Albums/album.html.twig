@@ -6,6 +6,7 @@
      <link href="{{ asset('bundles/networkweb/css/like.css') }}" type="text/css" rel="stylesheet">
     <link href="{{ asset('bundles/sonataadmin/vendor/jqueryui/themes/base/jquery-ui.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/sonatacore/vendor/jquery/dist/jquery.min.js') }}"></script>
@@ -14,6 +15,11 @@
     <script type="text/javascript" src="{{ asset('bundles/networkweb/js/like.js') }}"></script>
     <script src="{{ asset('bundles/sonataadmin/vendor/jqueryui/ui/minified/jquery-ui.min.js') }}"></script>
 {% endblock %}
+
+{% block title %}
+    {{ 'title.album'|trans }}
+{% endblock %}
+
 {% block right_content %}
     <div class="white-box" id="album-box">
     {% if is_cur_user and is_user_album %}

@@ -1,5 +1,5 @@
 {% extends "NetworkUserBundle:EditProfile:edit.base.html.twig" %}
-
+{% trans_default_domain 'FOSUserBundle' %}
 {% block javascripts %}
     {{ parent() }}
 
@@ -121,6 +121,10 @@
 
         });
     </script>
+{% endblock %}
+
+{% block title %}
+    {{ 'layout.audios'|trans }}
 {% endblock %}
 
 {% block stylesheets %}

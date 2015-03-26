@@ -161,3 +161,9 @@ a {
     line-height: 3.5;
     border-radius: 3px;
 }
+
+.info-title {
+    font-size: smaller;
+    color: #696969;
+    padding-right: 15px;
+}

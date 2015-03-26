@@ -4,6 +4,11 @@
     {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/video.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
+{% block title %}
+    {{ 'video.edit.name'|trans }}
+{% endblock %}
+
 {% block right_content_sub_one %}
     <div class="white-box" id="video_box">
         <form class="centered-form" action="{{ path('edit_video', {'id': video.id}) }}" {{ form_enctype(form) }} method="POST">

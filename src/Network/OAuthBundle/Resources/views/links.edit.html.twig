@@ -7,19 +7,23 @@
     <script src="{{ asset('bundles/networkweb/js/datepicker.js') }}"></script>
 {% endblock %}
 
+{% block title %}
+    {{ 'layout.links'|trans }}
+{% endblock %}
+
 {% block edit_content %}
 
             <p> {{ 'link.vkontakte'|trans }}:
                 {% if user.vkLogin %}
-                    {{ user.vkLogin }}
+                    <a href="http://vk.com/id{{ user.vkLogin }}">{{ 'link.all'|trans }}</a>
                     <a href="{{ url("remove_link", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.remove.vkontakte'|trans }} </a>
                 {% else %}
-                    <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
+                    <a href="{{ url("hwi_oauth_service_redirect", {service: "vkontakte"}) }}"> {{ 'profile.edit.link.add.vkontakte'|trans }} </a>
                 {% endif %}
             </p>
             <p> {{ 'link.github'|trans }}:
                 {% if user.githubLogin %}
-                    {{ user.githubLogin }}
+                    <a href="http://github.com/{{ user.githubLogin }}">{{ user.githubLogin }}</a>
                     <a href="{{ url("remove_link", {service: "github"}) }}"> {{ 'profile.edit.link.remove.github'|trans }} </a>
                 {% else %}
                     <a href="{{ url("hwi_oauth_service_redirect", {service: "github"}) }}"> {{ 'profile.edit.link.add.github'|trans }} </a>
@@ -27,7 +31,7 @@
             </p>
             <p> {{ 'link.facebook'|trans }}:
                 {% if user.fbLogin %}
-                    {{ user.fbLogin }}
+                    <a href="http://www.facebook.com/profile.php?id={{ user.fbLogin }}">{{ 'link.all' }}</a>
                     <a href="{{ url("remove_link", {service: "facebook"}) }}"> {{ 'profile.edit.link.remove.facebook'|trans }} </a>
                 {% else %}
                     <a href="{{ url("hwi_oauth_service_redirect", {service: "facebook"}) }}"> {{ 'profile.edit.link.add.facebook'|trans }} </a>
@@ -35,7 +39,7 @@
             </p>
             <p> {{ 'link.google'|trans }}:
                 {% if user.googleLogin %}
-                    {{ user.googleLogin }}
+                    <a href="https://plus.google.com/{{ user.googleLogin }}">{{ 'link.all'|trans }}</a>
                     <a href="{{ url("remove_link", {service: "google"}) }}"> {{ 'profile.edit.link.remove.google'|trans }} </a>
                 {% else %}
                     <a href="{{ url("hwi_oauth_service_redirect", {service: "google"}) }}"> {{ 'profile.edit.link.add.google'|trans }} </a>

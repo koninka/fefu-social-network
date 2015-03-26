@@ -4,6 +4,11 @@
     {{ parent() }}
     <link href="{{ asset('bundles/networkweb/css/video.css') }}" type="text/css" rel="stylesheet" />
 {% endblock %}
+
+{% block title %}
+    {{ 'video.add.name'|trans }}
+{% endblock %}
+
 {% block javascripts %}
     {{ parent() }}
     <script src="{{ asset('bundles/networkweb/js/jquery.magnific-popup.min.js') }}"></script>
