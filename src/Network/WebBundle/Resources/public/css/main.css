@@ -161,3 +161,20 @@ a {
     line-height: 3.5;
     border-radius: 3px;
 }
+
+#notification h6{
+    display: block;
+    height: 30px;
+    color: #8797b3;
+    font-size: large;
+}
+
+#notification{
+    text-align: center;
+}
+
+#notification p{
+    text-align: center;
+    color: rgba(0, 0, 0, 0.69);
+    padding-bottom: 10px;
+}

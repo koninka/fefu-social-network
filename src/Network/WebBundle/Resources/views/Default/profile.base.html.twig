@@ -52,7 +52,6 @@
                                 </span>
                             </a>
                         </li>
-                        <li><a href="{{ path('audios') }}">{{ 'layout.audios'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('videos') }}">{{ 'layout.videos'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('user_profile_show_albums') }}">{{ 'layout.show_albums'|trans({}, 'FOSUserBundle') }}</a></li>
                         <li><a href="{{ path('fos_user_profile_edit') }}">{{ 'layout.profile_edit'|trans({}, 'FOSUserBundle') }}</a></li>
@@ -63,6 +62,18 @@
                         <li><a href="{{ path('fos_user_security_login') }}">{{ 'layout.login'|trans({}, 'FOSUserBundle') }}</a></li>
                     </ul>
                 {% endif %}
+                </div>
+
+            {% endblock %}
+            {% block notification %}
+                <div id="notification" style="display: none">
+                    <hr>
+                    <h6>{{ 'notify.notification'|trans({}, 'FOSUserBundle')}}</h6>
+                    <div class="not_msg">
+                        <p class="have_birth" style="display: none">{{ 'msg.birthday'|trans({}, 'FOSUserBundle') }}
+                            <ab class="today" style="display: none">{{ 'msg.today'|trans({}, 'FOSUserBundle') }}</ab>
+                            <ab class="tomorrow" style="display: none">{{ 'msg.tomorrow'|trans({}, 'FOSUserBundle') }}</ab></p>
+                    </div>
                 </div>
             {% endblock %}
         </div>

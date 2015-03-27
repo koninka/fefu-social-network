@@ -194,3 +194,9 @@ users_poll:
   defaults: { _controller: NetworkWebBundle:Poll:getUserAnswerJson }
   options:
     expose: true
+
+notification:
+  path: /notify
+  defaults: { _controller: NetworkWebBundle:Notification:getNotification }
+  options:
+    expose: true
