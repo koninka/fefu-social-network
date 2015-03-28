@@ -12,10 +12,11 @@ class NotificationController extends Controller
     {
         $user = $this->getUser();
         if($user == null){
-               return new JsonResponse(['status' => 'badUser']);
+            return new JsonResponse(['status' => 'badUser']);
         }
 
-        $friends = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship')->findFriendsForUser($user->getId());
+        $friends = $this->getDoctrine()->getRepository('NetworkStoreBundle:Relationship')->getFriendsBirthdays($user->getId());
+
         $date = new \DateTime();
         $now = [
             'day' => $date->format('d'),
@@ -26,26 +27,16 @@ class NotificationController extends Controller
             'today' => [],
             'tomorrow' => []
         ];
-        foreach($friends as $friend){
-            $f = $friend->getPartner();
-            $birth = $f->getBirthday()->format('d');
-            $month = $f->getBirthday()->format('m');
-            if($month == $now['month']) {
-                $when = $birth == $now['day'] ? 'today' : ($birth - 1 == $now['day'] ? 'tomorrow' : null);
-                if ($when == null)
-                    continue;
 
-                $responseParam[$when][] = [
-                    'id' => $f->getId(),
-                    'name' => $f->getFirstName() . ' ' . $f->getLastName(),
-                ];
-            } elseif(($month - 1 == $now['month'] || $now['month'] == 12 && $month == 1) &&
-                (date('t', strtotime('today')) == $now['day'] && $birth == 1) ){         // Today the last day of the month
-                $responseParam['tomorrow'][] = [                                         // And Birthday will be tomorrow
-                    'id' => $f->getId(),
-                    'name' => $f->getFirstName() . ' ' . $f->getLastName(),
-                ];
-            }
+        foreach($friends as $friend){
+            $birth = $friend['birthday']->format('d');
+            $month = $friend['birthday']->format('m');
+            $when = $birth == $now['day'] ? 'today' :'tomorrow';
+            $responseParam[$when][] = [
+                'id' => $friend['id'],
+                'name' => $friend['firstName'] . ' ' . $friend['lastName'],
+            ];
+
         }
 
         return new JsonResponse($responseParam);
