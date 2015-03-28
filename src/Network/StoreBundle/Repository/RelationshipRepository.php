@@ -156,4 +156,30 @@ class RelationshipRepository extends EntityRepository
         return $qb->getQuery()->getSingleScalarResult();
     }
 
+    /**
+     * @param $userId
+     * @return array
+     */
+    public function getFriendsBirthdays($userId)
+    {
+        $em = $this->getEntityManager();
+
+        $dql = "
+            SELECT p.id, p.birthday, p.firstName, p.lastName from NetworkStoreBundle:Relationship r
+            JOIN r.partner p
+            WHERE r.user = :userId and r.status = :status and DATE_DIFF(:date1, :date2) < 2
+        ";
+
+        $today = new \DateTime();
+        $tomorrow = (new \DateTime())->add(new \DateInterval('P1D'));
+
+        $query = $em->createQuery($dql)
+            ->setParameter('userId', $userId)
+            ->setParameter('status', RelationshipStatusEnumType::FS_ACCEPTED)
+            ->setParameter('date1', $today)
+            ->setParameter('date2', $tomorrow);
+
+        return $query->getResult();
+    }
+
 }

@@ -211,6 +211,7 @@ notify:
     kicked_from_conference: You were kicked from conference
     new_message_from: New message from
     invited_to_conference: You were invited to conference
+    notification: Notification
 
 # Message
 msg:
@@ -248,6 +249,9 @@ msg:
     feed_title_all: All
     feed_title_friends: Friends
     feed_title_communities: Communities
+    birthday: Some of your friends have a birthday
+    today: today
+    tomorrow: tomorrow
 
 form:
     new_email: New email

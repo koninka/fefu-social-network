@@ -212,6 +212,7 @@ notify:
     kicked_from_conference: Вас удалили из конференции
     new_message_from: Новое сообщение от
     invited_to_conference: Вы были приглашены в конференцию
+    notification: Напоминание
 
 # Message
 msg:
@@ -249,6 +250,9 @@ msg:
     feed_title_all: Все
     feed_title_friends: Друзья
     feed_title_communities: Группы
+    birthday:  У ваших друзей день рождениия
+    today: сегодня
+    tomorrow: завтра
 
 form:
     new_email: Новая почта
